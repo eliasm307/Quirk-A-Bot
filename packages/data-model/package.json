@@ -6,9 +6,9 @@
 	"types": "dist/index.d.ts",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"start": "yarn && yarn build && node .",
-		"dev": "yarn && nodemon .",
-		"build": "npx tsc",
+		"start": "yarn build && node .",
+		"dev": "yarn build && nodemon .",
+		"build": "yarn && npx tsc",
 		"prepublish": "npx tsc"
 	},
 	"author": "",
