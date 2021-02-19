@@ -3,13 +3,9 @@ import { iAttribute, iCharacterSheet, iCharacterSheetModel, iDiscipline, iSkill 
 import fs, { WriteOptions } from 'fs-extra';
 import TypeFactory from './TypeFactory';
 export default class CharacterSheet implements iCharacterSheet {
-	readonly id: string = '';
-	sire: string = '';
-	attributes: AttributeMap = TypeFactory.newAttributeMap();
-	skills: SkillMap = TypeFactory.newSkillMap();
-	disciplines: DisciplineMap = TypeFactory.newDisciplineMap();
-	touchstonesAndConvictions: string[] = [];
+	readonly discordUserId: number;
 
+	//-------------------------------------
 	// properties with custom setters
 	private _health: number = 0;
 	private _willpower: number = 0;
@@ -18,11 +14,64 @@ export default class CharacterSheet implements iCharacterSheet {
 	private _bloodPotency: number = 0;
 	private _name: string = '';
 	private _clan: string = '';
+	private _sire: string = '';
+	private _attributes: AttributeMap = TypeFactory.newAttributeMap();
+	private _skills: SkillMap = TypeFactory.newSkillMap();
+	private _disciplines: DisciplineMap = TypeFactory.newDisciplineMap();
+	private _touchstonesAndConvictions: string[] = [];
 
-	public set hunger(val: number) {}
+	//-------------------------------------
+	// BASIC VARIABLE GETTERS AND SETTERS
+	public set health(newVal: number) {
+		this._health = newVal;
+	}
+	public set willpower(newVal: number) {}
+	public set hunger(newVal: number) {}
+	public set humanity(newVal: number) {}
+	public set bloodPotency(newVal: number) {}
+	public set name(newVal: string) {}
+	public set clan(newVal: string) {}
+	public set sire(newVal: string) {}
 
-	constructor(sheet: iCharacterSheet) {
-		if (!sheet) throw `constructor argument not defined`;
+	//-------------------------------------
+	// ATTRIBUTES
+	public get attributes(): iAttribute[] {
+		return Array.from(this._attributes.values());
+	}
+
+	public getAttributeByName(name: string): iAttribute | null {
+		return this._attributes.has(name) ? (this._attributes.get(name) as iAttribute) : null;
+	}
+
+	//-------------------------------------
+	// SKILLS
+	public get skills(): iSkill[] {
+		return Array.from(this._skills.values());
+	}
+
+	//-------------------------------------
+	// DISCIPLINES
+	public get disciplines(): iDiscipline[] {
+		return Array.from(this._disciplines.values());
+	}
+
+	//-------------------------------------
+	// TOUCHSTONES AND CONVICTIONS
+	public get touchstonesAndConvictions(): string[] {
+		return [...this._touchstonesAndConvictions];
+	}
+
+	//-------------------------------------
+	// CONSTRUCTOR
+	constructor(sheet: iCharacterSheet | number) {
+		if (typeof sheet === 'number') {
+			this.discordUserId = sheet;
+		} else if (typeof sheet === 'object') {
+			this.discordUserId = sheet.discordUserId;
+			// todo add other variables
+		} else {
+			throw `constructor argument not defined`;
+		}
 	}
 
 	private exportDataToFile(data: any, outputFilePath: string): void {

@@ -19,21 +19,19 @@ export interface iDiscipline {
 }
 
 export interface iCharacterSheet {
-	id: string;
+	discordUserId: number;
 	name: string;
 	clan: ClanName;
 	sire: string;
-	attributes: AttributeMap;
 	health: number; // todo limit 0 to 10
 	willpower: number; // todo limit 0 to 10
-	skills: SkillMap;
-	disciplines: DisciplineMap;
 	hunger: number; // todo limit 0 to 5
 	humanity: number; // todo limit 0 to 10
 	bloodPotency: number; // todo limit 0 to 10
-  touchstonesAndConvictions: string[];
-  
-
+	touchstonesAndConvictions: string[];
+	attributes: iAttribute[];
+	skills: iSkill[];
+	disciplines: iDiscipline[];
 }
 
 export interface iCharacterSheetModel {
