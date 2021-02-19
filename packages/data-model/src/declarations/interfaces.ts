@@ -1,5 +1,5 @@
 import { iCharacterSheetModel } from './interfaces';
-import { AttributeCategory, AttributeName, ClanName, DisciplineName, SkillName } from './types';
+import { AttributeCategory, AttributeName, ClanName, DisciplineName, SkillName, AttributeMap, SkillMap, DisciplineMap } from './types';
 
 export interface iAttribute {
 	category: AttributeCategory;
@@ -23,15 +23,17 @@ export interface iCharacterSheet {
 	name: string;
 	clan: ClanName;
 	sire: string;
-	attributes: Map<AttributeName, iAttribute>;
+	attributes: AttributeMap;
 	health: number; // todo limit 0 to 10
 	willpower: number; // todo limit 0 to 10
-	skills: Map<SkillName, iSkill>;
-	disciplines: Map<DisciplineName, iDiscipline>;
+	skills: SkillMap;
+	disciplines: DisciplineMap;
 	hunger: number; // todo limit 0 to 5
 	humanity: number; // todo limit 0 to 10
 	bloodPotency: number; // todo limit 0 to 10
-	touchstonesAndConvictions: string[];
+  touchstonesAndConvictions: string[];
+  
+
 }
 
 export interface iCharacterSheetModel {

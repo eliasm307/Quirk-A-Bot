@@ -1,21 +1,27 @@
+import { AttributeMap, SkillMap, DisciplineMap } from './../declarations/types';
 import { iAttribute, iCharacterSheet, iCharacterSheetModel, iDiscipline, iSkill } from '../declarations/interfaces';
 import fs, { WriteOptions } from 'fs-extra';
+import TypeFactory from './TypeFactory';
 export default class CharacterSheet implements iCharacterSheet {
-	id: string = '';
-	name: string = '';
-	clan: string = '';
+	readonly id: string = '';
 	sire: string = '';
-	attributes: Map<string, iAttribute>;
-	health: number;
-	willpower: number;
-	skills: Map<string, iSkill>;
-	disciplines: Map<string, iDiscipline>;
-	hunger: number;
-	humanity: number;
-	bloodPotency: number;
-	touchstonesAndConvictions: string[];
+	attributes: AttributeMap = TypeFactory.newAttributeMap();
+	skills: SkillMap = TypeFactory.newSkillMap();
+	disciplines: DisciplineMap = TypeFactory.newDisciplineMap();
+	touchstonesAndConvictions: string[] = [];
 
-	constructor(sheet: string | iCharacterSheet) {
+	// properties with custom setters
+	private _health: number = 0;
+	private _willpower: number = 0;
+	private _hunger: number = 0;
+	private _humanity: number = 0;
+	private _bloodPotency: number = 0;
+	private _name: string = '';
+	private _clan: string = '';
+
+	public set hunger(val: number) {}
+
+	constructor(sheet: iCharacterSheet) {
 		if (!sheet) throw `constructor argument not defined`;
 	}
 
