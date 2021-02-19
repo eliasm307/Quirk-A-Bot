@@ -1,3 +1,4 @@
+import { iCharacterSheetModel } from './interfaces';
 import { AttributeCategory, AttributeName, ClanName, DisciplineName, SkillName } from './types';
 
 export interface iAttribute {
@@ -17,7 +18,8 @@ export interface iDiscipline {
 	// todo add "specialisation" / sub types?
 }
 
-export interface iCharacterSheetModel {
+export interface iCharacterSheet {
+	id: string;
 	name: string;
 	clan: ClanName;
 	sire: string;
@@ -30,4 +32,8 @@ export interface iCharacterSheetModel {
 	humanity: number; // todo limit 0 to 10
 	bloodPotency: number; // todo limit 0 to 10
 	touchstonesAndConvictions: string[];
+}
+
+export interface iCharacterSheetModel {
+	characterSheet: iCharacterSheet;
 }
