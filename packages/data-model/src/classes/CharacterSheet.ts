@@ -1,4 +1,11 @@
-import { AttributeMap, SkillMap, DisciplineMap } from './../declarations/types';
+import {
+	AttributeMap,
+	SkillMap,
+	DisciplineMap,
+	AttributeName,
+	DisciplineName,
+	SkillName,
+} from './../declarations/types';
 import { iAttribute, iCharacterSheet, iCharacterSheetModel, iDiscipline, iSkill } from '../declarations/interfaces';
 import fs, { WriteOptions } from 'fs-extra';
 import TypeFactory from './TypeFactory';
@@ -7,18 +14,18 @@ export default class CharacterSheet implements iCharacterSheet {
 
 	//-------------------------------------
 	// properties with custom setters
-	private _health: number = 0;
-	private _willpower: number = 0;
-	private _hunger: number = 0;
-	private _humanity: number = 0;
-	private _bloodPotency: number = 0;
-	private _name: string = '';
-	private _clan: string = '';
-	private _sire: string = '';
-	private _attributes: AttributeMap = TypeFactory.newAttributeMap();
-	private _skills: SkillMap = TypeFactory.newSkillMap();
-	private _disciplines: DisciplineMap = TypeFactory.newDisciplineMap();
-	private _touchstonesAndConvictions: string[] = [];
+	private _health: number;
+	private _willpower: number;
+	private _hunger: number;
+	private _humanity: number;
+	private _bloodPotency: number;
+	private _name: string;
+	private _clan: string;
+	private _sire: string;
+	private _attributes: AttributeMap;
+	private _skills: SkillMap;
+	private _disciplines: DisciplineMap;
+	private _touchstonesAndConvictions: string[];
 
 	//-------------------------------------
 	// BASIC VARIABLE GETTERS AND SETTERS
@@ -66,11 +73,54 @@ export default class CharacterSheet implements iCharacterSheet {
 	constructor(sheet: iCharacterSheet | number) {
 		if (typeof sheet === 'number') {
 			this.discordUserId = sheet;
+
+			// initialise with default values
+			this._health = 0;
+			this._willpower = 0;
+			this._hunger = 0;
+			this._humanity = 0;
+			this._bloodPotency = 0;
+			this._name = '';
+			this._clan = '';
+			this._sire = '';
+			this._attributes = TypeFactory.newAttributeMap();
+			this._disciplines = TypeFactory.newDisciplineMap();
+			this._skills = TypeFactory.newSkillMap();
+			this._touchstonesAndConvictions = [];
 		} else if (typeof sheet === 'object') {
-			this.discordUserId = sheet.discordUserId;
-			// todo add other variables
+			const {
+				attributes,
+				bloodPotency,
+				clan,
+				disciplines,
+				health,
+				humanity,
+				hunger,
+				name,
+				sire,
+				skills,
+				touchstonesAndConvictions,
+				willpower,
+				discordUserId,
+			} = sheet;
+
+			// initialise using input details
+			this.discordUserId = discordUserId;
+			this._health = health;
+			this._willpower = willpower;
+			this._hunger = hunger;
+			this._humanity = humanity;
+			this._bloodPotency = bloodPotency;
+			this._name = name;
+			this._clan = clan;
+			this._sire = sire;
+
+			this._attributes = new Map<AttributeName, iAttribute>(attributes.map(e => [e.name, e]));
+			this._disciplines = new Map<DisciplineName, iDiscipline>(disciplines.map(e => [e.name, e]));
+			this._skills = new Map<SkillName, iSkill>(skills.map(e => [e.name, e]));
+			this._touchstonesAndConvictions = [...touchstonesAndConvictions];
 		} else {
-			throw `constructor argument not defined`;
+			throw `${__filename} constructor argument not defined`;
 		}
 	}
 

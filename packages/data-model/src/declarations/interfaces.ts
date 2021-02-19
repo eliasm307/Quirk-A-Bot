@@ -1,5 +1,10 @@
-import { iCharacterSheetModel } from './interfaces';
-import { AttributeCategory, AttributeName, ClanName, DisciplineName, SkillName, AttributeMap, SkillMap, DisciplineMap } from './types';
+import {
+	AttributeCategory,
+	AttributeName,
+	ClanName,
+	DisciplineName,
+	SkillName, 
+} from './types';
 
 export interface iAttribute {
 	category: AttributeCategory;
