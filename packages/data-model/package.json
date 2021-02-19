@@ -23,14 +23,5 @@
 		"nodemon": "^2.0.7",
 		"ts-jest": "^26.5.1",
 		"typescript": "^4.1.5"
-	},
-	"jest": {
-		"preset": "ts-jest",
-		"testEnvironment": "node",
-		"verbose": false,
-		"modulePathIgnorePatterns": [ 
-			"node_modules",
-			"coverage"
-		]
 	}
 }

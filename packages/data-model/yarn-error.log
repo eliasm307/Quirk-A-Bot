@@ -1,0 +1,58 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Github-Repos\Quirk-A-Bot\.yarn\releases\yarn-1.19.0.cjs test
+
+PATH: 
+  C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Users\ELIAS\bin;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Python39\Scripts;C:\Python39;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0;C:\Windows\System32\OpenSSH;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files\Microsoft VS Code\bin;C:\Program Files\dotnet;C:\Program Files\nodejs;C:\ProgramData\chocolatey\bin;C:\Program Files (x86)\Yarn\bin;C:\Program Files\ngrok;C:\Program Files (x86)\dotnet;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0;C:\WINDOWS\System32\OpenSSH;C:\Program Files\Git\cmd;C:\Users\ELIAS\.windows-build-tools\python27;C:\Users\ELIAS\AppData\Local\Temp\yarn--1603661581449-0.6068892112042992;C:\Github-Repos\testable-projects-fcc\node_modules\windows-build-tools\node_modules\.bin;C:\Users\ELIAS\AppData\Local\Yarn\Data\link\node_modules\.bin;C:\Program Files\libexec\lib\node_modules\npm\bin\node-gyp-bin;C:\Program Files\lib\node_modules\npm\bin\node-gyp-bin;C:\Program Files\nodejs\node_modules\npm\bin\node-gyp-bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Users\ELIAS\bin;C:\Users\ELIAS\AppData\Local\Microsoft\WindowsApps;C:\Users\ELIAS\.dotnet\tools;C:\Users\ELIAS\AppData\Local\GitHubDesktop\bin;C:\Users\ELIAS\AppData\Roaming\npm;C:\Users\ELIAS\AppData\Local\Yarn\bin;C:\Users\ELIAS\AppData\Local\Microsoft\WindowsApps
+
+Yarn version: 
+  1.19.0
+
+Node version: 
+  15.0.1
+
+Platform: 
+  win32 x64
+
+Trace: 
+  SyntaxError: C:\Github-Repos\Quirk-A-Bot\packages\data-model\package.json: Unexpected token } in JSON at position 616
+      at JSON.parse (<anonymous>)
+      at C:\Github-Repos\Quirk-A-Bot\.yarn\releases\yarn-1.19.0.cjs:1098:57
+      at Generator.next (<anonymous>)
+      at step (C:\Github-Repos\Quirk-A-Bot\.yarn\releases\yarn-1.19.0.cjs:310:30)
+      at C:\Github-Repos\Quirk-A-Bot\.yarn\releases\yarn-1.19.0.cjs:321:13
+
+npm manifest: 
+  {
+  	"name": "@quirk-a-bot/data-model",
+  	"version": "1.0.0",
+  	"description": "",
+  	"main": "dist/index.js",
+  	"types": "dist/index.d.ts",
+  	"scripts": {
+  		"test": "rm -rf dist && yarn build && npx tsc && jest --logHeapUsage",
+  		"start": "yarn build && node .",
+  		"dev": "yarn build && nodemon .",
+  		"build": "yarn && npx tsc"
+  	},
+  	"author": "",
+  	"license": "ISC",
+  	"dependencies": {
+  		"@types/node": "^14.14.22",
+  		"fs-extra": "^9.1.0"
+  	},
+  	"devDependencies": {
+  		"@types/fs-extra": "^9.0.6",
+  		"@types/jest": "^26.0.20",
+  		"jest": "^26.6.3",
+  		"nodemon": "^2.0.7",
+  		"ts-jest": "^26.5.1",
+  		"typescript": "^4.1.5"
+  	},
+  	
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
