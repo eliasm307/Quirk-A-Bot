@@ -2,16 +2,25 @@ import fs from 'fs-extra';
 import path from 'path';
 import CharacterSheet from './CharacterSheet';
 
-test('save new blank character sheet', () => {
+test('save new blank character sheet and load the character sheet', () => {
 	const testUserId = Math.floor(Math.random() * 999999);
 
 	const filePath = path.resolve(__dirname, `../data/character-sheets/test/${testUserId}.json`);
 
-	const cs = new CharacterSheet(testUserId);
+  // creates new sheet and does initial save
+	const cs = new CharacterSheet(testUserId, filePath);
+ 
 
-	console.log({ testUserId, filePath, cs });
+	const csLoaded = CharacterSheet.loadFromFile({ filePath });
 
-	cs.saveToFile(filePath);
+	console.log({ testUserId, filePath, cs, csLoaded });
 
+  // file should exist after save
 	expect(fs.pathExistsSync(filePath)).toBe(true);
+
+  // user id should be the same
+	expect(csLoaded.discordUserId).toEqual(testUserId);
+
+  // sheets should be the same
+	expect(cs).toEqual(csLoaded);
 });

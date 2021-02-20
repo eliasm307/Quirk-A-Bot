@@ -21,6 +21,7 @@ interface iLoadFromFileArgs {
 
 export default class CharacterSheet implements iCharacterSheet {
 	readonly discordUserId: number;
+	private savePath: string;
 
 	//-------------------------------------
 	// properties with custom setters
@@ -39,6 +40,7 @@ export default class CharacterSheet implements iCharacterSheet {
 
 	//-------------------------------------
 	// BASIC VARIABLE GETTERS AND SETTERS
+	// todo add auto save for each change, maybe on change handler that takes in an iChangeEvent object
 	public set health(newVal: number) {
 		this._health = newVal;
 	}
@@ -98,27 +100,36 @@ export default class CharacterSheet implements iCharacterSheet {
 		return this._attributes.has(name) ? (this._attributes.get(name) as iAttribute) : null;
 	}
 
+	// todo item adder method
+
 	//-------------------------------------
 	// SKILLS
 	public get skills(): iSkill[] {
 		return Array.from(this._skills.values());
 	}
 
+	// todo single getter method
+	// todo item adder method
 	//-------------------------------------
 	// DISCIPLINES
 	public get disciplines(): iDiscipline[] {
 		return Array.from(this._disciplines.values());
 	}
 
+	// todo single getter method
+	// todo item adder method
 	//-------------------------------------
 	// TOUCHSTONES AND CONVICTIONS
 	public get touchstonesAndConvictions(): string[] {
 		return [...this._touchstonesAndConvictions];
 	}
 
+	// todo single getter method
+	// todo item adder method
+
 	//-------------------------------------
 	// CONSTRUCTOR
-	constructor(sheet: iCharacterSheet | number) {
+	constructor(sheet: iCharacterSheet | number, customSavePath?: string) {
 		if (typeof sheet === 'number') {
 			this.discordUserId = sheet;
 
@@ -135,6 +146,9 @@ export default class CharacterSheet implements iCharacterSheet {
 			this._disciplines = TypeFactory.newDisciplineMap();
 			this._skills = TypeFactory.newSkillMap();
 			this._touchstonesAndConvictions = [];
+
+			// initial save
+			this.saveToFile(customSavePath);
 		} else if (typeof sheet === 'object') {
 			const {
 				attributes,
@@ -170,7 +184,9 @@ export default class CharacterSheet implements iCharacterSheet {
 		} else {
 			throw `${__filename} constructor argument not defined`;
 		}
+		this.savePath = customSavePath || path.resolve(__dirname, `../data/character-sheets/${this.discordUserId}.json`);;
 	}
+ 
 
 	public static loadFromFile({ filePath, fileName }: iLoadFromFileArgs): iCharacterSheet {
 		if (!filePath && !fileName) throw `${__filename}: filePath and fileName are not defined, cannot load from file`;
