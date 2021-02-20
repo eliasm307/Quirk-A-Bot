@@ -2,6 +2,9 @@ example message
 notes
 Blank
 
+# temporary folders
+**/temporary/**
+
 # compiled output
 **/build/**
 **/dist/**

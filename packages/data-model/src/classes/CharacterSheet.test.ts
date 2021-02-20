@@ -5,7 +5,7 @@ import CharacterSheet from './CharacterSheet';
 test('save new blank character sheet and load the character sheet', () => {
 	const testUserId = Math.floor(Math.random() * 999999);
 
-	const filePath = path.resolve(__dirname, `../data/character-sheets/test/${testUserId}.json`);
+	const filePath = path.resolve(__dirname, `../data/character-sheets/temporary/${testUserId}.json`);
 
   // creates new sheet and does initial save
 	const cs = new CharacterSheet(testUserId, filePath);

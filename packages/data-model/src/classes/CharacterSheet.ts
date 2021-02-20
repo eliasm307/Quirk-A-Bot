@@ -17,6 +17,21 @@ interface iLoadFromFileArgs {
 	fileName?: string;
 }
 
+interface iPrivateModifiableProperties {
+	health: number;
+	willpower: number;
+	hunger: number;
+	humanity: number;
+	bloodPotency: number;
+	name: string;
+	clan: string;
+	sire: string;
+	attributes: AttributeMap;
+	skills: SkillMap;
+	disciplines: DisciplineMap;
+	touchstonesAndConvictions: string[];
+}
+
 // todo split this into smaller pieces
 
 export default class CharacterSheet implements iCharacterSheet {
@@ -25,80 +40,70 @@ export default class CharacterSheet implements iCharacterSheet {
 	//-------------------------------------
 	// private properties with custom setters and/or getters
 	#savePath: string; // specified in constructor
-	#health: number;
-	#willpower: number;
-	#hunger: number;
-	#humanity: number;
-	#bloodPotency: number;
-	#name: string;
-	#clan: string;
-	#sire: string;
-	#attributes: AttributeMap;
-	#skills: SkillMap;
-	#disciplines: DisciplineMap;
-	#touchstonesAndConvictions: string[];
+	#private: iPrivateModifiableProperties;
 
 	//-------------------------------------
 	// BASIC VARIABLE GETTERS AND SETTERS
 	// todo add auto save for each change, maybe on change handler that takes in an iChangeEvent object
 	public set health(newVal: number) {
-		this.#health = newVal;
-		this.onChange('attributes', this.#health, newVal);
+		// this.#private.health = newVal;
+		// todo test this works
+		this.onChange('health', newVal);
 	}
 	public get health() {
-		return this.#health;
+		return this.#private.health;
 	}
 	public set willpower(newVal: number) {
-		this.#willpower = newVal;
+		this.#private.willpower = newVal;
 	}
 	public get willpower() {
-		return this.#willpower;
+		return this.#private.willpower;
 	}
 	public set hunger(newVal: number) {
-		this.#hunger = newVal;
+		this.#private.hunger = newVal;
 	}
 	public get hunger() {
-		return this.#hunger;
+		return this.#private.hunger;
 	}
 	public set humanity(newVal: number) {
-		this.#humanity = newVal;
+		this.#private.humanity = newVal;
 	}
 	public get humanity() {
-		return this.#humanity;
+		return this.#private.humanity;
 	}
 	public set bloodPotency(newVal: number) {
-		this.#bloodPotency = newVal;
+		this.#private.bloodPotency = newVal;
 	}
 	public get bloodPotency() {
-		return this.#bloodPotency;
+		return this.#private.bloodPotency;
 	}
 	public set name(newVal: string) {
-		this.#name = newVal;
+		this.#private.name = newVal;
 	}
 	public get name() {
-		return this.#name;
+		return this.#private.name;
 	}
 	public set clan(newVal: string) {
-		this.#clan = newVal;
+		this.#private.clan = newVal;
 	}
 	public get clan() {
-		return this.#clan;
+		return this.#private.clan;
 	}
 	public set sire(newVal: string) {
-		this.#sire = newVal;
+		this.#private.sire = newVal;
 	}
 	public get sire() {
-		return this.#sire;
+		return this.#private.sire;
 	}
 
 	//-------------------------------------
 	// ATTRIBUTES
 	public get attributes(): iAttribute[] {
-		return Array.from(this.#attributes.values());
+		return Array.from(this.#private.attributes.values());
 	}
 
 	public getAttributeByName(name: string): iAttribute | null {
-		return this.#attributes.has(name) ? (this.#attributes.get(name) as iAttribute) : null;
+		return this.#private.attributes.has(name) ? (this.#private.attributes.get(name) as iAttribute) : null;
 	}
 
 	// todo item adder method
@@ -106,7 +111,7 @@ export default class CharacterSheet implements iCharacterSheet {
 	//-------------------------------------
 	// SKILLS
 	public get skills(): iSkill[] {
-		return Array.from(this.#skills.values());
+		return Array.from(this.#private.skills.values());
 	}
 
 	// todo single getter method
@@ -114,7 +119,7 @@ export default class CharacterSheet implements iCharacterSheet {
 	//-------------------------------------
 	// DISCIPLINES
 	public get disciplines(): iDiscipline[] {
-		return Array.from(this.#disciplines.values());
+		return Array.from(this.#private.disciplines.values());
 	}
 
 	// todo single getter method
@@ -122,7 +127,7 @@ export default class CharacterSheet implements iCharacterSheet {
 	//-------------------------------------
 	// TOUCHSTONES AND CONVICTIONS
 	public get touchstonesAndConvictions(): string[] {
-		return [...this.#touchstonesAndConvictions];
+		return [...this.#private.touchstonesAndConvictions];
 	}
 
 	// todo single getter method
@@ -135,18 +140,20 @@ export default class CharacterSheet implements iCharacterSheet {
 			this.discordUserId = sheet;
 
 			// initialise with default values
-			this.#health = 0;
-			this.#willpower = 0;
-			this.#hunger = 0;
-			this.#humanity = 0;
-			this.#bloodPotency = 0;
-			this.#name = '';
-			this.#clan = '';
-			this.#sire = '';
-			this.#attributes = TypeFactory.newAttributeMap();
-			this.#disciplines = TypeFactory.newDisciplineMap();
-			this.#skills = TypeFactory.newSkillMap();
-			this.#touchstonesAndConvictions = [];
+			this.#private = {
+				health: 0,
+				willpower: 0,
+				hunger: 0,
+				humanity: 0,
+				bloodPotency: 0,
+				name: '',
+				clan: '',
+				sire: '',
+				attributes: TypeFactory.newAttributeMap(),
+				disciplines: TypeFactory.newDisciplineMap(),
+				skills: TypeFactory.newSkillMap(),
+				touchstonesAndConvictions: [],
+			};
 		} else if (typeof sheet === 'object') {
 			const {
 				attributes,
@@ -166,19 +173,21 @@ export default class CharacterSheet implements iCharacterSheet {
 
 			// initialise using input details
 			this.discordUserId = discordUserId;
-			this.#health = health;
-			this.#willpower = willpower;
-			this.#hunger = hunger;
-			this.#humanity = humanity;
-			this.#bloodPotency = bloodPotency;
-			this.#name = name;
-			this.#clan = clan;
-			this.#sire = sire;
+			this.#private = {
+				health: health,
+				willpower: willpower,
+				hunger: hunger,
+				humanity: humanity,
+				bloodPotency: bloodPotency,
+				name: name,
+				clan: clan,
+				sire: sire,
 
-			this.#attributes = new Map<AttributeName, iAttribute>(attributes.map(e => [e.name, e]));
-			this.#disciplines = new Map<DisciplineName, iDiscipline>(disciplines.map(e => [e.name, e]));
-			this.#skills = new Map<SkillName, iSkill>(skills.map(e => [e.name, e]));
-			this.#touchstonesAndConvictions = [...touchstonesAndConvictions];
+				attributes: new Map<AttributeName, iAttribute>(attributes.map(e => [e.name, e])),
+				disciplines: new Map<DisciplineName, iDiscipline>(disciplines.map(e => [e.name, e])),
+				skills: new Map<SkillName, iSkill>(skills.map(e => [e.name, e])),
+				touchstonesAndConvictions: [...touchstonesAndConvictions],
+			};
 		} else {
 			throw `${__filename} constructor argument not defined`;
 		}
@@ -222,5 +231,22 @@ export default class CharacterSheet implements iCharacterSheet {
 
 		return exportDataToFile(saveData, this.#savePath);
 	}
-	private onChange<Key extends keyof iCharacterSheet, T>(property: Key, oldValue: T, newValue: T): void {}
+	private onChange<PrivateProperty extends keyof iPrivateModifiableProperties>(property: PrivateProperty, newValue: any): void {
+		// get current value as old value
+		const oldValue: any = this.#private[property];
+
+		// if old value is the same as new value do nothing
+		if (oldValue === newValue)
+			return console.log(__filename, `Property ${property} was changed to the same value, nothing was done.`);
+
+		// implement change
+		this.#private[property] = newValue;
+
+		// todo record change, create a log class where this has an array of logs
+
+		// attempt autosave
+		this.saveToFile()
+			? console.log(__filename, `Successfully saved change`, { property, oldValue, newValue })
+			: console.error(__filename, `Error while saving change`, { property, oldValue, newValue });
+	}
 }
