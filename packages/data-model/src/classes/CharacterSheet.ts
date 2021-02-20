@@ -10,6 +10,7 @@ import {
 import { iAttribute, iCharacterSheet, iCharacterSheetModel, iDiscipline, iSkill } from '../declarations/interfaces';
 import TypeFactory from './TypeFactory';
 import importDataFromFile from '../utils/importDataFromFile';
+import exportDataToFile from '../utils/exportDataToFile';
 
 interface iLoadFromFileArgs {
 	filePath?: string;
@@ -145,7 +146,8 @@ export default class CharacterSheet implements iCharacterSheet {
 		return new CharacterSheet(data);
 	}
 
-	public static saveToFile(): boolean {
-		
+	public saveToFile(): boolean {
+		const filePath = path.resolve(__dirname, `../data/character-sheets/${this.discordUserId}`);
+		return exportDataToFile(this, filePath);
 	}
 }

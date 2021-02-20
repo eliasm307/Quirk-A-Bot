@@ -1,4 +1,4 @@
 test('test', () => {
-	expect(true).toBe(true);
+	expect(fs.pathExistsSync(outputFilePath)).toBe(true);
 });
 
