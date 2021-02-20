@@ -39,6 +39,7 @@ export default class CharacterSheet implements iCharacterSheet {
 
 	//-------------------------------------
 	// private properties with custom setters and/or getters
+	static instances: Map<string, iCharacterSheet> = new Map<string, iCharacterSheet>();
 	#savePath: string; // specified in constructor
 	#private: iPrivateModifiableProperties;
 
@@ -198,6 +199,10 @@ export default class CharacterSheet implements iCharacterSheet {
 		if (typeof sheet === 'number') this.saveToFile();
 	}
 
+	/**
+	 * Static method to create an instance from an existing character sheet JSON file
+	 * @param param0
+	 */
 	public static loadFromFile({ filePath, fileName }: iLoadFromFileArgs): iCharacterSheet {
 		if (!filePath && !fileName) throw `${__filename}: filePath and fileName are not defined, cannot load from file`;
 
@@ -205,10 +210,22 @@ export default class CharacterSheet implements iCharacterSheet {
 			filePath ||
 			path.resolve(__dirname, `../data/character-sheets/${fileName}${/\.json$/i.test(fileName || '') ? `` : `.json`}`);
 
+		// check if an instance exists
+		if (CharacterSheet.instances.has(resolvedPath)) {
+			console.log(__filename, `Using existing instance for '${resolvedPath}'`);
+			return CharacterSheet.instances.get(resolvedPath) as iCharacterSheet;
+		}
+		console.log(__filename, `No existing instance for '${resolvedPath}', loading new instance`);
+
 		const data: iCharacterSheet = importDataFromFile(resolvedPath);
 
+		const instance = new CharacterSheet(data, resolvedPath);
+
+		// save instance reference
+		CharacterSheet.instances.set(resolvedPath, instance);
+
 		// load the character sheet and set the current location as the save path
-		return new CharacterSheet(data, resolvedPath);
+		return instance;
 	}
 
 	private saveToFile(): boolean {
@@ -231,7 +248,10 @@ export default class CharacterSheet implements iCharacterSheet {
 
 		return exportDataToFile(saveData, this.#savePath);
 	}
-	private onChange<PrivateProperty extends keyof iPrivateModifiableProperties>(property: PrivateProperty, newValue: any): void {
+	private onChange<PrivateProperty extends keyof iPrivateModifiableProperties>(
+		property: PrivateProperty,
+		newValue: any
+	): void {
 		// get current value as old value
 		const oldValue: any = this.#private[property];
 
