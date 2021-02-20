@@ -24,7 +24,8 @@ export interface iDiscipline {
 }
 
 export interface iCharacterSheet {
-	discordUserId: number;
+  discordUserId: number;
+  // todo add user aliases (ie known discord names to be added by bot)
 	name: string;
 	clan: ClanName;
 	sire: string;
