@@ -47,7 +47,7 @@ export default class CharacterSheet implements iCharacterSheet {
 	// BASIC VARIABLE GETTERS AND SETTERS
 	// todo generate setters and getters dynamically, as they follow the same pattern
 	// todo add auto save for each change, maybe on change handler that takes in an iChangeEvent object
-	public set health(newVal: number) { 
+	public set health(newVal: number) {
 		this.onChange('health', newVal);
 	}
 	public get health() {
@@ -202,7 +202,7 @@ export default class CharacterSheet implements iCharacterSheet {
 	 * Static method to create an instance from an existing character sheet JSON file
 	 * @param param0
 	 */
-	public static loadFromFile({ filePath, fileName }: iLoadFromFileArgs): iCharacterSheet {
+	public static loadFromFile({ filePath, fileName }: iLoadFromFileArgs): CharacterSheet {
 		if (!filePath && !fileName) throw `${__filename}: filePath and fileName are not defined, cannot load from file`;
 
 		const resolvedPath =
@@ -212,7 +212,7 @@ export default class CharacterSheet implements iCharacterSheet {
 		// check if an instance exists
 		if (CharacterSheet.instances.has(resolvedPath)) {
 			console.log(__filename, `Using existing instance for '${resolvedPath}'`);
-			return CharacterSheet.instances.get(resolvedPath) as iCharacterSheet;
+			return CharacterSheet.instances.get(resolvedPath) as CharacterSheet;
 		}
 		console.log(__filename, `No existing instance for '${resolvedPath}', loading new instance`);
 
@@ -227,9 +227,8 @@ export default class CharacterSheet implements iCharacterSheet {
 		return instance;
 	}
 
-	private saveToFile(): boolean {
-		// create data to save to file
-		const saveData: iCharacterSheet = {
+	public toJson(): iCharacterSheet {
+		return {
 			attributes: this.attributes,
 			bloodPotency: this.bloodPotency,
 			clan: this.clan,
@@ -244,8 +243,10 @@ export default class CharacterSheet implements iCharacterSheet {
 			touchstonesAndConvictions: this.touchstonesAndConvictions,
 			willpower: this.willpower,
 		};
+	}
 
-		return exportDataToFile(saveData, this.#savePath);
+	private saveToFile(): boolean {
+		return exportDataToFile(this.toJson(), this.#savePath);
 	}
 	private onChange<PrivateProperty extends keyof iPrivateModifiableProperties>(
 		property: PrivateProperty,
@@ -258,7 +259,7 @@ export default class CharacterSheet implements iCharacterSheet {
 		if (oldValue === newValue)
 			return console.log(__filename, `Property ${property} was changed to the same value, nothing was done.`);
 
-		// implement change
+		// implement property change
 		this.#private[property] = newValue;
 
 		// todo record change, create a log class where this has an array of logs
