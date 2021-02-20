@@ -1,4 +1,3 @@
-import { iAttribute } from './../../dist/declarations/interfaces.d';
 import path from 'path';
 import {
 	AttributeMap,
@@ -121,7 +120,6 @@ export default class CharacterSheet implements iCharacterSheet {
 				if (instance) instance.rating = value;
 			} else {
 				// else add new attribute instance
-				
 			}
 		} else if (attribute instanceof iAttribute) {
 		} else {
@@ -221,7 +219,6 @@ export default class CharacterSheet implements iCharacterSheet {
 
 	/**
 	 * Static method to create an instance from an existing character sheet JSON file
-	 * @param param0
 	 */
 	public static loadFromFile({ filePath, fileName }: iLoadFromFileArgs): CharacterSheet {
 		if (!filePath && !fileName) throw `${__filename}: filePath and fileName are not defined, cannot load from file`;
@@ -266,7 +263,7 @@ export default class CharacterSheet implements iCharacterSheet {
 		};
 	}
 
-	private saveToFile(): boolean {
+	saveToFile(): boolean {
 		return exportDataToFile(this.toJson(), this.#savePath);
 	}
 	private onChange<PrivateProperty extends keyof iPrivateModifiableProperties>(
