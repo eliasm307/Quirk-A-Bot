@@ -146,9 +146,6 @@ export default class CharacterSheet implements iCharacterSheet {
 			this._disciplines = TypeFactory.newDisciplineMap();
 			this._skills = TypeFactory.newSkillMap();
 			this._touchstonesAndConvictions = [];
-
-			// initial save
-			this.saveToFile(customSavePath);
 		} else if (typeof sheet === 'object') {
 			const {
 				attributes,
@@ -184,7 +181,11 @@ export default class CharacterSheet implements iCharacterSheet {
 		} else {
 			throw `${__filename} constructor argument not defined`;
 		}
+
 		this.savePath = customSavePath || path.resolve(__dirname, `../data/character-sheets/${this.discordUserId}.json`);
+
+		// if only user id was provided, assume this is a new sheet then do initial save so a persistent file exists
+		if (typeof sheet === 'number') this.saveToFile();
 	}
 
 	public static loadFromFile({ filePath, fileName }: iLoadFromFileArgs): iCharacterSheet {
@@ -196,7 +197,8 @@ export default class CharacterSheet implements iCharacterSheet {
 
 		const data: iCharacterSheet = importDataFromFile(resolvedPath);
 
-		return new CharacterSheet(data);
+		// load the character sheet and set the current location as the save path
+		return new CharacterSheet(data, resolvedPath);
 	}
 
 	private saveToFile(): boolean {

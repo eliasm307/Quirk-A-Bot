@@ -24,3 +24,5 @@ test('save new blank character sheet and load the character sheet', () => {
   // sheets should be the same
 	expect(cs).toEqual(csLoaded);
 });
+
+// todo test what happens if file doesnt exist
