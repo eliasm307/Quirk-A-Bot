@@ -98,13 +98,19 @@ export default class CharacterSheet implements iCharacterSheet {
 	}
 
 	//-------------------------------------
+	// GENERIC METHODS
+	private getDetailByName<N, T>(name: N, map: Map<N, T>) {
+		return map.has(name) ? (map.get(name) as T) : null;
+	}
+
+	//-------------------------------------
 	// ATTRIBUTES
 	public get attributes(): iAttribute[] {
 		return Array.from(this.#private.attributes.values());
 	}
 
 	public getAttributeByName(name: AttributeName): iAttribute | null {
-		return this.#private.attributes.has(name) ? (this.#private.attributes.get(name) as iAttribute) : null;
+		return this.getDetailByName(name, this.#private.attributes);
 	}
 
 	/**
@@ -135,6 +141,10 @@ export default class CharacterSheet implements iCharacterSheet {
 	// SKILLS
 	public get skills(): iSkill[] {
 		return Array.from(this.#private.skills.values());
+	}
+
+	public getSkillByName(name: SkillName): iSkill | null {
+		return this.getDetailByName(name, this.#private.skills);
 	}
 
 	// todo single getter method
