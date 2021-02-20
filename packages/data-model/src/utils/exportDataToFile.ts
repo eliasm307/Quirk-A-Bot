@@ -3,7 +3,8 @@ import fs, { WriteOptions } from 'fs-extra';
 
 export default function exportDataToFile( data: any, outputFilePath: string ): void {
   // todo account for if data is falsy
-  
+  // todo test
+
 	const writeOptions: WriteOptions = {
 		spaces: 2,
 	};
