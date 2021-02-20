@@ -184,9 +184,8 @@ export default class CharacterSheet implements iCharacterSheet {
 		} else {
 			throw `${__filename} constructor argument not defined`;
 		}
-		this.savePath = customSavePath || path.resolve(__dirname, `../data/character-sheets/${this.discordUserId}.json`);;
+		this.savePath = customSavePath || path.resolve(__dirname, `../data/character-sheets/${this.discordUserId}.json`);
 	}
- 
 
 	public static loadFromFile({ filePath, fileName }: iLoadFromFileArgs): iCharacterSheet {
 		if (!filePath && !fileName) throw `${__filename}: filePath and fileName are not defined, cannot load from file`;
@@ -200,9 +199,8 @@ export default class CharacterSheet implements iCharacterSheet {
 		return new CharacterSheet(data);
 	}
 
-	public saveToFile(customPath?: string, ...args: any): boolean {
-		const filePath = customPath || path.resolve(__dirname, `../data/character-sheets/${this.discordUserId}.json`);
-
+	private saveToFile(): boolean {
+		// create data to save to file
 		const saveData: iCharacterSheet = {
 			attributes: this.attributes,
 			bloodPotency: this.bloodPotency,
@@ -219,8 +217,6 @@ export default class CharacterSheet implements iCharacterSheet {
 			willpower: this.willpower,
 		};
 
-		console.log(__filename, 'saveToFile', { saveData, args });
-
-		return exportDataToFile(saveData, filePath);
+		return exportDataToFile(saveData, this.savePath);
 	}
 }
