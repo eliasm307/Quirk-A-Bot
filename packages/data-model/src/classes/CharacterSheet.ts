@@ -144,4 +144,8 @@ export default class CharacterSheet implements iCharacterSheet {
 
 		return new CharacterSheet(data);
 	}
+
+	public static saveToFile(): boolean {
+		
+	}
 }
