@@ -6,18 +6,23 @@ import {
 	SkillName, 
 } from './types';
 
-export interface iAttribute {
+export interface iDetail { 
+	name: string;
+	value: number;
+}
+
+export interface iAttribute extends iDetail {
 	category: AttributeCategory;
 	name: AttributeName; // todo add options explicitly
 	value: number; // todo limit to 0-5
 }
 
-export interface iSkill {
+export interface iSkill extends iDetail {
 	name: SkillName;
 	value: number; // todo limit to 0-5
 }
 
-export interface iDiscipline {
+export interface iDiscipline extends iDetail {
 	name: DisciplineName;
 	value: number; // todo limit to 0-5
 	// todo add "specialisation" / sub types?
@@ -40,6 +45,7 @@ export interface iCharacterSheet {
 	disciplines: iDiscipline[];
 }
 
+// todo is this required?
 export interface iCharacterSheetModel {
 	characterSheet: iCharacterSheet;
 }

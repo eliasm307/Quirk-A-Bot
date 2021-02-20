@@ -11,7 +11,7 @@ export default function importDataFromFile(filePath: string): any {
 
 		if (!exists) throw 'File does not exist.';
 		const file = fs.readJSONSync(filePath, readOptions);
-		console.log(__filename, `File: "${filePath}" read successfully`); // log success
+		// console.log(__filename, `File: "${filePath}" read successfully`); // log success
 		return file;
 	} catch (error) {
 		console.error(__filename, `ERROR reading File: "${filePath}"`, { error }); // log error

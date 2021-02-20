@@ -8,14 +8,13 @@ const filePath = path.resolve(__dirname, `../data/character-sheets/temporary/${t
 let testName: string;
 
 testName = 'save new blank character sheet and load the character sheet';
-
 test(testName, () => {
 	// creates new sheet and does initial save
 	const cs = new CharacterSheet(testUserId, filePath);
 
 	const csLoaded = CharacterSheet.loadFromFile({ filePath });
 
-	console.log({ testName, testUserId, filePath, cs, csLoaded });
+	// console.log({ testName, testUserId, filePath, cs, csLoaded });
 
 	// file should exist after save
 	expect(fs.pathExistsSync(filePath)).toBe(true);

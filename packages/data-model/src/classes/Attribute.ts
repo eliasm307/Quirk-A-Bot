@@ -4,7 +4,7 @@ import { AttributeCategory } from '../declarations/types';
 import CharacterSheet from './CharacterSheet';
 
 interface iPrivateModifiableProperties {
-	rating: number;
+	value: number;
 }
 
 export default class Attribute implements iAttribute {
@@ -15,10 +15,10 @@ export default class Attribute implements iAttribute {
 	readonly name: AttributeName;
 
 	public set value(newVal: number) {
-		this.onChange('rating', newVal);
+		this.onChange('value', newVal);
 	}
 	public get value() {
-		return this.#private.rating;
+		return this.#private.value;
 	}
 
 	// todo dont use CharacterSheet class as dependency
@@ -27,7 +27,7 @@ export default class Attribute implements iAttribute {
 		this.name = name;
 		this.category = this.getCategory(name);
 		this.#private = {
-			rating: value,
+			value: value,
 		};
 
 		// todo, account for when this is instantiated independently, not by a CharacterSheet. Maybe use a factory? Or check for this when a change is made, ie before a save needs to be made (you could update the reference to the attribute based on which one was updated last? this seems like a bad pattern)

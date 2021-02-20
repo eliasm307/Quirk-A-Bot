@@ -1,3 +1,4 @@
+import { iDetail } from './../declarations/interfaces';
 import path from 'path';
 import {
 	AttributeMap,
@@ -12,6 +13,7 @@ import TypeFactory from './TypeFactory';
 import importDataFromFile from '../utils/importDataFromFile';
 import exportDataToFile from '../utils/exportDataToFile';
 import Attribute from './Attribute';
+import Skill from './Skill';
 
 interface iLoadFromFileArgs {
 	filePath?: string;
@@ -99,8 +101,37 @@ export default class CharacterSheet implements iCharacterSheet {
 
 	//-------------------------------------
 	// GENERIC METHODS
-	private getDetailByName<N, T>(name: N, map: Map<N, T>) {
+	private getDetailByName<N, T>(name: N, map: Map<N, T>): T | null {
 		return map.has(name) ? (map.get(name) as T) : null;
+	}
+
+	private setDetailValue<N, T extends iDetail>(
+		map: Map<N, T>,
+		name: N,
+		value: number,
+		instanceCreator: () => T,
+		typeName: string
+	): void {
+		console.warn(__filename, `setting value for ${typeName} with name '${name}' to value '${value}'`);
+
+		// todo find out how to print type name, ie ${ReturnType<typeof instanceCreator>}
+
+		if (name && value) {
+			// if attribute already exists then just update it
+			if (map.has(name)) {
+				const instance = map.get(name);
+
+				if (!instance)
+					return console.error(__filename, `${typeName} with name '${name}' is not defined but key exists`);
+
+				instance.value = value;
+			} else {
+				// else add new attribute instance
+				map.set(name, instanceCreator());
+			}
+		} else {
+			console.error(__filename, `set${typeName} error: bad inputs`, { attribute: name, value });
+		}
 	}
 
 	//-------------------------------------
@@ -119,7 +150,14 @@ export default class CharacterSheet implements iCharacterSheet {
 	 * @param value attribute value
 	 */
 	public setAttribute(name: AttributeName, value: number): void {
-		if (typeof name === 'string' && name && typeof value === 'number') {
+		return this.setDetailValue(
+			this.#private.attributes,
+			name,
+			value,
+			() => new Attribute(this, name, value),
+			'Attribute'
+		);
+		/*if (typeof name === 'string' && name && typeof value === 'number') {
 			// if attribute already exists then just update it
 			if (this.#private.attributes.has(name)) {
 				const instance = this.#private.attributes.get(name);
@@ -134,7 +172,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			}
 		} else {
 			console.error(__filename, 'addAttribute error: bad inputs', { attribute: name, value });
-		}
+		}*/
 	}
 
 	//-------------------------------------
@@ -145,6 +183,10 @@ export default class CharacterSheet implements iCharacterSheet {
 
 	public getSkillByName(name: SkillName): iSkill | null {
 		return this.getDetailByName(name, this.#private.skills);
+	}
+
+	public setSkill(name: SkillName, value: number): void {
+		return this.setDetailValue(this.#private.skills, name, value, () => new Skill(this, name, value), 'skill');
 	}
 
 	// todo single getter method
@@ -247,7 +289,7 @@ export default class CharacterSheet implements iCharacterSheet {
 
 		// check if an instance exists
 		if (CharacterSheet.instances.has(resolvedPath)) {
-			console.log(__filename, `Using existing instance for '${resolvedPath}'`);
+			// console.log(__filename, `Using existing instance for '${resolvedPath}'`);
 			return CharacterSheet.instances.get(resolvedPath) as CharacterSheet;
 		}
 		console.log(__filename, `No existing instance for '${resolvedPath}', loading new instance`);
@@ -303,7 +345,7 @@ export default class CharacterSheet implements iCharacterSheet {
 
 		// attempt autosave
 		this.saveToFile()
-			? console.log(__filename, `Successfully saved change`, { property, oldValue, newValue })
+			? null /*console.log(__filename, `Successfully saved change`, { property, oldValue, newValue })*/
 			: console.error(__filename, `Error while saving change`, { property, oldValue, newValue });
 	}
 }

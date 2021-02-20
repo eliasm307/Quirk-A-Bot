@@ -15,7 +15,7 @@ export default function exportDataToFile(data: any, outputFilePath: string): boo
 
 		// check file path exists
 		if (fs.pathExistsSync(outputFilePath)) {
-			console.log(__filename, `File: "${outputFilePath}" created successfully`); // log success
+			// console.log(__filename, `File: "${outputFilePath}" created successfully`); // log success
 			return true;
 		} else {
 			console.error(__filename, `UNKNOWN ERROR creating File: "${outputFilePath}"`); // log error
