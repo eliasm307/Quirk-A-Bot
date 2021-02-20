@@ -1,3 +1,4 @@
+import path from 'path';
 import {
 	AttributeMap,
 	SkillMap,
@@ -8,6 +9,15 @@ import {
 } from './../declarations/types';
 import { iAttribute, iCharacterSheet, iCharacterSheetModel, iDiscipline, iSkill } from '../declarations/interfaces';
 import TypeFactory from './TypeFactory';
+import importDataFromFile from '../utils/importDataFromFile';
+
+interface iLoadFromFileArgs {
+	filePath?: string;
+	fileName?: string;
+}
+
+// todo split this into smaller pieces
+
 export default class CharacterSheet implements iCharacterSheet {
 	readonly discordUserId: number;
 
@@ -123,5 +133,15 @@ export default class CharacterSheet implements iCharacterSheet {
 		}
 	}
 
+	public static loadFromFile({ filePath, fileName }: iLoadFromFileArgs): iCharacterSheet {
+		if (!filePath && !fileName) throw `${__filename}: filePath and fileName are not defined, cannot load from file`;
 
+		const resolvedPath =
+			filePath ||
+			path.resolve(__dirname, `../data/character-sheets/${fileName}${/\.json$/i.test(fileName || '') ? `` : `.json`}`);
+
+		const data: iCharacterSheet = importDataFromFile(resolvedPath);
+
+		return new CharacterSheet(data);
+	}
 }

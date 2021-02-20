@@ -1,16 +1,16 @@
 import fs, { ReadOptions } from 'fs-extra';
 
-export default async function importDataFromFile(filePath: string) {
+export default function importDataFromFile(filePath: string): any {
 	// todo account for if data is falsy
 	// todo test
 
 	const readOptions: ReadOptions = { throws: true };
 
 	try {
-		const exists = await fs.pathExists(filePath); // check file path exists
+		const exists = fs.pathExistsSync(filePath); // check file path exists
 
 		if (!exists) throw 'File does not exist.';
-		const file = await fs.readJSON(filePath, readOptions);
+		const file = fs.readJSONSync(filePath, readOptions);
 		console.log(__filename, `File: "${filePath}" read successfully`); // log success
 		return file;
 	} catch (error) {
