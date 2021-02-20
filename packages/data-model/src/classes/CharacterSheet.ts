@@ -1,3 +1,4 @@
+import { iAttribute } from './../../dist/declarations/interfaces.d';
 import path from 'path';
 import {
 	AttributeMap,
@@ -107,6 +108,26 @@ export default class CharacterSheet implements iCharacterSheet {
 	}
 
 	// todo item adder method
+	// overloads
+	public addAttribute(attribute: iAttribute): void;
+	public addAttribute(attributeName: AttributeName, value: number): void;
+
+	// implementation
+	public addAttribute(attribute: iAttribute | AttributeName, value?: number): void {
+		if (typeof attribute === 'string' && typeof value === 'number') {
+			// if attribute already exists then just update it
+			if (this.#private.attributes.has(attribute)) {
+				const instance = this.#private.attributes.get(attribute);
+				if (instance) instance.rating = value;
+			} else {
+				// else add new attribute instance
+				
+			}
+		} else if (attribute instanceof iAttribute) {
+		} else {
+			console.error(__filename, 'addAttribute error: bad inputs', { attribute, value });
+		}
+	}
 
 	//-------------------------------------
 	// SKILLS
