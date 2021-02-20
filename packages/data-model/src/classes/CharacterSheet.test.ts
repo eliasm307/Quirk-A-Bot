@@ -44,7 +44,7 @@ test(testName, () => {
 
 	const csLoaded = CharacterSheet.loadFromFile({ filePath });
 
-	console.log({ testName, csLoadedData: csLoaded.toJson(), cs2Data: cs2.toJson() });
+	// console.log({ testName, csLoadedData: csLoaded.toJson(), cs2Data: cs2.toJson() });
 
 	// properties should be up to date on loaded instance
 	expect(csLoaded.health).toEqual(testHealthValue);

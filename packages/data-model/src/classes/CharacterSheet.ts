@@ -107,17 +107,23 @@ export default class CharacterSheet implements iCharacterSheet {
 		return this.#private.attributes.has(name) ? (this.#private.attributes.get(name) as iAttribute) : null;
 	}
 
-	// todo item adder method
-
-	// implementation
+	/**
+	 * Update attribute value if it exists, otherwise add the attribute
+	 * @param name attribute name
+	 * @param value attribute value
+	 */
 	public setAttribute(name: AttributeName, value: number): void {
 		if (typeof name === 'string' && name && typeof value === 'number') {
 			// if attribute already exists then just update it
 			if (this.#private.attributes.has(name)) {
 				const instance = this.#private.attributes.get(name);
-				if (instance) instance.value = value;
+
+				if (!instance) return console.error(__filename, `Attribute with name '${name}' is not defined but key exists`);
+
+				console.log(__filename, `Setting attribute value on `);
+				instance.value = value;
 			} else {
-				// todo else add new attribute instance
+				// else add new attribute instance
 				this.#private.attributes.set(name, new Attribute(this, name, value));
 			}
 		} else {
@@ -209,7 +215,10 @@ export default class CharacterSheet implements iCharacterSheet {
 			throw `${__filename} constructor argument not defined`;
 		}
 
-		this.#savePath = customSavePath || path.resolve(__dirname, `../data/character-sheets/${this.discordUserId}.json`);
+		// try using resolved custom path, otherwise create path in general location using the user id
+		this.#savePath =
+			(customSavePath ? path.resolve(customSavePath) : '') ||
+			path.resolve(__dirname, `../data/character-sheets/${this.discordUserId}.json`);
 
 		// if only user id was provided, assume this is a new sheet then do initial save so a persistent file exists
 		if (typeof sheet === 'number') this.saveToFile();
@@ -221,8 +230,9 @@ export default class CharacterSheet implements iCharacterSheet {
 	public static loadFromFile({ filePath, fileName }: iLoadFromFileArgs): CharacterSheet {
 		if (!filePath && !fileName) throw `${__filename}: filePath and fileName are not defined, cannot load from file`;
 
+		// try using the input filePath resolved, otherwise create path using filename in general location
 		const resolvedPath =
-			filePath ||
+			(filePath ? path.resolve(filePath) : '') ||
 			path.resolve(__dirname, `../data/character-sheets/${fileName}${/\.json$/i.test(fileName || '') ? `` : `.json`}`);
 
 		// check if an instance exists
@@ -232,6 +242,7 @@ export default class CharacterSheet implements iCharacterSheet {
 		}
 		console.log(__filename, `No existing instance for '${resolvedPath}', loading new instance`);
 
+		// todo add option to create blank instance at the specified path if it doesnt exist?
 		const data: iCharacterSheet = importDataFromFile(resolvedPath);
 
 		const instance = new CharacterSheet(data, resolvedPath);

@@ -30,8 +30,9 @@ export default class Attribute implements iAttribute {
 			rating: value,
 		};
 
-		// make sure character sheet has a reference to this attribute // ? will this produce any cyclic behaviour? test this
-		if (!this.#characterSheet.getAttributeByName(name)) this.#characterSheet.setAttribute(name, value);
+		// todo, account for when this is instantiated independently, not by a CharacterSheet. Maybe use a factory? Or check for this when a change is made, ie before a save needs to be made
+		// make sure character sheet has a reference to this attribute // ? will this produce any cyclic behaviour? tested, and YES it does
+		// if (!this.#characterSheet.getAttributeByName(name)) this.#characterSheet.setAttribute(name, value);
 	}
 
 	private getCategory(name: AttributeName): AttributeCategory {
