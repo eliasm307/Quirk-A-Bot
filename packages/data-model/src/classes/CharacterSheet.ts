@@ -47,51 +47,50 @@ export default class CharacterSheet implements iCharacterSheet {
 	// BASIC VARIABLE GETTERS AND SETTERS
 	// todo generate setters and getters dynamically, as they follow the same pattern
 	// todo add auto save for each change, maybe on change handler that takes in an iChangeEvent object
-	public set health(newVal: number) {
-		// this.#private.health = newVal;
+	public set health(newVal: number) { 
 		this.onChange('health', newVal);
 	}
 	public get health() {
 		return this.#private.health;
 	}
 	public set willpower(newVal: number) {
-		this.#private.willpower = newVal;
+		this.onChange('willpower', newVal);
 	}
 	public get willpower() {
 		return this.#private.willpower;
 	}
 	public set hunger(newVal: number) {
-		this.#private.hunger = newVal;
+		this.onChange('hunger', newVal);
 	}
 	public get hunger() {
 		return this.#private.hunger;
 	}
 	public set humanity(newVal: number) {
-		this.#private.humanity = newVal;
+		this.onChange('humanity', newVal);
 	}
 	public get humanity() {
 		return this.#private.humanity;
 	}
 	public set bloodPotency(newVal: number) {
-		this.#private.bloodPotency = newVal;
+		this.onChange('bloodPotency', newVal);
 	}
 	public get bloodPotency() {
 		return this.#private.bloodPotency;
 	}
 	public set name(newVal: string) {
-		this.#private.name = newVal;
+		this.onChange('name', newVal);
 	}
 	public get name() {
 		return this.#private.name;
 	}
 	public set clan(newVal: string) {
-		this.#private.clan = newVal;
+		this.onChange('clan', newVal);
 	}
 	public get clan() {
 		return this.#private.clan;
 	}
 	public set sire(newVal: string) {
-		this.#private.sire = newVal;
+		this.onChange('sire', newVal);
 	}
 	public get sire() {
 		return this.#private.sire;
