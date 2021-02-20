@@ -1,4 +1,4 @@
-import { iAttribute, iSkill } from './../declarations/interfaces';
+import { iAttribute, iSkill, iCharacterSheet } from './../declarations/interfaces';
 import { iDiscipline } from '../declarations/interfaces';
 import {
 	DisciplineMap,
@@ -17,5 +17,23 @@ export default abstract class TypeFactory {
 	}
 	static newSkillMap(): SkillMap {
 		return new Map<SkillName, iSkill>();
+	}
+
+	static newiCharacterSheetObject(): iCharacterSheet {
+		return {
+			attributes: [],
+			bloodPotency: 0,
+			clan: '',
+			disciplines: [],
+			discordUserId: 0,
+			health: 0,
+			humanity: 0,
+			hunger: 0,
+			name: '',
+			sire: '',
+			skills: [],
+			touchstonesAndConvictions: [],
+			willpower: 0,
+		};
 	}
 }

@@ -45,10 +45,10 @@ export default class CharacterSheet implements iCharacterSheet {
 
 	//-------------------------------------
 	// BASIC VARIABLE GETTERS AND SETTERS
+	// todo generate setters and getters dynamically, as they follow the same pattern
 	// todo add auto save for each change, maybe on change handler that takes in an iChangeEvent object
 	public set health(newVal: number) {
 		// this.#private.health = newVal;
-		// todo test this works
 		this.onChange('health', newVal);
 	}
 	public get health() {
