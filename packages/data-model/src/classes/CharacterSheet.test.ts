@@ -27,26 +27,34 @@ test(testName, () => {
 	expect(cs).toEqual(csLoaded);
 });
 
-testName = 'test autosave';
+testName = 'test autosave and custom setters for basic data types';
 test(testName, () => {
 	const cs = CharacterSheet.loadFromFile({ filePath });
 
 	const cs2 = CharacterSheet.loadFromFile({ filePath });
 
-  const testHealthValue = 3;
+	const testHealthValue = 1;
+	const testBloodPotencyValue = 2;
+	const testHungerValue = 3;
 
-	// test change with auto save
+	// test changes with auto save
 	cs.health = testHealthValue;
+	cs.bloodPotency = testBloodPotencyValue;
+	cs.hunger = testHungerValue;
 
 	const csLoaded = CharacterSheet.loadFromFile({ filePath });
 
 	console.log({ testName, csLoadedHealth: csLoaded.health });
 
-	// health should be as specified
+	// properties should be up to date on loaded instance
 	expect(csLoaded.health).toEqual(testHealthValue);
+	expect(csLoaded.bloodPotency).toEqual(testBloodPotencyValue);
+	expect(csLoaded.hunger).toEqual(testHungerValue);
 
-	// separate instance should update // ? is this good?
+	// separate instance properties should be up to date // ? is this good?
 	expect(cs2.health).toEqual(testHealthValue);
+	expect(cs2.bloodPotency).toEqual(testBloodPotencyValue);
+	expect(cs2.hunger).toEqual(testHungerValue);
 });
 
 // todo test what happens if file doesnt exist
