@@ -42,13 +42,51 @@ export default class CharacterSheet implements iCharacterSheet {
 	public set health(newVal: number) {
 		this._health = newVal;
 	}
-	public set willpower(newVal: number) {}
-	public set hunger(newVal: number) {}
-	public set humanity(newVal: number) {}
-	public set bloodPotency(newVal: number) {}
-	public set name(newVal: string) {}
-	public set clan(newVal: string) {}
-	public set sire(newVal: string) {}
+	public get health() {
+		return this._health;
+	}
+	public set willpower(newVal: number) {
+		this._willpower = newVal;
+	}
+	public get willpower() {
+		return this._willpower;
+	}
+	public set hunger(newVal: number) {
+		this._hunger = newVal;
+	}
+	public get hunger() {
+		return this._hunger;
+	}
+	public set humanity(newVal: number) {
+		this._humanity = newVal;
+	}
+	public get humanity() {
+		return this._humanity;
+	}
+	public set bloodPotency(newVal: number) {
+		this._bloodPotency = newVal;
+	}
+	public get bloodPotency() {
+		return this._bloodPotency;
+	}
+	public set name(newVal: string) {
+		this._name = newVal;
+	}
+	public get name() {
+		return this._name;
+	}
+	public set clan(newVal: string) {
+		this._clan = newVal;
+	}
+	public get clan() {
+		return this._clan;
+	}
+	public set sire(newVal: string) {
+		this._sire = newVal;
+	}
+	public get sire() {
+		return this._sire;
+	}
 
 	//-------------------------------------
 	// ATTRIBUTES
@@ -146,8 +184,27 @@ export default class CharacterSheet implements iCharacterSheet {
 		return new CharacterSheet(data);
 	}
 
-	public saveToFile(): boolean {
-		const filePath = path.resolve(__dirname, `../data/character-sheets/${this.discordUserId}`);
-		return exportDataToFile(this, filePath);
+	public saveToFile(customPath?: string, ...args: any): boolean {
+		const filePath = customPath || path.resolve(__dirname, `../data/character-sheets/${this.discordUserId}.json`);
+
+		const saveData: iCharacterSheet = {
+			attributes: this.attributes,
+			bloodPotency: this.bloodPotency,
+			clan: this.clan,
+			disciplines: this.disciplines,
+			discordUserId: this.discordUserId,
+			health: this.health,
+			humanity: this.humanity,
+			hunger: this.hunger,
+			name: this.name,
+			sire: this.sire,
+			skills: this.skills,
+			touchstonesAndConvictions: this.touchstonesAndConvictions,
+			willpower: this.willpower,
+		};
+
+		console.log(__filename, 'saveToFile', { saveData, args });
+
+		return exportDataToFile(saveData, filePath);
 	}
 }

@@ -5,7 +5,8 @@ export default function exportDataToFile(data: any, outputFilePath: string): boo
 	// todo test
 
 	const writeOptions: WriteOptions = {
-		spaces: 2,
+    spaces: 2,
+    
 	};
 
 	try {
