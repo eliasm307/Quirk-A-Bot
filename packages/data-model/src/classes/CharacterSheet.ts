@@ -43,6 +43,7 @@ export default class CharacterSheet implements iCharacterSheet {
 	// todo add auto save for each change, maybe on change handler that takes in an iChangeEvent object
 	public set health(newVal: number) {
 		this.#health = newVal;
+		this.onChange('attributes', this.#health, newVal);
 	}
 	public get health() {
 		return this.#health;
@@ -221,4 +222,5 @@ export default class CharacterSheet implements iCharacterSheet {
 
 		return exportDataToFile(saveData, this.#savePath);
 	}
+	private onChange<Key extends keyof iCharacterSheet, T>(property: Key, oldValue: T, newValue: T): void {}
 }
