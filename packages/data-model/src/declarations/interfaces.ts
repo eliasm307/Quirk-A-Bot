@@ -9,17 +9,17 @@ import {
 export interface iAttribute {
 	category: AttributeCategory;
 	name: AttributeName; // todo add options explicitly
-	rating: number; // todo limit to 0-5
+	value: number; // todo limit to 0-5
 }
 
 export interface iSkill {
 	name: SkillName;
-	rating: number; // todo limit to 0-5
+	value: number; // todo limit to 0-5
 }
 
 export interface iDiscipline {
 	name: DisciplineName;
-	level: number; // todo limit to 0-5
+	value: number; // todo limit to 0-5
 	// todo add "specialisation" / sub types?
 }
 

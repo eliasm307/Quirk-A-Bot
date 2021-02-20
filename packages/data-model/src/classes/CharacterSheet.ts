@@ -11,6 +11,7 @@ import { iAttribute, iCharacterSheet, iCharacterSheetModel, iDiscipline, iSkill 
 import TypeFactory from './TypeFactory';
 import importDataFromFile from '../utils/importDataFromFile';
 import exportDataToFile from '../utils/exportDataToFile';
+import Attribute from './Attribute';
 
 interface iLoadFromFileArgs {
 	filePath?: string;
@@ -102,28 +103,25 @@ export default class CharacterSheet implements iCharacterSheet {
 		return Array.from(this.#private.attributes.values());
 	}
 
-	public getAttributeByName(name: string): iAttribute | null {
+	public getAttributeByName(name: AttributeName): iAttribute | null {
 		return this.#private.attributes.has(name) ? (this.#private.attributes.get(name) as iAttribute) : null;
 	}
 
 	// todo item adder method
-	// overloads
-	public addAttribute(attribute: iAttribute): void;
-	public addAttribute(attributeName: AttributeName, value: number): void;
 
 	// implementation
-	public addAttribute(attribute: iAttribute | AttributeName, value?: number): void {
-		if (typeof attribute === 'string' && typeof value === 'number') {
+	public setAttribute(name: AttributeName, value: number): void {
+		if (typeof name === 'string' && name && typeof value === 'number') {
 			// if attribute already exists then just update it
-			if (this.#private.attributes.has(attribute)) {
-				const instance = this.#private.attributes.get(attribute);
-				if (instance) instance.rating = value;
+			if (this.#private.attributes.has(name)) {
+				const instance = this.#private.attributes.get(name);
+				if (instance) instance.value = value;
 			} else {
-				// else add new attribute instance
+				// todo else add new attribute instance
+				this.#private.attributes.set(name, new Attribute(this, name, value));
 			}
-		} else if (attribute instanceof iAttribute) {
 		} else {
-			console.error(__filename, 'addAttribute error: bad inputs', { attribute, value });
+			console.error(__filename, 'addAttribute error: bad inputs', { attribute: name, value });
 		}
 	}
 
