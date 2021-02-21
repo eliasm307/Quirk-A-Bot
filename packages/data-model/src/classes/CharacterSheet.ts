@@ -1,16 +1,12 @@
 import { iCharacterSheetData, iTrait as iTrait } from './../declarations/interfaces';
 import path from 'path';
-import {
-	AttributeMap,
-	SkillMap,
+import { 
 	DisciplineMap,
 	AttributeName,
 	DisciplineName,
 	SkillName,
-	TraitName,
-	isAttributeName,
-	TraitMap,
-	TraitMapImplicit,
+	TraitName, 
+	TraitMap, 
 } from './../declarations/types';
 import { iAttribute, iCharacterSheet, iDiscipline, iSkill } from '../declarations/interfaces';
 import TypeFactory from './TypeFactory';
@@ -18,6 +14,7 @@ import importDataFromFile from '../utils/importDataFromFile';
 import exportDataToFile from '../utils/exportDataToFile';
 import Attribute from './Attribute';
 import Skill from './Skill';
+import { isAttributeName, isSkillName } from '../utils/typePredicates';
 
 interface iLoadFromFileArgs {
 	filePath?: string;
@@ -105,16 +102,16 @@ export default class CharacterSheet implements iCharacterSheet {
 
 	//-------------------------------------
 	// GENERIC METHODS
-	private getDetailByName<N, T>(name: N, map: Map<N, T>): T | null {
+	private getGenericTraitByName<N, T>(name: N, map: Map<N, T>): T | null {
 		return map.get(name) as T;
 	}
 
-	private setDetailValue<N, T extends iTrait>(
+	private setGenericTraitValue<N, T extends iTrait>(
 		map: TraitMap<T>,
 		name: TraitName<T>,
 		value: number,
 		instanceCreator: () => T,
-		typeName: string = 'Detail'
+		typeName: 'Attribute' | 'Skill' | 'Discipline' | string = 'Detail'
 	): void { 
 
 		console.warn(__filename, `setting value for ${typeName} with name '${name}' to value '${value}'`);
@@ -141,17 +138,26 @@ export default class CharacterSheet implements iCharacterSheet {
 		}
 	}
 
-	public setTrait<T extends iTrait>(name: TraitName<T>, value: number): void {
+	public setTrait<T extends iTrait>( name: TraitName<T>, value: number ): void {
+		// todo make sure this covers all cases
 		if (isAttributeName(name)) {
-			return this.setDetailValue(
+			return this.setGenericTraitValue(
 				this.#private.attributes,
 				name,
 				value,
 				() => new Attribute(this, name, value),
 				'Attribute'
 			);
+		} else if ( isSkillName( name ) ) {
+			return this.setGenericTraitValue(
+				this.#private.skills,
+				name,
+				value,
+				() => new Skill(this, name, value),
+				'Skill'
+			);
 		} else {
-			throw 'Name has unkown type';
+			throw `Trait name unkown: ${name}`;
 		}
 	}
 
@@ -164,7 +170,7 @@ export default class CharacterSheet implements iCharacterSheet {
 	}
 
 	public getAttributeByName(name: AttributeName): iAttribute | null {
-		return this.getDetailByName(name, this.#private.attributes);
+		return this.getGenericTraitByName(name, this.#private.attributes);
 	}
 
 	// todo add remove method
@@ -175,7 +181,7 @@ export default class CharacterSheet implements iCharacterSheet {
 	 * @param value attribute value
 	 */
 	public setAttribute(name: AttributeName, value: number): void {
-		return this.setDetailValue(
+		return this.setGenericTraitValue(
 			this.#private.attributes,
 			name,
 			value,
@@ -207,11 +213,11 @@ export default class CharacterSheet implements iCharacterSheet {
 	}
 
 	public getSkillByName(name: SkillName): iSkill | null {
-		return this.getDetailByName(name, this.#private.skills);
+		return this.getGenericTraitByName(name, this.#private.skills);
 	}
 
 	public setSkill(name: SkillName, value: number): void {
-		return this.setDetailValue(this.#private.skills, name, value, () => new Skill(this, name, value), 'skill');
+		return this.setGenericTraitValue(this.#private.skills, name, value, () => new Skill(this, name, value), 'skill');
 	}
 
 	// todo add remove method
