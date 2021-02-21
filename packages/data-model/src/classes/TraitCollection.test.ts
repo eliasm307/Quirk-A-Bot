@@ -1,6 +1,5 @@
-import { AttributeName } from './../declarations/types';
-import { testCsRandom } from '../utils/testUtils';
-import { testCs } from '../utils/testUtils';
+import { AttributeName } from './../declarations/types'; 
+import { testCs, testCsRandom } from '../utils/testUtils';
 import TraitCollection from './TraitCollection';
 import Attribute from './Attribute';
 
@@ -29,5 +28,5 @@ test('traitCollection CRUD tests', () => {
 
 	// test deleting existing entry
 	tc.delete('Wits');
-	expect(tc.size).toEqual(1);
+	expect(tc.size).toEqual(0);
 });

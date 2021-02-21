@@ -1,44 +1,46 @@
 import { TraitName, TraitMap } from './../declarations/types';
 import { iCharacterSheet, iTrait, iTraitCollection } from './../declarations/interfaces';
 
-export default class TraitCollection<T extends iTrait> implements iTraitCollection<T>{
+export default class TraitCollection<T extends iTrait> implements iTraitCollection<T> {
 	#characterSheet: iCharacterSheet;
 	#instanceCreator: (name: TraitName<T>, value: number) => T;
-	#map: TraitMap<T> = new Map<TraitName<T>, T>();
-	#typeName: string = '';
+  #map: TraitMap<T> = new Map<TraitName<T>, T>();
+  
+  // todo add trait typename util which gets an appropriate name based on the type of TraitName 
+	#typeName: string = 'Trait';
 	constructor(characterSheet: iCharacterSheet, instanceCreator: (name: TraitName<T>, value: number) => T) {
 		this.#characterSheet = characterSheet;
 		this.#instanceCreator = instanceCreator;
 	}
-  size: number = 0;
-  get( name: TraitName<T> ): T {
-    throw new Error( 'Method not implemented.' );
-  }
-  delete( name: TraitName<T> ): T {
-    throw new Error( 'Method not implemented.' );
-  }
-  has( name: TraitName<T> ): boolean {
-    throw new Error( 'Method not implemented.' );
-  }
+	get size(): number {
+		return this.#map.size;
+	}
+
+	get(name: TraitName<T>): T | void {
+		return this.#map.get(name);
+	}
+	delete(name: TraitName<T>): void {
+		// todo log change
+		this.#map.delete(name);
+	}
+	has(name: TraitName<T>): boolean {
+		return this.#map.has(name);
+	}
 
 	set(name: TraitName<T>, value: number = 0): void {
-		if (name && value) {
-			// if trait already exists then just update it
-			if (this.#map.has(name)) {
-				const instance = this.#map.get(name);
+		// if trait already exists then just update it
+		if (this.#map.has(name)) {
+			const instance = this.#map.get(name);
 
-				if (!instance)
-					return console.error(__filename, `${this.#typeName} with name '${name}' is not defined but key exists`);
+			if (!instance)
+				return console.error(__filename, `${this.#typeName} with name '${name}' is not defined but key exists`);
 
-				// todo add on change handler call
-				instance.value = value;
-			} else {
-				// todo add on change handler call for new trait
-				// else add new trait instance
-				this.#map.set(name, this.#instanceCreator(name, value));
-			}
+			// todo log change
+			instance.value = value;
 		} else {
-			console.error(__filename, `set${this.#typeName} error: bad inputs`, { attribute: name, value });
+			// todo log change
+			// else add new trait instance
+			this.#map.set(name, this.#instanceCreator(name, value));
 		}
 	}
 }

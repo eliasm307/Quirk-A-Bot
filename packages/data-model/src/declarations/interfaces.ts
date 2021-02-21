@@ -67,10 +67,10 @@ export interface iCharacterSheet extends iCharacterSheetData {
 }
 
 export interface iTraitCollection<T extends iTrait> {
-	get(name: TraitName<T>): T;
+	get(name: TraitName<T>): T | void;
 	set(name: TraitName<T>, value: number): void;
 
-	delete(name: TraitName<T>): T;
+	delete(name: TraitName<T>): void;
 
 	has( name: TraitName<T> ): boolean;
 	readonly size: number;
