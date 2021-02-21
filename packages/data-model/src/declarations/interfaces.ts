@@ -1,5 +1,7 @@
 import Attribute from '../classes/Attribute';
+import Discipline from '../classes/Discipline';
 import Skill from '../classes/Skill';
+import TraitCollection from '../classes/TraitCollection';
 import { AttributeCategory, AttributeName, ClanName, DisciplineName, SkillName, TraitName } from './types';
 
 export interface iTrait {
@@ -29,7 +31,7 @@ export interface iDiscipline extends iTrait {
 	// todo add "specialisation" / sub types?
 }
 
-export interface iCharacterSheetData {
+interface iCharacterSheetPrimitiveData {
 	discordUserId: number;
 	// todo add user aliases (ie known discord names to be added by bot)
 	name: string;
@@ -40,17 +42,27 @@ export interface iCharacterSheetData {
 	hunger: number; // todo limit 0 to 5
 	humanity: number; // todo limit 0 to 10
 	bloodPotency: number; // todo limit 0 to 10
+}
+
+interface iCharacterSheetNonPrimitiveData {
 	touchstonesAndConvictions: string[];
 	attributes: iAttribute[];
 	skills: iSkill[];
 	disciplines: iDiscipline[];
 }
 
-export interface iCharacterSheet extends iCharacterSheetData {
+export interface iCharacterSheetData extends iCharacterSheetPrimitiveData, iCharacterSheetNonPrimitiveData {}
+
+export interface iCharacterSheet extends iCharacterSheetPrimitiveData {
 	saveToFile(): boolean; // ? should this be handled by another class?
 
 	// this is difficult to implement because at some point you need to choose a
 	// setTrait<T extends iTrait>(name: TraitName<T>, value: number): void;
+
+	skills: TraitCollection<Skill>;
+	attributes: TraitCollection<Attribute>;
+
+	disciplines: TraitCollection<Discipline>;
 
 	// ? make traitCollection class to do these operations?
 
@@ -73,5 +85,7 @@ export interface iTraitCollection<T extends iTrait> {
 	delete(name: TraitName<T>): void;
 
 	has( name: TraitName<T> ): boolean;
+	
+	toJson(): iTrait[] 
 	readonly size: number;
 }

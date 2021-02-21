@@ -4,13 +4,16 @@ import { iCharacterSheet, iTrait, iTraitCollection } from './../declarations/int
 export default class TraitCollection<T extends iTrait> implements iTraitCollection<T> {
 	#characterSheet: iCharacterSheet;
 	#instanceCreator: (name: TraitName<T>, value: number) => T;
-  #map: TraitMap<T> = new Map<TraitName<T>, T>();
-  
-  // todo add trait typename util which gets an appropriate name based on the type of TraitName 
+	#map: TraitMap<T> = new Map<TraitName<T>, T>();
+
+	// todo add trait typename util which gets an appropriate name based on the type of TraitName
 	#typeName: string = 'Trait';
 	constructor(characterSheet: iCharacterSheet, instanceCreator: (name: TraitName<T>, value: number) => T) {
 		this.#characterSheet = characterSheet;
 		this.#instanceCreator = instanceCreator;
+	}
+	toJson(): iTrait[] {
+		return Array.from(this.#map.values());
 	}
 	get size(): number {
 		return this.#map.size;
