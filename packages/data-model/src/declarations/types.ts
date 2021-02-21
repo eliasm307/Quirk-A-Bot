@@ -1,6 +1,6 @@
 import Attribute from '../classes/Attribute';
 import Skill from '../classes/Skill';
-import { iAttribute, iDiscipline, iSkill } from './interfaces';
+import { iAttribute, iDiscipline, iSkill, iTrait } from './interfaces';
 // todo explicitly specify names
 export type ClanName = string;
 
@@ -35,9 +35,26 @@ export type AttributeName = typeof attributeNames[number];
 	| 'Intelligence'
 	| 'Wits'
 	| 'Resolve';*/
-export type SkillName = string; // todo explicitly specify names
+
+export type SkillName = 'Athletics' | 'Brawl' | 'Craft'; // todo explicitly specify names
 export type DisciplineName = string; // todo explicitly specify names
 export type AttributeMap = Map<AttributeName, iAttribute>;
 export type DisciplineMap = Map<DisciplineName, iDiscipline>;
 export type SkillMap = Map<SkillName, iSkill>;
-export type TraitName<T> = T extends Skill ? SkillName : T extends Attribute ? AttributeName : string;
+
+export type TraitName<T extends iTrait> = T extends Skill ? SkillName : T extends Attribute ? AttributeName : string;
+
+export type TraitMapImplicit = SkillMap | AttributeMap | DisciplineMap;
+
+export type TraitMap<T extends iTrait> = T extends Skill
+	? SkillMap
+	: T extends Attribute
+	? AttributeMap
+	: Map<string, iTrait>;
+
+/*
+// ? is this level of generalisation worth it?
+
+
+
+*/

@@ -2,23 +2,28 @@ import Attribute from '../classes/Attribute';
 import Skill from '../classes/Skill';
 import { AttributeCategory, AttributeName, ClanName, DisciplineName, SkillName, TraitName } from './types';
 
-export interface iDetail {
+export interface iTrait {
 	name: string;
 	value: number;
 }
 
-export interface iAttribute extends iDetail {
+export interface iAttribute extends iTrait { 
+	name: AttributeName; // todo add options explicitly
+	value: number; // todo limit to 0-5
+}
+
+export interface iAttribute2 extends iTrait {
 	category: AttributeCategory;
 	name: AttributeName; // todo add options explicitly
 	value: number; // todo limit to 0-5
 }
 
-export interface iSkill extends iDetail {
+export interface iSkill extends iTrait {
 	name: SkillName;
 	value: number; // todo limit to 0-5
 }
 
-export interface iDiscipline extends iDetail {
+export interface iDiscipline extends iTrait {
 	name: DisciplineName;
 	value: number; // todo limit to 0-5
 	// todo add "specialisation" / sub types?
@@ -48,7 +53,7 @@ export interface iCharacterSheet extends iCharacterSheetData {
 	saveToFile(): boolean; // ? should this be handled by another class?
 
 	// this is difficult to implement because at some point you need to choose a 
-	setTrait<T>(name: TraitName<T>, value: number): void;
+	setTrait<T extends iTrait>(name: TraitName<T>, value: number): void;
 
 	/*
 	// ? make traitCollection class to do these operations?

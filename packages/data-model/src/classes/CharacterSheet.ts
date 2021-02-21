@@ -1,4 +1,4 @@
-import { iCharacterSheetData, iDetail } from './../declarations/interfaces';
+import { iCharacterSheetData, iTrait as iTrait } from './../declarations/interfaces';
 import path from 'path';
 import {
 	AttributeMap,
@@ -9,6 +9,8 @@ import {
 	SkillName,
 	TraitName,
 	isAttributeName,
+	TraitMap,
+	TraitMapImplicit,
 } from './../declarations/types';
 import { iAttribute, iCharacterSheet, iDiscipline, iSkill } from '../declarations/interfaces';
 import TypeFactory from './TypeFactory';
@@ -31,8 +33,8 @@ interface iPrivateModifiableProperties {
 	name: string;
 	clan: string;
 	sire: string;
-	attributes: AttributeMap;
-	skills: SkillMap;
+	attributes: TraitMap<Attribute>;
+	skills: TraitMap<Skill>;
 	disciplines: DisciplineMap;
 	touchstonesAndConvictions: string[];
 }
@@ -107,18 +109,19 @@ export default class CharacterSheet implements iCharacterSheet {
 		return map.get(name) as T;
 	}
 
-	private setDetailValue<N, T extends iDetail>(
-		map: Map<N, T>,
-		name: N,
+	private setDetailValue<N, T extends iTrait>(
+		map: TraitMap<T>,
+		name: TraitName<T>,
 		value: number,
 		instanceCreator: () => T,
 		typeName: string = 'Detail'
-	): void {
+	): void { 
+
 		console.warn(__filename, `setting value for ${typeName} with name '${name}' to value '${value}'`);
 
 		// todo find out how to print type name, ie ${ReturnType<typeof instanceCreator>}
 
-		if (name && value) {
+		if ( name && value) {
 			// if detail already exists then just update it
 			if (map.has(name)) {
 				const instance = map.get(name);
@@ -138,17 +141,18 @@ export default class CharacterSheet implements iCharacterSheet {
 		}
 	}
 
-	public setTrait<T>( name: TraitName<T>, value: number ): void {
-		
-		const map: Map<TraitName<T>, T> = isAttributeName(name) ? this.#private.attributes : this.#private.skills;
-
+	public setTrait<T extends iTrait>(name: TraitName<T>, value: number): void {
+		if (isAttributeName(name)) {
 			return this.setDetailValue(
-				map,
+				this.#private.attributes,
 				name,
 				value,
 				() => new Attribute(this, name, value),
 				'Attribute'
 			);
+		} else {
+			throw 'Name has unkown type';
+		}
 	}
 
 	// todo add remove detail method
