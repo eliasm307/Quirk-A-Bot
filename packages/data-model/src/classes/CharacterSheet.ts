@@ -1,13 +1,6 @@
 import { iCharacterSheetData, iTrait as iTrait } from './../declarations/interfaces';
 import path from 'path';
-import { 
-	DisciplineMap,
-	AttributeName,
-	DisciplineName,
-	SkillName,
-	TraitName, 
-	TraitMap, 
-} from './../declarations/types';
+import { DisciplineMap, AttributeName, DisciplineName, SkillName, TraitName, TraitMap } from './../declarations/types';
 import { iAttribute, iCharacterSheet, iDiscipline, iSkill } from '../declarations/interfaces';
 import TypeFactory from './TypeFactory';
 import importDataFromFile from '../utils/importDataFromFile';
@@ -112,13 +105,12 @@ export default class CharacterSheet implements iCharacterSheet {
 		value: number,
 		instanceCreator: () => T,
 		typeName: 'Attribute' | 'Skill' | 'Discipline' | string = 'Detail'
-	): void { 
-
-		console.warn(__filename, `setting value for ${typeName} with name '${name}' to value '${value}'`);
+	): void {
+		// console.warn(__filename, `setting value for ${typeName} with name '${name}' to value '${value}'`);
 
 		// todo find out how to print type name, ie ${ReturnType<typeof instanceCreator>}
 
-		if ( name && value) {
+		if (name && value) {
 			// if detail already exists then just update it
 			if (map.has(name)) {
 				const instance = map.get(name);
@@ -138,6 +130,8 @@ export default class CharacterSheet implements iCharacterSheet {
 		}
 	}
 
+	/*
+	// NOTE this could work but its a bit too convoluted for intellisense to work properly so no major benefits
 	public setTrait<T extends iTrait>( name: TraitName<T>, value: number ): void {
 		// todo make sure this covers all cases
 		if (isAttributeName(name)) {
@@ -160,6 +154,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			throw `Trait name unkown: ${name}`;
 		}
 	}
+	*/
 
 	// todo add remove detail method
 
@@ -168,12 +163,9 @@ export default class CharacterSheet implements iCharacterSheet {
 	public get attributes(): iAttribute[] {
 		return Array.from(this.#private.attributes.values());
 	}
-
 	public getAttributeByName(name: AttributeName): iAttribute | null {
 		return this.getGenericTraitByName(name, this.#private.attributes);
 	}
-
-	// todo add remove method
 
 	/**
 	 * Update attribute value if it exists, otherwise add the attribute
@@ -221,8 +213,10 @@ export default class CharacterSheet implements iCharacterSheet {
 	}
 
 	// todo add remove method
+
 	//-------------------------------------
 	// DISCIPLINES
+	// todo do this as a map
 	public get disciplines(): iDiscipline[] {
 		return Array.from(this.#private.disciplines.values());
 	}

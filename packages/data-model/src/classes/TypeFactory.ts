@@ -1,4 +1,4 @@
-import { iAttribute, iSkill, iCharacterSheet } from './../declarations/interfaces';
+import { iAttribute, iSkill, iCharacterSheet, iCharacterSheetData } from './../declarations/interfaces';
 import { iDiscipline } from '../declarations/interfaces';
 import {
 	DisciplineMap,
@@ -19,7 +19,7 @@ export default abstract class TypeFactory {
 		return new Map<SkillName, iSkill>();
 	}
 
-	static newiCharacterSheetObject(): iCharacterSheet {
+	static newiCharacterSheetObject(): iCharacterSheetData {
 		return {
 			attributes: [],
 			bloodPotency: 0,

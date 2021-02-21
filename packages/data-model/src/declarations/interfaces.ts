@@ -7,7 +7,7 @@ export interface iTrait {
 	value: number;
 }
 
-export interface iAttribute extends iTrait { 
+export interface iAttribute extends iTrait {
 	name: AttributeName; // todo add options explicitly
 	value: number; // todo limit to 0-5
 }
@@ -46,24 +46,22 @@ export interface iCharacterSheetData {
 	disciplines: iDiscipline[];
 }
 
-
-
-// todo is this required?
 export interface iCharacterSheet extends iCharacterSheetData {
 	saveToFile(): boolean; // ? should this be handled by another class?
 
-	// this is difficult to implement because at some point you need to choose a 
-	setTrait<T extends iTrait>(name: TraitName<T>, value: number): void;
+	// this is difficult to implement because at some point you need to choose a
+	// setTrait<T extends iTrait>(name: TraitName<T>, value: number): void;
 
-	/*
 	// ? make traitCollection class to do these operations?
-	setSkill( name: SkillName, value: number ): void;
-	removeSkill(name: SkillName): void
+
+	setSkill(name: SkillName, value: number): void;
 	getSkillByName(name: SkillName): iSkill | null;
+	// todo removeSkill(name: SkillName): void;
 
 	// ? make traitCollection class to do these operations?
-	setAttribute( name: AttributeName, value: number ): void;
-	removeAttribut
-	getAttributeByName(name: AttributeName): iAttribute | null; 
-	*/
+	setAttribute(name: AttributeName, value: number): void;
+	getAttributeByName(name: AttributeName): iAttribute | null;
+	// todo removeAttribute(name: AttributeName): void;
+
+	/*	*/
 }

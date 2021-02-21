@@ -56,4 +56,17 @@ test(testName, () => {
 	expect(cs2.hunger).toEqual(testHungerValue);
 });
 
+testName = 'test trait methods';
+test(testName, () => {
+	const cs = CharacterSheet.loadFromFile({ filePath });
+
+	cs.setAttribute('Strength', 5);
+	cs.setSkill('Athletics', 3);
+
+	expect(cs.getAttributeByName('Strength')?.value).toEqual(5);
+	expect( cs.getSkillByName( 'Athletics' )?.value ).toEqual( 3 );
+	
+	
+});
+
 // todo test what happens if file doesnt exist
