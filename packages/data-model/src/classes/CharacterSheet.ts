@@ -95,7 +95,8 @@ export default class CharacterSheet implements iCharacterSheet {
 
 	//-------------------------------------
 	// GENERIC METHODS
-	private getGenericTraitByName<N, T>(name: N, map: Map<N, T>): T | null {
+	private getGenericTraitByName<N, T>( name: N, map: Map<N, T> ): T | null {
+		
 		return map.get(name) as T;
 	}
 

@@ -24,7 +24,7 @@ export default class Attribute implements iAttribute {
 	}
 
 	// todo dont use CharacterSheet class as dependency
-	constructor(characterSheet: CharacterSheet, name: AttributeName, value: number) {
+	constructor(characterSheet: CharacterSheet, name: AttributeName, value: number = 0) {
 		this.#characterSheet = characterSheet;
 		this.name = name;
 		this.category = this.getCategory(name);

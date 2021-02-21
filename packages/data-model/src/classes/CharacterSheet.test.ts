@@ -3,21 +3,21 @@ import path from 'path';
 import CharacterSheet from './CharacterSheet';
 
 const testUserId = Math.floor(Math.random() * 999999);
-const filePath = path.resolve(__dirname, `../data/character-sheets/temporary/${testUserId}.json`);
+const filePathRandom = path.resolve(__dirname, `../data/character-sheets/temporary/${testUserId}.json`);
 
 let testName: string;
 
 testName = 'save new blank character sheet and load the character sheet';
 test(testName, () => {
 	// creates new sheet and does initial save
-	const cs = new CharacterSheet(testUserId, filePath);
+	const cs = new CharacterSheet(testUserId, filePathRandom);
 
-	const csLoaded = CharacterSheet.loadFromFile({ filePath });
+	const csLoaded = CharacterSheet.loadFromFile({ filePath: filePathRandom });
 
 	// console.log({ testName, testUserId, filePath, cs, csLoaded });
 
 	// file should exist after save
-	expect(fs.pathExistsSync(filePath)).toBe(true);
+	expect(fs.pathExistsSync(filePathRandom)).toBe(true);
 
 	// user id should be the same
 	expect(csLoaded.discordUserId).toEqual(testUserId);
@@ -28,9 +28,9 @@ test(testName, () => {
 
 testName = 'test autosave and custom setters for basic data types';
 test(testName, () => {
-	const cs = CharacterSheet.loadFromFile({ filePath });
+	const cs = CharacterSheet.loadFromFile({ filePath: filePathRandom });
 
-	const cs2 = CharacterSheet.loadFromFile({ filePath });
+	const cs2 = CharacterSheet.loadFromFile({ filePath: filePathRandom });
 
 	const testHealthValue = 1;
 	const testBloodPotencyValue = 2;
@@ -41,7 +41,7 @@ test(testName, () => {
 	cs.bloodPotency = testBloodPotencyValue;
 	cs.hunger = testHungerValue;
 
-	const csLoaded = CharacterSheet.loadFromFile({ filePath });
+	const csLoaded = CharacterSheet.loadFromFile({ filePath: filePathRandom });
 
 	// console.log({ testName, csLoadedData: csLoaded.toJson(), cs2Data: cs2.toJson() });
 
@@ -58,7 +58,7 @@ test(testName, () => {
 
 testName = 'test trait methods';
 test(testName, () => {
-	const cs = CharacterSheet.loadFromFile({ filePath });
+	const cs = CharacterSheet.loadFromFile({ filePath: filePathRandom });
 
 	cs.setAttribute('Strength', 5);
 	cs.setSkill('Athletics', 3);

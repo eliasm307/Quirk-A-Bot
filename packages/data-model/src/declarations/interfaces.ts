@@ -65,3 +65,13 @@ export interface iCharacterSheet extends iCharacterSheetData {
 
 	/*	*/
 }
+
+export interface iTraitCollection<T extends iTrait> {
+	get(name: TraitName<T>): T;
+	set(name: TraitName<T>, value: number): void;
+
+	delete(name: TraitName<T>): T;
+
+	has( name: TraitName<T> ): boolean;
+	readonly size: number;
+}
