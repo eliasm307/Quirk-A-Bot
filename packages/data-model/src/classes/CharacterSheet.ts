@@ -1,4 +1,4 @@
-import { iDetail } from './../declarations/interfaces';
+import { iCharacterSheetData, iDetail } from './../declarations/interfaces';
 import path from 'path';
 import {
 	AttributeMap,
@@ -8,7 +8,7 @@ import {
 	DisciplineName,
 	SkillName,
 } from './../declarations/types';
-import { iAttribute, iCharacterSheet, iCharacterSheetModel, iDiscipline, iSkill } from '../declarations/interfaces';
+import { iAttribute, iCharacterSheet, iDiscipline, iSkill } from '../declarations/interfaces';
 import TypeFactory from './TypeFactory';
 import importDataFromFile from '../utils/importDataFromFile';
 import exportDataToFile from '../utils/exportDataToFile';
@@ -102,7 +102,7 @@ export default class CharacterSheet implements iCharacterSheet {
 	//-------------------------------------
 	// GENERIC METHODS
 	private getDetailByName<N, T>(name: N, map: Map<N, T>): T | null {
-		return map.has(name) ? (map.get(name) as T) : null;
+		return map.get(name) as T;
 	}
 
 	private setDetailValue<N, T extends iDetail>(
@@ -110,29 +110,37 @@ export default class CharacterSheet implements iCharacterSheet {
 		name: N,
 		value: number,
 		instanceCreator: () => T,
-		typeName: string
+		typeName: string = 'Detail'
 	): void {
 		console.warn(__filename, `setting value for ${typeName} with name '${name}' to value '${value}'`);
 
 		// todo find out how to print type name, ie ${ReturnType<typeof instanceCreator>}
 
 		if (name && value) {
-			// if attribute already exists then just update it
+			// if detail already exists then just update it
 			if (map.has(name)) {
 				const instance = map.get(name);
 
 				if (!instance)
 					return console.error(__filename, `${typeName} with name '${name}' is not defined but key exists`);
 
+				// todo add on change handler call
 				instance.value = value;
 			} else {
-				// else add new attribute instance
+				// todo add on change handler call for new detail
+				// else add new detail instance
 				map.set(name, instanceCreator());
 			}
 		} else {
 			console.error(__filename, `set${typeName} error: bad inputs`, { attribute: name, value });
 		}
 	}
+
+	public setTrait( name ): void (
+		
+	)
+
+	// todo add remove detail method
 
 	//-------------------------------------
 	// ATTRIBUTES
@@ -143,6 +151,8 @@ export default class CharacterSheet implements iCharacterSheet {
 	public getAttributeByName(name: AttributeName): iAttribute | null {
 		return this.getDetailByName(name, this.#private.attributes);
 	}
+
+	// todo add remove method
 
 	/**
 	 * Update attribute value if it exists, otherwise add the attribute
@@ -189,8 +199,7 @@ export default class CharacterSheet implements iCharacterSheet {
 		return this.setDetailValue(this.#private.skills, name, value, () => new Skill(this, name, value), 'skill');
 	}
 
-	// todo single getter method
-	// todo item adder method
+	// todo add remove method
 	//-------------------------------------
 	// DISCIPLINES
 	public get disciplines(): iDiscipline[] {
@@ -199,6 +208,7 @@ export default class CharacterSheet implements iCharacterSheet {
 
 	// todo single getter method
 	// todo item adder method
+	// todo add remove method
 	//-------------------------------------
 	// TOUCHSTONES AND CONVICTIONS
 	public get touchstonesAndConvictions(): string[] {
@@ -207,6 +217,7 @@ export default class CharacterSheet implements iCharacterSheet {
 
 	// todo single getter method
 	// todo item adder method
+	// todo add remove method
 
 	//-------------------------------------
 	// CONSTRUCTOR
@@ -306,7 +317,7 @@ export default class CharacterSheet implements iCharacterSheet {
 		return instance;
 	}
 
-	public toJson(): iCharacterSheet {
+	public toJson(): iCharacterSheetData {
 		return {
 			attributes: this.attributes,
 			bloodPotency: this.bloodPotency,

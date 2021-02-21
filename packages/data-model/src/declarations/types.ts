@@ -17,3 +17,4 @@ export type DisciplineName = string; // todo explicitly specify names
 export type AttributeMap = Map<AttributeName, iAttribute>;
 export type DisciplineMap = Map<DisciplineName, iDiscipline>;
 export type SkillMap = Map<SkillName, iSkill>;
+export type TraitName<T> = T extends Skill ? SkillName : T extends Attribute ? AttributeName : string;

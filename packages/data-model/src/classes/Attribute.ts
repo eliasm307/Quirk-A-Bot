@@ -7,6 +7,8 @@ interface iPrivateModifiableProperties {
 	value: number;
 }
 
+// todo make a base trait class that implements iTrait, which is implemented by Skills, Attributes etc
+
 export default class Attribute implements iAttribute {
 	#private: iPrivateModifiableProperties;
 	#characterSheet: CharacterSheet;

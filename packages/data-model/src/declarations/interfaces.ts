@@ -1,12 +1,8 @@
-import {
-	AttributeCategory,
-	AttributeName,
-	ClanName,
-	DisciplineName,
-	SkillName, 
-} from './types';
+import Attribute from '../classes/Attribute';
+import Skill from '../classes/Skill';
+import { AttributeCategory, AttributeName, ClanName, DisciplineName, SkillName } from './types';
 
-export interface iDetail { 
+export interface iDetail {
 	name: string;
 	value: number;
 }
@@ -28,9 +24,9 @@ export interface iDiscipline extends iDetail {
 	// todo add "specialisation" / sub types?
 }
 
-export interface iCharacterSheet {
-  discordUserId: number;
-  // todo add user aliases (ie known discord names to be added by bot)
+export interface iCharacterSheetData {
+	discordUserId: number;
+	// todo add user aliases (ie known discord names to be added by bot)
 	name: string;
 	clan: ClanName;
 	sire: string;
@@ -45,7 +41,23 @@ export interface iCharacterSheet {
 	disciplines: iDiscipline[];
 }
 
+
+
 // todo is this required?
-export interface iCharacterSheetModel {
-	characterSheet: iCharacterSheet;
+export interface iCharacterSheet extends iCharacterSheetData {
+	saveToFile(): boolean; // ? should this be handled by another class?
+
+	setTrait<T>(name: TraitName<T>): void;
+
+	/*
+	// ? make traitCollection class to do these operations?
+	setSkill( name: SkillName, value: number ): void;
+	removeSkill(name: SkillName): void
+	getSkillByName(name: SkillName): iSkill | null;
+
+	// ? make traitCollection class to do these operations?
+	setAttribute( name: AttributeName, value: number ): void;
+	removeAttribut
+	getAttributeByName(name: AttributeName): iAttribute | null; 
+	*/
 }
