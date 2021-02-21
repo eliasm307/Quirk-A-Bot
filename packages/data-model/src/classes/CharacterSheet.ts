@@ -7,6 +7,7 @@ import {
 	AttributeName,
 	DisciplineName,
 	SkillName,
+	TraitName,
 } from './../declarations/types';
 import { iAttribute, iCharacterSheet, iDiscipline, iSkill } from '../declarations/interfaces';
 import TypeFactory from './TypeFactory';
@@ -136,9 +137,18 @@ export default class CharacterSheet implements iCharacterSheet {
 		}
 	}
 
-	public setTrait( name ): void (
+	public setTrait<T>( name: TraitName<T>, value: number ): void {
 		
-	)
+		const map: Map<string, T> = name in TraitName<Skill> ?  true : null;
+
+			return this.setDetailValue(
+				this.#private.attributes,
+				name,
+				value,
+				() => new Attribute(this, name, value),
+				'Attribute'
+			);
+	}
 
 	// todo add remove detail method
 

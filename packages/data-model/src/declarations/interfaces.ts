@@ -1,6 +1,6 @@
 import Attribute from '../classes/Attribute';
 import Skill from '../classes/Skill';
-import { AttributeCategory, AttributeName, ClanName, DisciplineName, SkillName } from './types';
+import { AttributeCategory, AttributeName, ClanName, DisciplineName, SkillName, TraitName } from './types';
 
 export interface iDetail {
 	name: string;
@@ -47,7 +47,8 @@ export interface iCharacterSheetData {
 export interface iCharacterSheet extends iCharacterSheetData {
 	saveToFile(): boolean; // ? should this be handled by another class?
 
-	setTrait<T>(name: TraitName<T>): void;
+	// this is difficult to implement because at some point you need to choose a 
+	setTrait<T>(name: TraitName<T>, value: number): void;
 
 	/*
 	// ? make traitCollection class to do these operations?
