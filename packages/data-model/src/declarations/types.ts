@@ -12,9 +12,12 @@ export type DisciplineName = typeof DISCIPLINE_NAMES[number];
 export type AttributeMap = Map<AttributeName, iAttribute>;
 export type DisciplineMap = Map<DisciplineName, iDiscipline>;
 export type SkillMap = Map<SkillName, iSkill>;
-export type TraitName<T extends iTrait> = T extends Skill ? SkillName : T extends Attribute ? AttributeName : ''; // todo make sure this covers all options
-export type TraitMap<T extends iTrait> = T extends Skill
+export type TraitName<T extends iTrait> = T extends Skill ? SkillName : T extends Attribute ? AttributeName : string; // todo make sure this covers all options
+export type TraitMap<T extends iTrait> = Map<TraitName<T>, T>;
+	
+	/*T extends Skill
 	? SkillMap
 	: T extends Attribute
 	? AttributeMap
-	: Map<string, iTrait>; // todo make sure this covers all options
+	: Map<TraitName<T>, iTrait>; // todo make sure this covers all options
+	*/

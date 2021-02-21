@@ -23,8 +23,8 @@ interface iPrivateModifiableProperties {
 	name: string;
 	clan: string;
 	sire: string;
-	attributes: TraitMap<Attribute>;
-	skills: TraitMap<Skill>;
+	attributes: TraitMap<iAttribute>;
+	skills: TraitMap<iSkill>;
 	disciplines: DisciplineMap;
 	touchstonesAndConvictions: string[];
 }
@@ -250,9 +250,9 @@ export default class CharacterSheet implements iCharacterSheet {
 				name: '',
 				clan: '',
 				sire: '',
-				attributes: TypeFactory.newAttributeMap(),
+				attributes: TypeFactory.newTraitMap(),
 				disciplines: TypeFactory.newDisciplineMap(),
-				skills: TypeFactory.newSkillMap(),
+				skills: TypeFactory.newTraitMap(),
 				touchstonesAndConvictions: [],
 			};
 		} else if (typeof sheet === 'object') {
@@ -284,9 +284,9 @@ export default class CharacterSheet implements iCharacterSheet {
 				clan: clan,
 				sire: sire,
 
-				attributes: new Map<AttributeName, iAttribute>(attributes.map(e => [e.name, e])),
+				attributes: TypeFactory.newTraitMap<iAttribute>(...attributes),
 				disciplines: new Map<DisciplineName, iDiscipline>(disciplines.map(e => [e.name, e])),
-				skills: new Map<SkillName, iSkill>(skills.map(e => [e.name, e])),
+				skills: TypeFactory.newTraitMap<iSkill>(...skills),
 				touchstonesAndConvictions: [...touchstonesAndConvictions],
 			};
 		} else {

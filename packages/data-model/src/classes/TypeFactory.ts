@@ -1,4 +1,4 @@
-import { iAttribute, iSkill, iCharacterSheet, iCharacterSheetData } from './../declarations/interfaces';
+import { iAttribute, iSkill, iCharacterSheet, iCharacterSheetData, iTrait } from './../declarations/interfaces';
 import { iDiscipline } from '../declarations/interfaces';
 import {
 	DisciplineMap,
@@ -7,16 +7,16 @@ import {
 	AttributeName,
 	SkillMap,
 	SkillName,
+	TraitMap,
+	TraitName,
 } from './../declarations/types';
+import Attribute from './Attribute';
 export default abstract class TypeFactory {
 	static newDisciplineMap(): DisciplineMap {
 		return new Map<DisciplineName, iDiscipline>();
 	}
-	static newAttributeMap(): AttributeMap {
-		return new Map<AttributeName, iAttribute>();
-	}
-	static newSkillMap(): SkillMap {
-		return new Map<SkillName, iSkill>();
+	static newTraitMap<T extends iTrait>(...args: T[]): TraitMap<T> {
+		return new Map<TraitName<T>, T>(args.map(e => [e.name as TraitName<T>, e]));
 	}
 
 	static newiCharacterSheetObject(): iCharacterSheetData {
