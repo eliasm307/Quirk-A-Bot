@@ -7,7 +7,8 @@ import importDataFromFile from '../utils/importDataFromFile';
 import exportDataToFile from '../utils/exportDataToFile';
 import Attribute from './Attribute';
 import Skill from './Skill';
-import { isAttributeName, isSkillName } from '../utils/typePredicates';
+import TraitCollection from './TraitCollection';
+import Discipline from './Discipline';
 
 interface iLoadFromFileArgs {
 	filePath?: string;
@@ -93,14 +94,15 @@ export default class CharacterSheet implements iCharacterSheet {
 		return this.#private.sire;
 	}
 
+
 	//-------------------------------------
 	// GENERIC METHODS
-	private getGenericTraitByName<N, T>( name: N, map: Map<N, T> ): T | null {
-		
+	/*
+	private getGenericTraitByName<N, T>(name: N, map: Map<N, T>): T | null {
 		return map.get(name) as T;
 	}
 
-	private setGenericTraitValue<N, T extends iTrait>(
+	private setGenericTraitValue<N, T extends iTrait<T>>(
 		map: TraitMap<T>,
 		name: TraitName<T>,
 		value: number,
@@ -130,6 +132,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			console.error(__filename, `set${typeName} error: bad inputs`, { attribute: name, value });
 		}
 	}
+*/
 
 	/*
 	// NOTE this could work but its a bit too convoluted for intellisense to work properly so no major benefits
@@ -161,18 +164,27 @@ export default class CharacterSheet implements iCharacterSheet {
 
 	//-------------------------------------
 	// ATTRIBUTES
+
+	readonly attributes: TraitCollection<iAttribute> = new TraitCollection(
+		this,
+		(name, value) => new Attribute(this, name, value)
+	);
+
+	/*
 	public get attributes(): iAttribute[] {
 		return Array.from(this.#private.attributes.values());
 	}
 	public getAttributeByName(name: AttributeName): iAttribute | null {
 		return this.getGenericTraitByName(name, this.#private.attributes);
-	}
+	}  
+*/
 
 	/**
 	 * Update attribute value if it exists, otherwise add the attribute
 	 * @param name attribute name
 	 * @param value attribute value
 	 */
+	/*
 	public setAttribute(name: AttributeName, value: number): void {
 		return this.setGenericTraitValue(
 			this.#private.attributes,
@@ -181,7 +193,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			() => new Attribute(this, name, value),
 			'Attribute'
 		);
-		/*if (typeof name === 'string' && name && typeof value === 'number') {
+		if (typeof name === 'string' && name && typeof value === 'number') {
 			// if attribute already exists then just update it
 			if (this.#private.attributes.has(name)) {
 				const instance = this.#private.attributes.get(name);
@@ -196,12 +208,15 @@ export default class CharacterSheet implements iCharacterSheet {
 			}
 		} else {
 			console.error(__filename, 'addAttribute error: bad inputs', { attribute: name, value });
-		}*/
+		}
 	}
-
+*/
 	//-------------------------------------
 	// SKILLS
-	public get skills(): iSkill[] {
+	readonly skills: TraitCollection<iSkill> = new TraitCollection(this, (name, value) => new Skill(this, name, value));
+
+	/*
+	public get skillsx(): iSkill[] {
 		return Array.from(this.#private.skills.values());
 	}
 
@@ -209,18 +224,25 @@ export default class CharacterSheet implements iCharacterSheet {
 		return this.getGenericTraitByName(name, this.#private.skills);
 	}
 
-	public setSkill(name: SkillName, value: number): void {
+	private setSkill(name: SkillName, value: number): void {
 		return this.setGenericTraitValue(this.#private.skills, name, value, () => new Skill(this, name, value), 'skill');
-	}
+	}*/
 
 	// todo add remove method
 
 	//-------------------------------------
 	// DISCIPLINES
 	// todo do this as a map
+	/*
 	public get disciplines(): iDiscipline[] {
 		return Array.from(this.#private.disciplines.values());
 	}
+	*/
+
+	readonly disciplines: TraitCollection<iDiscipline> = new TraitCollection(
+		this,
+		(name, value) => new Discipline(this, name, value)
+	);
 
 	// todo single getter method
 	// todo item adder method
@@ -237,7 +259,7 @@ export default class CharacterSheet implements iCharacterSheet {
 
 	//-------------------------------------
 	// CONSTRUCTOR
-	constructor(sheet: iCharacterSheet | number, customSavePath?: string) {
+	constructor(sheet: iCharacterSheetData | number, customSavePath?: string) {
 		if (typeof sheet === 'number') {
 			this.discordUserId = sheet;
 
@@ -285,9 +307,9 @@ export default class CharacterSheet implements iCharacterSheet {
 				clan: clan,
 				sire: sire,
 
-				attributes: TypeFactory.newTraitMap<iAttribute>(...attributes),
-				disciplines: new Map<DisciplineName, iDiscipline>(disciplines.map(e => [e.name, e])),
-				skills: TypeFactory.newTraitMap<iSkill>(...skills),
+				attributes: TypeFactory.newTraitMap<iAttribute>(...attributes ),
+				disciplines: TypeFactory.newTraitMap<iDiscipline>(...disciplines ),
+				skills: TypeFactory.newTraitMap<iSkill>(...skills ),
 				touchstonesAndConvictions: [...touchstonesAndConvictions],
 			};
 		} else {
@@ -301,6 +323,41 @@ export default class CharacterSheet implements iCharacterSheet {
 
 		// if only user id was provided, assume this is a new sheet then do initial save so a persistent file exists
 		if (typeof sheet === 'number') this.saveToFile();
+	}
+	setSkill(name: 'Athletics' | 'Brawl' | 'Craft', value: number): void {
+		throw new Error('Method not implemented.');
+	}
+	getSkillByName(name: 'Athletics' | 'Brawl' | 'Craft'): iSkill | null {
+		throw new Error('Method not implemented.');
+	}
+	setAttribute(
+		name:
+			| 'Strength'
+			| 'Dexterity'
+			| 'Stamina'
+			| 'Charisma'
+			| 'Manipulation'
+			| 'Composure'
+			| 'Intelligence'
+			| 'Wits'
+			| 'Resolve',
+		value: number
+	): void {
+		throw new Error('Method not implemented.');
+	}
+	getAttributeByName(
+		name:
+			| 'Strength'
+			| 'Dexterity'
+			| 'Stamina'
+			| 'Charisma'
+			| 'Manipulation'
+			| 'Composure'
+			| 'Intelligence'
+			| 'Wits'
+			| 'Resolve'
+	): iAttribute | null {
+		throw new Error('Method not implemented.');
 	}
 
 	/**
@@ -322,7 +379,8 @@ export default class CharacterSheet implements iCharacterSheet {
 		console.log(__filename, `No existing instance for '${resolvedPath}', loading new instance`);
 
 		// todo add option to create blank instance at the specified path if it doesnt exist?
-		const data: iCharacterSheet = importDataFromFile(resolvedPath);
+		// todo make sure imported data matches expected schema
+		const data: iCharacterSheetData = importDataFromFile(resolvedPath);
 
 		const instance = new CharacterSheet(data, resolvedPath);
 
@@ -335,17 +393,17 @@ export default class CharacterSheet implements iCharacterSheet {
 
 	public toJson(): iCharacterSheetData {
 		return {
-			attributes: this.attributes,
+			attributes: this.attributes.toJson(),
 			bloodPotency: this.bloodPotency,
 			clan: this.clan,
-			disciplines: this.disciplines,
+			disciplines: this.disciplines.toJson(),
 			discordUserId: this.discordUserId,
 			health: this.health,
 			humanity: this.humanity,
 			hunger: this.hunger,
 			name: this.name,
 			sire: this.sire,
-			skills: this.skills,
+			skills: this.skills.toJson(),
 			touchstonesAndConvictions: this.touchstonesAndConvictions,
 			willpower: this.willpower,
 		};

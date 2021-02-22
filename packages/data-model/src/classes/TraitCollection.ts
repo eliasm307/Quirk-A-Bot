@@ -1,7 +1,7 @@
 import { TraitName, TraitMap } from './../declarations/types';
 import { iCharacterSheet, iTrait, iTraitCollection } from './../declarations/interfaces';
 
-export default class TraitCollection<T extends iTrait> implements iTraitCollection<T> {
+export default class TraitCollection<T extends iTrait  > implements iTraitCollection<T> {
 	#characterSheet: iCharacterSheet;
 	#instanceCreator: (name: TraitName<T>, value: number) => T;
 	#map: TraitMap<T> = new Map<TraitName<T>, T>();
@@ -12,7 +12,7 @@ export default class TraitCollection<T extends iTrait> implements iTraitCollecti
 		this.#characterSheet = characterSheet;
 		this.#instanceCreator = instanceCreator;
 	}
-	toJson(): iTrait[] {
+	toJson(): T [] {
 		return Array.from(this.#map.values());
 	}
 	get size(): number {

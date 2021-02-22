@@ -20,7 +20,7 @@ export default class Skill implements iSkill {
 	}
 
 	// todo dont use CharacterSheet class as dependency
-	constructor(characterSheet: CharacterSheet, name: SkillName, value: number) {
+	constructor(characterSheet: CharacterSheet, name: SkillName, value: number = 0) {
 		this.#characterSheet = characterSheet;
 		this.name = name; 
 		this.#private = {

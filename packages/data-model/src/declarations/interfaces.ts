@@ -4,30 +4,27 @@ import Skill from '../classes/Skill';
 import TraitCollection from '../classes/TraitCollection';
 import { AttributeCategory, AttributeName, ClanName, DisciplineName, SkillName, TraitName } from './types';
 
-export interface iTrait {
+export interface iTrait  {
+	// name: TraitName<T>;
 	name: string;
-	value: number;
-}
-
-export interface iAttribute extends iTrait {
-	name: AttributeName; // todo add options explicitly
 	value: number; // todo limit to 0-5
 }
 
-export interface iAttribute2 extends iTrait {
-	category: AttributeCategory;
-	name: AttributeName; // todo add options explicitly
-	value: number; // todo limit to 0-5
+export interface iAttribute extends iTrait  {
+	name: AttributeName
 }
 
-export interface iSkill extends iTrait {
-	name: SkillName;
-	value: number; // todo limit to 0-5
+export interface iAttribute2 extends iTrait  {
+	category: AttributeCategory; // todo handle category as separate interface implemented by class
+	name: AttributeName; // todo add options explicitly 
 }
 
-export interface iDiscipline extends iTrait {
-	name: DisciplineName;
-	value: number; // todo limit to 0-5
+export interface iSkill extends iTrait  {
+	 name: SkillName; 
+}
+
+export interface iDiscipline extends iTrait  {
+ name: DisciplineName; 
 	// todo add "specialisation" / sub types?
 }
 
@@ -59,10 +56,10 @@ export interface iCharacterSheet extends iCharacterSheetPrimitiveData {
 	// this is difficult to implement because at some point you need to choose a
 	// setTrait<T extends iTrait>(name: TraitName<T>, value: number): void;
 
-	skills: TraitCollection<Skill>;
-	attributes: TraitCollection<Attribute>;
+	skills: TraitCollection<iSkill>;
+	attributes: TraitCollection<iAttribute>;
 
-	disciplines: TraitCollection<Discipline>;
+	disciplines: TraitCollection<iDiscipline>;
 
 	// ? make traitCollection class to do these operations?
 
@@ -78,14 +75,14 @@ export interface iCharacterSheet extends iCharacterSheetPrimitiveData {
 	/*	*/
 }
 
-export interface iTraitCollection<T extends iTrait> {
+export interface iTraitCollection<T extends iTrait > {
 	get(name: TraitName<T>): T | void;
 	set(name: TraitName<T>, value: number): void;
 
 	delete(name: TraitName<T>): void;
 
-	has( name: TraitName<T> ): boolean;
-	
-	toJson(): iTrait[] 
+	has(name: TraitName<T>): boolean;
+
+	toJson(): iTrait [];
 	readonly size: number;
 }
