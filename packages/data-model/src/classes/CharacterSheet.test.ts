@@ -45,7 +45,11 @@ test(testName, () => {
 
 	const csLoaded = CharacterSheet.loadFromFile({ filePath: filePathRandom });
 
-	// console.log({ testName, csLoadedData: csLoaded.toJson(), cs2Data: cs2.toJson() });
+	console.log({
+		testName,
+		log1: csLoaded.getLogData(),
+		log2: cs2.getLogData(),
+	});
 
 	// properties should be up to date on loaded instance
 	expect(csLoaded.health).toEqual(testHealthValue);
@@ -56,6 +60,10 @@ test(testName, () => {
 	expect(cs2.health).toEqual(testHealthValue);
 	expect(cs2.bloodPotency).toEqual(testBloodPotencyValue);
 	expect(cs2.hunger).toEqual(testHungerValue);
+
+	// check changes were logged
+	expect(csLoaded.getLogData().length).toBeGreaterThanOrEqual(3);
+	expect(csLoaded.getLogData()).toEqual(cs2.getLogData());
 });
 
 testName = 'test basic trait methods';
@@ -71,8 +79,6 @@ test(testName, () => {
 	expect((cs.touchstonesAndConvictions.get('a custom one') as iTouchStoneOrConviction)?.value).toEqual(
 		'something, something, something'
 	);
-} );
-
- 
+});
 
 // todo test what happens if file doesnt exist

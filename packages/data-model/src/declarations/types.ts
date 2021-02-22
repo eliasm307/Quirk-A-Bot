@@ -21,4 +21,5 @@ export type TraitType = typeof TRAIT_TYPES[number];
 
 export type LogOperation = 'ADD' | 'UPDATE' | 'DELETE';
 
-export type LogInitialValue<T, O extends LogOperation> = O extends 'ADD' ? void : T;
+export type LogInitialValue<T, O extends LogOperation> = O extends 'ADD' ? undefined : T;
+export type LogNewValue<T, O extends LogOperation> = O extends 'DELETE' ? undefined : T;

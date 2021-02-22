@@ -1,47 +1,76 @@
-import { LogOperation, LogInitialValue } from './../../declarations/types';
+import { LogOperation, LogInitialValue, LogNewValue } from './../../declarations/types';
 import { iLogEvent } from './../../declarations/interfaces';
 
-interface props<T, L extends LogOperation> {
+
+interface Props<T, L extends LogOperation> {
 	operation: L;
-	description: string;
-	oldValue: LogInitialValue<T, L>;
-	newValue?: T;
+	description?: string;
+	oldValue?: LogInitialValue<T, L>;
+	newValue?: LogNewValue<T, L>;
 }
+interface PropsOLD<T, L extends LogOperation> {
+	operation: L;
+	description?: string;
+	oldValue: LogInitialValue<T, L>;
+	newValue: LogNewValue<T, L>;
+}
+interface deleteProps<T> {
+	operation: LogOperation;
+	description?: string;
+	oldValue: LogInitialValue<T, LogOperation>;
+}
+interface updateProps<T> {
+	operation: LogOperation;
+	description?: string;
+	oldValue: LogInitialValue<T, LogOperation>;
+	newValue: LogNewValue<T, LogOperation>;
+}
+interface addProps<T> {
+	operation: LogOperation;
+	description?: string;
+	newValue: LogNewValue<T, LogOperation>;
+}
+
+type props<T, L extends LogOperation> = L extends 'DELETE'
+	? deleteProps<T>
+	: L extends 'ADD'
+	? addProps<T>
+	: updateProps<T>;
 
 // todo try applying conditional types for the initial and new values based on operation type here
 export default class LogEvent<T, L extends LogOperation> implements iLogEvent<T> {
 	operation: L;
-	description: string;
-	initialValue: LogInitialValue<T, L>;
-	newValue?: T;
+	description?: string;
+	initialValue?: LogInitialValue<T, L>;
+	newValue?: LogNewValue<T, L>;
 
-	constructor({ operation, description, oldValue: initialValue, newValue }: props<T, L>) {
+	constructor({ operation, description, oldValue, newValue }: Props<T, L>) {
 		// check values are defined correctly
 		switch (operation) {
 			case 'ADD':
-				if (!newValue) throw `${operation} operation requires a newValue to be defined`;
-				if (initialValue)
+				if (!newValue) throw Error(`${operation} operation requires a newValue to be defined`);
+				if (oldValue)
 					console.warn(__filename, `${operation} operation doesnt require an initial value, this will be ignored`);
 				break;
 
 			case 'DELETE':
-				if (!initialValue) throw `${operation} operation requires a newValue to be defined`;
+				if (!oldValue) throw Error(`${operation} operation requires a newValue to be defined`);
 				if (newValue)
 					console.warn(__filename, `${operation} operation doesnt require a new value, this will be ignored`);
 				break;
 
 			case 'UPDATE':
-				if (!initialValue && !newValue)
-					throw `${operation} operation requires both an initalValue and a newValue to be defined`;
+				if (!oldValue && !newValue)
+					throw Error(`${operation} operation requires both an initalValue and a newValue to be defined`);
 				break;
 
 			default:
-				throw `Unknown operation "${operation}"`;
+				throw Error(`Unknown operation "${operation}"`);
 		}
 
 		this.operation = operation;
 		this.description = description;
-		this.initialValue = initialValue;
+		this.initialValue = oldValue;
 		this.newValue = newValue;
 	}
 }

@@ -1,4 +1,10 @@
-import { iCharacterSheetData, iLogEvent, iLogger, iTouchStoneOrConviction, iLogCollection } from './../declarations/interfaces';
+import {
+	iCharacterSheetData,
+	iLogEvent,
+	iLogger,
+	iTouchStoneOrConviction,
+	iLogCollection,
+} from './../declarations/interfaces';
 import path from 'path';
 import { iAttribute, iCharacterSheet, iDiscipline, iSkill } from '../declarations/interfaces';
 import importDataFromFile from '../utils/importDataFromFile';
@@ -36,9 +42,8 @@ const example: iModifiablePrimitiveProperties = {
 	hunger: 0,
 	name: '',
 	sire: '',
-	willpower: 0
-}
- 
+	willpower: 0,
+};
 
 // todo split this into smaller pieces
 
@@ -174,7 +179,7 @@ export default class CharacterSheet implements iCharacterSheet, iLogger<LogDataT
 			initialSkills = [...skills];
 			initialTouchstonesAndConvictions = [...touchstonesAndConvictions];
 		} else {
-			throw `${__filename} constructor argument not defined`;
+			throw Error(`${__filename} constructor argument not defined`);
 		}
 
 		// create collections, with initial data where available
@@ -224,7 +229,8 @@ export default class CharacterSheet implements iCharacterSheet, iLogger<LogDataT
 	 * Static method to create an instance from an existing character sheet JSON file
 	 */
 	public static loadFromFile({ filePath, fileName }: iLoadFromFileArgs): CharacterSheet {
-		if (!filePath && !fileName) throw `${__filename}: filePath and fileName are not defined, cannot load from file`;
+		if (!filePath && !fileName)
+			throw Error(`${__filename}: filePath and fileName are not defined, cannot load from file`);
 
 		// try using the input filePath resolved, otherwise create path using filename in general location
 		const resolvedPath =
@@ -236,7 +242,7 @@ export default class CharacterSheet implements iCharacterSheet, iLogger<LogDataT
 			// console.log(__filename, `Using existing instance for '${resolvedPath}'`);
 			return CharacterSheet.instances.get(resolvedPath) as CharacterSheet;
 		}
-		console.log(__filename, `No existing instance for '${resolvedPath}', loading new instance`);
+		// console.log(__filename, `No existing instance for '${resolvedPath}', loading new instance`);
 
 		// todo add option to create blank instance at the specified path if it doesnt exist?
 		// todo make sure imported data matches expected schema
@@ -289,7 +295,7 @@ export default class CharacterSheet implements iCharacterSheet, iLogger<LogDataT
 		this.#private[property] = newValue;
 
 		// todo record change, create a log class where this has an array of logs
-		this.#logEvents.log(new LogEvent({ operation: 'UPDATE', oldValue, description: '' }));
+		this.#logEvents.log(new LogEvent({ operation: 'DELETE', oldValue }));
 
 		// attempt autosave
 		this.saveToFile()

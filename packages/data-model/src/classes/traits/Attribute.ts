@@ -1,8 +1,8 @@
 import { AttributeName } from '../../declarations/types';
 import { iAttribute, iCharacterSheet } from '../../declarations/interfaces';
-import { AttributeCategory } from '../../declarations/types'; 
+import { AttributeCategory } from '../../declarations/types';
 import BaseTrait from './BaseTrait';
- 
+
 export default class Attribute extends BaseTrait<iAttribute> implements iAttribute {
 	readonly category: AttributeCategory;
 
@@ -26,7 +26,7 @@ export default class Attribute extends BaseTrait<iAttribute> implements iAttribu
 			case 'Resolve':
 				return 'Mental';
 			default:
-				throw `${__filename} ERROR: Unknown attribute name "${name}"`;
+				throw Error(`${__filename} ERROR: Unknown attribute name "${name}"`);
 		}
 	}
 }

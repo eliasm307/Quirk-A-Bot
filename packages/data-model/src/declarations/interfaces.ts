@@ -85,8 +85,8 @@ export interface iTraitCollection<T extends iTrait> {
 export interface iLogEvent<T> {
 	operation: LogOperation;
 	description?: string;
-	initialValue: T | void ; // initial value not required if its an addition // todo enforce this in implementation
-	newValue?: T; // delete doesnt require this
+	initialValue?: T  ; // initial value not required if its an addition // todo enforce this in implementation
+	newValue?: T ; // delete doesnt require this
 }
 
 /** For objects that require internal logging */
