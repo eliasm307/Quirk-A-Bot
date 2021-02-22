@@ -1,25 +1,13 @@
-import { iCharacterSheetData, iTouchStoneOrConviction, iTrait } from './../declarations/interfaces';
-import path from 'path';
-import {
-	DisciplineMap,
-	AttributeName,
-	DisciplineName,
-	SkillName,
-	TraitName,
-	TraitMap,
-	TraitValue,
-	TraitType,
-} from './../declarations/types';
-import { iAttribute, iCharacterSheet, iDiscipline, iSkill } from '../declarations/interfaces';
-import TypeFactory from './TypeFactory';
+import { iCharacterSheetData, iTouchStoneOrConviction  } from './../declarations/interfaces';
+import path from 'path'; 
+import { iAttribute, iCharacterSheet, iDiscipline, iSkill } from '../declarations/interfaces'; 
 import importDataFromFile from '../utils/importDataFromFile';
 import exportDataToFile from '../utils/exportDataToFile';
 import Attribute from './traits/Attribute';
 import Skill from './traits/Skill';
-import TraitCollection, { iTraitCollectionArguments } from './TraitCollection';
+import TraitCollection from './TraitCollection';
 import Discipline from './traits/Discipline';
-import TouchStoneOrConviction from './traits/TouchStoneOrConviction';
-import { isAttributeName, isDisciplineName, isSkillName } from '../utils/typePredicates';
+import TouchStoneOrConviction from './traits/TouchStoneOrConviction'; 
 
 interface iLoadFromFileArgs {
 	filePath?: string;
@@ -49,9 +37,7 @@ export default class CharacterSheet implements iCharacterSheet {
 	#private: iPrivateDirectlyModifiableProperties;
 
 	//-------------------------------------
-	// BASIC VARIABLE GETTERS AND SETTERS
-	// todo generate setters and getters dynamically, as they follow the same pattern
-	// todo add auto save for each change, maybe on change handler that takes in an iChangeEvent object
+	// BASIC VARIABLE GETTERS AND SETTERS  
 	public set health(newVal: number) {
 		this.onChange('health', newVal);
 	}
@@ -93,15 +79,13 @@ export default class CharacterSheet implements iCharacterSheet {
 	}
 	public get clan() {
 		return this.#private.clan;
-	} /*
+	}
 	public set sire(newVal: string) {
 		this.onChange('sire', newVal);
 	}
 	public get sire() {
 		return this.#private.sire;
-	}
-
-	*/
+	} 
 
 	//-------------------------------------
 	// NON BASIC VARIABLE COLLECTIONS
@@ -141,60 +125,8 @@ export default class CharacterSheet implements iCharacterSheet {
 			name: '',
 			clan: '',
 			sire: '',
-		};
-
-		/*for (let [key, value] of Object.entries(basicExample)) {
-			const key2: keyof iPrivateDirectlyModifiableProperties = key;
-			Object.defineProperty(this, key, {
-				get: (): any => {
-					return this.#private[key];
-				},
-				set: (value: any) => {
-					if (this.data[key] !== value) {
-						this.data[key] = value;
-						this.updatedKeys.push(key);
-					}
-				},
-			});
-		}*/
-
-		for (let [key, value] of Object.entries(basicExample)) {
-			CharacterSheet.initGetterAndSetter(this , key as keyof iPrivateDirectlyModifiableProperties, value);
-			/*Object.defineProperty(this, key, {
-				get: function () {
-					console.log('GET', { key });
-					return this.#private[key];
-				},
-				set: function (newVal: any) {
-					console.log('SET', { key, type: typeof value });
-					this.onChange(key, newVal);
-				},
-			});*/
-		}
-		/*
-		function collectionInitArgs<T extends iTrait>(
-			characterSheet: iCharacterSheet,
-			traitType: TraitType
-		): iTraitCollectionArguments<T> {
-			return {
-				characterSheet,
-				instanceCreator: (name, value) => {
-					if (traitType === 'Attribute' && isAttributeName(name)) {
-						return new Attribute(characterSheet, name, value as number);
-					} else if (traitType === 'Skill' && isSkillName(name)) {
-						return new Skill(characterSheet, name, value as number);
-					} else if (traitType === 'Discipline' && isDisciplineName(name)) {
-						return new Discipline(characterSheet, name, value as number);
-					} else if (traitType === 'Touchstone or Conviction' && typeof value === 'string') {
-						return new TouchStoneOrConviction(characterSheet, name, value);
-					} else {
-						throw 'Unknown Trait';
-					}
-				},
-			} as iTraitCollectionArguments<T>;
-		}
-		*/
-
+		}; 
+  
 		let initialAttributes: iAttribute[] = [];
 		let initialDisciplines: iDiscipline[] = [];
 		let initialSkills: iSkill[] = [];
@@ -248,10 +180,7 @@ export default class CharacterSheet implements iCharacterSheet {
 				clan: clan,
 				sire: sire,
 			};
-			/*this.attributes = TypeFactory.newTraitMap<iAttribute>(...attributes),
-				this.disciplines: TypeFactory.newTraitMap<iDiscipline>(...disciplines),
-				this.skills: TypeFactory.newTraitMap<iSkill>(...skills),
-				this.touchstonesAndConvictions: TypeFactory.newTraitMap<iTouchStoneOrConviction>(...touchstonesAndConvictions),*/
+			
 			initialAttributes = [...attributes];
 			initialDisciplines = [...disciplines];
 			initialSkills = [...skills];

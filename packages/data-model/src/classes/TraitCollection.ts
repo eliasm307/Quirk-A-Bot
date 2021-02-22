@@ -11,7 +11,7 @@ export default class TraitCollection<T extends iTrait> implements iTraitCollecti
 	#instanceCreator: (name: TraitName<T>, value: TraitValue<T>) => T;
 	#map: TraitMap<T>;
 
-	// todo add trait typename util which gets an appropriate name based on the type of TraitName
+	// todo add trait typename util which gets an appropriate name based on the type of TraitName, do as conditional type
 	#typeName: string = 'Trait';
 	constructor({ characterSheet, instanceCreator }: iTraitCollectionArguments<T>, ...initialData: T[]) {
 		this.#characterSheet = characterSheet;
@@ -30,6 +30,7 @@ export default class TraitCollection<T extends iTrait> implements iTraitCollecti
 	}
 	delete(name: TraitName<T>): void {
 		// todo log change
+		// todo add autosave
 		this.#map.delete(name);
 	}
 	has(name: TraitName<T>): boolean {
@@ -50,9 +51,11 @@ export default class TraitCollection<T extends iTrait> implements iTraitCollecti
 				return console.error(__filename, `${this.#typeName} with name '${name}' is not defined but key exists`);
 
 			// todo log change
+			// todo add autosave
 			instance.value = value;
 		} else {
 			// todo log change
+			// todo add autosave
 			// else add new trait instance
 			this.#map.set(name, this.#instanceCreator(name, value));
 		}

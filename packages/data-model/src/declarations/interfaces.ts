@@ -1,6 +1,4 @@
-import Attribute from '../classes/traits/Attribute';
-import Discipline from '../classes/traits/Discipline';
-import Skill from '../classes/traits/Skill';
+
 import TraitCollection from '../classes/TraitCollection';
 import { AttributeCategory, AttributeName, ClanName, DisciplineName, SkillName, TraitName } from './types';
 

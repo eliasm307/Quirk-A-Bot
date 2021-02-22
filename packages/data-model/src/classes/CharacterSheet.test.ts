@@ -1,5 +1,4 @@
 import { iTouchStoneOrConviction } from './../declarations/interfaces';
-
 import fs from 'fs-extra';
 import path from 'path';
 import { iAttribute, iSkill } from '../declarations/interfaces';
