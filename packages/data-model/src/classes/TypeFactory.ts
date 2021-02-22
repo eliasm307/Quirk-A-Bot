@@ -1,6 +1,6 @@
 import { iCharacterSheetData, iTrait } from './../declarations/interfaces';
-import { TraitMap, TraitName } from './../declarations/types'; 
-export default abstract class TypeFactory { 
+import { TraitMap, TraitName } from './../declarations/types';
+export default abstract class TypeFactory {
 	static newTraitMap<T extends iTrait>(...args: T[]): TraitMap<T> {
 		return new Map<TraitName<T>, T>(args.map(e => [e.name as TraitName<T>, e]));
 	}

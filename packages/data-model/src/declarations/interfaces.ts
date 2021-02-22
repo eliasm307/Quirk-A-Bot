@@ -82,12 +82,25 @@ export interface iTraitCollection<T extends iTrait> {
 	readonly size: number;
 }
 
+export interface iOldValue<T> {
+	oldValue: T; // initial value not required if its an addition // todo enforce this in implementation
+}
+
+export interface iNewValue<T> {
+	newValue : T; // delete doesnt require this
+}
+
+export interface iBaseLogEventProps {
+	description?: string;
+	property: string;
+}
+
+// todo this violates interface segregation, intial and new value arent universal
 export interface iLogEvent<T> {
 	operation: LogOperation;
-	description?: string;
-	initialValue?: T; // initial value not required if its an addition // todo enforce this in implementation
-	newValue?: T; // delete doesnt require this
+	note?: string;
 	property: string;
+	describe(): string;
 }
 
 /** For objects that require internal logging */
@@ -100,6 +113,11 @@ export interface iLogReporter<T> {
 }
 
 export interface iLogCollection<T> {
-	log(event: iLogEvent<T>): void;
+	logAdd(event: iLogEvent<T>): void;
+
+	logUpdate(event: iLogEvent<T>): void;
+
+	logDelete(event: iLogEvent<T>): void;
+
 	toJson(): iLogEvent<T>[];
 }

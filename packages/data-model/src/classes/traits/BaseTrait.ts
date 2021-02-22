@@ -1,5 +1,6 @@
 import {   TraitName, TraitValue } from '../../declarations/types';
-import { iCharacterSheet, iLogger, iTrait } from '../../declarations/interfaces';
+import { iCharacterSheet, iLogEvent, iLogger, iTrait } from '../../declarations/interfaces';
+import LogCollection from '../log/LogCollection';
 
 interface iPrivateModifiableProperties<T> {
 	value: TraitValue<T>;
@@ -8,6 +9,7 @@ interface iPrivateModifiableProperties<T> {
 export default abstract class BaseTrait<T> implements iTrait, iLogger<TraitValue<T>> {
 	#private: iPrivateModifiableProperties<T>;
 	#characterSheet: iCharacterSheet;
+	#logs = new LogCollection<TraitValue<T>>();
 
 	readonly name: TraitName<T>;
 
@@ -29,6 +31,9 @@ export default abstract class BaseTrait<T> implements iTrait, iLogger<TraitValue
 		// make sure character sheet has a reference to this Skill // will this produce any cyclic behaviour? tested, and YES it does
 		// if (!this.#characterSheet.getSkillByName(name)) this.#characterSheet.setSkill(name, value);
 	}
+	getLogData(): iLogEvent<TraitValue<T>>[] {
+		return this.#logs.toJson();
+	}
 
 	protected onChange<PrivateProperty extends keyof iPrivateModifiableProperties<T>>(
 		property: PrivateProperty,
@@ -45,6 +50,7 @@ export default abstract class BaseTrait<T> implements iTrait, iLogger<TraitValue
 		this.#private[property] = newValue;
 
 		// todo record change, create a log class where this has an array of logs
+		this.#logs
 
 		// attempt autosave
 		this.#characterSheet.saveToFile()

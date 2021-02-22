@@ -1,15 +1,17 @@
 import { TraitName, TraitMap, TraitValue } from './../declarations/types';
-import { iCharacterSheet, iLogger, iTrait, iTraitCollection } from './../declarations/interfaces';
+import { iCharacterSheet, iLogEvent, iLogger, iTrait, iTraitCollection } from './../declarations/interfaces';
+import LogCollection from './log/LogCollection';
 
 export interface iTraitCollectionArguments<T extends iTrait> {
 	characterSheet: iCharacterSheet;
 	instanceCreator: (name: TraitName<T>, value: TraitValue<T>) => T;
 }
 
-export default class TraitCollection<T extends iTrait> implements iTraitCollection<T>, iLogger<T> {
+export default class TraitCollection<T extends iTrait> implements iTraitCollection<T>, iLogger<TraitValue<T>> {
 	#characterSheet: iCharacterSheet;
 	#instanceCreator: (name: TraitName<T>, value: TraitValue<T>) => T;
 	#map: TraitMap<T>;
+	#logs: LogCollection<TraitValue<T>> = new LogCollection<TraitValue<T>>();
 
 	// todo add trait typename util which gets an appropriate name based on the type of TraitName, do as conditional type
 	#typeName: string = 'Trait';
@@ -17,6 +19,9 @@ export default class TraitCollection<T extends iTrait> implements iTraitCollecti
 		this.#characterSheet = characterSheet;
 		this.#instanceCreator = instanceCreator;
 		this.#map = new Map<TraitName<T>, T>(initialData.map(e => [e.name as TraitName<T>, e]));
+	}
+	getLogData(): iLogEvent<TraitValue<T>>[] {
+		return this.#logs.toJson();
 	}
 	toJson(): T[] {
 		return Array.from(this.#map.values());
