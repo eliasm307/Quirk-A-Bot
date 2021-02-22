@@ -13,16 +13,12 @@ export interface iTrait {
 export interface iAttribute extends iTrait {
 	name: AttributeName;
 	value: number;
+	category: AttributeCategory; // todo handle category as separate interface implemented by class?
 }
 
 export interface iTouchStoneOrConviction extends iTrait {
 	name: string;
 	value: string;
-}
-
-export interface iAttribute2xxxxxxxxxxxxxxxxx extends iTrait {
-	category: AttributeCategory; // todo handle category as separate interface implemented by class
-	name: AttributeName; // todo add options explicitly
 }
 
 export interface iSkill extends iTrait {
