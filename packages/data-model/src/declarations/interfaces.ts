@@ -1,6 +1,14 @@
-
 import TraitCollection from '../classes/TraitCollection';
-import { AttributeCategory, AttributeName, ClanName, DisciplineName, SkillName, TraitName } from './types';
+import {
+	AttributeCategory,
+	AttributeName,
+	ClanName,
+	DisciplineName,
+	SkillName,
+	TraitName,
+	LogOperation,
+	LogInitialValue,
+} from './types';
 
 export interface iTrait {
 	// name: TraitName<T>;
@@ -68,11 +76,22 @@ export interface iCharacterSheet extends iCharacterSheetPrimitiveData {
 export interface iTraitCollection<T extends iTrait> {
 	get(name: TraitName<T>): T | void;
 	set(name: TraitName<T>, value: number): void;
-
 	delete(name: TraitName<T>): void;
-
 	has(name: TraitName<T>): boolean;
-
 	toJson(): iTrait[];
 	readonly size: number;
+}
+export interface iLog<T, L extends LogOperation> {
+	operation: L;
+	description: string;
+	initialValue: LogInitialValue<L>; // initial value constrait depends on operation type
+	newValue: T;
+}
+
+export interface iLogger<T> {
+	getLogData(): iLog<T, LogOperation>[];
+}
+
+export interface iLogReporter<T> {
+	generateLogReport(logger: iLogger<T>): string;
 }
