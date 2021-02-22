@@ -1,3 +1,4 @@
+import { iTouchStoneOrConviction } from './../declarations/interfaces';
 
 import fs from 'fs-extra';
 import path from 'path';
@@ -64,9 +65,13 @@ test(testName, () => {
 
 	cs.attributes.set('Strength', 5);
 	cs.skills.set('Athletics', 3);
+	cs.touchstonesAndConvictions.set('a custom one', 'something, something, something');
 
 	expect((cs.attributes.get('Strength') as iAttribute).value).toEqual(5);
 	expect((cs.skills.get('Athletics') as iSkill)?.value).toEqual(3);
+	expect((cs.touchstonesAndConvictions.get('a custom one') as iTouchStoneOrConviction)?.value).toEqual(
+		'something, something, something'
+	);
 });
 
 // todo test what happens if file doesnt exist

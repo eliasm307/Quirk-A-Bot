@@ -1,4 +1,4 @@
-import { iCharacterSheetData, iTrait as iTrait } from './../declarations/interfaces';
+import { iCharacterSheetData, iTouchStoneOrConviction } from './../declarations/interfaces';
 import path from 'path';
 import { DisciplineMap, AttributeName, DisciplineName, SkillName, TraitName, TraitMap } from './../declarations/types';
 import { iAttribute, iCharacterSheet, iDiscipline, iSkill } from '../declarations/interfaces';
@@ -9,6 +9,7 @@ import Attribute from './Attribute';
 import Skill from './Skill';
 import TraitCollection from './TraitCollection';
 import Discipline from './Discipline';
+import TouchStoneOrConviction from './TouchStoneOrConviction';
 
 interface iLoadFromFileArgs {
 	filePath?: string;
@@ -26,8 +27,8 @@ interface iPrivateModifiableProperties {
 	sire: string;
 	attributes: TraitMap<iAttribute>;
 	skills: TraitMap<iSkill>;
-	disciplines: DisciplineMap;
-	touchstonesAndConvictions: string[];
+	disciplines: TraitMap<iDiscipline>;
+	touchstonesAndConvictions: TraitMap<iTouchStoneOrConviction>;
 }
 
 // todo split this into smaller pieces
@@ -104,13 +105,17 @@ export default class CharacterSheet implements iCharacterSheet {
 		this,
 		(name, value) => new Discipline(this, name, value)
 	);
- 
+
+	readonly touchstonesAndConvictions: TraitCollection<iTouchStoneOrConviction> = new TraitCollection(
+		this,
+		(name, value) => new TouchStoneOrConviction(this, name, value)
+	);
 	//-------------------------------------
 	// TOUCHSTONES AND CONVICTIONS
 	// todo make this log changes
-	public get touchstonesAndConvictions(): string[] {
+	/*public get touchstonesAndConvictions(): string[] {
 		return [...this.#private.touchstonesAndConvictions];
-	}
+	}*/
 
 	// todo single getter method
 	// todo item adder method
@@ -133,9 +138,9 @@ export default class CharacterSheet implements iCharacterSheet {
 				clan: '',
 				sire: '',
 				attributes: TypeFactory.newTraitMap(),
-				disciplines: TypeFactory.newDisciplineMap(),
+				disciplines: TypeFactory.newTraitMap(),
 				skills: TypeFactory.newTraitMap(),
-				touchstonesAndConvictions: [],
+				touchstonesAndConvictions: TypeFactory.newTraitMap(),
 			};
 		} else if (typeof sheet === 'object') {
 			const {
@@ -169,7 +174,7 @@ export default class CharacterSheet implements iCharacterSheet {
 				attributes: TypeFactory.newTraitMap<iAttribute>(...attributes),
 				disciplines: TypeFactory.newTraitMap<iDiscipline>(...disciplines),
 				skills: TypeFactory.newTraitMap<iSkill>(...skills),
-				touchstonesAndConvictions: [...touchstonesAndConvictions],
+				touchstonesAndConvictions: TypeFactory.newTraitMap<iTouchStoneOrConviction>(...touchstonesAndConvictions),
 			};
 		} else {
 			throw `${__filename} constructor argument not defined`;
@@ -228,7 +233,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			name: this.name,
 			sire: this.sire,
 			skills: this.skills.toJson(),
-			touchstonesAndConvictions: this.touchstonesAndConvictions,
+			touchstonesAndConvictions: this.touchstonesAndConvictions.toJson(),
 			willpower: this.willpower,
 		};
 	}

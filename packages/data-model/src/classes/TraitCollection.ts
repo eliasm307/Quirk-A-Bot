@@ -1,14 +1,14 @@
-import { TraitName, TraitMap } from './../declarations/types';
+import { TraitName, TraitMap, TraitValue } from './../declarations/types';
 import { iCharacterSheet, iTrait, iTraitCollection } from './../declarations/interfaces';
 
 export default class TraitCollection<T extends iTrait> implements iTraitCollection<T> {
 	#characterSheet: iCharacterSheet;
-	#instanceCreator: (name: TraitName<T>, value: number) => T;
+	#instanceCreator: (name: TraitName<T>, value: TraitValue<T>) => T;
 	#map: TraitMap<T> = new Map<TraitName<T>, T>();
 
 	// todo add trait typename util which gets an appropriate name based on the type of TraitName
 	#typeName: string = 'Trait';
-	constructor(characterSheet: iCharacterSheet, instanceCreator: (name: TraitName<T>, value: number) => T) {
+	constructor(characterSheet: iCharacterSheet, instanceCreator: (name: TraitName<T>, value: TraitValue<T>) => T) {
 		this.#characterSheet = characterSheet;
 		this.#instanceCreator = instanceCreator;
 	}
@@ -35,7 +35,10 @@ export default class TraitCollection<T extends iTrait> implements iTraitCollecti
 	 * @param name name of trait to edit or create
 	 * @param value value to assign
 	 */
-	set(name: TraitName<T>, value: number = 0): void {
+	set( name: TraitName<T>, value: TraitValue<T> ): void {
+		
+		
+
 		// if trait already exists then just update it
 		if (this.#map.has(name)) {
 			const instance = this.#map.get(name);
