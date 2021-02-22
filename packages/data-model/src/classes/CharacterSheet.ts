@@ -1,20 +1,20 @@
-import { iCharacterSheetData, iTouchStoneOrConviction  } from './../declarations/interfaces';
-import path from 'path'; 
-import { iAttribute, iCharacterSheet, iDiscipline, iSkill } from '../declarations/interfaces'; 
+import { iCharacterSheetData, iTouchStoneOrConviction } from './../declarations/interfaces';
+import path from 'path';
+import { iAttribute, iCharacterSheet, iDiscipline, iSkill } from '../declarations/interfaces';
 import importDataFromFile from '../utils/importDataFromFile';
 import exportDataToFile from '../utils/exportDataToFile';
 import Attribute from './traits/Attribute';
 import Skill from './traits/Skill';
 import TraitCollection from './TraitCollection';
 import Discipline from './traits/Discipline';
-import TouchStoneOrConviction from './traits/TouchStoneOrConviction'; 
+import TouchStoneOrConviction from './traits/TouchStoneOrConviction';
 
 interface iLoadFromFileArgs {
 	filePath?: string;
 	fileName?: string;
 }
 
-interface iPrivateDirectlyModifiableProperties {
+interface iModifiablePrimitiveProperties {
 	health: number;
 	willpower: number;
 	hunger: number;
@@ -34,10 +34,10 @@ export default class CharacterSheet implements iCharacterSheet {
 	// private properties with custom setters and/or getters
 	static instances: Map<string, iCharacterSheet> = new Map<string, iCharacterSheet>();
 	#savePath: string; // specified in constructor
-	#private: iPrivateDirectlyModifiableProperties;
+	#private: iModifiablePrimitiveProperties;
 
 	//-------------------------------------
-	// BASIC VARIABLE GETTERS AND SETTERS  
+	// BASIC VARIABLE GETTERS AND SETTERS
 	public set health(newVal: number) {
 		this.onChange('health', newVal);
 	}
@@ -85,48 +85,17 @@ export default class CharacterSheet implements iCharacterSheet {
 	}
 	public get sire() {
 		return this.#private.sire;
-	} 
-
+	}
 	//-------------------------------------
 	// NON BASIC VARIABLE COLLECTIONS
 	readonly attributes: TraitCollection<iAttribute>;
 	readonly skills: TraitCollection<iSkill>;
-
 	readonly disciplines: TraitCollection<iDiscipline>;
-
 	readonly touchstonesAndConvictions: TraitCollection<iTouchStoneOrConviction>;
-
-	static initGetterAndSetter<K extends keyof iPrivateDirectlyModifiableProperties, V>(
-		self: CharacterSheet,
-		key: K,
-		value: V
-	) {
-		Object.defineProperty(self, key, {
-			get: function () {
-				console.log('GET', { key });
-				return self.#private[key];
-			},
-			set: function (newVal: V) {
-				console.log('SET', { key, type: typeof value });
-				self.onChange(key, newVal);
-			},
-		});
-	}
 
 	//-------------------------------------
 	// CONSTRUCTOR
 	constructor(sheet: iCharacterSheetData | number, customSavePath?: string) {
-		const basicExample: iPrivateDirectlyModifiableProperties = {
-			health: 0,
-			willpower: 0,
-			hunger: 0,
-			humanity: 0,
-			bloodPotency: 0,
-			name: '',
-			clan: '',
-			sire: '',
-		}; 
-  
 		let initialAttributes: iAttribute[] = [];
 		let initialDisciplines: iDiscipline[] = [];
 		let initialSkills: iSkill[] = [];
@@ -180,7 +149,7 @@ export default class CharacterSheet implements iCharacterSheet {
 				clan: clan,
 				sire: sire,
 			};
-			
+
 			initialAttributes = [...attributes];
 			initialDisciplines = [...disciplines];
 			initialSkills = [...skills];
@@ -231,6 +200,7 @@ export default class CharacterSheet implements iCharacterSheet {
 		if (typeof sheet === 'number') this.saveToFile();
 	}
 
+	// todo loading and saving should be done by a persistence management class
 	/**
 	 * Static method to create an instance from an existing character sheet JSON file
 	 */
@@ -283,7 +253,7 @@ export default class CharacterSheet implements iCharacterSheet {
 	saveToFile(): boolean {
 		return exportDataToFile(this.toJson(), this.#savePath);
 	}
-	private onChange<PrivateProperty extends keyof iPrivateDirectlyModifiableProperties>(
+	private onChange<PrivateProperty extends keyof iModifiablePrimitiveProperties>(
 		property: PrivateProperty,
 		newValue: any
 	): void {
