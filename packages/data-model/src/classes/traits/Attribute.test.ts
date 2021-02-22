@@ -1,6 +1,6 @@
-import { iAttribute } from '../declarations/interfaces';
-import Attribute from './Attribute';
-import CharacterSheet from './CharacterSheet';
+import { iAttribute } from '../../declarations/interfaces';
+import Attribute from '../Attribute';
+import CharacterSheet from '../CharacterSheet';
 
 const cs: CharacterSheet = new CharacterSheet(0, '../data/character-sheets/temporary/test.json');
 

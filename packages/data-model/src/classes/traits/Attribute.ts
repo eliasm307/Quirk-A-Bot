@@ -1,7 +1,7 @@
-import { AttributeName } from './../declarations/types';
-import { iAttribute, iCharacterSheet } from '../declarations/interfaces';
-import { AttributeCategory } from '../declarations/types';
-import CharacterSheet from './CharacterSheet';
+import { AttributeName } from '../../declarations/types';
+import { iAttribute, iCharacterSheet } from '../../declarations/interfaces';
+import { AttributeCategory } from '../../declarations/types';
+import CharacterSheet from '../CharacterSheet';
 import BaseTrait from './BaseTrait';
 
 interface iPrivateModifiableProperties {

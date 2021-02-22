@@ -1,5 +1,5 @@
-import { SkillName, TraitName, TraitValue } from './../declarations/types';
-import { iCharacterSheet, iTrait } from './../declarations/interfaces';
+import { SkillName, TraitName, TraitValue } from '../../declarations/types';
+import { iCharacterSheet, iTrait } from '../../declarations/interfaces';
 
 interface iPrivateModifiableProperties<T> {
 	value: TraitValue<T>;

@@ -1,9 +1,9 @@
 import { ATTRIBUTE_CATEGORIES, TRAIT_TYPES } from './../constants';
-import Attribute from '../classes/Attribute';
-import Skill from '../classes/Skill';
+import Attribute from '../classes/traits/Attribute';
+import Skill from '../classes/traits/Skill';
 import { ATTRIBUTE_NAMES, SKILL_NAMES, DISCIPLINE_NAMES } from '../constants';
 import { iAttribute, iDiscipline, iSkill, iTrait, iTouchStoneOrConviction } from './interfaces';
-import Discipline from '../classes/Discipline';
+import Discipline from '../classes/traits/Discipline';
 
 export type ClanName = 'Caitiff' | string; // todo explicitly specify names
 export type AttributeCategory = typeof ATTRIBUTE_CATEGORIES[number];

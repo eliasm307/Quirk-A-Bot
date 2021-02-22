@@ -14,11 +14,11 @@ import { iAttribute, iCharacterSheet, iDiscipline, iSkill } from '../declaration
 import TypeFactory from './TypeFactory';
 import importDataFromFile from '../utils/importDataFromFile';
 import exportDataToFile from '../utils/exportDataToFile';
-import Attribute from './Attribute';
-import Skill from './Skill';
+import Attribute from './traits/Attribute';
+import Skill from './traits/Skill';
 import TraitCollection, { iTraitCollectionArguments } from './TraitCollection';
-import Discipline from './Discipline';
-import TouchStoneOrConviction from './TouchStoneOrConviction';
+import Discipline from './traits/Discipline';
+import TouchStoneOrConviction from './traits/TouchStoneOrConviction';
 import { isAttributeName, isDisciplineName, isSkillName } from '../utils/typePredicates';
 
 interface iLoadFromFileArgs {
