@@ -1,4 +1,4 @@
-import { iCharacterSheetData, iTouchStoneOrConviction } from './../declarations/interfaces';
+import { iCharacterSheetData, iLogEvent, iLogger, iTouchStoneOrConviction, iLogCollection } from './../declarations/interfaces';
 import path from 'path';
 import { iAttribute, iCharacterSheet, iDiscipline, iSkill } from '../declarations/interfaces';
 import importDataFromFile from '../utils/importDataFromFile';
@@ -8,6 +8,8 @@ import Skill from './traits/Skill';
 import TraitCollection from './TraitCollection';
 import Discipline from './traits/Discipline';
 import TouchStoneOrConviction from './traits/TouchStoneOrConviction';
+import { LogOperation } from '../declarations/types';
+import LogCollection from './log/LogCollection';
 
 interface iLoadFromFileArgs {
 	filePath?: string;
@@ -27,11 +29,15 @@ interface iModifiablePrimitiveProperties {
 
 // todo split this into smaller pieces
 
-export default class CharacterSheet implements iCharacterSheet {
+type LogDataType = string | number;
+
+export default class CharacterSheet implements iCharacterSheet, iLogger< LogDataType> {
 	readonly discordUserId: number;
 
 	//-------------------------------------
 	// private properties with custom setters and/or getters
+
+	/** Existing instances of this class */
 	static instances: Map<string, iCharacterSheet> = new Map<string, iCharacterSheet>();
 	#savePath: string; // specified in constructor
 	#private: iModifiablePrimitiveProperties;
@@ -268,10 +274,17 @@ export default class CharacterSheet implements iCharacterSheet {
 		this.#private[property] = newValue;
 
 		// todo record change, create a log class where this has an array of logs
+		this.#logEvents.log(event)
 
 		// attempt autosave
 		this.saveToFile()
 			? null /*console.log(__filename, `Successfully saved change`, { property, oldValue, newValue })*/
 			: console.error(__filename, `Error while saving change`, { property, oldValue, newValue });
+	}
+
+	#logEvents: iLogCollection<LogDataType> = new LogCollection();
+
+	getLogData(): iLogEvent<any, LogOperation>[] {
+		return [...this.#logEvents.toJson()];
 	}
 }

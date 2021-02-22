@@ -81,17 +81,24 @@ export interface iTraitCollection<T extends iTrait> {
 	toJson(): iTrait[];
 	readonly size: number;
 }
-export interface iLog<T, L extends LogOperation> {
+
+export interface iLogEvent<T, L extends LogOperation> {
 	operation: L;
 	description: string;
 	initialValue: LogInitialValue<L>; // initial value constrait depends on operation type
 	newValue: T;
 }
 
+/** For objects that require internal logging */
 export interface iLogger<T> {
-	getLogData(): iLog<T, LogOperation>[];
+	getLogData(): iLogEvent<T, LogOperation>[];
 }
 
 export interface iLogReporter<T> {
 	generateLogReport(logger: iLogger<T>): string;
+}
+
+export interface iLogCollection<T> {
+	log(event: iLogEvent<T, LogOperation>): void;
+	toJson(): iLogEvent<T, LogOperation>[];
 }
