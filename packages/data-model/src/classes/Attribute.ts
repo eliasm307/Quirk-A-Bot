@@ -2,6 +2,7 @@ import { AttributeName } from './../declarations/types';
 import { iAttribute, iCharacterSheet } from '../declarations/interfaces';
 import { AttributeCategory } from '../declarations/types';
 import CharacterSheet from './CharacterSheet';
+import BaseTrait from './BaseTrait';
 
 interface iPrivateModifiableProperties {
 	value: number;
@@ -9,31 +10,12 @@ interface iPrivateModifiableProperties {
 
 // todo make a base trait class that implements iTrait, which is implemented by Skills, Attributes etc
 
-export default class Attribute implements iAttribute {
-	#private: iPrivateModifiableProperties;
-	#characterSheet: iCharacterSheet;
-
+export default class Attribute extends BaseTrait<iAttribute> implements iAttribute {
 	readonly category: AttributeCategory;
-	readonly name: AttributeName;
 
-	public set value(newVal: number) {
-		this.onChange('value', newVal);
-	}
-	public get value() {
-		return this.#private.value;
-	}
- 
 	constructor(characterSheet: iCharacterSheet, name: AttributeName, value: number = 0) {
-		this.#characterSheet = characterSheet;
-		this.name = name;
+		super(characterSheet, name, value);
 		this.category = this.getCategory(name);
-		this.#private = {
-			value: value,
-		};
-
-		// todo, account for when this is instantiated independently, not by a CharacterSheet. Maybe use a factory? Or check for this when a change is made, ie before a save needs to be made (you could update the reference to the attribute based on which one was updated last? this seems like a bad pattern)
-		// make sure character sheet has a reference to this attribute // ? will this produce any cyclic behaviour? tested, and YES it does
-		// if (!this.#characterSheet.getAttributeByName(name)) this.#characterSheet.setAttribute(name, value);
 	}
 
 	private getCategory(name: AttributeName): AttributeCategory {
@@ -54,7 +36,7 @@ export default class Attribute implements iAttribute {
 				throw `${__filename} ERROR: Unknown attribute name "${name}"`;
 		}
 	}
-
+	/*
 	private onChange<PrivateProperty extends keyof iPrivateModifiableProperties>(
 		property: PrivateProperty,
 		newValue: any
@@ -75,5 +57,5 @@ export default class Attribute implements iAttribute {
 		this.#characterSheet.saveToFile()
 			? console.log(__filename, `Successfully saved change`, { property, oldValue, newValue })
 			: console.error(__filename, `Error while saving change`, { property, oldValue, newValue });
-	}
+	}*/
 }

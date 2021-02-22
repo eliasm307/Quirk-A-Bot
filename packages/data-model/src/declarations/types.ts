@@ -5,7 +5,7 @@ import { ATTRIBUTE_NAMES, SKILL_NAMES, DISCIPLINE_NAMES } from '../constants';
 import { iAttribute, iDiscipline, iSkill, iTrait, iTouchStoneOrConviction } from './interfaces';
 import Discipline from '../classes/Discipline';
 
-export type ClanName = string; // todo explicitly specify names
+export type ClanName = 'Caitiff' | string; // todo explicitly specify names
 export type AttributeCategory = typeof ATTRIBUTE_CATEGORIES[number];
 export type AttributeName = typeof ATTRIBUTE_NAMES[number];
 export type SkillName = typeof SKILL_NAMES[number];
@@ -19,7 +19,7 @@ export type TraitName<T> = T extends iSkill
 	? AttributeName
 	: T extends iDiscipline
 	? DisciplineName
-	: string; // todo make sure this covers all options
+	: string; // NOTE make sure this covers all options
 
 export type TraitValue<T> = T extends iTouchStoneOrConviction ? string : number;
 export type TraitMap<T extends iTrait> = Map<TraitName<T>, T>;
