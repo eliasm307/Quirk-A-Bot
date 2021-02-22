@@ -1,5 +1,5 @@
 import { SkillName } from '../declarations/types';
-import { iSkill } from '../declarations/interfaces';
+import { iCharacterSheet, iSkill } from '../declarations/interfaces';
 import CharacterSheet from './CharacterSheet';
 
 interface iPrivateModifiableProperties {
@@ -8,7 +8,7 @@ interface iPrivateModifiableProperties {
 
 export default class Skill implements iSkill {
 	#private: iPrivateModifiableProperties;
-	#characterSheet: CharacterSheet;
+	#characterSheet: iCharacterSheet;
 
 	readonly name: SkillName;
 
@@ -20,7 +20,7 @@ export default class Skill implements iSkill {
 	}
 
 	// todo dont use CharacterSheet class as dependency
-	constructor(characterSheet: CharacterSheet, name: SkillName, value: number = 0) {
+	constructor(characterSheet: iCharacterSheet, name: SkillName, value: number = 0) {
 		this.#characterSheet = characterSheet;
 		this.name = name;
 		this.#private = {

@@ -1,16 +1,22 @@
 import { TraitName, TraitMap, TraitValue } from './../declarations/types';
 import { iCharacterSheet, iTrait, iTraitCollection } from './../declarations/interfaces';
 
+export interface iTraitCollectionArguments<T extends iTrait> {
+	characterSheet: iCharacterSheet;
+	instanceCreator: (name: TraitName<T>, value: TraitValue<T>) => T;
+}
+
 export default class TraitCollection<T extends iTrait> implements iTraitCollection<T> {
 	#characterSheet: iCharacterSheet;
 	#instanceCreator: (name: TraitName<T>, value: TraitValue<T>) => T;
-	#map: TraitMap<T> = new Map<TraitName<T>, T>();
+	#map: TraitMap<T>;
 
 	// todo add trait typename util which gets an appropriate name based on the type of TraitName
 	#typeName: string = 'Trait';
-	constructor(characterSheet: iCharacterSheet, instanceCreator: (name: TraitName<T>, value: TraitValue<T>) => T) {
+	constructor({ characterSheet, instanceCreator }: iTraitCollectionArguments<T>, ...initialData: T[]) {
 		this.#characterSheet = characterSheet;
 		this.#instanceCreator = instanceCreator;
+		this.#map = new Map<TraitName<T>, T>(initialData.map(e => [e.name as TraitName<T>, e]));
 	}
 	toJson(): T[] {
 		return Array.from(this.#map.values());
@@ -35,10 +41,7 @@ export default class TraitCollection<T extends iTrait> implements iTraitCollecti
 	 * @param name name of trait to edit or create
 	 * @param value value to assign
 	 */
-	set( name: TraitName<T>, value: TraitValue<T> ): void {
-		
-		
-
+	set(name: TraitName<T>, value: TraitValue<T>): void {
 		// if trait already exists then just update it
 		if (this.#map.has(name)) {
 			const instance = this.#map.get(name);

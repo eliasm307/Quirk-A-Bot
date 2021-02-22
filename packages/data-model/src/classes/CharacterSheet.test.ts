@@ -59,7 +59,7 @@ test(testName, () => {
 	expect(cs2.hunger).toEqual(testHungerValue);
 });
 
-testName = 'test trait methods';
+testName = 'test basic trait methods';
 test(testName, () => {
 	const cs = CharacterSheet.loadFromFile({ filePath: filePathRandom });
 
@@ -72,6 +72,8 @@ test(testName, () => {
 	expect((cs.touchstonesAndConvictions.get('a custom one') as iTouchStoneOrConviction)?.value).toEqual(
 		'something, something, something'
 	);
-});
+} );
+
+ 
 
 // todo test what happens if file doesnt exist

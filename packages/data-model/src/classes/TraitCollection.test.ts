@@ -1,11 +1,15 @@
-import { AttributeName } from './../declarations/types'; 
+import { AttributeName } from './../declarations/types';
 import { testCs, testCsRandom } from '../utils/testUtils';
 import TraitCollection from './TraitCollection';
 import Attribute from './Attribute';
+import { iAttribute } from '../declarations/interfaces';
 
 test('traitCollection CRUD tests', () => {
 	const cs = testCsRandom;
-	const tc = new TraitCollection<Attribute>(cs, (name, value) => new Attribute(cs, name, value));
+	const tc = new TraitCollection<iAttribute>({
+		characterSheet: cs,
+		instanceCreator: (name, value) => new Attribute(cs, name, value),
+	});
 
 	// test size method
 	expect(tc.size).toEqual(0);
@@ -29,4 +33,45 @@ test('traitCollection CRUD tests', () => {
 	// test deleting existing entry
 	tc.delete('Wits');
 	expect(tc.size).toEqual(0);
+});
+
+test('traitCollection instantiation with initial data', () => {
+	const cs = testCs;
+	const tc = new TraitCollection<iAttribute>({
+		characterSheet: cs,
+		instanceCreator: (name, value) => new Attribute(cs, name, value),
+	});
+
+	// add items
+	tc.set('Wits', 3);
+	tc.set('Charisma', 4);
+	tc.set('Manipulation', 1);
+
+	// expect atleast 3 items
+	expect(tc.size).toBeGreaterThanOrEqual(3);
+
+	const count = tc.size;
+
+	const traits = tc.toJson();
+
+	// separate instance of same character sheet, no inital data
+	const tc2 = new TraitCollection<iAttribute>({
+		characterSheet: cs,
+		instanceCreator: (name, value) => new Attribute(cs, name, value),
+	});
+
+	// no items expected
+	expect(tc2.size).toEqual(0);
+
+	// separate instance of same character sheet, with inital data
+	const tc3 = new TraitCollection<iAttribute>(
+		{
+			characterSheet: cs,
+			instanceCreator: (name, value) => new Attribute(cs, name, value),
+		},
+		...tc.toJson()
+	);
+
+	// same items as initial expected
+	expect(tc3.size).toEqual(tc.size);
 });

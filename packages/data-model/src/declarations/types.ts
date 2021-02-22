@@ -1,4 +1,4 @@
-import { ATTRIBUTE_CATEGORIES } from './../constants';
+import { ATTRIBUTE_CATEGORIES, TRAIT_TYPES } from './../constants';
 import Attribute from '../classes/Attribute';
 import Skill from '../classes/Skill';
 import { ATTRIBUTE_NAMES, SKILL_NAMES, DISCIPLINE_NAMES } from '../constants';
@@ -23,6 +23,8 @@ export type TraitName<T> = T extends iSkill
 
 export type TraitValue<T> = T extends iTouchStoneOrConviction ? string : number;
 export type TraitMap<T extends iTrait> = Map<TraitName<T>, T>;
+
+export type TraitType = typeof TRAIT_TYPES[ number ];
 
 /*T extends Skill
 	? SkillMap
