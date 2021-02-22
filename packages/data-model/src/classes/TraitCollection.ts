@@ -1,7 +1,7 @@
 import { TraitName, TraitMap } from './../declarations/types';
 import { iCharacterSheet, iTrait, iTraitCollection } from './../declarations/interfaces';
 
-export default class TraitCollection<T extends iTrait  > implements iTraitCollection<T> {
+export default class TraitCollection<T extends iTrait> implements iTraitCollection<T> {
 	#characterSheet: iCharacterSheet;
 	#instanceCreator: (name: TraitName<T>, value: number) => T;
 	#map: TraitMap<T> = new Map<TraitName<T>, T>();
@@ -12,7 +12,7 @@ export default class TraitCollection<T extends iTrait  > implements iTraitCollec
 		this.#characterSheet = characterSheet;
 		this.#instanceCreator = instanceCreator;
 	}
-	toJson(): T [] {
+	toJson(): T[] {
 		return Array.from(this.#map.values());
 	}
 	get size(): number {
@@ -30,6 +30,11 @@ export default class TraitCollection<T extends iTrait  > implements iTraitCollec
 		return this.#map.has(name);
 	}
 
+	/**
+	 * Update trait value if it exists, otherwise add a new one
+	 * @param name name of trait to edit or create
+	 * @param value value to assign
+	 */
 	set(name: TraitName<T>, value: number = 0): void {
 		// if trait already exists then just update it
 		if (this.#map.has(name)) {

@@ -1,5 +1,5 @@
 import { SkillName } from '../declarations/types';
-import { iSkill } from '../declarations/interfaces'; 
+import { iSkill } from '../declarations/interfaces';
 import CharacterSheet from './CharacterSheet';
 
 interface iPrivateModifiableProperties {
@@ -9,7 +9,7 @@ interface iPrivateModifiableProperties {
 export default class Skill implements iSkill {
 	#private: iPrivateModifiableProperties;
 	#characterSheet: CharacterSheet;
- 
+
 	readonly name: SkillName;
 
 	public set value(newVal: number) {
@@ -22,16 +22,15 @@ export default class Skill implements iSkill {
 	// todo dont use CharacterSheet class as dependency
 	constructor(characterSheet: CharacterSheet, name: SkillName, value: number = 0) {
 		this.#characterSheet = characterSheet;
-		this.name = name; 
+		this.name = name;
 		this.#private = {
 			value: value,
 		};
 
 		// todo, account for when this is instantiated independently, not by a CharacterSheet. Maybe use a factory? Or check for this when a change is made, ie before a save needs to be made (you could update the reference to the Skill based on which one was updated last? this seems like a bad pattern)
-		// make sure character sheet has a reference to this Skill // ? will this produce any cyclic behaviour? tested, and YES it does
+		// make sure character sheet has a reference to this Skill // will this produce any cyclic behaviour? tested, and YES it does
 		// if (!this.#characterSheet.getSkillByName(name)) this.#characterSheet.setSkill(name, value);
 	}
- 
 
 	private onChange<PrivateProperty extends keyof iPrivateModifiableProperties>(
 		property: PrivateProperty,

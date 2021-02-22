@@ -1,5 +1,5 @@
 import { AttributeName } from './../declarations/types';
-import { iAttribute } from '../declarations/interfaces';
+import { iAttribute, iCharacterSheet } from '../declarations/interfaces';
 import { AttributeCategory } from '../declarations/types';
 import CharacterSheet from './CharacterSheet';
 
@@ -11,7 +11,7 @@ interface iPrivateModifiableProperties {
 
 export default class Attribute implements iAttribute {
 	#private: iPrivateModifiableProperties;
-	#characterSheet: CharacterSheet;
+	#characterSheet: iCharacterSheet;
 
 	readonly category: AttributeCategory;
 	readonly name: AttributeName;
@@ -22,9 +22,8 @@ export default class Attribute implements iAttribute {
 	public get value() {
 		return this.#private.value;
 	}
-
-	// todo dont use CharacterSheet class as dependency
-	constructor(characterSheet: CharacterSheet, name: AttributeName, value: number = 0) {
+ 
+	constructor(characterSheet: iCharacterSheet, name: AttributeName, value: number = 0) {
 		this.#characterSheet = characterSheet;
 		this.name = name;
 		this.category = this.getCategory(name);

@@ -54,27 +54,14 @@ export interface iCharacterSheet extends iCharacterSheetPrimitiveData {
 	saveToFile(): boolean; // ? should this be handled by another class?
 	toJson(): iCharacterSheetData;
 
-	// this is difficult to implement because at some point you need to choose a
+	// this is too general and causes intellisense to stop working, prefer using custom collections 
 	// setTrait<T extends iTrait>(name: TraitName<T>, value: number): void;
 
 	skills: TraitCollection<iSkill>;
 	attributes: TraitCollection<iAttribute>;
-
 	disciplines: TraitCollection<iDiscipline>;
 
-	/*
-	// ? make traitCollection class to do these operations?
 
-	setSkill(name: SkillName, value: number): void;
-	getSkillByName(name: SkillName): iSkill | null;
-	// todo removeSkill(name: SkillName): void;
-
-	// ? make traitCollection class to do these operations?
-	setAttribute(name: AttributeName, value: number): void;
-	getAttributeByName(name: AttributeName): iAttribute | null;
-	// todo removeAttribute(name: AttributeName): void;
-
-	*/
 }
 
 export interface iTraitCollection<T extends iTrait > {

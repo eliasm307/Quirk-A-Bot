@@ -94,161 +94,20 @@ export default class CharacterSheet implements iCharacterSheet {
 		return this.#private.sire;
 	}
 
-
-	//-------------------------------------
-	// GENERIC METHODS
-	/*
-	private getGenericTraitByName<N, T>(name: N, map: Map<N, T>): T | null {
-		return map.get(name) as T;
-	}
-
-	private setGenericTraitValue<N, T extends iTrait<T>>(
-		map: TraitMap<T>,
-		name: TraitName<T>,
-		value: number,
-		instanceCreator: () => T,
-		typeName: 'Attribute' | 'Skill' | 'Discipline' | string = 'Detail'
-	): void {
-		// console.warn(__filename, `setting value for ${typeName} with name '${name}' to value '${value}'`);
-
-		// todo find out how to print type name, ie ${ReturnType<typeof instanceCreator>}
-
-		if (name && value) {
-			// if detail already exists then just update it
-			if (map.has(name)) {
-				const instance = map.get(name);
-
-				if (!instance)
-					return console.error(__filename, `${typeName} with name '${name}' is not defined but key exists`);
-
-				// todo add on change handler call
-				instance.value = value;
-			} else {
-				// todo add on change handler call for new detail
-				// else add new detail instance
-				map.set(name, instanceCreator());
-			}
-		} else {
-			console.error(__filename, `set${typeName} error: bad inputs`, { attribute: name, value });
-		}
-	}
-*/
-
-	/*
-	// NOTE this could work but its a bit too convoluted for intellisense to work properly so no major benefits
-	public setTrait<T extends iTrait>( name: TraitName<T>, value: number ): void {
-		// todo make sure this covers all cases
-		if (isAttributeName(name)) {
-			return this.setGenericTraitValue(
-				this.#private.attributes,
-				name,
-				value,
-				() => new Attribute(this, name, value),
-				'Attribute'
-			);
-		} else if ( isSkillName( name ) ) {
-			return this.setGenericTraitValue(
-				this.#private.skills,
-				name,
-				value,
-				() => new Skill(this, name, value),
-				'Skill'
-			);
-		} else {
-			throw `Trait name unkown: ${name}`;
-		}
-	}
-	*/
-
-	// todo add remove detail method
-
-	//-------------------------------------
-	// ATTRIBUTES
-
 	readonly attributes: TraitCollection<iAttribute> = new TraitCollection(
 		this,
 		(name, value) => new Attribute(this, name, value)
 	);
-
-	/*
-	public get attributes(): iAttribute[] {
-		return Array.from(this.#private.attributes.values());
-	}
-	public getAttributeByName(name: AttributeName): iAttribute | null {
-		return this.getGenericTraitByName(name, this.#private.attributes);
-	}  
-*/
-
-	/**
-	 * Update attribute value if it exists, otherwise add the attribute
-	 * @param name attribute name
-	 * @param value attribute value
-	 */
-	/*
-	public setAttribute(name: AttributeName, value: number): void {
-		return this.setGenericTraitValue(
-			this.#private.attributes,
-			name,
-			value,
-			() => new Attribute(this, name, value),
-			'Attribute'
-		);
-		if (typeof name === 'string' && name && typeof value === 'number') {
-			// if attribute already exists then just update it
-			if (this.#private.attributes.has(name)) {
-				const instance = this.#private.attributes.get(name);
-
-				if (!instance) return console.error(__filename, `Attribute with name '${name}' is not defined but key exists`);
-
-				console.log(__filename, `Setting attribute value on `);
-				instance.value = value;
-			} else {
-				// else add new attribute instance
-				this.#private.attributes.set(name, new Attribute(this, name, value));
-			}
-		} else {
-			console.error(__filename, 'addAttribute error: bad inputs', { attribute: name, value });
-		}
-	}
-*/
-	//-------------------------------------
-	// SKILLS
 	readonly skills: TraitCollection<iSkill> = new TraitCollection(this, (name, value) => new Skill(this, name, value));
-
-	/*
-	public get skillsx(): iSkill[] {
-		return Array.from(this.#private.skills.values());
-	}
-
-	public getSkillByName(name: SkillName): iSkill | null {
-		return this.getGenericTraitByName(name, this.#private.skills);
-	}
-
-	private setSkill(name: SkillName, value: number): void {
-		return this.setGenericTraitValue(this.#private.skills, name, value, () => new Skill(this, name, value), 'skill');
-	}*/
-
-	// todo add remove method
-
-	//-------------------------------------
-	// DISCIPLINES
-	// todo do this as a map
-	/*
-	public get disciplines(): iDiscipline[] {
-		return Array.from(this.#private.disciplines.values());
-	}
-	*/
 
 	readonly disciplines: TraitCollection<iDiscipline> = new TraitCollection(
 		this,
 		(name, value) => new Discipline(this, name, value)
 	);
-
-	// todo single getter method
-	// todo item adder method
-	// todo add remove method
+ 
 	//-------------------------------------
 	// TOUCHSTONES AND CONVICTIONS
+	// todo make this log changes
 	public get touchstonesAndConvictions(): string[] {
 		return [...this.#private.touchstonesAndConvictions];
 	}
@@ -307,9 +166,9 @@ export default class CharacterSheet implements iCharacterSheet {
 				clan: clan,
 				sire: sire,
 
-				attributes: TypeFactory.newTraitMap<iAttribute>(...attributes ),
-				disciplines: TypeFactory.newTraitMap<iDiscipline>(...disciplines ),
-				skills: TypeFactory.newTraitMap<iSkill>(...skills ),
+				attributes: TypeFactory.newTraitMap<iAttribute>(...attributes),
+				disciplines: TypeFactory.newTraitMap<iDiscipline>(...disciplines),
+				skills: TypeFactory.newTraitMap<iSkill>(...skills),
 				touchstonesAndConvictions: [...touchstonesAndConvictions],
 			};
 		} else {
@@ -324,7 +183,7 @@ export default class CharacterSheet implements iCharacterSheet {
 		// if only user id was provided, assume this is a new sheet then do initial save so a persistent file exists
 		if (typeof sheet === 'number') this.saveToFile();
 	}
-  
+
 	/**
 	 * Static method to create an instance from an existing character sheet JSON file
 	 */
