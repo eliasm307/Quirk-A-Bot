@@ -324,42 +324,7 @@ export default class CharacterSheet implements iCharacterSheet {
 		// if only user id was provided, assume this is a new sheet then do initial save so a persistent file exists
 		if (typeof sheet === 'number') this.saveToFile();
 	}
-	setSkill(name: 'Athletics' | 'Brawl' | 'Craft', value: number): void {
-		throw new Error('Method not implemented.');
-	}
-	getSkillByName(name: 'Athletics' | 'Brawl' | 'Craft'): iSkill | null {
-		throw new Error('Method not implemented.');
-	}
-	setAttribute(
-		name:
-			| 'Strength'
-			| 'Dexterity'
-			| 'Stamina'
-			| 'Charisma'
-			| 'Manipulation'
-			| 'Composure'
-			| 'Intelligence'
-			| 'Wits'
-			| 'Resolve',
-		value: number
-	): void {
-		throw new Error('Method not implemented.');
-	}
-	getAttributeByName(
-		name:
-			| 'Strength'
-			| 'Dexterity'
-			| 'Stamina'
-			| 'Charisma'
-			| 'Manipulation'
-			| 'Composure'
-			| 'Intelligence'
-			| 'Wits'
-			| 'Resolve'
-	): iAttribute | null {
-		throw new Error('Method not implemented.');
-	}
-
+  
 	/**
 	 * Static method to create an instance from an existing character sheet JSON file
 	 */

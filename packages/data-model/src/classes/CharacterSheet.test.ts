@@ -1,5 +1,7 @@
+
 import fs from 'fs-extra';
 import path from 'path';
+import { iAttribute, iSkill } from '../declarations/interfaces';
 import CharacterSheet from './CharacterSheet';
 
 const testUserId = Math.floor(Math.random() * 999999);
@@ -60,13 +62,11 @@ testName = 'test trait methods';
 test(testName, () => {
 	const cs = CharacterSheet.loadFromFile({ filePath: filePathRandom });
 
-	cs.setAttribute('Strength', 5);
-	cs.setSkill('Athletics', 3);
+	cs.attributes.set('Strength', 5);
+	cs.skills.set('Athletics', 3);
 
-	expect(cs.getAttributeByName('Strength')?.value).toEqual(5);
-	expect( cs.getSkillByName( 'Athletics' )?.value ).toEqual( 3 );
-	
-	
+	expect((cs.attributes.get('Strength') as iAttribute).value).toEqual(5);
+	expect((cs.skills.get('Athletics') as iSkill)?.value).toEqual(3);
 });
 
 // todo test what happens if file doesnt exist

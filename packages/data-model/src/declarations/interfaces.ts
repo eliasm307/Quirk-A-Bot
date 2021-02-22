@@ -52,6 +52,7 @@ export interface iCharacterSheetData extends iCharacterSheetPrimitiveData, iChar
 
 export interface iCharacterSheet extends iCharacterSheetPrimitiveData {
 	saveToFile(): boolean; // ? should this be handled by another class?
+	toJson(): iCharacterSheetData;
 
 	// this is difficult to implement because at some point you need to choose a
 	// setTrait<T extends iTrait>(name: TraitName<T>, value: number): void;
@@ -61,6 +62,7 @@ export interface iCharacterSheet extends iCharacterSheetPrimitiveData {
 
 	disciplines: TraitCollection<iDiscipline>;
 
+	/*
 	// ? make traitCollection class to do these operations?
 
 	setSkill(name: SkillName, value: number): void;
@@ -72,7 +74,7 @@ export interface iCharacterSheet extends iCharacterSheetPrimitiveData {
 	getAttributeByName(name: AttributeName): iAttribute | null;
 	// todo removeAttribute(name: AttributeName): void;
 
-	/*	*/
+	*/
 }
 
 export interface iTraitCollection<T extends iTrait > {
