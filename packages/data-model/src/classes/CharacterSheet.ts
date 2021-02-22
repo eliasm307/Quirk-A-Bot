@@ -295,7 +295,7 @@ export default class CharacterSheet implements iCharacterSheet, iLogger<LogDataT
 		this.#private[property] = newValue;
 
 		// todo record change, create a log class where this has an array of logs
-		this.#logEvents.log(new LogEvent({ operation: 'DELETE', oldValue }));
+		this.#logEvents.log(new LogEvent({ operation: 'UPDATE', oldValue, newValue, property }));
 
 		// attempt autosave
 		this.saveToFile()

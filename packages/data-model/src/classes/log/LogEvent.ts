@@ -1,12 +1,12 @@
 import { LogOperation, LogInitialValue, LogNewValue } from './../../declarations/types';
 import { iLogEvent } from './../../declarations/interfaces';
 
-
 interface Props<T, L extends LogOperation> {
-	operation: L;
+	operation: LogOperation;
 	description?: string;
-	oldValue?: LogInitialValue<T, L>;
-	newValue?: LogNewValue<T, L>;
+	oldValue?: T;
+	newValue?: T;
+	property: string;
 }
 interface PropsOLD<T, L extends LogOperation> {
 	operation: L;
@@ -39,22 +39,23 @@ type props<T, L extends LogOperation> = L extends 'DELETE'
 
 // todo try applying conditional types for the initial and new values based on operation type here
 export default class LogEvent<T, L extends LogOperation> implements iLogEvent<T> {
-	operation: L;
+	operation: LogOperation;
 	description?: string;
-	initialValue?: LogInitialValue<T, L>;
-	newValue?: LogNewValue<T, L>;
+	initialValue?: T;
+	newValue?: T;
+	property: string;
 
-	constructor({ operation, description, oldValue, newValue }: Props<T, L>) {
+	constructor({ operation, description, oldValue, newValue, property }: Props<T, L>) {
 		// check values are defined correctly
 		switch (operation) {
 			case 'ADD':
 				if (!newValue) throw Error(`${operation} operation requires a newValue to be defined`);
 				if (oldValue)
-					console.warn(__filename, `${operation} operation doesnt require an initial value, this will be ignored`);
+					console.warn(__filename, `${operation} operation doesnt require an old value, this will be ignored`);
 				break;
 
 			case 'DELETE':
-				if (!oldValue) throw Error(`${operation} operation requires a newValue to be defined`);
+				if (!oldValue) throw Error(`${operation} operation requires a oldValue to be defined`);
 				if (newValue)
 					console.warn(__filename, `${operation} operation doesnt require a new value, this will be ignored`);
 				break;
@@ -72,5 +73,6 @@ export default class LogEvent<T, L extends LogOperation> implements iLogEvent<T>
 		this.description = description;
 		this.initialValue = oldValue;
 		this.newValue = newValue;
+		this.property = property;
 	}
 }

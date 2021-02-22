@@ -63,6 +63,20 @@ test(testName, () => {
 
 	// check changes were logged
 	expect(csLoaded.getLogData().length).toBeGreaterThanOrEqual(3);
+
+	// add more log items
+	csLoaded.health += 3;
+	csLoaded.bloodPotency += 3;
+	csLoaded.hunger += 3;
+
+	console.log({
+		testName,
+		log1: csLoaded.getLogData(),
+		log2: cs2.getLogData(),
+	});
+
+	// check changes were logged
+	expect(csLoaded.getLogData().length).toBeGreaterThanOrEqual(6);
 	expect(csLoaded.getLogData()).toEqual(cs2.getLogData());
 });
 
