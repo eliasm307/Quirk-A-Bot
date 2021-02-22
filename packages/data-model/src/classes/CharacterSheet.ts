@@ -93,13 +93,15 @@ export default class CharacterSheet implements iCharacterSheet {
 	}
 	public get clan() {
 		return this.#private.clan;
-	}
+	} /*
 	public set sire(newVal: string) {
 		this.onChange('sire', newVal);
 	}
 	public get sire() {
 		return this.#private.sire;
 	}
+
+	*/
 
 	//-------------------------------------
 	// NON BASIC VARIABLE COLLECTIONS
@@ -110,10 +112,65 @@ export default class CharacterSheet implements iCharacterSheet {
 
 	readonly touchstonesAndConvictions: TraitCollection<iTouchStoneOrConviction>;
 
+	static initGetterAndSetter<K extends keyof iPrivateDirectlyModifiableProperties, V>(
+		self: CharacterSheet,
+		key: K,
+		value: V
+	) {
+		Object.defineProperty(self, key, {
+			get: function () {
+				console.log('GET', { key });
+				return self.#private[key];
+			},
+			set: function (newVal: V) {
+				console.log('SET', { key, type: typeof value });
+				self.onChange(key, newVal);
+			},
+		});
+	}
+
 	//-------------------------------------
 	// CONSTRUCTOR
 	constructor(sheet: iCharacterSheetData | number, customSavePath?: string) {
-		
+		const basicExample: iPrivateDirectlyModifiableProperties = {
+			health: 0,
+			willpower: 0,
+			hunger: 0,
+			humanity: 0,
+			bloodPotency: 0,
+			name: '',
+			clan: '',
+			sire: '',
+		};
+
+		/*for (let [key, value] of Object.entries(basicExample)) {
+			const key2: keyof iPrivateDirectlyModifiableProperties = key;
+			Object.defineProperty(this, key, {
+				get: (): any => {
+					return this.#private[key];
+				},
+				set: (value: any) => {
+					if (this.data[key] !== value) {
+						this.data[key] = value;
+						this.updatedKeys.push(key);
+					}
+				},
+			});
+		}*/
+
+		for (let [key, value] of Object.entries(basicExample)) {
+			CharacterSheet.initGetterAndSetter(this , key as keyof iPrivateDirectlyModifiableProperties, value);
+			/*Object.defineProperty(this, key, {
+				get: function () {
+					console.log('GET', { key });
+					return this.#private[key];
+				},
+				set: function (newVal: any) {
+					console.log('SET', { key, type: typeof value });
+					this.onChange(key, newVal);
+				},
+			});*/
+		}
 		/*
 		function collectionInitArgs<T extends iTrait>(
 			characterSheet: iCharacterSheet,
