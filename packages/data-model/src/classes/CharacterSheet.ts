@@ -113,6 +113,8 @@ export default class CharacterSheet implements iCharacterSheet {
 	//-------------------------------------
 	// CONSTRUCTOR
 	constructor(sheet: iCharacterSheetData | number, customSavePath?: string) {
+		
+		/*
 		function collectionInitArgs<T extends iTrait>(
 			characterSheet: iCharacterSheet,
 			traitType: TraitType
@@ -134,6 +136,7 @@ export default class CharacterSheet implements iCharacterSheet {
 				},
 			} as iTraitCollectionArguments<T>;
 		}
+		*/
 
 		let initialAttributes: iAttribute[] = [];
 		let initialDisciplines: iDiscipline[] = [];
