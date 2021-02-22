@@ -82,16 +82,16 @@ export interface iTraitCollection<T extends iTrait> {
 	readonly size: number;
 }
 
-export interface iLogEvent<T, L extends LogOperation> {
-	operation: L;
-	description: string;
-	initialValue: LogInitialValue<L>; // initial value constrait depends on operation type
-	newValue: T;
+export interface iLogEvent<T> {
+	operation: LogOperation;
+	description?: string;
+	initialValue: T | void ; // initial value not required if its an addition // todo enforce this in implementation
+	newValue?: T; // delete doesnt require this
 }
 
 /** For objects that require internal logging */
 export interface iLogger<T> {
-	getLogData(): iLogEvent<T, LogOperation>[];
+	getLogData(): iLogEvent<T>[];
 }
 
 export interface iLogReporter<T> {
@@ -99,6 +99,6 @@ export interface iLogReporter<T> {
 }
 
 export interface iLogCollection<T> {
-	log(event: iLogEvent<T, LogOperation>): void;
-	toJson(): iLogEvent<T, LogOperation>[];
+	log(event: iLogEvent<T>): void;
+	toJson(): iLogEvent<T>[];
 }

@@ -10,6 +10,7 @@ import Discipline from './traits/Discipline';
 import TouchStoneOrConviction from './traits/TouchStoneOrConviction';
 import { LogOperation } from '../declarations/types';
 import LogCollection from './log/LogCollection';
+import LogEvent from './log/LogEvent';
 
 interface iLoadFromFileArgs {
 	filePath?: string;
@@ -27,11 +28,23 @@ interface iModifiablePrimitiveProperties {
 	sire: string;
 }
 
+const example: iModifiablePrimitiveProperties = {
+	bloodPotency: 0,
+	clan: '',
+	health: 0,
+	humanity: 0,
+	hunger: 0,
+	name: '',
+	sire: '',
+	willpower: 0
+}
+ 
+
 // todo split this into smaller pieces
 
-type LogDataType = string | number;
+type LogDataType = typeof example[keyof iModifiablePrimitiveProperties];
 
-export default class CharacterSheet implements iCharacterSheet, iLogger< LogDataType> {
+export default class CharacterSheet implements iCharacterSheet, iLogger<LogDataType> {
 	readonly discordUserId: number;
 
 	//-------------------------------------
@@ -259,12 +272,14 @@ export default class CharacterSheet implements iCharacterSheet, iLogger< LogData
 	saveToFile(): boolean {
 		return exportDataToFile(this.toJson(), this.#savePath);
 	}
-	private onChange<PrivateProperty extends keyof iModifiablePrimitiveProperties>(
+
+	// todo can this not use an any type
+	private onChange<T extends LogDataType, PrivateProperty extends keyof iModifiablePrimitiveProperties>(
 		property: PrivateProperty,
 		newValue: any
 	): void {
 		// get current value as old value
-		const oldValue: any = this.#private[property];
+		const oldValue: LogDataType = this.#private[property];
 
 		// if old value is the same as new value do nothing
 		if (oldValue === newValue)
@@ -274,7 +289,7 @@ export default class CharacterSheet implements iCharacterSheet, iLogger< LogData
 		this.#private[property] = newValue;
 
 		// todo record change, create a log class where this has an array of logs
-		this.#logEvents.log(event)
+		this.#logEvents.log(new LogEvent({ operation: 'UPDATE', oldValue, description: '' }));
 
 		// attempt autosave
 		this.saveToFile()
@@ -284,7 +299,7 @@ export default class CharacterSheet implements iCharacterSheet, iLogger< LogData
 
 	#logEvents: iLogCollection<LogDataType> = new LogCollection();
 
-	getLogData(): iLogEvent<any, LogOperation>[] {
+	getLogData(): iLogEvent<LogDataType>[] {
 		return [...this.#logEvents.toJson()];
 	}
 }
