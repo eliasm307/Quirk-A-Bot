@@ -47,6 +47,7 @@ const example: iModifiablePrimitiveProperties = {
 
 // todo split this into smaller pieces
 
+// data types of fields that will be logged
 type LogDataType = typeof example[keyof iModifiablePrimitiveProperties];
 
 export default class CharacterSheet implements iCharacterSheet, iLogger<LogDataType> {

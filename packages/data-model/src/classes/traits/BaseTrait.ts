@@ -1,11 +1,11 @@
 import {   TraitName, TraitValue } from '../../declarations/types';
-import { iCharacterSheet, iTrait } from '../../declarations/interfaces';
+import { iCharacterSheet, iLogger, iTrait } from '../../declarations/interfaces';
 
 interface iPrivateModifiableProperties<T> {
 	value: TraitValue<T>;
 }
 
-export default abstract class BaseTrait<T> implements iTrait {
+export default abstract class BaseTrait<T> implements iTrait, iLogger<TraitValue<T>> {
 	#private: iPrivateModifiableProperties<T>;
 	#characterSheet: iCharacterSheet;
 
@@ -28,8 +28,6 @@ export default abstract class BaseTrait<T> implements iTrait {
 		// todo, account for when this is instantiated independently, not by a CharacterSheet. Maybe use a factory? Or check for this when a change is made, ie before a save needs to be made (you could update the reference to the Skill based on which one was updated last? this seems like a bad pattern)
 		// make sure character sheet has a reference to this Skill // will this produce any cyclic behaviour? tested, and YES it does
 		// if (!this.#characterSheet.getSkillByName(name)) this.#characterSheet.setSkill(name, value);
-
-    
 	}
 
 	protected onChange<PrivateProperty extends keyof iPrivateModifiableProperties<T>>(

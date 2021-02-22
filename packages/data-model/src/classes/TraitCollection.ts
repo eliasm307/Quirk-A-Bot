@@ -1,12 +1,12 @@
 import { TraitName, TraitMap, TraitValue } from './../declarations/types';
-import { iCharacterSheet, iTrait, iTraitCollection } from './../declarations/interfaces';
+import { iCharacterSheet, iLogger, iTrait, iTraitCollection } from './../declarations/interfaces';
 
 export interface iTraitCollectionArguments<T extends iTrait> {
 	characterSheet: iCharacterSheet;
 	instanceCreator: (name: TraitName<T>, value: TraitValue<T>) => T;
 }
 
-export default class TraitCollection<T extends iTrait> implements iTraitCollection<T> {
+export default class TraitCollection<T extends iTrait> implements iTraitCollection<T>, iLogger<T> {
 	#characterSheet: iCharacterSheet;
 	#instanceCreator: (name: TraitName<T>, value: TraitValue<T>) => T;
 	#map: TraitMap<T>;
