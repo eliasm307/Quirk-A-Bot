@@ -81,11 +81,17 @@ test(testName, () => {
 });
 
 testName = 'test basic trait methods';
-test(testName, () => {
+test( testName, () => {
+		console.log(`creating cs`);
 	const cs = CharacterSheet.loadFromFile({ filePath: filePathRandom });
 
-	cs.attributes.set('Strength', 5);
-	cs.skills.set('Athletics', 3);
+	console.log(`setting strength`)
+	cs.attributes.set( 'Strength', 5 );
+	
+		console.log(`setting Athletics`);
+	cs.skills.set( 'Athletics', 3 );
+	
+	console.log(`setting touchstones/Conviction`);
 	cs.touchstonesAndConvictions.set('a custom one', 'something, something, something');
 
 	expect((cs.attributes.get('Strength') as iAttribute).value).toEqual(5);

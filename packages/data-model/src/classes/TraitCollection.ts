@@ -8,31 +8,38 @@ import {
 	iTraitCollection,
 } from './../declarations/interfaces';
 import LogCollection from './log/LogCollection';
+import DeleteLogEvent from './log/DeleteLogEvent';
+import UpdateLogEvent from './log/UpdateLogEvent';
+import AddLogEvent from './log/AddLogEvent';
 
 export interface iTraitCollectionArguments<T extends iTrait> extends iSaveAction {
 	instanceCreator: (name: TraitName<T>, value: TraitValue<T>) => T;
 }
 
-export default class TraitCollection<T extends iTrait> implements iTraitCollection<T>, iLogger  {
-	#saveAction: () => boolean;
+export default class TraitCollection<T extends iTrait> implements iTraitCollection<T>, iLogger {
 	#instanceCreator: (name: TraitName<T>, value: TraitValue<T>) => T;
+	private saveAction: () => boolean;
 	#map: TraitMap<T>;
 	#logs = new LogCollection<TraitValue<T>>();
 
-	// todo add trait typename util which gets an appropriate name based on the type of TraitName, do as conditional type
 	#typeName: TraitType | string = 'Trait';
 	constructor({ instanceCreator, saveAction }: iTraitCollectionArguments<T>, ...initialData: T[]) {
-		this.#saveAction = saveAction;
+		this.saveAction = saveAction;
 		this.#instanceCreator = instanceCreator;
 		this.#map = new Map<TraitName<T>, T>(initialData.map(e => [e.name as TraitName<T>, e]));
 	}
-	getLogData(): iLogEvent  [] {
+	getLogData(): iLogEvent[] {
+		const collectionLogs: iLogEvent[] = this.#logs.toJson();
+		const itemLogs: iLogEvent[] = Array.from(this.#map.values()).reduce(
+			(acc: iLogEvent[], e) => [...acc, ...e.getLogData()],
+			[]
+		);
+		//todo memoise the above
 
-		const collectionLogs = this.#logs.toJson();
-		const itemLogs = Array.from(this.#map.values()).map(e => e.);
+		// console.warn('getLogData()', { collectionLogs, itemLogs });
 
-
-		return [...this.#logs.toJson(), ...this.#map.entries()];
+		// combine logs and sort oldest to newest
+		return [...collectionLogs, ...itemLogs].sort((a, b) => Number(a.time.getTime() - b.time.getTime()));
 	}
 	toJson(): T[] {
 		return Array.from(this.#map.values());
@@ -45,9 +52,19 @@ export default class TraitCollection<T extends iTrait> implements iTraitCollecti
 		return this.#map.get(name);
 	}
 	delete(name: TraitName<T>): void {
-		// todo log change
-		// todo add autosave
+		const oldValue = this.#map.get(name);
+		const property = name;
+
+		// todo add error handling
+
+		// apply change
 		this.#map.delete(name);
+
+		// log change
+		this.#logs.log(new DeleteLogEvent({ oldValue, property }));
+
+		// autosave
+		this.saveAction();
 	}
 	has(name: TraitName<T>): boolean {
 		return this.#map.has(name);
@@ -56,9 +73,9 @@ export default class TraitCollection<T extends iTrait> implements iTraitCollecti
 	/**
 	 * Update trait value if it exists, otherwise add a new one
 	 * @param name name of trait to edit or create
-	 * @param value value to assign
+	 * @param newValue value to assign
 	 */
-	set(name: TraitName<T>, value: TraitValue<T>): void {
+	set(name: TraitName<T>, newValue: TraitValue<T>): void {
 		// if trait already exists then just update it
 		if (this.#map.has(name)) {
 			const instance = this.#map.get(name);
@@ -66,14 +83,22 @@ export default class TraitCollection<T extends iTrait> implements iTraitCollecti
 			if (!instance)
 				return console.error(__filename, `${this.#typeName} with name '${name}' is not defined but key exists`);
 
-			// todo log change
-			// todo add autosave
-			instance.value = value;
+			const oldValue = instance.value;
+
+			// apply change
+			instance.value = newValue;
+
+			// log change // NOTE the instances also log changes?
+			this.#logs.log(new UpdateLogEvent({ newValue, oldValue, property: name }));
 		} else {
-			// todo log change
-			// todo add autosave
-			// else add new trait instance
-			this.#map.set(name, this.#instanceCreator(name, value));
+			// add new trait instance
+			this.#map.set(name, this.#instanceCreator(name, newValue));
+
+			// log change
+			this.#logs.log(new AddLogEvent({ newValue, property: name }));
 		}
+
+		// autosave
+		this.saveAction();
 	}
 }

@@ -11,7 +11,7 @@ import {
 	TraitValue,
 } from './types';
 
-export interface iTrait {
+export interface iTrait extends iLogger {
 	// name: TraitName<T>;
 	name: string;
 	value: number | string; // todo limit to 0-5
@@ -125,7 +125,7 @@ export interface iLogReporter {
 	generateLogReport(logger: iLogger): string;
 }
 
-export interface iLogCollection  {
+export interface iLogCollection {
 	log(event: iLogEvent): void;
 
 	toJson(): iLogEvent[];

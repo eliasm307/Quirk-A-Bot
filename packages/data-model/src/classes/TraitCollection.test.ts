@@ -1,10 +1,12 @@
-import { AttributeName } from './../declarations/types';
+import { AttributeName, LogOperation } from './../declarations/types';
 import { testCs, testCsRandom } from '../utils/testUtils';
 import TraitCollection from './TraitCollection';
 import Attribute from './traits/Attribute';
 import { iAttribute } from '../declarations/interfaces';
+import AddLogEvent from '../classes/log/AddLogEvent';
 
 const saveAction = () => true;
+let testName: string;
 
 test('traitCollection CRUD tests', () => {
 	const tc = new TraitCollection<iAttribute>({
@@ -36,7 +38,8 @@ test('traitCollection CRUD tests', () => {
 	expect(tc.size).toEqual(0);
 });
 
-test('traitCollection instantiation with initial data', () => {
+testName = 'traitCollection instantiation with initial data and logging';
+test(testName, () => {
 	const tc = new TraitCollection<iAttribute>({
 		saveAction,
 		instanceCreator: (name, value) => new Attribute({ saveAction, name, value }),
@@ -46,9 +49,18 @@ test('traitCollection instantiation with initial data', () => {
 	tc.set('Wits', 3);
 	tc.set('Charisma', 4);
 	tc.set('Manipulation', 1);
+	tc.set('Wits', 1);
 
 	// expect atleast 3 items
 	expect(tc.size).toBeGreaterThanOrEqual(3);
+
+	const log = tc.getLogData();
+
+	// console.log({ testName, log });
+
+	// expect logs
+	expect(log[0].operation).toEqual('ADD' as LogOperation);
+	expect(log[3].operation).toEqual('UPDATE' as LogOperation);
 
 	const count = tc.size;
 

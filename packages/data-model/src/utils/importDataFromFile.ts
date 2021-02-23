@@ -1,6 +1,6 @@
 import fs, { ReadOptions } from 'fs-extra';
 
-export default function importDataFromFile(filePath: string): any {
+export default function importDataFromFile<T>(filePath: string): T | null {
 	// todo account for if data is falsy
 	// todo test
 

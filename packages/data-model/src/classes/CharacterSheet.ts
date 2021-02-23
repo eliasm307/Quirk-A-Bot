@@ -7,17 +7,22 @@ import {
 } from './../declarations/interfaces';
 import path from 'path';
 import { iAttribute, iCharacterSheet, iDiscipline, iSkill } from '../declarations/interfaces';
-import importDataFromFile from '../utils/importDataFromFile';
-import exportDataToFile from '../utils/exportDataToFile';
+
+
+
+
 import Attribute from './traits/Attribute';
 import Skill from './traits/Skill';
 import TraitCollection from './TraitCollection';
 import Discipline from './traits/Discipline';
 import TouchStoneOrConviction from './traits/TouchStoneOrConviction';
-import { LogOperation } from '../declarations/types';
+
+
+import importDataFromFile from '../utils/importDataFromFile';
+
 import LogCollection from './log/LogCollection';
-import BaseLogEvent from './log/BaseLogEvent';
 import UpdateLogEvent from './log/UpdateLogEvent';
+import exportDataToFile from '../utils/exportDataToFile';
 
 interface iLoadFromFileArgs {
 	filePath?: string;
@@ -51,7 +56,7 @@ const example: iModifiablePrimitiveProperties = {
 // data types of fields that will be logged
 type LogDataType = typeof example[keyof iModifiablePrimitiveProperties];
 
-export default class CharacterSheet implements iCharacterSheet, iLogger  {
+export default class CharacterSheet implements iCharacterSheet, iLogger {
 	readonly discordUserId: number;
 
 	//-------------------------------------
@@ -59,8 +64,10 @@ export default class CharacterSheet implements iCharacterSheet, iLogger  {
 
 	/** Existing instances of this class */
 	static instances: Map<string, iCharacterSheet> = new Map<string, iCharacterSheet>();
-	#savePath: string; // specified in constructor
+
 	#private: iModifiablePrimitiveProperties;
+	#logEvents: iLogCollection = new LogCollection();
+	#savePath: string; // specified in constructor
 
 	//-------------------------------------
 	// BASIC VARIABLE GETTERS AND SETTERS
@@ -246,7 +253,9 @@ export default class CharacterSheet implements iCharacterSheet, iLogger  {
 
 		// todo add option to create blank instance at the specified path if it doesnt exist?
 		// todo make sure imported data matches expected schema
-		const data: iCharacterSheetData = importDataFromFile(resolvedPath);
+		const data = importDataFromFile<iCharacterSheetData>(resolvedPath);
+
+		if (!data) throw Error(`Error importing data from ${resolvedPath}`);
 
 		const instance = new CharacterSheet(data, resolvedPath);
 
@@ -276,6 +285,7 @@ export default class CharacterSheet implements iCharacterSheet, iLogger  {
 	}
 
 	private saveToFile(): boolean {
+		// this.#savePath
 		return exportDataToFile(this.toJson(), this.#savePath);
 	}
 
@@ -303,9 +313,7 @@ export default class CharacterSheet implements iCharacterSheet, iLogger  {
 			: console.error(__filename, `Error while saving change`, { property, oldValue, newValue });
 	}
 
-	#logEvents: iLogCollection  = new LogCollection();
-
-	getLogData(): iLogEvent [] {
+	getLogData(): iLogEvent[] {
 		return [...this.#logEvents.toJson()];
 	}
 }
