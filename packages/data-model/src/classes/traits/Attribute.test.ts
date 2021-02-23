@@ -1,14 +1,14 @@
 import CharacterSheet from '../CharacterSheet';
+import Attribute from './Attribute';
+import TraitCollection from './TraitCollection';
 
 const cs: CharacterSheet = new CharacterSheet(0, '../data/character-sheets/temporary/test.json');
 
 // todo, make this a test for BaseTrait
 
 let testName = 'test adding attribute directly to Character sheet';
-test(testName, () => {
-
-	
-
+test( testName, () => {
+	const tc = new TraitCollection<Attribute>({instanceCreator: (name, value)=> new Attribute({name, value }), });
 	cs.attributes.set('Charisma', 3);
 
 	console.log(__filename, { testName, attributes: cs.attributes.toJson() });

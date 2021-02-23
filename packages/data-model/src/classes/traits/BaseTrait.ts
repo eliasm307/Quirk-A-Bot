@@ -19,12 +19,14 @@ export default abstract class BaseTrait<T extends iTraitData> implements iBaseTr
 	#private: iPrivateModifiableProperties<T>;
 	// #characterSheet: iCharacterSheet;
 	#logs = new LogCollection<TraitValue<T>>();
-	#saveAction: () => boolean;
+	#saveAction?: () => boolean;
 
 	readonly name: TraitName<T>;
 
+	protected abstract newValueIsValid(newVal: TraitValue<T>): boolean;
+
 	public set value(newVal: TraitValue<T>) {
-		this.onChange('value', newVal);
+		if (this.newValueIsValid(newVal)) this.onChange('value', newVal);
 	}
 	public get value() {
 		return this.#private.value as TraitValue<T>;
@@ -69,9 +71,11 @@ export default abstract class BaseTrait<T extends iTraitData> implements iBaseTr
 		// log change
 		this.#logs.log(new UpdateLogEvent({ newValue, oldValue, property: this.name }));
 
-		// attempt autosave
-		this.#saveAction()
-			? console.log(__filename, `Successfully saved trait property change`, { property, oldValue, newValue })
-			: console.error(__filename, `Error while saving trait property change`, { property, oldValue, newValue });
+		// attempt autosave, if available
+		if (this.#saveAction) {
+			this.#saveAction()
+				? console.log(__filename, `Successfully saved trait property change`, { property, oldValue, newValue })
+				: console.error(__filename, `Error while saving trait property change`, { property, oldValue, newValue });
+		}
 	}
 }

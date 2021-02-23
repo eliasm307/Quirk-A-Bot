@@ -25,42 +25,57 @@ export interface iTraitData {
 	name: string;
 	value: number | string; // todo limit to 0-5
 }
- 
+
+/** Base interface for Trait Objects */
 export interface iBaseTrait extends iTraitData, iToJson<iTraitData>, iLogger {
 	// todo add explain method to give a summary what this trait is for
 	// todo add explainValue method to describe the current value of the attribute, ie add description getter to describe the meaning of a value
+	// todo add min and max limits for trait values, shoud this be done here?
+}
+
+export interface iNumberValue {
+	min: number;
+	max: number;
+	value: number;
 }
 
 export interface iBaseTraitProps<T extends iTraitData> {
-	saveAction: () => boolean;
+	saveAction?: () => boolean;
 	name: TraitName<T>;
 	value: TraitValue<T>;
 }
+export interface iAbstractNumberTraitProps<T extends iTraitData> extends iBaseTraitProps<T> {
+	min?: number;
+	max: number;
+}
 
-export interface iAttributeData extends iTraitData {
+// ? does this need to be a separate inteface?
+export interface iAttributeData extends iTraitData, iNumberValue {
 	name: AttributeName;
 	value: number;
 	category: AttributeCategory;
 }
 
+// ? does this need to be a separate inteface?
 export interface iTouchStoneOrConvictionData extends iTraitData {
 	name: string;
 	value: string;
 }
 
-export interface iSkillData extends iTraitData {
+// ? does this need to be a separate inteface?
+export interface iSkillData extends iTraitData, iNumberValue {
 	name: SkillName;
 	value: number;
 }
 
-export interface iDisciplineData extends iTraitData {
+export interface iDisciplineData extends iTraitData, iNumberValue {
 	name: DisciplineName;
 	value: number;
 	// todo add "specialisation" / sub types?
 }
 
 export interface iSaveAction {
-	saveAction: () => boolean;
+	saveAction?: () => boolean;
 }
 
 interface iCharacterSheetPrimitiveData {
@@ -74,6 +89,9 @@ interface iCharacterSheetPrimitiveData {
 	hunger: number; // todo limit 0 to 5
 	humanity: number; // todo limit 0 to 10
 	bloodPotency: number; // todo limit 0 to 10
+}
+export interface iTraitCollectionArguments<T extends iTraitData> extends iSaveAction {
+	instanceCreator: (name: TraitName<T>, value: TraitValue<T>) => T;
 }
 
 interface iCharacterSheetNonPrimitiveData {
