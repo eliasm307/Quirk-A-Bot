@@ -1,7 +1,7 @@
 import CharacterSheet from '../classes/CharacterSheet';
 import path from 'path';
 
-export const testUserId = Math.floor(Math.random() * 999999);
+export const testUserId = Math.floor(Math.random() * 10);
 export const filePathRandom = path.resolve(__dirname, `../data/character-sheets/temporary/${testUserId}.json`);
 
 export const filePath = path.resolve(__dirname, '../data/character-sheets/temporary/test.json');

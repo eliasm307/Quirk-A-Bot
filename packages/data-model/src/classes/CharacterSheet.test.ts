@@ -25,7 +25,7 @@ test(testName, () => {
 	expect(csLoaded.discordUserId).toEqual(testUserId);
 
 	// sheets should be the same
-	expect(cs).toEqual(csLoaded);
+	expect(cs.toJson()).toEqual(csLoaded.toJson());
 });
 
 testName = 'test autosave and custom setters for basic data types';

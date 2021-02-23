@@ -187,7 +187,7 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 		}
 
 		// function to save this character sheet
-		const saveAction = this.saveToFile;
+		const saveAction = () => this.saveToFile();
 
 		// create collections, with initial data where available
 		this.attributes = new TraitCollection<iAttribute>(
