@@ -20,15 +20,18 @@ export interface iToJson<T extends iTraitData> {
 	toJson: () => TraitData<T>;
 }
 
-export interface iTraitData   {
-	// name: TraitName<T>;
+/** Describes the shape of the most basic trait */
+export interface iTraitData {
 	name: string;
 	value: number | string; // todo limit to 0-5
-	// todo add description getter to describe the meaning of a value 
+	
 }
 
-export interface iBaseTrait  extends iTraitData, iToJson<iTraitData>, iLogger {}
-
+// ? does this need a generic?
+export interface iBaseTrait<T extends iTraitData> extends iTraitData, iToJson<iTraitData>, iLogger {
+	// todo add explain method to give a summary what this trait is for
+	// todo add explainValue method to describe the current value of the attribute, ie add description getter to describe the meaning of a value
+}
 
 export interface iBaseTraitProps<T extends iTraitData> {
 	saveAction: () => boolean;
@@ -39,7 +42,7 @@ export interface iBaseTraitProps<T extends iTraitData> {
 export interface iAttributeData extends iTraitData {
 	name: AttributeName;
 	value: number;
-	category: AttributeCategory; // todo handle category as separate interface implemented by class?
+	category: AttributeCategory; 
 }
 
 export interface iTouchStoneOrConvictionData extends iTraitData {
@@ -97,7 +100,7 @@ export interface iCharacterSheet extends iCharacterSheetPrimitiveData {
 	touchstonesAndConvictions: TraitCollection<TouchStoneOrConviction>;
 }
 
-export interface iTraitCollection<T extends iBaseTrait> {
+export interface iTraitCollection<T extends iBaseTrait<TraitData<T>>> {
 	get(name: TraitName<T>): T | void;
 	set(name: TraitName<T>, value: number): void;
 	delete(name: TraitName<T>): void;
@@ -107,7 +110,7 @@ export interface iTraitCollection<T extends iBaseTrait> {
 }
 
 export interface iOldValue<T> {
-	oldValue: T; // initial value not required if its an addition // todo enforce this in implementation
+	oldValue: T; 
 }
 
 export interface iNewValue<T> {

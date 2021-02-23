@@ -17,7 +17,7 @@ export interface iTraitCollectionArguments<T extends iTraitData> extends iSaveAc
 	instanceCreator: (name: TraitName<T>, value: TraitValue<T>) => T;
 }
 
-export default class TraitCollection<T extends iBaseTrait> implements iTraitCollection<T>, iLogger {
+export default class TraitCollection<T extends iBaseTrait<TraitData<T>>> implements iTraitCollection<T>, iLogger {
 	#instanceCreator: (name: TraitName<T>, value: TraitValue<T>) => T;
 	private saveAction: () => boolean;
 	#map: TraitMap<T>;

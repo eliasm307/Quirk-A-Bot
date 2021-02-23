@@ -7,19 +7,12 @@ import {
 } from './../declarations/interfaces';
 import path from 'path';
 import { iAttributeData, iCharacterSheet, iDisciplineData, iSkillData } from '../declarations/interfaces';
-
-
-
-
 import Attribute from './traits/Attribute';
 import Skill from './traits/Skill';
 import TraitCollection from './traits/TraitCollection';
 import Discipline from './traits/Discipline';
 import TouchStoneOrConviction from './traits/TouchStoneOrConviction';
-
-
 import importDataFromFile from '../utils/importDataFromFile';
-
 import LogCollection from './log/LogCollection';
 import UpdateLogEvent from './log/UpdateLogEvent';
 import exportDataToFile from '../utils/exportDataToFile';
@@ -29,6 +22,7 @@ interface iLoadFromFileArgs {
 	fileName?: string;
 }
 
+// todo make each of these into a new type of trait object, so methods can be implemented like "Describe" etc
 interface iModifiablePrimitiveProperties {
 	health: number;
 	willpower: number;

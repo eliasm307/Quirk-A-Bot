@@ -6,8 +6,8 @@ interface iProps<T> extends iBaseLogEventProps, iOldValue<T> {}
 export default class DeleteLogEvent<T> extends BaseLogEvent<T> implements iLogEvent, iOldValue<T> {
 	oldValue: T;
 
-	constructor({ note: description, oldValue, property }: iProps<T>) {
-		super({ operation: 'DELETE', property, note: description });
+	constructor({ note, oldValue, property }: iProps<T>) {
+		super({ operation: 'DELETE', property, note });
 		this.oldValue = oldValue;
 	}
 	describe(): string {
