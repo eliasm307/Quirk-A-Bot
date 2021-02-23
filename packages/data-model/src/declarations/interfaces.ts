@@ -14,6 +14,7 @@ export interface iTrait {
 	// name: TraitName<T>;
 	name: string;
 	value: number | string; // todo limit to 0-5
+	// todo add description getter to describe the meaning of a value
 }
 
 export interface iAttribute extends iTrait {
@@ -91,17 +92,17 @@ export interface iNewValue<T> {
 }
 
 export interface iBaseLogEventProps {
-	description?: string;
+	note?: string;
 	property: string;
 }
 
 // todo this violates interface segregation, intial and new value arent universal
-export interface iLogEvent<T> {
-	operation: LogOperation;
-	note?: string;
-	property: string;
+export interface iLogEvent<T> extends iBaseLogEventProps {
+	operation: LogOperation; 
 	describe(): string;
 }
+
+export interface iAddLogEvent<T> extends iLogEvent<T>, iNewValue<T> {}
 
 /** For objects that require internal logging */
 export interface iLogger<T> {
@@ -113,11 +114,7 @@ export interface iLogReporter<T> {
 }
 
 export interface iLogCollection<T> {
-	logAdd(event: iLogEvent<T>): void;
-
-	logUpdate(event: iLogEvent<T>): void;
-
-	logDelete(event: iLogEvent<T>): void;
+	log(event: iLogEvent<T>): void; 
 
 	toJson(): iLogEvent<T>[];
 }

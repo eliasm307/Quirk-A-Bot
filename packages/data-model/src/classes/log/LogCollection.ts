@@ -32,16 +32,6 @@ type props<T, L extends LogOperation> = L extends 'DELETE'
 export default class LogCollection<T> implements iLogCollection<T> {
 	#logs: iLogEvent<T>[] = [];
 
-	constructor() {}
-  logAdd( event: addProps<T> ): void {
-    throw new Error( 'Method not implemented.' );
-  }
-  logUpdate( event: iLogEvent<T> ): void {
-    throw new Error( 'Method not implemented.' );
-  }
-  logDelete( event: iLogEvent<T> ): void {
-    throw new Error( 'Method not implemented.' );
-  }
 	log(event: iLogEvent<T>): void {
 		this.#logs.push(event);
 	}

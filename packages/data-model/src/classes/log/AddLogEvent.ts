@@ -1,13 +1,16 @@
+import { iAddLogEvent } from './../../declarations/interfaces';
 import { iBaseLogEventProps, iLogEvent, iNewValue } from '../../declarations/interfaces';
 import BaseLogEvent from './BaseLogEvent';
 
 interface iProps<T> extends iBaseLogEventProps, iNewValue<T> {}
 
-export default class AddLogEvent<T> extends BaseLogEvent<T> implements iLogEvent<T>, iNewValue<T> {
+
+// ? do these need to implement iNewValue? whenthese are put into a collection, the additional iNewValue, iOldValue etc details are lost so is there a point? the differences shouldjust be on the specific classes and they all extend iBaseLogEvent? Actually properties can still be accessed using instanceof checks?
+export default class AddLogEvent<T> extends BaseLogEvent<T> implements iAddLogEvent<T> {
 	newValue: T;
 
-	constructor({ description, newValue, property }: iProps<T>) {
-		super({ operation: 'ADD', property, description });
+	constructor({ note: description, newValue, property }: iProps<T>) {
+		super({ operation: 'ADD', property, note: description });
 		this.newValue = newValue;
 	}
   describe(): string {

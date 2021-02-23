@@ -17,6 +17,7 @@ import TouchStoneOrConviction from './traits/TouchStoneOrConviction';
 import { LogOperation } from '../declarations/types';
 import LogCollection from './log/LogCollection';
 import BaseLogEvent from './log/BaseLogEvent';
+import UpdateLogEvent from './log/UpdateLogEvent';
 
 interface iLoadFromFileArgs {
 	filePath?: string;
@@ -296,7 +297,7 @@ export default class CharacterSheet implements iCharacterSheet, iLogger<LogDataT
 		this.#private[property] = newValue;
 
 		// todo record change, create a log class where this has an array of logs
-		this.#logEvents.logUpdate({ operation: 'UPDATE', oldValue, newValue, property });
+		this.#logEvents.log(new UpdateLogEvent({ oldValue, newValue, property }));
 
 		// attempt autosave
 		this.saveToFile()

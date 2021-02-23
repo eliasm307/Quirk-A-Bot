@@ -12,7 +12,7 @@ export default abstract class BaseLogEvent<T> implements iLogEvent<T> {
 	note?: string;
 	property: string;
 
-	constructor({operation,  description, property }: iProps) {
+	constructor({operation,  note: description, property }: iProps) {
 		// check values are defined correctly
 		// todo delete this
 		/*
@@ -42,4 +42,5 @@ export default abstract class BaseLogEvent<T> implements iLogEvent<T> {
 		this.note = description;
 		this.property = property;
 	}
+	abstract describe(): string  
 }
