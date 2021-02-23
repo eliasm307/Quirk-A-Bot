@@ -99,7 +99,7 @@ export interface iOldValue<T> {
 }
 
 export interface iNewValue<T> {
-	newValue : T; // delete doesnt require this
+	newValue: T; // delete doesnt require this
 }
 
 export interface iBaseLogEventProps {
@@ -108,25 +108,25 @@ export interface iBaseLogEventProps {
 }
 
 // todo this violates interface segregation, intial and new value arent universal
-export interface iLogEvent<T> extends iBaseLogEventProps {
+export interface iLogEvent extends iBaseLogEventProps {
 	operation: LogOperation;
 	describe(): string;
 	time: Date;
 }
 
-export interface iAddLogEvent<T> extends iLogEvent<T>, iNewValue<T> {}
+export interface iAddLogEvent<T> extends iLogEvent, iNewValue<T> {}
 
 /** For objects that require internal logging */
-export interface iLogger<T> {
-	getLogData(): iLogEvent<T>[];
+export interface iLogger {
+	getLogData(): iLogEvent[];
 }
 
-export interface iLogReporter<T> {
-	generateLogReport(logger: iLogger<T>): string;
+export interface iLogReporter {
+	generateLogReport(logger: iLogger): string;
 }
 
-export interface iLogCollection<T> {
-	log(event: iLogEvent<T>): void; 
+export interface iLogCollection  {
+	log(event: iLogEvent): void;
 
-	toJson(): iLogEvent<T>[];
+	toJson(): iLogEvent[];
 }

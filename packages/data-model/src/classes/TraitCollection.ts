@@ -13,7 +13,7 @@ export interface iTraitCollectionArguments<T extends iTrait> extends iSaveAction
 	instanceCreator: (name: TraitName<T>, value: TraitValue<T>) => T;
 }
 
-export default class TraitCollection<T extends iTrait> implements iTraitCollection<T>, iLogger<TraitValue<T>> {
+export default class TraitCollection<T extends iTrait> implements iTraitCollection<T>, iLogger  {
 	#saveAction: () => boolean;
 	#instanceCreator: (name: TraitName<T>, value: TraitValue<T>) => T;
 	#map: TraitMap<T>;
@@ -26,9 +26,11 @@ export default class TraitCollection<T extends iTrait> implements iTraitCollecti
 		this.#instanceCreator = instanceCreator;
 		this.#map = new Map<TraitName<T>, T>(initialData.map(e => [e.name as TraitName<T>, e]));
 	}
-	getLogData(): iLogEvent<TraitValue<T>>[] {
+	getLogData(): iLogEvent  [] {
 
-		
+		const collectionLogs = this.#logs.toJson();
+		const itemLogs = Array.from(this.#map.values()).map(e => e.);
+
 
 		return [...this.#logs.toJson(), ...this.#map.entries()];
 	}

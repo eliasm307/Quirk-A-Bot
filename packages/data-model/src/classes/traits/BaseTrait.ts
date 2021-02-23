@@ -7,7 +7,7 @@ interface iPrivateModifiableProperties<T> {
 	value: TraitValue<T>;
 }
 
-export default abstract class BaseTrait<T extends iTrait> implements iTrait, iLogger<TraitValue<T>> {
+export default abstract class BaseTrait<T extends iTrait> implements iTrait, iLogger  {
 	#private: iPrivateModifiableProperties<T>;
 	// #characterSheet: iCharacterSheet;
 	#logs = new LogCollection<TraitValue<T>>();
@@ -33,7 +33,7 @@ export default abstract class BaseTrait<T extends iTrait> implements iTrait, iLo
 		// make sure character sheet has a reference to this Skill // will this produce any cyclic behaviour? tested, and YES it does
 		// if (!this.#characterSheet.getSkillByName(name)) this.#characterSheet.setSkill(name, value);
 	}
-	getLogData(): iLogEvent<TraitValue<T>>[] {
+	getLogData(): iLogEvent [] {
 		return this.#logs.toJson();
 	}
 

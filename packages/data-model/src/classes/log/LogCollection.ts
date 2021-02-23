@@ -1,13 +1,13 @@
 import { LogInitialValue, LogNewValue, LogOperation } from '../../declarations/types';
 import { iLogCollection, iLogEvent } from './../../declarations/interfaces';
 
-export default class LogCollection<T> implements iLogCollection<T> {
-	#logs: iLogEvent<T>[] = [];
+export default class LogCollection<T> implements iLogCollection  {
+	#logs: iLogEvent[] = [];
 
-	log(event: iLogEvent<T>): void {
+	log(event: iLogEvent): void {
 		this.#logs.push(event);
 	}
-	toJson(): iLogEvent<T>[] {
+	toJson(): iLogEvent[] {
 		return [...this.#logs];
 	}
 }

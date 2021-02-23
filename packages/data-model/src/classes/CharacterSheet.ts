@@ -51,7 +51,7 @@ const example: iModifiablePrimitiveProperties = {
 // data types of fields that will be logged
 type LogDataType = typeof example[keyof iModifiablePrimitiveProperties];
 
-export default class CharacterSheet implements iCharacterSheet, iLogger<LogDataType> {
+export default class CharacterSheet implements iCharacterSheet, iLogger  {
 	readonly discordUserId: number;
 
 	//-------------------------------------
@@ -303,9 +303,9 @@ export default class CharacterSheet implements iCharacterSheet, iLogger<LogDataT
 			: console.error(__filename, `Error while saving change`, { property, oldValue, newValue });
 	}
 
-	#logEvents: iLogCollection<LogDataType> = new LogCollection();
+	#logEvents: iLogCollection  = new LogCollection();
 
-	getLogData(): iLogEvent<LogDataType>[] {
+	getLogData(): iLogEvent [] {
 		return [...this.#logEvents.toJson()];
 	}
 }

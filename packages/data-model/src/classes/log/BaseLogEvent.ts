@@ -7,7 +7,7 @@ interface iProps extends iBaseLogEventProps {
 	operation: LogOperation;
 }
 
-export default abstract class BaseLogEvent<T> implements iLogEvent<T> {
+export default abstract class BaseLogEvent<T> implements iLogEvent {
 	operation: LogOperation;
 	note?: string;
 	property: string;
