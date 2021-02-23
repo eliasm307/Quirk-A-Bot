@@ -1,9 +1,9 @@
-import { AttributeName, LogOperation } from './../declarations/types';
-import { testCs, testCsRandom } from '../utils/testUtils';
+import { AttributeName, LogOperation } from '../../declarations/types';
+import { testCs, testCsRandom } from '../../utils/testUtils';
 import TraitCollection from './TraitCollection';
-import Attribute from './traits/Attribute';
-import { iAttribute } from '../declarations/interfaces';
-import AddLogEvent from '../classes/log/AddLogEvent';
+import Attribute from './Attribute';
+import { iAttribute } from '../../declarations/interfaces';
+import AddLogEvent from '../log/AddLogEvent';
 
 const saveAction = () => true;
 let testName: string;

@@ -13,7 +13,7 @@ import { iAttribute, iCharacterSheet, iDiscipline, iSkill } from '../declaration
 
 import Attribute from './traits/Attribute';
 import Skill from './traits/Skill';
-import TraitCollection from './TraitCollection';
+import TraitCollection from './traits/TraitCollection';
 import Discipline from './traits/Discipline';
 import TouchStoneOrConviction from './traits/TouchStoneOrConviction';
 

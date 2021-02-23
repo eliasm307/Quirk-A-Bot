@@ -1,4 +1,4 @@
-import TraitCollection from '../classes/TraitCollection';
+import TraitCollection from '../classes/traits/TraitCollection';
 import {
 	AttributeCategory,
 	AttributeName,
@@ -20,6 +20,7 @@ export interface iTrait extends iLogger {
 	name: string;
 	value: number | string; // todo limit to 0-5
 	// todo add description getter to describe the meaning of a value
+	toJson: () => any;
 }
 
 export interface iBaseTraitProps<T extends iTrait> {

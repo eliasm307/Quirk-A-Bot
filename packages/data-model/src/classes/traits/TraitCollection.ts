@@ -1,4 +1,4 @@
-import { TraitName, TraitMap, TraitValue, TraitType } from './../declarations/types';
+import { TraitName, TraitMap, TraitValue, TraitType } from '../../declarations/types';
 import {
 	iCharacterSheet,
 	iLogEvent,
@@ -6,11 +6,11 @@ import {
 	iSaveAction,
 	iTrait,
 	iTraitCollection,
-} from './../declarations/interfaces';
-import LogCollection from './log/LogCollection';
-import DeleteLogEvent from './log/DeleteLogEvent';
-import UpdateLogEvent from './log/UpdateLogEvent';
-import AddLogEvent from './log/AddLogEvent';
+} from '../../declarations/interfaces';
+import LogCollection from '../log/LogCollection';
+import DeleteLogEvent from '../log/DeleteLogEvent';
+import UpdateLogEvent from '../log/UpdateLogEvent';
+import AddLogEvent from '../log/AddLogEvent';
 
 export interface iTraitCollectionArguments<T extends iTrait> extends iSaveAction {
 	instanceCreator: (name: TraitName<T>, value: TraitValue<T>) => T;
