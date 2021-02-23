@@ -11,6 +11,10 @@ import {
 	TraitValue,
 } from './types';
 
+export interface iToJson<T> {
+	toJson: () => T;
+}
+
 export interface iTrait extends iLogger {
 	// name: TraitName<T>;
 	name: string;

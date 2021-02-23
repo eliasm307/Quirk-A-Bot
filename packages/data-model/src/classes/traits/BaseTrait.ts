@@ -1,4 +1,4 @@
-import { iBaseTraitProps } from './../../declarations/interfaces';
+import { iBaseTraitProps, iToJson } from './../../declarations/interfaces';
 import { TraitName, TraitValue } from '../../declarations/types';
 import { iCharacterSheet, iLogEvent, iLogger, iTrait } from '../../declarations/interfaces';
 import LogCollection from '../log/LogCollection';
@@ -8,7 +8,7 @@ interface iPrivateModifiableProperties<T> {
 	value: TraitValue<T>;
 }
 
-export default abstract class BaseTrait<T extends iTrait> implements iTrait {
+export default abstract class BaseTrait<T extends iTrait> implements iTrait, iToJson<T> {
 	#private: iPrivateModifiableProperties<T>;
 	// #characterSheet: iCharacterSheet;
 	#logs = new LogCollection<TraitValue<T>>();
@@ -34,6 +34,8 @@ export default abstract class BaseTrait<T extends iTrait> implements iTrait {
 		// make sure character sheet has a reference to this Skill // will this produce any cyclic behaviour? tested, and YES it does
 		// if (!this.#characterSheet.getSkillByName(name)) this.#characterSheet.setSkill(name, value);
 	}
+	abstract toJson: () => T;
+
 	getLogData(): iLogEvent[] {
 		return this.#logs.toJson();
 	}
@@ -52,7 +54,7 @@ export default abstract class BaseTrait<T extends iTrait> implements iTrait {
 		// implement property change
 		this.#private[property] = newValue;
 
-		// log change 
+		// log change
 		this.#logs.log(new UpdateLogEvent({ newValue, oldValue, property: this.name }));
 
 		// attempt autosave

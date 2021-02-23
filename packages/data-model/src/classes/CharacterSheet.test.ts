@@ -4,7 +4,9 @@ import path from 'path';
 import { iAttribute, iSkill } from '../declarations/interfaces';
 import CharacterSheet from './CharacterSheet';
 
-const testUserId = Math.floor(Math.random() * 999999);
+
+// todo use test utils
+const testUserId = Math.floor(Math.random() * 9);
 const filePathRandom = path.resolve(__dirname, `../data/character-sheets/temporary/${testUserId}.json`);
 
 let testName: string;

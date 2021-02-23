@@ -42,7 +42,7 @@ export default class TraitCollection<T extends iTrait> implements iTraitCollecti
 		return [...collectionLogs, ...itemLogs].sort((a, b) => Number(a.time.getTime() - b.time.getTime()));
 	}
 	toJson(): T[] {
-		return Array.from(this.#map.values());
+		return Array.from(this.#map.values()).map((e )=>e.toJson());
 	}
 	get size(): number {
 		return this.#map.size;
