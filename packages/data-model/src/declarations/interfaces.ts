@@ -46,6 +46,10 @@ export interface iDiscipline extends iTrait {
 	// todo add "specialisation" / sub types?
 }
 
+export interface iSaveAction {
+	saveAction: () => boolean;
+}
+
 interface iCharacterSheetPrimitiveData {
 	discordUserId: number;
 	// todo add user aliases (ie known discord names to be added by bot)
@@ -105,8 +109,9 @@ export interface iBaseLogEventProps {
 
 // todo this violates interface segregation, intial and new value arent universal
 export interface iLogEvent<T> extends iBaseLogEventProps {
-	operation: LogOperation; 
+	operation: LogOperation;
 	describe(): string;
+	time: Date;
 }
 
 export interface iAddLogEvent<T> extends iLogEvent<T>, iNewValue<T> {}

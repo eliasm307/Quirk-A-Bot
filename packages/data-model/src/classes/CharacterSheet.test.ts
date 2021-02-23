@@ -44,13 +44,13 @@ test(testName, () => {
 	cs.hunger = testHungerValue;
 
 	const csLoaded = CharacterSheet.loadFromFile({ filePath: filePathRandom });
-
+	/*
 	console.log({
 		testName,
 		log1: csLoaded.getLogData(),
 		log2: cs2.getLogData(),
 	});
-
+*/
 	// properties should be up to date on loaded instance
 	expect(csLoaded.health).toEqual(testHealthValue);
 	expect(csLoaded.bloodPotency).toEqual(testBloodPotencyValue);
@@ -68,12 +68,12 @@ test(testName, () => {
 	csLoaded.health += 3;
 	csLoaded.bloodPotency += 3;
 	csLoaded.hunger += 3;
-
+	/*
 	console.log({
 		testName,
 		log1: csLoaded.getLogData(),
 		log2: cs2.getLogData(),
-	});
+	});*/
 
 	// check changes were logged
 	expect(csLoaded.getLogData().length).toBeGreaterThanOrEqual(6);

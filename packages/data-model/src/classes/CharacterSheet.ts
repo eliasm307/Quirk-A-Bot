@@ -141,11 +141,6 @@ export default class CharacterSheet implements iCharacterSheet, iLogger<LogDataT
 				clan: '',
 				sire: '',
 			};
-
-			this.touchstonesAndConvictions = new TraitCollection({
-				characterSheet: this,
-				instanceCreator: (name, value) => new TouchStoneOrConviction(this.saveToFile, name, value),
-			});
 		} else if (typeof sheet === 'object') {
 			const {
 				attributes,
@@ -184,20 +179,21 @@ export default class CharacterSheet implements iCharacterSheet, iLogger<LogDataT
 			throw Error(`${__filename} constructor argument not defined`);
 		}
 
+		// function to save this character sheet
 		const saveAction = this.saveToFile;
 
 		// create collections, with initial data where available
 		this.attributes = new TraitCollection<iAttribute>(
 			{
-				characterSheet: this,
-				instanceCreator: ( name, value ) => new Attribute( { saveAction, name, value }),
+				saveAction,
+				instanceCreator: (name, value) => new Attribute({ saveAction, name, value }),
 			},
 			...initialAttributes
 		);
 
 		this.skills = new TraitCollection<iSkill>(
 			{
-				characterSheet: this,
+				saveAction,
 				instanceCreator: (name, value) => new Skill({ saveAction, name, value }),
 			},
 			...initialSkills
@@ -205,7 +201,7 @@ export default class CharacterSheet implements iCharacterSheet, iLogger<LogDataT
 
 		this.disciplines = new TraitCollection<iDiscipline>(
 			{
-				characterSheet: this,
+				saveAction,
 				instanceCreator: (name, value) => new Discipline({ saveAction, name, value }),
 			},
 			...initialDisciplines
@@ -213,7 +209,7 @@ export default class CharacterSheet implements iCharacterSheet, iLogger<LogDataT
 
 		this.touchstonesAndConvictions = new TraitCollection<iTouchStoneOrConviction>(
 			{
-				characterSheet: this,
+				saveAction,
 				instanceCreator: (name, value) => new TouchStoneOrConviction({ saveAction, name, value }),
 			},
 			...initialTouchstonesAndConvictions

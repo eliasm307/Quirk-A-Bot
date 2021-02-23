@@ -5,14 +5,15 @@ import { iLogEvent } from '../../declarations/interfaces';
 // ? this doesnt seem right
 interface iProps extends iBaseLogEventProps {
 	operation: LogOperation;
-} 
+}
 
 export default abstract class BaseLogEvent<T> implements iLogEvent<T> {
-	operation: LogOperation ;
+	operation: LogOperation;
 	note?: string;
 	property: string;
+	time: Date;
 
-	constructor({operation,  note: description, property }: iProps) {
+	constructor({ operation, note: description, property }: iProps) {
 		// check values are defined correctly
 		// todo delete this
 		/*
@@ -41,6 +42,7 @@ export default abstract class BaseLogEvent<T> implements iLogEvent<T> {
 		this.operation = operation;
 		this.note = description;
 		this.property = property;
+		this.time = new Date();
 	}
-	abstract describe(): string  
+	abstract describe(): string;
 }

@@ -4,11 +4,12 @@ import TraitCollection from './TraitCollection';
 import Attribute from './traits/Attribute';
 import { iAttribute } from '../declarations/interfaces';
 
+const saveAction = () => true;
+
 test('traitCollection CRUD tests', () => {
-	const cs = testCsRandom;
 	const tc = new TraitCollection<iAttribute>({
-		characterSheet: cs,
-		instanceCreator: (name, value) => new Attribute(cs, name, value),
+		saveAction,
+		instanceCreator: (name, value) => new Attribute({ saveAction, name, value }),
 	});
 
 	// test size method
@@ -36,10 +37,8 @@ test('traitCollection CRUD tests', () => {
 });
 
 test('traitCollection instantiation with initial data', () => {
-	const saveAction = () => true;
-
 	const tc = new TraitCollection<iAttribute>({
-		characterSheet: cs,
+		saveAction,
 		instanceCreator: (name, value) => new Attribute({ saveAction, name, value }),
 	});
 
@@ -57,8 +56,8 @@ test('traitCollection instantiation with initial data', () => {
 
 	// separate instance of same character sheet, no inital data
 	const tc2 = new TraitCollection<iAttribute>({
-		characterSheet: cs,
-		instanceCreator: (name, value) => new Attribute(cs, name, value),
+		saveAction,
+		instanceCreator: (name, value) => new Attribute({ saveAction, name, value }),
 	});
 
 	// no items expected
@@ -67,8 +66,8 @@ test('traitCollection instantiation with initial data', () => {
 	// separate instance of same character sheet, with inital data
 	const tc3 = new TraitCollection<iAttribute>(
 		{
-			characterSheet: cs,
-			instanceCreator: (name, value) => new Attribute(cs, name, value),
+			saveAction,
+			instanceCreator: (name, value) => new Attribute({ saveAction, name, value }),
 		},
 		...tc.toJson()
 	);
