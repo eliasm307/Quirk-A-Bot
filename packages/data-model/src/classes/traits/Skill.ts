@@ -1,5 +1,12 @@
- 
-import {   iSkillData } from '../../declarations/interfaces';
+import { iAttributeData, iBaseTraitProps, iSkillData, iTraitData } from '../../declarations/interfaces';
+import AbstractNumberTrait from './AbstractNumberTrait';
 import BaseTrait from './BaseTrait';
 
-export default class Skill extends BaseTrait<iSkillData> implements iSkillData {}
+interface iProps<T extends iTraitData> extends iBaseTraitProps<T> { }
+
+export default class Skill extends AbstractNumberTrait<iSkillData> implements iSkillData {
+	constructor(props: iProps<iSkillData>) {
+		super({ ...props, max: 5, min: 0 });
+		const { name } = props;
+	}
+}

@@ -84,18 +84,19 @@ test(testName, () => {
 
 testName = 'test basic trait methods';
 test(testName, () => {
-	console.log(`creating cs`);
+	// console.log(`creating cs`);
 	const cs = CharacterSheet.loadFromFile({ filePath: filePathRandom });
 
-	console.log(`setting strength`);
+	// console.log(`setting strength`);
 	cs.attributes.set('Strength', 5);
 
-	console.log(`setting Athletics`);
+	// console.log(`setting Athletics`);
 	cs.skills.set('Athletics', 3);
 
-	console.log(`setting touchstones/Conviction`);
+	// console.log(`setting touchstones/Conviction`);
 	cs.touchstonesAndConvictions.set('a custom one', 'something, something, something');
 
+	expect(cs.attributes.get('Strength')).toBeTruthy();
 	expect((cs.attributes.get('Strength') as Attribute).value).toEqual(5);
 	expect((cs.skills.get('Athletics') as Skill)?.value).toEqual(3);
 	expect((cs.touchstonesAndConvictions.get('a custom one') as TouchStoneOrConviction)?.value).toEqual(

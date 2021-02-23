@@ -1,4 +1,4 @@
-import { iBaseTrait } from './../../declarations/interfaces';
+import { iBaseTrait, iTraitCollectionArguments } from './../../declarations/interfaces';
 import { TraitName, TraitMap, TraitValue, TraitType, TraitData } from '../../declarations/types';
 import {
 	iCharacterSheet,
@@ -13,13 +13,9 @@ import DeleteLogEvent from '../log/DeleteLogEvent';
 import UpdateLogEvent from '../log/UpdateLogEvent';
 import AddLogEvent from '../log/AddLogEvent';
 
-export interface iTraitCollectionArguments<T extends iTraitData> extends iSaveAction {
-	instanceCreator: (name: TraitName<T>, value: TraitValue<T>) => T;
-}
-
 export default class TraitCollection<T extends iBaseTrait> implements iTraitCollection<T>, iLogger {
 	#instanceCreator: (name: TraitName<T>, value: TraitValue<T>) => T;
-	private saveAction: () => boolean;
+	private saveAction?: () => boolean;
 	#map: TraitMap<T>;
 	#logs = new LogCollection<TraitValue<T>>();
 
@@ -66,8 +62,8 @@ export default class TraitCollection<T extends iBaseTrait> implements iTraitColl
 		// log change
 		this.#logs.log(new DeleteLogEvent({ oldValue, property }));
 
-		// autosave
-		this.saveAction();
+		// autosave if save is available
+		if (this.saveAction) this.saveAction();
 	}
 	has(name: TraitName<T>): boolean {
 		return this.#map.has(name);
@@ -101,7 +97,7 @@ export default class TraitCollection<T extends iBaseTrait> implements iTraitColl
 			this.#logs.log(new AddLogEvent({ newValue, property: name }));
 		}
 
-		// autosave
-		this.saveAction();
+		// autosave if save available
+		if (this.saveAction) this.saveAction();
 	}
 }
