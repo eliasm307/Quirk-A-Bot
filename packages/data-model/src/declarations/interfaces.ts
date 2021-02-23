@@ -25,9 +25,8 @@ export interface iTraitData {
 	name: string;
 	value: number | string; // todo limit to 0-5
 }
-
-// ? does this need a generic?
-export interface iBaseTrait<T extends iTraitData> extends iTraitData, iToJson<iTraitData>, iLogger {
+ 
+export interface iBaseTrait extends iTraitData, iToJson<iTraitData>, iLogger {
 	// todo add explain method to give a summary what this trait is for
 	// todo add explainValue method to describe the current value of the attribute, ie add description getter to describe the meaning of a value
 }
@@ -96,7 +95,7 @@ export interface iCharacterSheet extends iCharacterSheetPrimitiveData, iToJson<i
 	touchstonesAndConvictions: TraitCollection<TouchStoneOrConviction>;
 }
 
-export interface iTraitCollection<T extends iBaseTrait<TraitData<T>>> extends iToJson<iTraitData[]> {
+export interface iTraitCollection<T extends iBaseTrait> extends iToJson<iTraitData[]> {
 	get(name: TraitName<T>): T | void;
 	set(name: TraitName<T>, value: number): void;
 	delete(name: TraitName<T>): void;

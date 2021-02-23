@@ -1,6 +1,13 @@
 import { iBaseTrait } from './../../declarations/interfaces';
 import { TraitData, TraitName, TraitValue } from '../../declarations/types';
-import { iBaseTraitProps, iCharacterSheet, iLogEvent, iLogger, iToJson, iTraitData } from '../../declarations/interfaces';
+import {
+	iBaseTraitProps,
+	iCharacterSheet,
+	iLogEvent,
+	iLogger,
+	iToJson,
+	iTraitData,
+} from '../../declarations/interfaces';
 import LogCollection from '../log/LogCollection';
 import UpdateLogEvent from '../log/UpdateLogEvent';
 
@@ -8,7 +15,7 @@ interface iPrivateModifiableProperties<T> {
 	value: TraitValue<T>;
 }
 
-export default abstract class BaseTrait<T extends iTraitData> implements iBaseTrait<TraitData<T>> {
+export default abstract class BaseTrait<T extends iTraitData> implements iBaseTrait {
 	#private: iPrivateModifiableProperties<T>;
 	// #characterSheet: iCharacterSheet;
 	#logs = new LogCollection<TraitValue<T>>();
