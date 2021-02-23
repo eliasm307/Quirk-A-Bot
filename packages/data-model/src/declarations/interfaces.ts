@@ -16,15 +16,14 @@ import {
 	TraitData,
 } from './types';
 
-export interface iToJson<T extends iTraitData> {
-	toJson: () => TraitData<T>;
+export interface iToJson<T> {
+	toJson: () => T;
 }
 
 /** Describes the shape of the most basic trait */
 export interface iTraitData {
 	name: string;
 	value: number | string; // todo limit to 0-5
-	
 }
 
 // ? does this need a generic?
@@ -42,7 +41,7 @@ export interface iBaseTraitProps<T extends iTraitData> {
 export interface iAttributeData extends iTraitData {
 	name: AttributeName;
 	value: number;
-	category: AttributeCategory; 
+	category: AttributeCategory;
 }
 
 export interface iTouchStoneOrConvictionData extends iTraitData {
@@ -87,12 +86,9 @@ interface iCharacterSheetNonPrimitiveData {
 
 export interface iCharacterSheetData extends iCharacterSheetPrimitiveData, iCharacterSheetNonPrimitiveData {}
 
-export interface iCharacterSheet extends iCharacterSheetPrimitiveData {
+export interface iCharacterSheet extends iCharacterSheetPrimitiveData, iToJson<iCharacterSheetData> {
 	// saveToFile(): boolean; // ? should this be handled by another class?
-	toJson(): iCharacterSheetData;
-
-	// this is too general and causes intellisense to stop working, prefer using custom collections
-	// setTrait<T extends iTrait>(name: TraitName<T>, value: number): void;
+	// toJson(): iCharacterSheetData;
 
 	skills: TraitCollection<Skill>;
 	attributes: TraitCollection<Attribute>;
@@ -100,17 +96,16 @@ export interface iCharacterSheet extends iCharacterSheetPrimitiveData {
 	touchstonesAndConvictions: TraitCollection<TouchStoneOrConviction>;
 }
 
-export interface iTraitCollection<T extends iBaseTrait<TraitData<T>>> {
+export interface iTraitCollection<T extends iBaseTrait<TraitData<T>>> extends iToJson<iTraitData[]> {
 	get(name: TraitName<T>): T | void;
 	set(name: TraitName<T>, value: number): void;
 	delete(name: TraitName<T>): void;
 	has(name: TraitName<T>): boolean;
-	toJson(): iTraitData[];
 	readonly size: number;
 }
 
 export interface iOldValue<T> {
-	oldValue: T; 
+	oldValue: T;
 }
 
 export interface iNewValue<T> {
