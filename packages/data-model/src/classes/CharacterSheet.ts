@@ -144,7 +144,7 @@ export default class CharacterSheet implements iCharacterSheet, iLogger<LogDataT
 
 			this.touchstonesAndConvictions = new TraitCollection({
 				characterSheet: this,
-				instanceCreator: (name, value) => new TouchStoneOrConviction(this, name, value),
+				instanceCreator: (name, value) => new TouchStoneOrConviction(this.saveToFile, name, value),
 			});
 		} else if (typeof sheet === 'object') {
 			const {
@@ -184,11 +184,13 @@ export default class CharacterSheet implements iCharacterSheet, iLogger<LogDataT
 			throw Error(`${__filename} constructor argument not defined`);
 		}
 
+		const saveAction = this.saveToFile;
+
 		// create collections, with initial data where available
 		this.attributes = new TraitCollection<iAttribute>(
 			{
 				characterSheet: this,
-				instanceCreator: (name, value) => new Attribute(this, name, value),
+				instanceCreator: ( name, value ) => new Attribute( { saveAction, name, value }),
 			},
 			...initialAttributes
 		);
@@ -196,7 +198,7 @@ export default class CharacterSheet implements iCharacterSheet, iLogger<LogDataT
 		this.skills = new TraitCollection<iSkill>(
 			{
 				characterSheet: this,
-				instanceCreator: (name, value) => new Skill(this, name, value),
+				instanceCreator: (name, value) => new Skill({ saveAction, name, value }),
 			},
 			...initialSkills
 		);
@@ -204,7 +206,7 @@ export default class CharacterSheet implements iCharacterSheet, iLogger<LogDataT
 		this.disciplines = new TraitCollection<iDiscipline>(
 			{
 				characterSheet: this,
-				instanceCreator: (name, value) => new Discipline(this, name, value),
+				instanceCreator: (name, value) => new Discipline({ saveAction, name, value }),
 			},
 			...initialDisciplines
 		);
@@ -212,7 +214,7 @@ export default class CharacterSheet implements iCharacterSheet, iLogger<LogDataT
 		this.touchstonesAndConvictions = new TraitCollection<iTouchStoneOrConviction>(
 			{
 				characterSheet: this,
-				instanceCreator: (name, value) => new TouchStoneOrConviction(this, name, value),
+				instanceCreator: (name, value) => new TouchStoneOrConviction({ saveAction, name, value }),
 			},
 			...initialTouchstonesAndConvictions
 		);
@@ -277,7 +279,7 @@ export default class CharacterSheet implements iCharacterSheet, iLogger<LogDataT
 		};
 	}
 
-	saveToFile(): boolean {
+	private saveToFile(): boolean {
 		return exportDataToFile(this.toJson(), this.#savePath);
 	}
 

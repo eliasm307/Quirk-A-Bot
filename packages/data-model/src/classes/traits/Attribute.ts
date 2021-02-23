@@ -1,14 +1,17 @@
+import { iBaseTraitProps, iTrait } from './../../declarations/interfaces';
 import { AttributeName } from '../../declarations/types';
 import { iAttribute, iCharacterSheet } from '../../declarations/interfaces';
 import { AttributeCategory } from '../../declarations/types';
 import BaseTrait from './BaseTrait';
 
+interface iProps<T extends iTrait> extends iBaseTraitProps<T> {}
+
 export default class Attribute extends BaseTrait<iAttribute> implements iAttribute {
 	readonly category: AttributeCategory;
 
-	constructor(characterSheet: iCharacterSheet, name: AttributeName, value: number = 0) {
-		super(characterSheet, name, value);
-		this.category = this.getCategory(name);
+	constructor(props: iProps<iAttribute>) {
+		super(props);
+		this.category = this.getCategory(props.name);
 	}
 
 	private getCategory(name: AttributeName): AttributeCategory {

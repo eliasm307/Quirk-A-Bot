@@ -2,7 +2,7 @@ import { TraitName, TraitMap, TraitValue } from './../declarations/types';
 import { iCharacterSheet, iLogEvent, iLogger, iTrait, iTraitCollection } from './../declarations/interfaces';
 import LogCollection from './log/LogCollection';
 
-export interface iTraitCollectionArguments<T extends iTrait> {
+export interface iTraitCollectionArguments<T extends iTrait> implements iSaveAction {
 	characterSheet: iCharacterSheet;
 	instanceCreator: (name: TraitName<T>, value: TraitValue<T>) => T;
 }

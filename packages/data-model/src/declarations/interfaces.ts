@@ -8,6 +8,7 @@ import {
 	TraitName,
 	LogOperation,
 	LogInitialValue,
+	TraitValue,
 } from './types';
 
 export interface iTrait {
@@ -15,6 +16,12 @@ export interface iTrait {
 	name: string;
 	value: number | string; // todo limit to 0-5
 	// todo add description getter to describe the meaning of a value
+}
+
+export interface iBaseTraitProps<T extends iTrait> {
+	saveAction: () => boolean;
+	name: TraitName<T>;
+	value: TraitValue<T>;
 }
 
 export interface iAttribute extends iTrait {
@@ -62,7 +69,7 @@ interface iCharacterSheetNonPrimitiveData {
 export interface iCharacterSheetData extends iCharacterSheetPrimitiveData, iCharacterSheetNonPrimitiveData {}
 
 export interface iCharacterSheet extends iCharacterSheetPrimitiveData {
-	saveToFile(): boolean; // ? should this be handled by another class?
+	// saveToFile(): boolean; // ? should this be handled by another class?
 	toJson(): iCharacterSheetData;
 
 	// this is too general and causes intellisense to stop working, prefer using custom collections

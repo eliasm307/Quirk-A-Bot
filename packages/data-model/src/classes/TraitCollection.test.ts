@@ -36,10 +36,11 @@ test('traitCollection CRUD tests', () => {
 });
 
 test('traitCollection instantiation with initial data', () => {
-	const cs = testCs;
+	const saveAction = () => true;
+
 	const tc = new TraitCollection<iAttribute>({
 		characterSheet: cs,
-		instanceCreator: (name, value) => new Attribute(cs, name, value),
+		instanceCreator: (name, value) => new Attribute({ saveAction, name, value }),
 	});
 
 	// add items

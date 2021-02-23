@@ -1,4 +1,5 @@
-import {   TraitName, TraitValue } from '../../declarations/types';
+import { iBaseTraitProps } from './../../declarations/interfaces';
+import { TraitName, TraitValue } from '../../declarations/types';
 import { iCharacterSheet, iLogEvent, iLogger, iTrait } from '../../declarations/interfaces';
 import LogCollection from '../log/LogCollection';
 
@@ -6,10 +7,11 @@ interface iPrivateModifiableProperties<T> {
 	value: TraitValue<T>;
 }
 
-export default abstract class BaseTrait<T> implements iTrait, iLogger<TraitValue<T>> {
+export default abstract class BaseTrait<T extends iTrait> implements iTrait, iLogger<TraitValue<T>> {
 	#private: iPrivateModifiableProperties<T>;
-	#characterSheet: iCharacterSheet;
+	// #characterSheet: iCharacterSheet;
 	#logs = new LogCollection<TraitValue<T>>();
+	#saveAction: () => boolean;
 
 	readonly name: TraitName<T>;
 
@@ -20,8 +22,8 @@ export default abstract class BaseTrait<T> implements iTrait, iLogger<TraitValue
 		return this.#private.value as TraitValue<T>;
 	}
 
-	constructor(characterSheet: iCharacterSheet, name: TraitName<T>, value: TraitValue<T>) {
-		this.#characterSheet = characterSheet;
+	constructor ( { saveAction , name , value }: iBaseTraitProps<T>) {
+		this.#saveAction = saveAction;
 		this.name = name;
 		this.#private = {
 			value: value,
@@ -50,10 +52,10 @@ export default abstract class BaseTrait<T> implements iTrait, iLogger<TraitValue
 		this.#private[property] = newValue;
 
 		// todo record change, create a log class where this has an array of logs
-		this.#logs
+		this.#logs;
 
 		// attempt autosave
-		this.#characterSheet.saveToFile()
+		this.#saveAction()
 			? console.log(__filename, `Successfully saved trait property change`, { property, oldValue, newValue })
 			: console.error(__filename, `Error while saving trait property change`, { property, oldValue, newValue });
 	}
