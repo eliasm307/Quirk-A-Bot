@@ -2,24 +2,17 @@ import {
 	iCharacterSheetData,
 	iLogEvent,
 	iLogger,
-	iTouchStoneOrConviction,
+	iTouchStoneOrConvictionData,
 	iLogCollection,
 } from './../declarations/interfaces';
 import path from 'path';
-import { iAttribute, iCharacterSheet, iDiscipline, iSkill } from '../declarations/interfaces';
-
-
-
-
+import { iAttributeData, iCharacterSheet, iDisciplineData, iSkillData } from '../declarations/interfaces';
 import Attribute from './traits/Attribute';
 import Skill from './traits/Skill';
-import TraitCollection from './TraitCollection';
+import TraitCollection from './traits/TraitCollection';
 import Discipline from './traits/Discipline';
 import TouchStoneOrConviction from './traits/TouchStoneOrConviction';
-
-
 import importDataFromFile from '../utils/importDataFromFile';
-
 import LogCollection from './log/LogCollection';
 import UpdateLogEvent from './log/UpdateLogEvent';
 import exportDataToFile from '../utils/exportDataToFile';
@@ -29,6 +22,7 @@ interface iLoadFromFileArgs {
 	fileName?: string;
 }
 
+// todo make each of these into a new type of trait object, so methods can be implemented like "Describe" etc
 interface iModifiablePrimitiveProperties {
 	health: number;
 	willpower: number;
@@ -121,18 +115,18 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 	}
 	//-------------------------------------
 	// NON BASIC VARIABLE COLLECTIONS
-	readonly attributes: TraitCollection<iAttribute>;
-	readonly skills: TraitCollection<iSkill>;
-	readonly disciplines: TraitCollection<iDiscipline>;
-	readonly touchstonesAndConvictions: TraitCollection<iTouchStoneOrConviction>;
+	readonly attributes: TraitCollection<Attribute>;
+	readonly skills: TraitCollection<Skill>;
+	readonly disciplines: TraitCollection<Discipline>;
+	readonly touchstonesAndConvictions: TraitCollection<TouchStoneOrConviction>;
 
 	//-------------------------------------
 	// CONSTRUCTOR
 	constructor(sheet: iCharacterSheetData | number, customSavePath?: string) {
-		let initialAttributes: iAttribute[] = [];
-		let initialDisciplines: iDiscipline[] = [];
-		let initialSkills: iSkill[] = [];
-		let initialTouchstonesAndConvictions: iTouchStoneOrConviction[] = [];
+		let initialAttributes: iAttributeData[] = [];
+		let initialDisciplines: iDisciplineData[] = [];
+		let initialSkills: iSkillData[] = [];
+		let initialTouchstonesAndConvictions: iTouchStoneOrConvictionData[] = [];
 
 		if (typeof sheet === 'number') {
 			this.discordUserId = sheet;
@@ -190,7 +184,7 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 		const saveAction = () => this.saveToFile();
 
 		// create collections, with initial data where available
-		this.attributes = new TraitCollection<iAttribute>(
+		this.attributes = new TraitCollection<Attribute>(
 			{
 				saveAction,
 				instanceCreator: (name, value) => new Attribute({ saveAction, name, value }),
@@ -198,7 +192,7 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 			...initialAttributes
 		);
 
-		this.skills = new TraitCollection<iSkill>(
+		this.skills = new TraitCollection<Skill>(
 			{
 				saveAction,
 				instanceCreator: (name, value) => new Skill({ saveAction, name, value }),
@@ -206,7 +200,7 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 			...initialSkills
 		);
 
-		this.disciplines = new TraitCollection<iDiscipline>(
+		this.disciplines = new TraitCollection<Discipline>(
 			{
 				saveAction,
 				instanceCreator: (name, value) => new Discipline({ saveAction, name, value }),
@@ -214,7 +208,7 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 			...initialDisciplines
 		);
 
-		this.touchstonesAndConvictions = new TraitCollection<iTouchStoneOrConviction>(
+		this.touchstonesAndConvictions = new TraitCollection<TouchStoneOrConviction>(
 			{
 				saveAction,
 				instanceCreator: (name, value) => new TouchStoneOrConviction({ saveAction, name, value }),

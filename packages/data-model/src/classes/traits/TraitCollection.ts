@@ -1,32 +1,35 @@
-import { TraitName, TraitMap, TraitValue, TraitType } from './../declarations/types';
+import { iBaseTrait } from './../../declarations/interfaces';
+import { TraitName, TraitMap, TraitValue, TraitType, TraitData } from '../../declarations/types';
 import {
 	iCharacterSheet,
 	iLogEvent,
 	iLogger,
 	iSaveAction,
-	iTrait,
+	iTraitData,
 	iTraitCollection,
-} from './../declarations/interfaces';
-import LogCollection from './log/LogCollection';
-import DeleteLogEvent from './log/DeleteLogEvent';
-import UpdateLogEvent from './log/UpdateLogEvent';
-import AddLogEvent from './log/AddLogEvent';
+} from '../../declarations/interfaces';
+import LogCollection from '../log/LogCollection';
+import DeleteLogEvent from '../log/DeleteLogEvent';
+import UpdateLogEvent from '../log/UpdateLogEvent';
+import AddLogEvent from '../log/AddLogEvent';
 
-export interface iTraitCollectionArguments<T extends iTrait> extends iSaveAction {
+export interface iTraitCollectionArguments<T extends iTraitData> extends iSaveAction {
 	instanceCreator: (name: TraitName<T>, value: TraitValue<T>) => T;
 }
 
-export default class TraitCollection<T extends iTrait> implements iTraitCollection<T>, iLogger {
+export default class TraitCollection<T extends iBaseTrait<TraitData<T>>> implements iTraitCollection<T>, iLogger {
 	#instanceCreator: (name: TraitName<T>, value: TraitValue<T>) => T;
 	private saveAction: () => boolean;
 	#map: TraitMap<T>;
 	#logs = new LogCollection<TraitValue<T>>();
 
 	#typeName: TraitType | string = 'Trait';
-	constructor({ instanceCreator, saveAction }: iTraitCollectionArguments<T>, ...initialData: T[]) {
+	constructor({ instanceCreator, saveAction }: iTraitCollectionArguments<T>, ...initialData: TraitData<T>[]) {
 		this.saveAction = saveAction;
 		this.#instanceCreator = instanceCreator;
-		this.#map = new Map<TraitName<T>, T>(initialData.map(e => [e.name as TraitName<T>, e]));
+		this.#map = new Map<TraitName<T>, T>(
+			initialData.map(e => [e.name as TraitName<T>, instanceCreator(e.name as TraitName<T>, e.value as TraitValue<T>)])
+		);
 	}
 	getLogData(): iLogEvent[] {
 		const collectionLogs: iLogEvent[] = this.#logs.toJson();
@@ -41,8 +44,8 @@ export default class TraitCollection<T extends iTrait> implements iTraitCollecti
 		// combine logs and sort oldest to newest
 		return [...collectionLogs, ...itemLogs].sort((a, b) => Number(a.time.getTime() - b.time.getTime()));
 	}
-	toJson(): T[] {
-		return Array.from(this.#map.values()).map((e )=>e.toJson());
+	toJson(): TraitData<T>[] {
+		return Array.from(this.#map.values()).map(e => e.toJson() as TraitData<T>);
 	}
 	get size(): number {
 		return this.#map.size;
