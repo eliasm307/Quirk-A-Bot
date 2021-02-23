@@ -42,7 +42,7 @@ export type TraitData<T extends iTraitData> = T extends Skill
 	: T extends Discipline
 	? iDisciplineData
 	: iTraitData;
-export type TraitMap<T extends iBaseTrait<TraitData<T>>> = Map<TraitName<T>, T>;
+export type TraitMap<T extends iBaseTrait> = Map<TraitName<T>, T>;
 export type TraitType = typeof TRAIT_TYPES[number];
 
 export type LogOperation = 'ADD' | 'UPDATE' | 'DELETE';
