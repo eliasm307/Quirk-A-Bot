@@ -1,6 +1,6 @@
-import { iBaseTraitProps, iToJson } from './../../declarations/interfaces';
+import { iBaseTrait } from './../../declarations/interfaces';
 import { TraitName, TraitValue } from '../../declarations/types';
-import { iCharacterSheet, iLogEvent, iLogger, iTrait } from '../../declarations/interfaces';
+import { iBaseTraitProps, iCharacterSheet, iLogEvent, iLogger, iToJson, iTraitData } from '../../declarations/interfaces';
 import LogCollection from '../log/LogCollection';
 import UpdateLogEvent from '../log/UpdateLogEvent';
 
@@ -8,7 +8,7 @@ interface iPrivateModifiableProperties<T> {
 	value: TraitValue<T>;
 }
 
-export default abstract class BaseTrait<T extends iTrait> implements iTrait, iToJson<T> {
+export default abstract class BaseTrait<T extends iTraitData> implements iBaseTrait {
 	#private: iPrivateModifiableProperties<T>;
 	// #characterSheet: iCharacterSheet;
 	#logs = new LogCollection<TraitValue<T>>();
@@ -34,7 +34,12 @@ export default abstract class BaseTrait<T extends iTrait> implements iTrait, iTo
 		// make sure character sheet has a reference to this Skill // will this produce any cyclic behaviour? tested, and YES it does
 		// if (!this.#characterSheet.getSkillByName(name)) this.#characterSheet.setSkill(name, value);
 	}
-	abstract toJson: () => T;
+	toJson(): iTraitData {
+		return {
+			name: this.name,
+			value: this.value,
+		};
+	}
 
 	getLogData(): iLogEvent[] {
 		return this.#logs.toJson();

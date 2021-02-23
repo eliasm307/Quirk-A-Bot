@@ -1,9 +1,9 @@
-import { iTouchStoneOrConviction } from './../declarations/interfaces';
 import fs from 'fs-extra';
 import path from 'path';
-import { iAttribute, iSkill } from '../declarations/interfaces';
 import CharacterSheet from './CharacterSheet';
-
+import Skill from './traits/Skill';
+import Attribute from './traits/Attribute';
+import TouchStoneOrConviction from './traits/TouchStoneOrConviction';
 
 // todo use test utils
 const testUserId = Math.floor(Math.random() * 9);
@@ -83,22 +83,22 @@ test(testName, () => {
 });
 
 testName = 'test basic trait methods';
-test( testName, () => {
-		console.log(`creating cs`);
+test(testName, () => {
+	console.log(`creating cs`);
 	const cs = CharacterSheet.loadFromFile({ filePath: filePathRandom });
 
-	console.log(`setting strength`)
-	cs.attributes.set( 'Strength', 5 );
-	
-		console.log(`setting Athletics`);
-	cs.skills.set( 'Athletics', 3 );
-	
+	console.log(`setting strength`);
+	cs.attributes.set('Strength', 5);
+
+	console.log(`setting Athletics`);
+	cs.skills.set('Athletics', 3);
+
 	console.log(`setting touchstones/Conviction`);
 	cs.touchstonesAndConvictions.set('a custom one', 'something, something, something');
 
-	expect((cs.attributes.get('Strength') as iAttribute).value).toEqual(5);
-	expect((cs.skills.get('Athletics') as iSkill)?.value).toEqual(3);
-	expect((cs.touchstonesAndConvictions.get('a custom one') as iTouchStoneOrConviction)?.value).toEqual(
+	expect((cs.attributes.get('Strength') as Attribute).value).toEqual(5);
+	expect((cs.skills.get('Athletics') as Skill)?.value).toEqual(3);
+	expect((cs.touchstonesAndConvictions.get('a custom one') as TouchStoneOrConviction)?.value).toEqual(
 		'something, something, something'
 	);
 });

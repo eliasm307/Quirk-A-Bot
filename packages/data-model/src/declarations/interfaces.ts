@@ -1,3 +1,7 @@
+import Attribute from '../classes/traits/Attribute';
+import Discipline from '../classes/traits/Discipline';
+import Skill from '../classes/traits/Skill';
+import TouchStoneOrConviction from '../classes/traits/TouchStoneOrConviction';
 import TraitCollection from '../classes/traits/TraitCollection';
 import {
 	AttributeCategory,
@@ -9,43 +13,46 @@ import {
 	LogOperation,
 	LogInitialValue,
 	TraitValue,
+	TraitData,
 } from './types';
 
-export interface iToJson<T> {
-	toJson: () => T;
+export interface iToJson<T extends iTraitData> {
+	toJson: () => TraitData<T>;
 }
 
-export interface iTrait extends iLogger {
+export interface iTraitData   {
 	// name: TraitName<T>;
 	name: string;
 	value: number | string; // todo limit to 0-5
-	// todo add description getter to describe the meaning of a value
-	toJson: () => any;
+	// todo add description getter to describe the meaning of a value 
 }
 
-export interface iBaseTraitProps<T extends iTrait> {
+export interface iBaseTrait  extends iTraitData, iToJson<iTraitData>, iLogger {}
+
+
+export interface iBaseTraitProps<T extends iTraitData> {
 	saveAction: () => boolean;
 	name: TraitName<T>;
 	value: TraitValue<T>;
 }
 
-export interface iAttribute extends iTrait {
+export interface iAttributeData extends iTraitData {
 	name: AttributeName;
 	value: number;
 	category: AttributeCategory; // todo handle category as separate interface implemented by class?
 }
 
-export interface iTouchStoneOrConviction extends iTrait {
+export interface iTouchStoneOrConvictionData extends iTraitData {
 	name: string;
 	value: string;
 }
 
-export interface iSkill extends iTrait {
+export interface iSkillData extends iTraitData {
 	name: SkillName;
 	value: number;
 }
 
-export interface iDiscipline extends iTrait {
+export interface iDisciplineData extends iTraitData {
 	name: DisciplineName;
 	value: number;
 	// todo add "specialisation" / sub types?
@@ -69,10 +76,10 @@ interface iCharacterSheetPrimitiveData {
 }
 
 interface iCharacterSheetNonPrimitiveData {
-	touchstonesAndConvictions: iTouchStoneOrConviction[];
-	attributes: iAttribute[];
-	skills: iSkill[];
-	disciplines: iDiscipline[];
+	touchstonesAndConvictions: iTouchStoneOrConvictionData[];
+	attributes: iAttributeData[];
+	skills: iSkillData[];
+	disciplines: iDisciplineData[];
 }
 
 export interface iCharacterSheetData extends iCharacterSheetPrimitiveData, iCharacterSheetNonPrimitiveData {}
@@ -84,18 +91,18 @@ export interface iCharacterSheet extends iCharacterSheetPrimitiveData {
 	// this is too general and causes intellisense to stop working, prefer using custom collections
 	// setTrait<T extends iTrait>(name: TraitName<T>, value: number): void;
 
-	skills: TraitCollection<iSkill>;
-	attributes: TraitCollection<iAttribute>;
-	disciplines: TraitCollection<iDiscipline>;
-	touchstonesAndConvictions: TraitCollection<iTouchStoneOrConviction>;
+	skills: TraitCollection<Skill>;
+	attributes: TraitCollection<Attribute>;
+	disciplines: TraitCollection<Discipline>;
+	touchstonesAndConvictions: TraitCollection<TouchStoneOrConviction>;
 }
 
-export interface iTraitCollection<T extends iTrait> {
+export interface iTraitCollection<T extends iBaseTrait> {
 	get(name: TraitName<T>): T | void;
 	set(name: TraitName<T>, value: number): void;
 	delete(name: TraitName<T>): void;
 	has(name: TraitName<T>): boolean;
-	toJson(): iTrait[];
+	toJson(): iTraitData[];
 	readonly size: number;
 }
 
