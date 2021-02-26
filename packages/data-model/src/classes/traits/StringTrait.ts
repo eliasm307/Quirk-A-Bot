@@ -1,9 +1,9 @@
-import { iAbstractNumberTraitProps, iBaseTrait, iNumberValue, iTraitData } from './../../declarations/interfaces';
+import { iAbstractNumberTraitProps, iBaseTrait, iNumberValue, iTraitData } from '../../declarations/interfaces';
 import { TraitValue } from '../../declarations/types';
 import BaseTrait from './BaseTrait';
 
-/** Abstract class with behaviour for traits that have string values */
-export default abstract class AbstractStringTrait<T extends iTraitData> extends BaseTrait<T> implements iBaseTrait {
+/** class with behaviour for traits that have string values */
+export default class AbstractStringTrait<T extends iTraitData> extends BaseTrait<T> implements iBaseTrait {
 	/** Only allows setting non-empty strings */
 	newValueIsValid(newVal: TraitValue<T>): boolean {
 		// assert value is a number

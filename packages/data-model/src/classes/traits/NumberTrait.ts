@@ -1,9 +1,9 @@
-import { iAbstractNumberTraitProps, iBaseTrait, iNumberValue, iTraitData } from './../../declarations/interfaces';
+import { iAbstractNumberTraitProps, iBaseTrait, iNumberValue, iTraitData } from '../../declarations/interfaces';
 import { TraitValue } from '../../declarations/types';
 import BaseTrait from './BaseTrait';
 
-/** Abstract class with behaviour for traits that have number values */
-export default abstract class AbstractNumberTrait<T extends iTraitData>
+/** class with behaviour for traits that have number values */
+export default  class AbstractNumberTrait<T extends iTraitData>
 	extends BaseTrait<T>
 	implements iBaseTrait, iNumberValue {
 	min: number;

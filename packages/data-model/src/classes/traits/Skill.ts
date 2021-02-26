@@ -1,5 +1,5 @@
 import { iAttributeData, iBaseTraitProps, iSkillData, iTraitData } from '../../declarations/interfaces';
-import AbstractNumberTrait from './AbstractNumberTrait';
+import AbstractNumberTrait from './NumberTrait';
 import BaseTrait from './BaseTrait';
 
 interface iProps<T extends iTraitData> extends iBaseTraitProps<T> { }

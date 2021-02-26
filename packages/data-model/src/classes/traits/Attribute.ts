@@ -3,7 +3,7 @@ import { AttributeName } from '../../declarations/types';
 import { iAttributeData, iCharacterSheet } from '../../declarations/interfaces';
 import { AttributeCategory } from '../../declarations/types';
 import BaseTrait from './BaseTrait';
-import AbstractNumberTrait from './AbstractNumberTrait';
+import AbstractNumberTrait from './NumberTrait';
 
 export default class Attribute extends AbstractNumberTrait<iAttributeData> implements iAttributeData {
 	readonly category: AttributeCategory;
