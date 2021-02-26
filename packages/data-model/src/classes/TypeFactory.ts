@@ -1,5 +1,5 @@
 import { iCharacterSheetData } from '../declarations/interfaces/character-sheet-interfaces';
-import { iTraitData } from './../declarations/interfaces';
+import { iTraitData } from '../declarations/interfaces/trait-interfaces';
 import { TraitMap, TraitName } from './../declarations/types';
 export default abstract class TypeFactory {
 	/*

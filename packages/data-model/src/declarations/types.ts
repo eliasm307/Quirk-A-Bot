@@ -7,7 +7,7 @@ import {
 	iTraitData,
 	iTouchStoneOrConvictionData,
 	iBaseTrait,
-} from './interfaces';
+} from './interfaces/trait-interfaces';
 import BaseTrait from '../classes/traits/BaseTrait';
 import Attribute from '../classes/traits/Attribute';
 import TouchStoneOrConviction from '../classes/traits/TouchStoneOrConviction';

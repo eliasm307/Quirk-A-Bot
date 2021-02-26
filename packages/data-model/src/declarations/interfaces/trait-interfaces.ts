@@ -1,6 +1,6 @@
 
-import { iSaveAction, iToJson } from './interfaces/general-interfaces';
-import { iLogger } from './interfaces/log-interfaces';
+import { iSaveAction, iToJson } from './general-interfaces';
+import { iLogger } from './log-interfaces';
 import {
 	AttributeCategory,
 	AttributeName, 
@@ -8,7 +8,7 @@ import {
 	SkillName,
 	TraitName, 
 	TraitValue, 
-} from './types';
+} from '../types';
 
 
 

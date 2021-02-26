@@ -1,8 +1,8 @@
 import { 
 	iTouchStoneOrConvictionData, 
-} from './../declarations/interfaces';
+} from '../declarations/interfaces/trait-interfaces';
 import path from 'path';
-import { iAttributeData, iDisciplineData, iSkillData } from '../declarations/interfaces';
+import { iAttributeData, iDisciplineData, iSkillData } from '../declarations/interfaces/trait-interfaces';
 import Attribute from './traits/Attribute';
 import Skill from './traits/Skill';
 import TraitCollection from './traits/TraitCollection';

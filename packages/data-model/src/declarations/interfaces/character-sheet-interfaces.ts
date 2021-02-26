@@ -3,7 +3,7 @@ import Discipline from "../../classes/traits/Discipline";
 import Skill from "../../classes/traits/Skill";
 import TouchStoneOrConviction from "../../classes/traits/TouchStoneOrConviction";
 import TraitCollection from "../../classes/traits/TraitCollection";
-import { iTouchStoneOrConvictionData, iAttributeData, iSkillData, iDisciplineData } from "../interfaces";
+import { iTouchStoneOrConvictionData, iAttributeData, iSkillData, iDisciplineData } from "./trait-interfaces";
 import { ClanName } from "../types";
 import { iToJson } from "./general-interfaces";
 

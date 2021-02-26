@@ -2,7 +2,7 @@ import { AttributeName, LogOperation } from '../../declarations/types';
 import { testCs, testCsRandom } from '../../utils/testUtils';
 import TraitCollection from './TraitCollection';
 import Attribute from './Attribute';
-import { iAttributeData } from '../../declarations/interfaces';
+import { iAttributeData } from '../../declarations/interfaces/trait-interfaces';
 import AddLogEvent from '../log/AddLogEvent';
 
 const saveAction = () => true;

@@ -1,9 +1,9 @@
-import { iBaseTrait, iTraitCollectionArguments } from './../../declarations/interfaces';
+import { iBaseTrait, iTraitCollectionArguments } from '../../declarations/interfaces/trait-interfaces';
 import { TraitName, TraitMap, TraitValue, TraitType, TraitData } from '../../declarations/types';
 import { 
 	iTraitData,
 	iTraitCollection,
-} from '../../declarations/interfaces';
+} from '../../declarations/interfaces/trait-interfaces';
 import LogCollection from '../log/LogCollection';
 import DeleteLogEvent from '../log/DeleteLogEvent';
 import UpdateLogEvent from '../log/UpdateLogEvent';

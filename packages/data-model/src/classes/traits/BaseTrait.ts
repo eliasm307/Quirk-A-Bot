@@ -1,7 +1,7 @@
 import { iLogEvent } from './../../declarations/interfaces/log-interfaces';
-import { iBaseTrait } from './../../declarations/interfaces';
+import { iBaseTrait } from '../../declarations/interfaces/trait-interfaces';
 import { TraitData, TraitName, TraitValue } from '../../declarations/types';
-import { iBaseTraitProps, iTraitData } from '../../declarations/interfaces';
+import { iBaseTraitProps, iTraitData } from '../../declarations/interfaces/trait-interfaces';
 import LogCollection from '../log/LogCollection';
 import UpdateLogEvent from '../log/UpdateLogEvent';
 
