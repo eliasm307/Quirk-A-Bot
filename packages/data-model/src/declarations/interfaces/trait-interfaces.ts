@@ -108,7 +108,7 @@ export interface iTouchStoneOrConviction extends iTouchStoneOrConvictionData, iS
 
 // todo is this the best way to do this?
 // todo use dynamic types here?
-export interface iTraitCollection<T extends iBaseTrait<TraitNameUnion, TraitTypeUnion>>
+export interface iTraitCollection<T extends iBaseTrait<TraitNameUnionOrString, TraitTypeUnion>>
 	extends iToJson<iTraitData<TraitNameUnion, TraitTypeUnion>[]> {
 	get(name: TraitName<T>): T | void;
 	set(name: TraitName<T>, value: number): void;

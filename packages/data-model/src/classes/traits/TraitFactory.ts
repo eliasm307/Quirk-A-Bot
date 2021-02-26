@@ -14,6 +14,7 @@ import {
 	iTouchStoneOrConvictionData,
 	iTouchStoneOrConviction,
 	iNumberTraitData,
+	iBaseTraitProps,
 } from './../../declarations/interfaces/trait-interfaces';
 import { iCanHaveSaveAction } from '../../declarations/interfaces/general-interfaces';
 import NumberTraitWithCategory from './NumberTraitWithCategory';
@@ -21,13 +22,9 @@ import NumberTrait from './NumberTrait';
 import StringTrait from './StringTrait';
 import getAttributeCategory from '../../utils/getAttributeCategory';
 
-interface iGetAttributeProps extends iNumberTraitData<AttributeName>, iCanHaveSaveAction {}
-interface iGetDisciplineProps extends iNumberTraitData<DisciplineName>, iCanHaveSaveAction {}
-interface iGetSkillProps extends iNumberTraitData<SkillName>, iCanHaveSaveAction {}
-interface iGetTouchStoneOrConvictionProps extends iStringTraitProps<string>, iCanHaveSaveAction {}
-
 export default abstract class TraitFactory {
-	static newAttributeTrait({ name, value = 0, saveAction }: iGetAttributeProps): iAttribute {
+	// methods use base trait props as all other details should be selected to match the required trait type
+	static newAttributeTrait({ name, value = 0, saveAction }: iBaseTraitProps<AttributeName, number>): iAttribute {
 		const props: iNumberTraitWithCategoryProps<AttributeName, AttributeCategory> = {
 			categorySelector: getAttributeCategory,
 			min: 1,
@@ -40,7 +37,7 @@ export default abstract class TraitFactory {
 		return new NumberTraitWithCategory(props);
 	}
 
-	static newDisciplineTrait({ name, value = 0, saveAction }: iGetDisciplineProps): iDiscipline {
+	static newDisciplineTrait({ name, value = 0, saveAction }: iBaseTraitProps<DisciplineName, number>): iDiscipline {
 		const props: iNumberTraitProps<DisciplineName> = {
 			min: 1,
 			max: 5,
@@ -52,7 +49,7 @@ export default abstract class TraitFactory {
 		return new NumberTrait(props);
 	}
 
-	static newSkillTrait({ name, value = 0, saveAction }: iGetSkillProps): iSkill {
+	static newSkillTrait({ name, value = 0, saveAction }: iBaseTraitProps<SkillName, number>): iSkill {
 		const props: iNumberTraitProps<SkillName> = {
 			min: 0,
 			max: 5,
@@ -68,7 +65,7 @@ export default abstract class TraitFactory {
 		name,
 		value = 'TBC...',
 		saveAction,
-	}: iGetTouchStoneOrConvictionProps): iTouchStoneOrConviction {
+	}: iBaseTraitProps<string, string>): iTouchStoneOrConviction {
 		const props: iStringTraitProps<string> = {
 			name,
 			value,

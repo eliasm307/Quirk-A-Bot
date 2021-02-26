@@ -1,6 +1,7 @@
 import CharacterSheet from '../CharacterSheet';
 import Attribute from './Attribute';
 import TraitCollection from './TraitCollection';
+import TraitFactory from './TraitFactory';
 
 const cs: CharacterSheet = new CharacterSheet(0, '../data/character-sheets/temporary/test.json');
 
@@ -8,8 +9,10 @@ const cs: CharacterSheet = new CharacterSheet(0, '../data/character-sheets/tempo
 
 let testName = 'test adding attribute directly to Character sheet';
 
-test( testName, () => {
-	const tc = new TraitCollection<Attribute>({instanceCreator: (name, value)=> new Attribute({name, value }), });
+test(testName, () => {
+	const tc = new TraitCollection<iAttribute>({
+		instanceCreator: (name, value) => TraitFactory.newAttributeTrait({ name, value }),
+	});
 	cs.attributes.set('Charisma', 3);
 
 	console.log(__filename, { testName, attributes: cs.attributes.toJson() });

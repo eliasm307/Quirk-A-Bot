@@ -28,8 +28,6 @@ export default class Attribute
 			name: this.name,
 			value: this.value,
 			category: this.category,
-			min: this.min,
-			max: this.max,
 		};
 	}
 }

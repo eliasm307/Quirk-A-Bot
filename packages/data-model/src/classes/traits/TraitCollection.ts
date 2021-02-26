@@ -1,4 +1,5 @@
-import { iBaseTrait, iTraitCollectionProps } from '../../declarations/interfaces/trait-interfaces';
+import { TraitNameUnionOrString } from './../../declarations/types';
+import { iBaseTrait, iTraitCollectionProps, iTraitData } from '../../declarations/interfaces/trait-interfaces';
 import {
 	TraitName,
 	TraitMap,
@@ -15,8 +16,12 @@ import UpdateLogEvent from '../log/UpdateLogEvent';
 import AddLogEvent from '../log/AddLogEvent';
 import { iLogger, iLogEvent } from '../../declarations/interfaces/log-interfaces';
 
-export default class TraitCollection<T extends iBaseTrait<TraitNameUnion | string, TraitTypeUnion>>
-	implements iTraitCollection<T>, iLogger {
+export default class TraitCollection<
+	T extends iBaseTrait<N, V>,
+	N extends TraitNameUnionOrString,
+	V extends TraitTypeUnion,
+	D extends iTraitData<N, V>
+> implements iTraitCollection<T>, iLogger {
 	#instanceCreator: (name: TraitName<T>, value: TraitValue<T>) => T;
 	private saveAction?: () => boolean;
 	#map: TraitMap<T>;

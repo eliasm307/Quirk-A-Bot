@@ -2,7 +2,7 @@ import { AttributeName, LogOperation } from '../../declarations/types';
 import { testCs, testCsRandom } from '../../utils/testUtils';
 import TraitCollection from './TraitCollection';
 import Attribute from './Attribute';
-import { iAttributeData } from '../../declarations/interfaces/trait-interfaces';
+import { iAttribute, iAttributeData } from '../../declarations/interfaces/trait-interfaces';
 import AddLogEvent from '../log/AddLogEvent';
 
 const saveAction = () => true;
@@ -40,7 +40,7 @@ test('traitCollection CRUD tests', () => {
 
 testName = 'traitCollection instantiation with initial data and logging';
 test(testName, () => {
-	const tc = new TraitCollection<Attribute>({
+	const tc = new TraitCollection<iAttribute>({
 		saveAction,
 		instanceCreator: (name, value) => new Attribute({ saveAction, name, value }),
 	});
