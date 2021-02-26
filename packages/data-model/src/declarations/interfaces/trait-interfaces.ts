@@ -1,4 +1,4 @@
-import { TraitNameUnion } from './../types';
+import { TraitNameUnion, TraitValue } from './../types';
 import { iSaveAction, iToJson } from './general-interfaces';
 import { iLogger } from './log-interfaces';
 import { AttributeCategory, AttributeName, DisciplineName, SkillName, TraitName, TraitTypeUnion } from '../types';
@@ -87,7 +87,7 @@ export interface iDisciplineData extends iTraitData<DisciplineName, number>, iHa
 // todo use dynamic types here?
 export interface iTraitCollectionArguments<T extends iBaseTrait<TraitNameUnion, TraitTypeUnion>> extends iSaveAction {
 	// todo use dynamic types here?
-	instanceCreator: (name: TraitNameUnion, value: TraitTypeUnion) => T;
+	instanceCreator: (name: TraitName<T>, value: TraitValue<T>) => T;
 	// todo make this more specific in terms of available names and value types
 }
 
