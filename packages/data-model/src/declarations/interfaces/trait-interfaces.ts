@@ -1,3 +1,4 @@
+import { iNumberTrait, iCategory } from './trait-interfaces';
 import { TraitNameUnion, TraitValueType } from './../types';
 import { iSaveAction, iToJson } from './general-interfaces';
 import { iLogger } from './log-interfaces';
@@ -29,6 +30,11 @@ export interface iNumberTrait extends iBaseTrait, iNumberValue {
 	max: number;
 	value: number;
 }
+export interface iNumberTraitWithCategory<C extends string> extends iNumberTrait, iCategory<C> {}
+
+export interface iCategory<T> {
+	category: T;
+}
 export interface iStringTrait extends iBaseTrait, iStringValue {
 	value: string;
 }
@@ -54,6 +60,10 @@ export interface iNumberTraitProps<N extends TraitNameUnion> extends iBaseTraitP
 	min?: number;
 	max: number;
 }
+export interface iNumberTraitWithCategoryProps<N extends TraitNameUnion, C extends string>
+	extends iNumberTraitProps<N> {
+	categorySelector: (name: N) => C;
+}
 export interface iStringTraitProps<N extends TraitNameUnion> extends iBaseTraitProps<N, string> {}
 
 // ? does this need to be a separate inteface?
@@ -62,6 +72,8 @@ export interface iAttributeData extends iTraitData, iNumberValue {
 	value: number;
 	category: AttributeCategory;
 }
+
+export interface iAttribute extends iNumberTrait, iCategory {}
 
 // ? does this need to be a separate inteface?
 export interface iTouchStoneOrConvictionData extends iTraitData {
