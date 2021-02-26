@@ -1,16 +1,6 @@
-
 import { iSaveAction, iToJson } from './general-interfaces';
 import { iLogger } from './log-interfaces';
-import {
-	AttributeCategory,
-	AttributeName, 
-	DisciplineName,
-	SkillName,
-	TraitName, 
-	TraitValue, 
-} from '../types';
-
-
+import { AttributeCategory, AttributeName, DisciplineName, SkillName, TraitName, TraitValue } from '../types';
 
 /** Describes the shape of the most basic trait */
 export interface iTraitData {
@@ -23,6 +13,19 @@ export interface iBaseTrait extends iTraitData, iToJson<iTraitData>, iLogger {
 	// todo add explain method to give a summary what this trait is for
 	// todo add explainValue method to describe the current value of the attribute, ie add description getter to describe the meaning of a value
 	// todo add min and max limits for trait values, shoud this be done here?
+}
+
+export interface iNumberTrait extends iBaseTrait, iNumberValue {
+	min: number;
+	max: number;
+	value: number;
+}
+export interface iStringTrait extends iBaseTrait, iStringValue {
+	value: string;
+}
+
+export interface iStringValue {
+	value: string;
 }
 
 export interface iNumberValue {
@@ -66,7 +69,6 @@ export interface iDisciplineData extends iTraitData, iNumberValue {
 	// todo add "specialisation" / sub types?
 }
 
-
 export interface iTraitCollectionArguments<T extends iTraitData> extends iSaveAction {
 	instanceCreator: (name: TraitName<T>, value: TraitValue<T>) => T;
 }
@@ -78,4 +80,3 @@ export interface iTraitCollection<T extends iBaseTrait> extends iToJson<iTraitDa
 	has(name: TraitName<T>): boolean;
 	readonly size: number;
 }
-
