@@ -4,6 +4,7 @@ import {
 	iTraitData,
 	iHasCategorySelector,
 	iAttribute,
+  iDiscipline,
 } from './../../declarations/interfaces/trait-interfaces';
 import { iSaveAction } from '../../declarations/interfaces/general-interfaces';
 import NumberTraitWithCategory from './NumberTraitWithCategory';

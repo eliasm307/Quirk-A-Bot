@@ -1,4 +1,8 @@
 import { 
+	iAttribute,
+	iDiscipline,
+	iSkill,
+	iTouchStoneOrConviction,
 	iTouchStoneOrConvictionData, 
 } from '../declarations/interfaces/trait-interfaces';
 import path from 'path';
@@ -113,10 +117,10 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 	}
 	//-------------------------------------
 	// NON BASIC VARIABLE COLLECTIONS
-	readonly attributes: TraitCollection<Attribute>;
-	readonly skills: TraitCollection<Skill>;
-	readonly disciplines: TraitCollection<Discipline>;
-	readonly touchstonesAndConvictions: TraitCollection<TouchStoneOrConviction>;
+	readonly attributes: TraitCollection<iAttribute>;
+	readonly skills: TraitCollection<iSkill>;
+	readonly disciplines: TraitCollection<iDiscipline>;
+	readonly touchstonesAndConvictions: TraitCollection<iTouchStoneOrConviction>;
 
 	//-------------------------------------
 	// CONSTRUCTOR

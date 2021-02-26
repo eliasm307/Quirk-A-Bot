@@ -5,7 +5,7 @@ import {
 } from '../../declarations/interfaces/trait-interfaces';
 import NumberTrait from './NumberTrait';
 
-export default class NumberTraitWithCategory<N extends TraitNameUnion, C extends string>
+export default class NumberTraitWithCategory<N extends TraitNameUnionOrString, C extends string>
 	extends NumberTrait<N>
 	implements iNumberTraitWithCategory<C> {
 	readonly category: C;

@@ -9,7 +9,9 @@ import { TraitNameUnion, TraitValue } from '../../declarations/types';
 import AbstractBaseTrait from './AbstractBaseTrait';
 
 /** class with behaviour for traits that have number values */
-export default class NumberTrait<N extends TraitNameUnion> extends AbstractBaseTrait<N, number> implements iNumberTrait {
+export default class NumberTrait<N extends TraitNameUnionOrString>
+	extends AbstractBaseTrait<N, number>
+	implements iNumberTrait {
 	min: number;
 	max: number;
 

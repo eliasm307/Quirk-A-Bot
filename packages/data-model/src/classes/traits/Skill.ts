@@ -7,11 +7,11 @@ import {
 import NumberTrait from './NumberTrait';
 import AbstractBaseTrait from './AbstractBaseTrait';
 
-interface iProps<N extends TraitNameUnion> extends iBaseTraitProps<T> {}
+interface iProps<N extends TraitNameUnionOrString> extends iBaseTraitProps<T> {}
 
 export default class Skill extends NumberTrait<iSkillData> implements iSkillData {
-  constructor ( props: iProps<iSkillData> ) {
-    // todo customise this in Factory?
+	constructor(props: iProps<iSkillData>) {
+		// todo customise this in Factory?
 		super({ ...props, max: 5, min: 0 });
 		const { name } = props;
 	}

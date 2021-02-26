@@ -8,20 +8,19 @@ import {
 	TraitNameUnion,
 	TraitTypeUnion,
 } from '../../declarations/types';
-import {   iTraitCollection } from '../../declarations/interfaces/trait-interfaces';
+import { iTraitCollection } from '../../declarations/interfaces/trait-interfaces';
 import LogCollection from '../log/LogCollection';
 import DeleteLogEvent from '../log/DeleteLogEvent';
 import UpdateLogEvent from '../log/UpdateLogEvent';
 import AddLogEvent from '../log/AddLogEvent';
 import { iLogger, iLogEvent } from '../../declarations/interfaces/log-interfaces';
 
-export default class TraitCollection<T extends iBaseTrait<TraitNameUnion, TraitTypeUnion>>
+export default class TraitCollection<T extends iBaseTrait<TraitNameUnion | string, TraitTypeUnion>>
 	implements iTraitCollection<T>, iLogger {
 	#instanceCreator: (name: TraitName<T>, value: TraitValue<T>) => T;
 	private saveAction?: () => boolean;
 	#map: TraitMap<T>;
 	#logs = new LogCollection<TraitValue<T>>();
-
 	#typeName: TraitType | string = 'Trait';
 	constructor({ instanceCreator, saveAction }: iTraitCollectionProps<T>, ...initialData: TraitData<T>[]) {
 		this.saveAction = saveAction;

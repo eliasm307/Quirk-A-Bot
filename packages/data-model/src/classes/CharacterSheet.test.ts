@@ -4,6 +4,7 @@ import CharacterSheet from './CharacterSheet';
 import Skill from './traits/Skill';
 import Attribute from './traits/Attribute';
 import TouchStoneOrConviction from './traits/TouchStoneOrConviction';
+import { iSkill } from '../declarations/interfaces/trait-interfaces';
 
 // todo use test utils
 const testUserId = Math.floor(Math.random() * 9);
@@ -98,7 +99,7 @@ test(testName, () => {
 
 	expect(cs.attributes.get('Strength')).toBeTruthy();
 	expect((cs.attributes.get('Strength') as Attribute).value).toEqual(5);
-	expect((cs.skills.get('Athletics') as Skill)?.value).toEqual(3);
+	expect((cs.skills.get('Athletics') as iSkill)?.value).toEqual(3);
 	expect((cs.touchstonesAndConvictions.get('a custom one') as TouchStoneOrConviction)?.value).toEqual(
 		'something, something, something'
 	);

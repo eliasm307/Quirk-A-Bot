@@ -26,17 +26,17 @@ export interface iHasNumberValue {
 // -------------------------------------------------------
 // TRAIT PROPS
 
-export interface iBaseTraitProps<N extends TraitNameUnion, V extends TraitTypeUnion> {
+export interface iBaseTraitProps<N extends TraitNameUnionOrString, V extends TraitTypeUnion> {
 	saveAction?: () => boolean;
 	name: N;
 	value: V;
 }
-export interface iStringTraitProps<N extends TraitNameUnion> extends iBaseTraitProps<N, string> {}
-export interface iNumberTraitProps<N extends TraitNameUnion> extends iBaseTraitProps<N, number> {
+export interface iStringTraitProps<N extends TraitNameUnionOrString> extends iBaseTraitProps<N, string> {}
+export interface iNumberTraitProps<N extends TraitNameUnionOrString> extends iBaseTraitProps<N, number> {
 	min?: number;
 	max: number;
 }
-export interface iNumberTraitWithCategoryProps<N extends TraitNameUnion, C extends string>
+export interface iNumberTraitWithCategoryProps<N extends TraitNameUnionOrString, C extends string>
 	extends iNumberTraitProps<N> {
 	categorySelector: (name: N) => C;
 }
@@ -51,12 +51,16 @@ export interface iTraitCollectionProps<T extends iBaseTrait<TraitNameUnion, Trai
 // GENERIC TRAIT DATA TYPES
 
 /** Describes the shape of the most basic trait */
-export interface iTraitData<N extends TraitNameUnion | string, V extends TraitTypeUnion> {
+export interface iTraitData<N extends TraitNameUnionOrString | string, V extends TraitTypeUnion> {
 	name: N;
 	value: V;
 }
-export interface iNumberTraitData<N extends TraitNameUnion | string> extends iTraitData<N, number>, iHasNumberValue {}
-export interface iStringTraitData<N extends TraitNameUnion | string> extends iTraitData<N, string>, iHasStringValue {}
+export interface iNumberTraitData<N extends TraitNameUnionOrString | string>
+	extends iTraitData<N, number>,
+		iHasNumberValue {}
+export interface iStringTraitData<N extends TraitNameUnionOrString | string>
+	extends iTraitData<N, string>,
+		iHasStringValue {}
 // -------------------------------------------------------
 // SPECIFIC TRAIT DATA TYPES
 
@@ -70,7 +74,7 @@ export interface iDisciplineData extends iNumberTraitData<DisciplineName> {
 // GENERIC TRAIT OBJECTS TYPES
 
 /** Base interface for Trait Objects */
-export interface iBaseTrait<N extends TraitNameUnion | string, V extends TraitTypeUnion>
+export interface iBaseTrait<N extends TraitNameUnionOrString | string, V extends TraitTypeUnion>
 	extends iTraitData<N, V>,
 		iToJson<iTraitData<N, V>>,
 		iLogger {
@@ -78,12 +82,13 @@ export interface iBaseTrait<N extends TraitNameUnion | string, V extends TraitTy
 	// todo add explainValue method to describe the current value of the attribute, ie add description getter to describe the meaning of a value
 	// todo add min and max limits for trait values, shoud this be done here?
 }
-export interface iNumberTrait<N extends TraitNameUnion | string> extends iBaseTrait<N, number>, iHasNumberValue {
-	min: number;
-	max: number;
-}
-export interface iStringTrait<N extends TraitNameUnion | string> extends iBaseTrait<N, string>, iHasStringValue {}
-export interface iNumberTraitWithCategory<N extends TraitNameUnion, C extends string>
+export interface iNumberTrait<N extends TraitNameUnionOrString | string>
+	extends iBaseTrait<N, number>,
+		iHasNumberValue {}
+export interface iStringTrait<N extends TraitNameUnionOrString | string>
+	extends iBaseTrait<N, string>,
+		iHasStringValue {}
+export interface iNumberTraitWithCategory<N extends TraitNameUnionOrString, C extends string>
 	extends iNumberTrait<N>,
 		iHasCategory<C> {}
 
@@ -92,6 +97,7 @@ export interface iNumberTraitWithCategory<N extends TraitNameUnion, C extends st
 
 export interface iAttribute extends iAttributeData, iNumberTrait<AttributeName>, iHasCategory<AttributeCategory> {}
 export interface iDiscipline extends iDisciplineData, iNumberTrait<DisciplineName> {}
+export interface iSkill extends iSkillData, iNumberTrait<SkillName> {}
 export interface iTouchStoneOrConviction extends iTouchStoneOrConvictionData, iStringTrait<string> {}
 
 // -------------------------------------------------------

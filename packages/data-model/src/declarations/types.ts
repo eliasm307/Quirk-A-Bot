@@ -37,10 +37,10 @@ export type TraitValue<T> = T extends iTouchStoneOrConvictionData ? string : num
 export type TraitTypeUnion = number | string;
 
 export type TraitNameUnion = AttributeName | SkillName | DisciplineName;
-
+export type TraitNameUnionOrString = TraitNameUnion | string;
 // todo is this required
 /** Dynamic type for trait data only interfaces */
-export type TraitData<T extends iTraitData> = T extends Skill
+export type TraitData<T extends iTraitData<TraitNameUnionOrString, TraitTypeUnion>> = T extends Skill
 	? iSkillData
 	: T extends Attribute
 	? iAttributeData
@@ -48,8 +48,8 @@ export type TraitData<T extends iTraitData> = T extends Skill
 	? iTouchStoneOrConvictionData
 	: T extends Discipline
 	? iDisciplineData
-	: iTraitData;
-export type TraitMap<T extends iBaseTrait> = Map<TraitName<T>, T>;
+	: iTraitData<TraitNameUnionOrString, TraitTypeUnion>;
+export type TraitMap<T extends iBaseTrait<TraitNameUnionOrString, TraitTypeUnion>> = Map<TraitName<T>, T>;
 export type TraitType = typeof TRAIT_TYPES[number];
 
 export type LogOperation = 'ADD' | 'UPDATE' | 'DELETE';
