@@ -1,4 +1,3 @@
-import { iNumberTrait } from './trait-interfaces';
 import { TraitNameUnion, TraitValue } from './../types';
 import { iSaveAction, iToJson } from './general-interfaces';
 import { iLogger } from './log-interfaces';
@@ -71,7 +70,7 @@ export interface iDisciplineData extends iNumberTraitData<DisciplineName> {
 // GENERIC TRAIT OBJECTS TYPES
 
 /** Base interface for Trait Objects */
-export interface iBaseTrait<N extends TraitNameUnion, V extends TraitTypeUnion>
+export interface iBaseTrait<N extends TraitNameUnion | string, V extends TraitTypeUnion>
 	extends iTraitData<N, V>,
 		iToJson<iTraitData<N, V>>,
 		iLogger {
@@ -79,13 +78,11 @@ export interface iBaseTrait<N extends TraitNameUnion, V extends TraitTypeUnion>
 	// todo add explainValue method to describe the current value of the attribute, ie add description getter to describe the meaning of a value
 	// todo add min and max limits for trait values, shoud this be done here?
 }
-export interface iNumberTrait<N extends TraitNameUnion> extends iBaseTrait<N, number>, iHasNumberValue {
+export interface iNumberTrait<N extends TraitNameUnion | string> extends iBaseTrait<N, number>, iHasNumberValue {
 	min: number;
 	max: number;
 }
-export interface iStringTrait<N extends TraitNameUnion, V extends TraitTypeUnion>
-	extends iBaseTrait<N, string>,
-		iHasStringValue {}
+export interface iStringTrait<N extends TraitNameUnion | string> extends iBaseTrait<N, string>, iHasStringValue {}
 export interface iNumberTraitWithCategory<N extends TraitNameUnion, C extends string>
 	extends iNumberTrait<N>,
 		iHasCategory<C> {}
@@ -94,6 +91,8 @@ export interface iNumberTraitWithCategory<N extends TraitNameUnion, C extends st
 // SPECIFIC TRAIT OBJECTS
 
 export interface iAttribute extends iAttributeData, iNumberTrait<AttributeName>, iHasCategory<AttributeCategory> {}
+export interface iDiscipline extends iDisciplineData, iNumberTrait<DisciplineName> {}
+export interface iTouchStoneOrConviction extends iTouchStoneOrConvictionData, iStringTrait<string> {}
 
 // -------------------------------------------------------
 // TRAIT COLLECTION
