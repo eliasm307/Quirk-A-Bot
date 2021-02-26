@@ -1,11 +1,11 @@
-import { iBaseTraitProps, iTraitData, iNumberValue, iAbstractNumberTraitProps } from '../../declarations/interfaces/trait-interfaces';
+import { iBaseTraitProps, iTraitData, iNumberValue, iNumberTraitProps } from '../../declarations/interfaces/trait-interfaces';
 import { AttributeName } from '../../declarations/types';
 import { iAttributeData } from '../../declarations/interfaces/trait-interfaces';
 import { AttributeCategory } from '../../declarations/types';
 import BaseTrait from './BaseTrait';
-import AbstractNumberTrait from './NumberTrait';
+import NumberTrait from './NumberTrait';
 
-export default class Attribute extends AbstractNumberTrait<iAttributeData> implements iAttributeData {
+export default class Attribute extends NumberTrait<iAttributeData> implements iAttributeData {
 	readonly category: AttributeCategory;
 
 	constructor(props: iBaseTraitProps<iAttributeData>) {

@@ -50,10 +50,11 @@ export interface iBaseTraitProps<N extends TraitNameUnion, V extends TraitTypeUn
 	name: N;
 	value: V;
 }
-export interface iAbstractNumberTraitProps<N extends TraitNameUnion> extends iBaseTraitProps<T> {
+export interface iNumberTraitProps<N extends TraitNameUnion> extends iBaseTraitProps<N, number> {
 	min?: number;
 	max: number;
 }
+export interface iStringTraitProps<N extends TraitNameUnion> extends iBaseTraitProps<N, string> {}
 
 // ? does this need to be a separate inteface?
 export interface iAttributeData extends iTraitData, iNumberValue {

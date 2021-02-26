@@ -1,11 +1,13 @@
-import {
-	iStringTrait,
-} from '../../declarations/interfaces/trait-interfaces';
+import { iStringTrait, iStringTraitProps } from '../../declarations/interfaces/trait-interfaces';
 import { TraitNameUnion } from '../../declarations/types';
 import BaseTrait from './BaseTrait';
 
 /** class with behaviour for traits that have string values */
 export default class StringTrait<N extends TraitNameUnion> extends BaseTrait<N, string> implements iStringTrait {
+	constructor(props: iStringTraitProps<N>) {
+		super(props);
+	}
+
 	/** Only allows setting non-empty strings */
 	newValueIsValid(newVal: string): boolean {
 		// assert value is a number
