@@ -1,17 +1,13 @@
 import {
-	iAbstractNumberTraitProps,
-	iBaseTrait,
-	iNumberValue,
 	iStringTrait,
-	iTraitData,
 } from '../../declarations/interfaces/trait-interfaces';
-import { TraitValue } from '../../declarations/types';
+import { TraitNameUnion } from '../../declarations/types';
 import BaseTrait from './BaseTrait';
 
 /** class with behaviour for traits that have string values */
-export default class StringTrait<N extends TraitNameUnion> extends BaseTrait<T> implements iStringTrait {
+export default class StringTrait<N extends TraitNameUnion> extends BaseTrait<N, string> implements iStringTrait {
 	/** Only allows setting non-empty strings */
-	newValueIsValid(newVal: TraitValue<T>): boolean {
+	newValueIsValid(newVal: string): boolean {
 		// assert value is a number
 		if (typeof newVal !== 'string') {
 			throw Error(`Value for trait ${this.name} should be a string, received a "${typeof newVal}`);
