@@ -1,4 +1,4 @@
-import { iBaseTrait, iTraitCollectionArguments } from '../../declarations/interfaces/trait-interfaces';
+import { iBaseTrait, iTraitCollectionProps } from '../../declarations/interfaces/trait-interfaces';
 import {
 	TraitName,
 	TraitMap,
@@ -23,7 +23,7 @@ export default class TraitCollection<T extends iBaseTrait<TraitNameUnion, TraitT
 	#logs = new LogCollection<TraitValue<T>>();
 
 	#typeName: TraitType | string = 'Trait';
-	constructor({ instanceCreator, saveAction }: iTraitCollectionArguments<T>, ...initialData: TraitData<T>[]) {
+	constructor({ instanceCreator, saveAction }: iTraitCollectionProps<T>, ...initialData: TraitData<T>[]) {
 		this.saveAction = saveAction;
 		this.#instanceCreator = instanceCreator;
 		this.#map = new Map<TraitName<T>, T>(
