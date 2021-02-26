@@ -1,35 +1,31 @@
 import { TraitNameUnion } from './../types';
 import { iSaveAction, iToJson } from './general-interfaces';
 import { iLogger } from './log-interfaces';
-import {
-	AttributeCategory,
-	AttributeName,
-	DisciplineName,
-	SkillName,
-	TraitName,
-	TraitValue,
-	TraitTypeUnion,
-} from '../types';
+import { AttributeCategory, AttributeName, DisciplineName, SkillName, TraitName, TraitTypeUnion } from '../types';
 
 /** Describes the shape of the most basic trait */
-export interface iTraitData {
-	name: TraitNameUnion;
-	value: TraitTypeUnion;
+export interface iTraitData<N extends TraitNameUnion | string, V extends TraitTypeUnion> {
+	name: N;
+	value: V;
 }
 
 /** Base interface for Trait Objects */
-export interface iBaseTrait extends iTraitData, iToJson<iTraitData>, iLogger {
+export interface iBaseTrait<N extends TraitNameUnion, V extends TraitTypeUnion>
+	extends iTraitData<N, V>,
+		iToJson<iTraitData<N, V>>,
+		iLogger {
 	// todo add explain method to give a summary what this trait is for
 	// todo add explainValue method to describe the current value of the attribute, ie add description getter to describe the meaning of a value
 	// todo add min and max limits for trait values, shoud this be done here?
 }
 
-export interface iNumberTrait extends iBaseTrait, iHasNumberValue {
+export interface iNumberTrait<N extends TraitNameUnion> extends iBaseTrait<N, number>, iHasNumberValue {
 	min: number;
 	max: number;
-	value: number;
 }
-export interface iNumberTraitWithCategory<C extends string> extends iNumberTrait, iHasCategory<C> {}
+export interface iNumberTraitWithCategory<N extends TraitNameUnion, C extends string>
+	extends iNumberTrait<N>,
+		iHasCategory<C> {}
 
 export interface iHasCategorySelector<N extends string, C extends string> {
 	categorySelector: (name: N) => C;
@@ -38,9 +34,9 @@ export interface iHasCategorySelector<N extends string, C extends string> {
 export interface iHasCategory<C> {
 	category: C;
 }
-export interface iStringTrait extends iBaseTrait, iStringValue {
-	value: string;
-}
+export interface iStringTrait<N extends TraitNameUnion, V extends TraitTypeUnion>
+	extends iBaseTrait<N, string>,
+		iStringValue {}
 
 // ? is this required?
 export interface iStringValue {
@@ -70,33 +66,27 @@ export interface iNumberTraitWithCategoryProps<N extends TraitNameUnion, C exten
 export interface iStringTraitProps<N extends TraitNameUnion> extends iBaseTraitProps<N, string> {}
 
 // ? does this need to be a separate inteface?
-export interface iAttributeData extends iTraitData, iHasNumberValue {
-	name: AttributeName;
-	value: number;
-	category: AttributeCategory;
-}
+export interface iAttributeData
+	extends iTraitData<AttributeName, number>,
+		iHasNumberValue,
+		iHasCategory<AttributeCategory> {}
 
-export interface iAttribute<C extends string> extends iNumberTrait, iHasCategory<C> {}
+export interface iAttribute<C extends string> extends iNumberTrait<AttributeName>, iHasCategory<C> {}
 
 // ? does this need to be a separate inteface?
-export interface iTouchStoneOrConvictionData extends iTraitData {
+export interface iTouchStoneOrConvictionData extends iTraitData<string, string> {
 	name: string;
 	value: string;
 }
 
 // ? does this need to be a separate inteface?
-export interface iSkillData extends iTraitData, iHasNumberValue {
-	name: SkillName;
-	value: number;
-}
+export interface iSkillData extends iTraitData<SkillName, number>, iHasNumberValue {}
 
-export interface iDisciplineData extends iTraitData, iHasNumberValue {
-	name: DisciplineName;
-	value: number;
+export interface iDisciplineData extends iTraitData<DisciplineName, number>, iHasNumberValue { 
 	// todo add "specialisation" / sub types?
 }
 
-export interface iTraitCollectionArguments<T extends iBaseTrait> extends iSaveAction {
+export interface iTraitCollectionArguments<T extends iBaseTrait<N extends TraitNameUnion, TraitTypeUnion>> extends iSaveAction {
 	instanceCreator: (name: TraitNameUnion, value: TraitTypeUnion) => T;
 	// todo make this more specific in terms of available names and value types
 }
