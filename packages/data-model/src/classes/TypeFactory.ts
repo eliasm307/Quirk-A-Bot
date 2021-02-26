@@ -3,7 +3,7 @@ import { iTraitData } from '../declarations/interfaces/trait-interfaces';
 import { TraitMap, TraitName } from './../declarations/types';
 export default abstract class TypeFactory {
 	/*
-	static newTraitMap<T extends iTraitData>(...args: T[]): TraitMap<T> {
+	static newTraitMap<N extends TraitNameUnion>(...args: T[]): TraitMap<T> {
 		return new Map<TraitName<T>, T>(args.map(e => [e.name as TraitName<T>, e]));
 	}*/
 

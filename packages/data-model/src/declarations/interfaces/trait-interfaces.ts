@@ -1,11 +1,20 @@
+import { TraitNameUnion, TraitValueType } from './../types';
 import { iSaveAction, iToJson } from './general-interfaces';
 import { iLogger } from './log-interfaces';
-import { AttributeCategory, AttributeName, DisciplineName, SkillName, TraitName, TraitValue } from '../types';
+import {
+	AttributeCategory,
+	AttributeName,
+	DisciplineName,
+	SkillName,
+	TraitName,
+	TraitValue,
+	TraitTypeUnion,
+} from '../types';
 
 /** Describes the shape of the most basic trait */
 export interface iTraitData {
-	name: string;
-	value: number | string; // todo limit to 0-5
+	name: TraitNameUnion;
+	value: TraitTypeUnion;
 }
 
 /** Base interface for Trait Objects */
@@ -24,22 +33,24 @@ export interface iStringTrait extends iBaseTrait, iStringValue {
 	value: string;
 }
 
+// ? is this required?
 export interface iStringValue {
 	value: string;
 }
 
+// ? is this required?
 export interface iNumberValue {
 	min: number;
 	max: number;
 	value: number;
 }
 
-export interface iBaseTraitProps<T extends iTraitData> {
+export interface iBaseTraitProps<N extends TraitNameUnion, V extends TraitTypeUnion> {
 	saveAction?: () => boolean;
-	name: TraitName<T>;
-	value: TraitValue<T>;
+	name: N;
+	value: V;
 }
-export interface iAbstractNumberTraitProps<T extends iTraitData> extends iBaseTraitProps<T> {
+export interface iAbstractNumberTraitProps<N extends TraitNameUnion> extends iBaseTraitProps<T> {
 	min?: number;
 	max: number;
 }
@@ -69,7 +80,7 @@ export interface iDisciplineData extends iTraitData, iNumberValue {
 	// todo add "specialisation" / sub types?
 }
 
-export interface iTraitCollectionArguments<T extends iTraitData> extends iSaveAction {
+export interface iTraitCollectionArguments<N extends TraitNameUnion> extends iSaveAction {
 	instanceCreator: (name: TraitName<T>, value: TraitValue<T>) => T;
 }
 

@@ -20,6 +20,7 @@ export type AttributeName = typeof ATTRIBUTE_NAMES[number];
 export type SkillName = typeof SKILL_NAMES[number];
 export type DisciplineName = typeof DISCIPLINE_NAMES[number];
 
+// todo is this required?
 /** Dynamic type for trait name union types */
 export type TraitName<T extends iTraitData> = T extends iSkillData
 	? SkillName
@@ -32,6 +33,12 @@ export type TraitName<T extends iTraitData> = T extends iSkillData
 /** Dynamic type for trait value type */
 export type TraitValue<T> = T extends iTouchStoneOrConvictionData ? string : number;
 
+// todo add boolen for the future?
+export type TraitTypeUnion = number | string;
+
+export type TraitNameUnion = AttributeName | SkillName | DisciplineName;
+
+// todo is this required
 /** Dynamic type for trait data only interfaces */
 export type TraitData<T extends iTraitData> = T extends Skill
 	? iSkillData
