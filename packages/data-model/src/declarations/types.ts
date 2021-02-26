@@ -22,7 +22,7 @@ export type DisciplineName = typeof DISCIPLINE_NAMES[number];
 
 // todo is this required?
 /** Dynamic type for trait name union types */
-export type TraitName<T extends iTraitData> = T extends iSkillData
+export type TraitName<T extends iTraitData<TraitNameUnionOrString, TraitTypeUnion>> = T extends iSkillData
 	? SkillName
 	: T extends iAttributeData
 	? AttributeName

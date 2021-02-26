@@ -1,4 +1,4 @@
-import { TraitNameUnion } from './../../declarations/types';
+import { TraitNameUnion, TraitNameUnionOrString } from './../../declarations/types';
 import {
 	iNumberTraitWithCategory,
 	iNumberTraitWithCategoryProps,
@@ -7,7 +7,7 @@ import NumberTrait from './NumberTrait';
 
 export default class NumberTraitWithCategory<N extends TraitNameUnionOrString, C extends string>
 	extends NumberTrait<N>
-	implements iNumberTraitWithCategory<C> {
+	implements iNumberTraitWithCategory<N, C> {
 	readonly category: C;
 
 	#categorySelector: (name: N) => C;
