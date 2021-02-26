@@ -1,6 +1,6 @@
 import { iBaseTraitProps, iTraitData, iNumberValue, iAbstractNumberTraitProps } from './../../declarations/interfaces';
 import { AttributeName } from '../../declarations/types';
-import { iAttributeData, iCharacterSheet } from '../../declarations/interfaces';
+import { iAttributeData } from '../../declarations/interfaces';
 import { AttributeCategory } from '../../declarations/types';
 import BaseTrait from './BaseTrait';
 import AbstractNumberTrait from './NumberTrait';

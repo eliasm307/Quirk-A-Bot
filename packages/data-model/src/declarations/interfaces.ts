@@ -1,24 +1,16 @@
-import Attribute from '../classes/traits/Attribute';
-import Discipline from '../classes/traits/Discipline';
-import Skill from '../classes/traits/Skill';
-import TouchStoneOrConviction from '../classes/traits/TouchStoneOrConviction';
-import TraitCollection from '../classes/traits/TraitCollection';
+
+import { iSaveAction, iToJson } from './interfaces/general-interfaces';
+import { iLogger } from './interfaces/log-interfaces';
 import {
 	AttributeCategory,
-	AttributeName,
-	ClanName,
+	AttributeName, 
 	DisciplineName,
 	SkillName,
-	TraitName,
-	LogOperation,
-	LogInitialValue,
-	TraitValue,
-	TraitData,
+	TraitName, 
+	TraitValue, 
 } from './types';
 
-export interface iToJson<T> {
-	toJson: () => T;
-}
+
 
 /** Describes the shape of the most basic trait */
 export interface iTraitData {
@@ -74,43 +66,9 @@ export interface iDisciplineData extends iTraitData, iNumberValue {
 	// todo add "specialisation" / sub types?
 }
 
-export interface iSaveAction {
-	saveAction?: () => boolean;
-}
 
-interface iCharacterSheetPrimitiveData {
-	discordUserId: number;
-	// todo add user aliases (ie known discord names to be added by bot)
-	name: string;
-	clan: ClanName;
-	sire: string;
-	health: number; // todo limit 0 to 10
-	willpower: number; // todo limit 0 to 10
-	hunger: number; // todo limit 0 to 5
-	humanity: number; // todo limit 0 to 10
-	bloodPotency: number; // todo limit 0 to 10
-}
 export interface iTraitCollectionArguments<T extends iTraitData> extends iSaveAction {
 	instanceCreator: (name: TraitName<T>, value: TraitValue<T>) => T;
-}
-
-interface iCharacterSheetNonPrimitiveData {
-	touchstonesAndConvictions: iTouchStoneOrConvictionData[];
-	attributes: iAttributeData[];
-	skills: iSkillData[];
-	disciplines: iDisciplineData[];
-}
-
-export interface iCharacterSheetData extends iCharacterSheetPrimitiveData, iCharacterSheetNonPrimitiveData {}
-
-export interface iCharacterSheet extends iCharacterSheetPrimitiveData, iToJson<iCharacterSheetData> {
-	// saveToFile(): boolean; // ? should this be handled by another class?
-	// toJson(): iCharacterSheetData;
-
-	skills: TraitCollection<Skill>;
-	attributes: TraitCollection<Attribute>;
-	disciplines: TraitCollection<Discipline>;
-	touchstonesAndConvictions: TraitCollection<TouchStoneOrConviction>;
 }
 
 export interface iTraitCollection<T extends iBaseTrait> extends iToJson<iTraitData[]> {
@@ -121,39 +79,3 @@ export interface iTraitCollection<T extends iBaseTrait> extends iToJson<iTraitDa
 	readonly size: number;
 }
 
-export interface iOldValue<T> {
-	oldValue: T;
-}
-
-export interface iNewValue<T> {
-	newValue: T; // delete doesnt require this
-}
-
-export interface iBaseLogEventProps {
-	note?: string;
-	property: string;
-}
-
-// todo this violates interface segregation, intial and new value arent universal
-export interface iLogEvent extends iBaseLogEventProps {
-	operation: LogOperation;
-	describe(): string;
-	time: Date;
-}
-
-export interface iAddLogEvent<T> extends iLogEvent, iNewValue<T> {}
-
-/** For objects that require internal logging */
-export interface iLogger {
-	getLogData(): iLogEvent[];
-}
-
-export interface iLogReporter {
-	generateLogReport(logger: iLogger): string;
-}
-
-export interface iLogCollection {
-	log(event: iLogEvent): void;
-
-	toJson(): iLogEvent[];
-}

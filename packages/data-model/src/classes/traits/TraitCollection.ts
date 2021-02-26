@@ -1,10 +1,6 @@
 import { iBaseTrait, iTraitCollectionArguments } from './../../declarations/interfaces';
 import { TraitName, TraitMap, TraitValue, TraitType, TraitData } from '../../declarations/types';
-import {
-	iCharacterSheet,
-	iLogEvent,
-	iLogger,
-	iSaveAction,
+import { 
 	iTraitData,
 	iTraitCollection,
 } from '../../declarations/interfaces';
@@ -12,6 +8,7 @@ import LogCollection from '../log/LogCollection';
 import DeleteLogEvent from '../log/DeleteLogEvent';
 import UpdateLogEvent from '../log/UpdateLogEvent';
 import AddLogEvent from '../log/AddLogEvent';
+import { iLogger, iLogEvent } from '../../declarations/interfaces/log-interfaces';
 
 export default class TraitCollection<T extends iBaseTrait> implements iTraitCollection<T>, iLogger {
 	#instanceCreator: (name: TraitName<T>, value: TraitValue<T>) => T;

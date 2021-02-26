@@ -1,4 +1,5 @@
-import { iBaseLogEventProps, iLogEvent, iNewValue, iOldValue } from '../../declarations/interfaces';
+import { iOldValue, iNewValue } from '../../declarations/interfaces/general-interfaces';
+import { iBaseLogEventProps, iLogEvent } from '../../declarations/interfaces/log-interfaces';
 import BaseLogEvent from './BaseLogEvent';
 
 interface iProps<T> extends iBaseLogEventProps, iOldValue<T>, iNewValue<T> {}

@@ -1,6 +1,5 @@
-import { iBaseLogEventProps } from './../../declarations/interfaces';
-import { LogOperation, LogInitialValue, LogNewValue } from '../../declarations/types';
-import { iLogEvent } from '../../declarations/interfaces';
+import { LogOperation} from '../../declarations/types';
+import { iBaseLogEventProps, iLogEvent } from '../../declarations/interfaces/log-interfaces';
 
 // ? this doesnt seem right
 interface iProps extends iBaseLogEventProps {

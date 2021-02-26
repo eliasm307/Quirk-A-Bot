@@ -1,12 +1,8 @@
-import {
-	iCharacterSheetData,
-	iLogEvent,
-	iLogger,
-	iTouchStoneOrConvictionData,
-	iLogCollection,
+import { 
+	iTouchStoneOrConvictionData, 
 } from './../declarations/interfaces';
 import path from 'path';
-import { iAttributeData, iCharacterSheet, iDisciplineData, iSkillData } from '../declarations/interfaces';
+import { iAttributeData, iDisciplineData, iSkillData } from '../declarations/interfaces';
 import Attribute from './traits/Attribute';
 import Skill from './traits/Skill';
 import TraitCollection from './traits/TraitCollection';
@@ -16,6 +12,8 @@ import importDataFromFile from '../utils/importDataFromFile';
 import LogCollection from './log/LogCollection';
 import UpdateLogEvent from './log/UpdateLogEvent';
 import exportDataToFile from '../utils/exportDataToFile';
+import { iCharacterSheet, iCharacterSheetData } from '../declarations/interfaces/character-sheet-interfaces';
+import { iLogger, iLogCollection, iLogEvent } from '../declarations/interfaces/log-interfaces';
 
 interface iLoadFromFileArgs {
 	filePath?: string;

@@ -1,5 +1,6 @@
+import { iLogCollection, iLogEvent } from '../../declarations/interfaces/log-interfaces';
 import { LogInitialValue, LogNewValue, LogOperation } from '../../declarations/types';
-import { iLogCollection, iLogEvent } from './../../declarations/interfaces';
+import { } from './../../declarations/interfaces';
 
 export default class LogCollection<T> implements iLogCollection  {
 	#logs: iLogEvent[] = [];
