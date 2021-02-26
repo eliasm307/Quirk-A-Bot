@@ -2,14 +2,14 @@ import { iNumberTrait } from './../../declarations/interfaces/trait-interfaces';
 import {
 	iNumberTraitProps,
 	iBaseTrait,
-	iNumberValue,
+	iHasNumberValue,
 	iTraitData,
 } from '../../declarations/interfaces/trait-interfaces';
 import { TraitNameUnion, TraitValue } from '../../declarations/types';
-import BaseTrait from './BaseTrait';
+import AbstractBaseTrait from './AbstractBaseTrait';
 
 /** class with behaviour for traits that have number values */
-export default class NumberTrait<N extends TraitNameUnion> extends BaseTrait<N, number> implements iNumberTrait {
+export default class NumberTrait<N extends TraitNameUnion> extends AbstractBaseTrait<N, number> implements iNumberTrait {
 	min: number;
 	max: number;
 

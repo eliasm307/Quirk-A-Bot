@@ -182,7 +182,7 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 		const saveAction = () => this.saveToFile();
 
 		// create collections, with initial data where available
-		this.attributes = new TraitCollection<Attribute>(
+		this.attributes = new TraitCollection<iAttribute>(
 			{
 				saveAction,
 				instanceCreator: (name, value) => new Attribute({ saveAction, name, value }),
@@ -190,7 +190,7 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 			...initialAttributes
 		);
 
-		this.skills = new TraitCollection<Skill>(
+		this.skills = new TraitCollection<iSkill>(
 			{
 				saveAction,
 				instanceCreator: (name, value) => new Skill({ saveAction, name, value }),

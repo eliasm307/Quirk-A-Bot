@@ -5,7 +5,7 @@ import {
 	iTraitData,
 } from '../../declarations/interfaces/trait-interfaces';
 import NumberTrait from './NumberTrait';
-import BaseTrait from './BaseTrait';
+import AbstractBaseTrait from './AbstractBaseTrait';
 
 interface iProps<N extends TraitNameUnion> extends iBaseTraitProps<T> {}
 

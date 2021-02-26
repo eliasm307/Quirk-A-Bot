@@ -2,7 +2,7 @@ import { iAttributeData, iBaseTraitProps } from '../../declarations/interfaces/t
  
 import {  iDisciplineData  } from '../../declarations/interfaces/trait-interfaces';
 import NumberTrait from './NumberTrait';
-import BaseTrait from './BaseTrait';
+import AbstractBaseTrait from './AbstractBaseTrait';
 export default class Discipline extends NumberTrait<iDisciplineData> implements iDisciplineData {
 	constructor(props: iBaseTraitProps<iDisciplineData>) {
 		super({ ...props, max: 5, min: 1 });

@@ -1,9 +1,9 @@
 import { iNumberTraitWithCategoryProps } from './../../declarations/interfaces/trait-interfaces';
-import { iBaseTraitProps, iTraitData, iNumberValue, iNumberTraitProps } from '../../declarations/interfaces/trait-interfaces';
+import { iBaseTraitProps, iTraitData, iHasNumberValue, iNumberTraitProps } from '../../declarations/interfaces/trait-interfaces';
 import { AttributeName } from '../../declarations/types';
 import { iAttributeData } from '../../declarations/interfaces/trait-interfaces';
 import { AttributeCategory } from '../../declarations/types';
-import BaseTrait from './BaseTrait';
+import AbstractBaseTrait from './AbstractBaseTrait';
 import NumberTrait from './NumberTrait';
 import NumberTraitWithCategory from './NumberTraitWithCategory';
 

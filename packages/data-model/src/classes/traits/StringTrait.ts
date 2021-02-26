@@ -1,9 +1,9 @@
 import { iStringTrait, iStringTraitProps } from '../../declarations/interfaces/trait-interfaces';
 import { TraitNameUnion } from '../../declarations/types';
-import BaseTrait from './BaseTrait';
+import AbstractBaseTrait from './AbstractBaseTrait';
 
 /** class with behaviour for traits that have string values */
-export default class StringTrait<N extends TraitNameUnion> extends BaseTrait<N, string> implements iStringTrait {
+export default class StringTrait<N extends TraitNameUnion> extends AbstractBaseTrait<N, string> implements iStringTrait {
 	constructor(props: iStringTraitProps<N>) {
 		super(props);
 	}

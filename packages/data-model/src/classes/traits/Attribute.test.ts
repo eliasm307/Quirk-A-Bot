@@ -7,6 +7,7 @@ const cs: CharacterSheet = new CharacterSheet(0, '../data/character-sheets/tempo
 // todo, make this a test for BaseTrait
 
 let testName = 'test adding attribute directly to Character sheet';
+
 test( testName, () => {
 	const tc = new TraitCollection<Attribute>({instanceCreator: (name, value)=> new Attribute({name, value }), });
 	cs.attributes.set('Charisma', 3);

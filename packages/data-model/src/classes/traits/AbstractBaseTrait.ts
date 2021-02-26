@@ -1,6 +1,6 @@
-import { iLogEvent } from './../../declarations/interfaces/log-interfaces';
+import { iLogEvent } from '../../declarations/interfaces/log-interfaces';
 import { iBaseTrait } from '../../declarations/interfaces/trait-interfaces';
-import { TraitData, TraitName, TraitNameUnion, TraitTypeUnion, TraitValue,  } from '../../declarations/types';
+import { TraitNameUnion, TraitTypeUnion, TraitValue } from '../../declarations/types';
 import { iBaseTraitProps, iTraitData } from '../../declarations/interfaces/trait-interfaces';
 import LogCollection from '../log/LogCollection';
 import UpdateLogEvent from '../log/UpdateLogEvent';
@@ -9,7 +9,8 @@ interface iPrivateModifiableProperties<V> {
 	value: V;
 }
 
-export default abstract class BaseTrait<N extends TraitNameUnion, V extends TraitTypeUnion> implements iBaseTrait {
+export default abstract class AbstractBaseTrait<N extends TraitNameUnion, V extends TraitTypeUnion>
+	implements iBaseTrait {
 	#private: iPrivateModifiableProperties<V>;
 	// #characterSheet: iCharacterSheet;
 

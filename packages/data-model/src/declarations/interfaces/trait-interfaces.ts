@@ -1,5 +1,4 @@
-import { iNumberTrait, iHasCategory } from './trait-interfaces';
-import { TraitNameUnion, TraitValueType } from './../types';
+import { TraitNameUnion } from './../types';
 import { iSaveAction, iToJson } from './general-interfaces';
 import { iLogger } from './log-interfaces';
 import {
@@ -25,7 +24,7 @@ export interface iBaseTrait extends iTraitData, iToJson<iTraitData>, iLogger {
 	// todo add min and max limits for trait values, shoud this be done here?
 }
 
-export interface iNumberTrait extends iBaseTrait, iNumberValue {
+export interface iNumberTrait extends iBaseTrait, iHasNumberValue {
 	min: number;
 	max: number;
 	value: number;
@@ -36,8 +35,8 @@ export interface iHasCategorySelector<N extends string, C extends string> {
 	categorySelector: (name: N) => C;
 }
 
-export interface iHasCategory<T> {
-	category: T;
+export interface iHasCategory<C> {
+	category: C;
 }
 export interface iStringTrait extends iBaseTrait, iStringValue {
 	value: string;
@@ -49,7 +48,7 @@ export interface iStringValue {
 }
 
 // ? is this required?
-export interface iNumberValue {
+export interface iHasNumberValue {
 	min: number;
 	max: number;
 	value: number;
@@ -71,13 +70,13 @@ export interface iNumberTraitWithCategoryProps<N extends TraitNameUnion, C exten
 export interface iStringTraitProps<N extends TraitNameUnion> extends iBaseTraitProps<N, string> {}
 
 // ? does this need to be a separate inteface?
-export interface iAttributeData extends iTraitData, iNumberValue {
+export interface iAttributeData extends iTraitData, iHasNumberValue {
 	name: AttributeName;
 	value: number;
 	category: AttributeCategory;
 }
 
-export interface iAttribute extends iNumberTrait, iHasCategory {}
+export interface iAttribute<C extends string> extends iNumberTrait, iHasCategory<C> {}
 
 // ? does this need to be a separate inteface?
 export interface iTouchStoneOrConvictionData extends iTraitData {
@@ -86,19 +85,20 @@ export interface iTouchStoneOrConvictionData extends iTraitData {
 }
 
 // ? does this need to be a separate inteface?
-export interface iSkillData extends iTraitData, iNumberValue {
+export interface iSkillData extends iTraitData, iHasNumberValue {
 	name: SkillName;
 	value: number;
 }
 
-export interface iDisciplineData extends iTraitData, iNumberValue {
+export interface iDisciplineData extends iTraitData, iHasNumberValue {
 	name: DisciplineName;
 	value: number;
 	// todo add "specialisation" / sub types?
 }
 
-export interface iTraitCollectionArguments<N extends TraitNameUnion> extends iSaveAction {
-	instanceCreator: (name: TraitName<T>, value: TraitValue<T>) => T;
+export interface iTraitCollectionArguments<T extends iBaseTrait> extends iSaveAction {
+	instanceCreator: (name: TraitNameUnion, value: TraitTypeUnion) => T;
+	// todo make this more specific in terms of available names and value types
 }
 
 export interface iTraitCollection<T extends iBaseTrait> extends iToJson<iTraitData[]> {
