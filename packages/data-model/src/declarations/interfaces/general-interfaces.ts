@@ -1,13 +1,13 @@
 export interface iToJson<T> {
 	toJson: () => T;
 }
-export interface iSaveAction {
+export interface iCanHaveSaveAction {
 	saveAction?: () => boolean;
 }
-export interface iOldValue<T> {
+export interface iHasOldValue<T> {
 	oldValue: T;
 }
 
-export interface iNewValue<T> {
-	newValue: T; // delete doesnt require this
+export interface iHasNewValue<T> {
+	newValue: T;
 }

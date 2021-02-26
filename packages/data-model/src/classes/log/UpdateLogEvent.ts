@@ -1,10 +1,10 @@
-import { iOldValue, iNewValue } from '../../declarations/interfaces/general-interfaces';
+import { iHasOldValue, iHasNewValue } from '../../declarations/interfaces/general-interfaces';
 import { iBaseLogEventProps, iLogEvent } from '../../declarations/interfaces/log-interfaces';
 import BaseLogEvent from './BaseLogEvent';
 
-interface iProps<T> extends iBaseLogEventProps, iOldValue<T>, iNewValue<T> {}
+interface iProps<T> extends iBaseLogEventProps, iHasOldValue<T>, iHasNewValue<T> {}
 
-export default class UpdateLogEvent<T> extends BaseLogEvent<T> implements iLogEvent, iOldValue<T>, iNewValue<T> {
+export default class UpdateLogEvent<T> extends BaseLogEvent<T> implements iLogEvent, iHasOldValue<T>, iHasNewValue<T> {
 	oldValue: T;
 	newValue: T;
 

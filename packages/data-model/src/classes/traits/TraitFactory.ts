@@ -1,18 +1,24 @@
-import { AttributeName, AttributeCategory } from './../../declarations/types';
+import { AttributeName, AttributeCategory, DisciplineName } from './../../declarations/types';
 import {
 	iNumberTraitWithCategoryProps,
 	iTraitData,
 	iHasCategorySelector,
 	iAttribute,
-  iDiscipline,
+	iDiscipline,
+	iAttributeData,
+	iNumberTraitProps,
+  iDisciplineData,
 } from './../../declarations/interfaces/trait-interfaces';
-import { iSaveAction } from '../../declarations/interfaces/general-interfaces';
+import { iCanHaveSaveAction } from '../../declarations/interfaces/general-interfaces';
 import NumberTraitWithCategory from './NumberTraitWithCategory';
+import NumberTrait from './NumberTrait';
 
-interface iGetAttributeProps extends iSaveAction, iTraitData, iHasCategorySelector<AttributeName, AttributeCategory> {
-	name: AttributeName;
-	value: number;
-}
+interface iGetAttributeProps
+	extends iAttributeData,
+		iCanHaveSaveAction,
+		iHasCategorySelector<AttributeName, AttributeCategory> {}
+
+interface iGetDisciplineProps extends iDisciplineData, iCanHaveSaveAction {}
 
 export default abstract class TraitFactory {
 	static getAttributeTrait({ name, value, saveAction, categorySelector }: iGetAttributeProps): iAttribute {
@@ -26,11 +32,10 @@ export default abstract class TraitFactory {
 		};
 
 		return new NumberTraitWithCategory(props);
-  }
-  
-	static getDisciplineTrait({ name, value, saveAction, categorySelector }: iGetAttributeProps): iDiscipline {
-		const props: iNumberTraitWithCategoryProps<AttributeName, AttributeCategory> = {
-			categorySelector,
+	}
+
+	static getDisciplineTrait({ name, value, saveAction }: iGetDisciplineProps): iDiscipline {
+		const props: iNumberTraitProps<DisciplineName> = {
 			max: 5,
 			min: 1,
 			name,
@@ -38,6 +43,6 @@ export default abstract class TraitFactory {
 			saveAction,
 		};
 
-		return new NumberTraitWithCategory(props);
+		return new NumberTrait(props);
 	}
 }

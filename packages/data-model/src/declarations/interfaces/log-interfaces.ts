@@ -1,5 +1,5 @@
 import { LogOperation } from './../types';
-import { iNewValue } from './general-interfaces';
+import { iHasNewValue } from './general-interfaces';
 export interface iBaseLogEventProps {
 	note?: string;
 	property: string;
@@ -12,7 +12,7 @@ export interface iLogEvent extends iBaseLogEventProps {
 	time: Date;
 }
 
-export interface iAddLogEvent<T> extends iLogEvent, iNewValue<T> {}
+export interface iAddLogEvent<T> extends iLogEvent, iHasNewValue<T> {}
 
 /** For objects that require internal logging */
 export interface iLogger {
