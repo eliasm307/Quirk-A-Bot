@@ -65,7 +65,6 @@ export interface iNumberTraitWithCategoryProps<N extends TraitNameUnion, C exten
 }
 export interface iStringTraitProps<N extends TraitNameUnion> extends iBaseTraitProps<N, string> {}
 
-// ? does this need to be a separate inteface?
 export interface iAttributeData
 	extends iTraitData<AttributeName, number>,
 		iHasNumberValue,
@@ -73,25 +72,29 @@ export interface iAttributeData
 
 export interface iAttribute<C extends string> extends iNumberTrait<AttributeName>, iHasCategory<C> {}
 
-// ? does this need to be a separate inteface?
 export interface iTouchStoneOrConvictionData extends iTraitData<string, string> {
 	name: string;
 	value: string;
 }
 
-// ? does this need to be a separate inteface?
 export interface iSkillData extends iTraitData<SkillName, number>, iHasNumberValue {}
 
-export interface iDisciplineData extends iTraitData<DisciplineName, number>, iHasNumberValue { 
+export interface iDisciplineData extends iTraitData<DisciplineName, number>, iHasNumberValue {
 	// todo add "specialisation" / sub types?
 }
 
-export interface iTraitCollectionArguments<T extends iBaseTrait<N extends TraitNameUnion, TraitTypeUnion>> extends iSaveAction {
+// todo is this the best way to do this?
+// todo use dynamic types here?
+export interface iTraitCollectionArguments<T extends iBaseTrait<TraitNameUnion, TraitTypeUnion>> extends iSaveAction {
+	// todo use dynamic types here?
 	instanceCreator: (name: TraitNameUnion, value: TraitTypeUnion) => T;
 	// todo make this more specific in terms of available names and value types
 }
 
-export interface iTraitCollection<T extends iBaseTrait> extends iToJson<iTraitData[]> {
+// todo is this the best way to do this?
+// todo use dynamic types here?
+export interface iTraitCollection<T extends iBaseTrait<TraitNameUnion, TraitTypeUnion>>
+	extends iToJson<iTraitData<TraitNameUnion, TraitTypeUnion>[]> {
 	get(name: TraitName<T>): T | void;
 	set(name: TraitName<T>, value: number): void;
 	delete(name: TraitName<T>): void;
