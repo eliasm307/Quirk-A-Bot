@@ -18,6 +18,7 @@ import UpdateLogEvent from './log/UpdateLogEvent';
 import exportDataToFile from '../utils/exportDataToFile';
 import { iCharacterSheet, iCharacterSheetData } from '../declarations/interfaces/character-sheet-interfaces';
 import { iLogger, iLogCollection, iLogEvent } from '../declarations/interfaces/log-interfaces';
+import TraitFactory from './traits/TraitFactory';
 
 interface iLoadFromFileArgs {
 	filePath?: string;
@@ -189,7 +190,7 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 		this.attributes = new TraitCollection<iAttribute>(
 			{
 				saveAction,
-				instanceCreator: (name, value) => new Attribute({ saveAction, name, value }),
+				instanceCreator: (name, value) => TraitFactory.newAttributeTrait({ saveAction, name, value }),
 			},
 			...initialAttributes
 		);

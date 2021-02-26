@@ -18,9 +18,11 @@ export interface iHasStringValue {
 
 // ? is this required?
 export interface iHasNumberValue {
+	value: number;
+}
+export interface iHasNumberLimits {
 	min: number;
 	max: number;
-	value: number;
 }
 
 // -------------------------------------------------------
@@ -42,7 +44,8 @@ export interface iNumberTraitWithCategoryProps<N extends TraitNameUnionOrString,
 }
 // todo is this the best way to do this?
 // todo use dynamic types here?
-export interface iTraitCollectionProps<T extends iBaseTrait<TraitNameUnion, TraitTypeUnion>> extends iCanHaveSaveAction {
+export interface iTraitCollectionProps<T extends iBaseTrait<TraitNameUnion, TraitTypeUnion>>
+	extends iCanHaveSaveAction {
 	// todo use dynamic types here?
 	instanceCreator: (name: TraitName<T>, value: TraitValue<T>) => T;
 	// todo make this more specific in terms of available names and value types
@@ -84,7 +87,7 @@ export interface iBaseTrait<N extends TraitNameUnionOrString | string, V extends
 }
 export interface iNumberTrait<N extends TraitNameUnionOrString | string>
 	extends iBaseTrait<N, number>,
-		iHasNumberValue {}
+		iHasNumberValue, iHasNumberLimits {}
 export interface iStringTrait<N extends TraitNameUnionOrString | string>
 	extends iBaseTrait<N, string>,
 		iHasStringValue {}

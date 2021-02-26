@@ -13,24 +13,23 @@ import {
 	iStringTraitProps,
 	iTouchStoneOrConvictionData,
 	iTouchStoneOrConviction,
+	iNumberTraitData,
 } from './../../declarations/interfaces/trait-interfaces';
 import { iCanHaveSaveAction } from '../../declarations/interfaces/general-interfaces';
 import NumberTraitWithCategory from './NumberTraitWithCategory';
 import NumberTrait from './NumberTrait';
 import StringTrait from './StringTrait';
+import getAttributeCategory from '../../utils/getAttributeCategory';
 
-interface iGetAttributeProps
-	extends iAttributeData,
-		iCanHaveSaveAction,
-		iHasCategorySelector<AttributeName, AttributeCategory> {}
-interface iGetDisciplineProps extends iDisciplineData, iCanHaveSaveAction {}
-interface iGetSkillProps extends iSkillData, iCanHaveSaveAction {}
-interface iGetTouchStoneOrConvictionProps extends iTouchStoneOrConvictionData, iCanHaveSaveAction {}
+interface iGetAttributeProps extends iNumberTraitData<AttributeName>, iCanHaveSaveAction {}
+interface iGetDisciplineProps extends iNumberTraitData<DisciplineName>, iCanHaveSaveAction {}
+interface iGetSkillProps extends iNumberTraitData<SkillName>, iCanHaveSaveAction {}
+interface iGetTouchStoneOrConvictionProps extends iStringTraitProps<string>, iCanHaveSaveAction {}
 
 export default abstract class TraitFactory {
-	static newAttributeTrait({ name, value = 0, saveAction, categorySelector }: iGetAttributeProps): iAttribute {
+	static newAttributeTrait({ name, value = 0, saveAction }: iGetAttributeProps): iAttribute {
 		const props: iNumberTraitWithCategoryProps<AttributeName, AttributeCategory> = {
-			categorySelector,
+			categorySelector: getAttributeCategory,
 			min: 1,
 			max: 5,
 			name,
