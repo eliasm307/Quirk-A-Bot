@@ -1,4 +1,11 @@
-import { CoreTraitName, TraitDataDynamic, TraitNameUnion, TraitNameUnionOrString, TraitValueDynamic } from './../types';
+import {
+	CoreNumberTraitName,
+	CoreStringTraitName,
+	TraitDataDynamic,
+	TraitNameUnion,
+	TraitNameUnionOrString,
+	TraitValueDynamic,
+} from './../types';
 import { iCanHaveSaveAction, iToJson } from './general-interfaces';
 import { iLogger } from './log-interfaces';
 import {
@@ -80,7 +87,7 @@ export interface iTouchStoneOrConvictionData extends iStringTraitData<string> {}
 export interface iSkillData extends iNumberTraitData<SkillName> {}
 export interface iDisciplineData extends iNumberTraitData<DisciplineName> {
 	// todo add "specialisation" / sub types?
-} 
+}
 // -------------------------------------------------------
 // GENERIC TRAIT OBJECTS TYPES
 
@@ -109,6 +116,8 @@ export interface iAttribute extends iAttributeData, iNumberTrait<AttributeName>,
 export interface iDiscipline extends iDisciplineData, iNumberTrait<DisciplineName> {}
 export interface iSkill extends iSkillData, iNumberTrait<SkillName> {}
 export interface iTouchStoneOrConviction extends iTouchStoneOrConvictionData, iStringTrait<string> {}
+export interface iCoreNumberTrait extends iNumberTraitData<CoreNumberTraitName>, iNumberTrait<CoreNumberTraitName> {}
+export interface iCoreStringTrait extends iNumberTraitData<CoreStringTraitName>, iNumberTrait<CoreStringTraitName> {}
 
 // -------------------------------------------------------
 // TRAIT COLLECTION

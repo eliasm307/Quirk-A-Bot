@@ -1,6 +1,5 @@
-import { TraitValueTypeUnion } from './../declarations/types';
-import { iBaseTrait } from './../declarations/trait-interfaces';
-import { iNumberTraitData, iStringTraitData } from './../declarations/interfaces/trait-interfaces';
+import { CoreNumberTraitName, CoreStringTraitName, TraitValueTypeUnion } from './../declarations/types';
+import { iBaseTrait, iNumberTraitData, iStringTraitData } from './../declarations/interfaces/trait-interfaces';
 import {
 	iAttribute,
 	iDiscipline,
@@ -22,7 +21,6 @@ import { iLogger, iLogCollection, iLogEvent } from '../declarations/interfaces/l
 import TraitFactory from './traits/TraitFactory';
 import TypeFactory from './TypeFactory';
 import NumberTrait from './traits/NumberTrait';
-import { CoreTraitName } from '../declarations/types';
 import StringTrait from './traits/StringTrait';
 import { isBaseTrait, isCharacterSheetData } from '../utils/typePredicates';
 
@@ -101,50 +99,50 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 		}
 
 		// core number traits
-		this.bloodPotency = new NumberTrait<CoreTraitName>({
+		this.bloodPotency = new NumberTrait<CoreNumberTraitName>({
 			max: 10,
 			name: 'Blood Potency',
 			value: initialValues?.bloodPotency.value || 0,
 		});
 
-		this.hunger = new NumberTrait<CoreTraitName>({
+		this.hunger = new NumberTrait<CoreNumberTraitName>({
 			max: 5,
 			name: 'Hunger',
 			value: initialValues?.hunger.value || 0,
 		});
 
-		this.humanity = new NumberTrait<CoreTraitName>({
+		this.humanity = new NumberTrait<CoreNumberTraitName>({
 			max: 10,
 			name: 'Humanity',
 			value: initialValues?.humanity.value || 0,
 		});
 
-		this.health = new NumberTrait<CoreTraitName>({
+		this.health = new NumberTrait<CoreNumberTraitName>({
 			max: 10,
 			name: 'Health',
 			value: initialValues?.health.value || 0,
 		});
 
-		this.willpower = new NumberTrait<CoreTraitName>({
+		this.willpower = new NumberTrait<CoreNumberTraitName>({
 			max: 10,
 			name: 'Willpower',
 			value: initialValues?.willpower.value || 0,
 		});
 
 		// core string traits
-		this.name = new StringTrait<CoreTraitName>({
+		this.name = new StringTrait<CoreStringTraitName>({
 			name: 'Name',
 			value: initialValues?.name.value || '',
 			saveAction,
 		});
 
-		this.sire = new StringTrait<CoreTraitName>({
+		this.sire = new StringTrait<CoreStringTraitName>({
 			name: 'Sire',
 			value: initialValues?.sire.value || '',
 			saveAction,
 		});
 
-		this.clan = new StringTrait<CoreTraitName>({
+		this.clan = new StringTrait<CoreStringTraitName>({
 			name: 'Clan',
 			value: initialValues?.clan.value || '',
 			saveAction,
@@ -230,18 +228,18 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 	public toJson(): iCharacterSheetData {
 		const data: iCharacterSheetData = {
 			attributes: this.attributes.toJson(),
-			bloodPotency: this.bloodPotency.toJson() as iNumberTraitData<CoreTraitName>,
-			clan: this.clan.toJson() as iStringTraitData<CoreTraitName>,
+			bloodPotency: this.bloodPotency.toJson() as iNumberTraitData<CoreNumberTraitName>,
+			clan: this.clan.toJson() as iStringTraitData<CoreStringTraitName>,
 			disciplines: this.disciplines.toJson(),
 			discordUserId: this.discordUserId,
-			health: this.health.toJson() as iNumberTraitData<CoreTraitName>,
-			humanity: this.humanity.toJson() as iNumberTraitData<CoreTraitName>,
-			hunger: this.hunger.toJson() as iNumberTraitData<CoreTraitName>,
-			name: this.name.toJson() as iStringTraitData<CoreTraitName>,
-			sire: this.sire.toJson() as iStringTraitData<CoreTraitName>,
+			health: this.health.toJson() as iNumberTraitData<CoreNumberTraitName>,
+			humanity: this.humanity.toJson() as iNumberTraitData<CoreNumberTraitName>,
+			hunger: this.hunger.toJson() as iNumberTraitData<CoreNumberTraitName>,
+			name: this.name.toJson() as iStringTraitData<CoreStringTraitName>,
+			sire: this.sire.toJson() as iStringTraitData<CoreStringTraitName>,
 			skills: this.skills.toJson(),
 			touchstonesAndConvictions: this.touchstonesAndConvictions.toJson(),
-			willpower: this.willpower.toJson() as iNumberTraitData<CoreTraitName>,
+			willpower: this.willpower.toJson() as iNumberTraitData<CoreNumberTraitName>,
 		};
 		console.log(__filename, { data });
 		return data;
@@ -257,7 +255,9 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 		const exampleData = TraitFactory.newCharacterSheetDataObject();
 		const ex = this;
 		const logs: iLogEvent[] = [];
-		
+
+		// todo put core traits into a private traitCollection then get logs as normal
+		/*
 		for ( let key: keyof iCharacterSheet  in iCharacterSheetw ) {
  
 			const trait  = this.getTraitByName(key)
@@ -266,17 +266,17 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 			}
 			
 		}
-	/*	*/
+	/	*/
 
-		throw Error("Method not implemented")
+		throw Error('Method not implemented');
 
 		return [];
 	}
 
-	private getTraitByName<T extends keyof iCharacterSheet>( key: T ): iBaseTrait<string, TraitValueTypeUnion> | null {
-		const trait = this[ key ];
+	private getTraitByName<T extends keyof iCharacterSheet>(key: T): iBaseTrait<string, TraitValueTypeUnion> | null {
+		const trait = this[key];
 
-		if ( isBaseTrait( trait ) ) {
+		if (isBaseTrait(trait)) {
 			return trait;
 		}
 		return null;

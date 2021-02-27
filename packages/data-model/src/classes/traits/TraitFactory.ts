@@ -5,7 +5,8 @@ import {
 	DisciplineName,
 	SkillName,
 	TraitNameUnionOrString,
-	CoreTraitName,
+	CoreNumberTraitName,
+	CoreStringTraitName, 
 } from './../../declarations/types';
 import {
 	iNumberTraitWithCategoryProps,
@@ -101,15 +102,15 @@ export default abstract class TraitFactory {
 	static newCharacterSheetDataObject(props?: iCanHaveSaveAction): iCharacterSheetData {
 		const saveAction = props?.saveAction;
 		return {
-			bloodPotency: new NumberTrait<CoreTraitName>({ max: 10, name: 'Blood Potency', value: 0, saveAction }),
-			clan: new StringTrait<CoreTraitName>({ name: 'Clan', value: '', saveAction }),
+			bloodPotency: new NumberTrait<CoreNumberTraitName>({ max: 10, name: 'Blood Potency', value: 0, saveAction }),
+			clan: new StringTrait<CoreStringTraitName>({ name: 'Clan', value: '', saveAction }),
 			discordUserId: -1,
-			health: new NumberTrait<CoreTraitName>({ max: 10, name: 'Health', value: 0, saveAction }),
-			humanity: new NumberTrait<CoreTraitName>({ max: 10, name: 'Humanity', value: 0, saveAction }),
-			hunger: new NumberTrait<CoreTraitName>({ max: 5, name: 'Hunger', value: 0, saveAction }),
-			name: new StringTrait<CoreTraitName>({ name: 'Name', value: '', saveAction }),
-			sire: new StringTrait<CoreTraitName>({ name: 'Sire', value: '', saveAction }),
-			willpower: new NumberTrait<CoreTraitName>({ name: 'Willpower', value: 0, max: 10, saveAction }),
+			health: new NumberTrait<CoreNumberTraitName>({ max: 10, name: 'Health', value: 0, saveAction }),
+			humanity: new NumberTrait<CoreNumberTraitName>({ max: 10, name: 'Humanity', value: 0, saveAction }),
+			hunger: new NumberTrait<CoreNumberTraitName>({ max: 5, name: 'Hunger', value: 0, saveAction }),
+			name: new StringTrait<CoreStringTraitName>({ name: 'Name', value: '', saveAction }),
+			sire: new StringTrait<CoreStringTraitName>({ name: 'Sire', value: '', saveAction }),
+			willpower: new NumberTrait<CoreNumberTraitName>({ name: 'Willpower', value: 0, max: 10, saveAction }),
 			attributes: [],
 			disciplines: [],
 			skills: [],

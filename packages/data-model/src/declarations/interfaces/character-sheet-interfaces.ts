@@ -12,7 +12,7 @@ import {
 	iNumberTrait,
 	iTraitData,
 } from './trait-interfaces';
-import { ClanName, CoreTraitName } from '../types';
+import { ClanName, CoreNumberTraitName, CoreStringTraitName,  } from '../types';
 import { iToJson } from './general-interfaces';
 
 // todo delete
@@ -34,14 +34,14 @@ export interface iCharacterSheetNonPrimitiveData {}
 
 export interface iCharacterSheetData extends iCharacterSheetNonPrimitiveData {
 	discordUserId: number;
-	name: iTraitData<CoreTraitName, string>;
-	clan: iTraitData<CoreTraitName, string>;
-	sire: iTraitData<CoreTraitName, string>;
-	health: iTraitData<CoreTraitName, number>;
-	willpower: iTraitData<CoreTraitName, number>;
-	hunger: iTraitData<CoreTraitName, number>;
-	humanity: iTraitData<CoreTraitName, number>;
-	bloodPotency: iTraitData<CoreTraitName, number>;
+	name: iTraitData<CoreStringTraitName, string>;
+	clan: iTraitData<CoreStringTraitName, string>;
+	sire: iTraitData<CoreStringTraitName, string>;
+	health: iTraitData<CoreNumberTraitName, number>;
+	willpower: iTraitData<CoreNumberTraitName, number>;
+	hunger: iTraitData<CoreNumberTraitName, number>;
+	humanity: iTraitData<CoreNumberTraitName, number>;
+	bloodPotency: iTraitData<CoreNumberTraitName, number>;
 	attributes: iAttributeData[];
 	skills: iSkillData[];
 	disciplines: iDisciplineData[];
