@@ -98,7 +98,8 @@ export default abstract class TraitFactory {
 		);
 	}
 
-	static newCharacterSheetDataObject({ saveAction }: iCanHaveSaveAction): iCharacterSheetData {
+	static newCharacterSheetDataObject(props?: iCanHaveSaveAction): iCharacterSheetData {
+		const saveAction = props?.saveAction;
 		return {
 			bloodPotency: new NumberTrait<CoreTraitName>({ max: 10, name: 'Blood Potency', value: 0, saveAction }),
 			clan: new StringTrait<CoreTraitName>({ name: 'Clan', value: '', saveAction }),

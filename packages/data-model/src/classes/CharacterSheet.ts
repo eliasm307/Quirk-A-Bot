@@ -1,3 +1,5 @@
+import { TraitValueTypeUnion } from './../declarations/types';
+import { iBaseTrait } from './../declarations/trait-interfaces';
 import { iNumberTraitData, iStringTraitData } from './../declarations/interfaces/trait-interfaces';
 import {
 	iAttribute,
@@ -22,40 +24,15 @@ import TypeFactory from './TypeFactory';
 import NumberTrait from './traits/NumberTrait';
 import { CoreTraitName } from '../declarations/types';
 import StringTrait from './traits/StringTrait';
-import { isCharacterSheetData } from '../utils/typePredicates';
+import { isBaseTrait, isCharacterSheetData } from '../utils/typePredicates';
 
+// ! this shouldnt be here, should be in a file about persistence
 interface iLoadFromFileArgs {
 	filePath?: string;
 	fileName?: string;
 }
 
-// todo make each of these into a new type of trait object, so methods can be implemented like "Describe" etc
-interface iModifiablePrimitiveProperties {
-	health: number;
-	willpower: number;
-	hunger: number;
-	humanity: number;
-	bloodPotency: number;
-	name: string;
-	clan: string;
-	sire: string;
-}
-
-const example: iModifiablePrimitiveProperties = {
-	bloodPotency: 0,
-	clan: '',
-	health: 0,
-	humanity: 0,
-	hunger: 0,
-	name: '',
-	sire: '',
-	willpower: 0,
-};
-
 // todo split this into smaller pieces
-
-// data types of fields that will be logged
-type LogDataType = typeof example[keyof iModifiablePrimitiveProperties];
 
 export default class CharacterSheet implements iCharacterSheet, iLogger {
 	readonly discordUserId: number;
@@ -67,7 +44,7 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 	static instances: Map<string, iCharacterSheet> = new Map<string, iCharacterSheet>();
 
 	// #private: iModifiablePrimitiveProperties;
-	#logEvents: iLogCollection = new LogCollection();
+	// #logEvents: iLogCollection = new LogCollection();
 	#savePath: string; // specified in constructor
 
 	//-------------------------------------
@@ -105,21 +82,7 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 			// initialValues = TraitFactory.newCharacterSheetDataObject( { saveAction });
 		} else if (typeof sheet === 'object') {
 			if (isCharacterSheetData(sheet)) {
-				const {
-					attributes,
-					bloodPotency,
-					clan,
-					disciplines,
-					health,
-					humanity,
-					hunger,
-					name,
-					sire,
-					skills,
-					touchstonesAndConvictions,
-					willpower,
-					discordUserId,
-				} = sheet;
+				const { attributes, disciplines, skills, touchstonesAndConvictions } = sheet;
 
 				// initialise using input details
 				this.discordUserId = sheet.discordUserId;
@@ -137,15 +100,6 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 			throw Error(`${__filename} constructor argument not defined`);
 		}
 
-		/*
-		attributes,   
-				health,
-				humanity,
-				hunger, 
-				touchstonesAndConvictions,
-				willpower,
-				discordUserId,
-		*/
 		// core number traits
 		this.bloodPotency = new NumberTrait<CoreTraitName>({
 			max: 10,
@@ -298,33 +252,33 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 		return exportDataToFile(this.toJson(), this.#savePath);
 	}
 
-	/*
-	// todo can this not use an any type
-	private onChange<T extends LogDataType, PrivateProperty extends keyof iModifiablePrimitiveProperties>(
-		property: PrivateProperty,
-		newValue: any
-	): void {
-		// get current value as old value
-		const oldValue: LogDataType = this.#private[property];
-
-		// if old value is the same as new value do nothing
-		if (oldValue === newValue)
-			return console.log(__filename, `Property ${property} was changed to the same value, nothing was done.`);
-
-		// implement property change
-		this.#private[property] = newValue;
-
-		// todo record change, create a log class where this has an array of logs
-		this.#logEvents.log(new UpdateLogEvent({ oldValue, newValue, property }));
-
-		// attempt autosave
-		this.saveToFile()
-			? null //console.log(__filename, `Successfully saved change`, { property, oldValue, newValue })
-			: console.error(__filename, `Error while saving change`, { property, oldValue, newValue });
-	}
-	*/
-
+	// todo make this report log events grouped into objects with details about the property
 	getLogData(): iLogEvent[] {
-		return [...this.#logEvents.toJson()];
+		const exampleData = TraitFactory.newCharacterSheetDataObject();
+		const ex = this;
+		const logs: iLogEvent[] = [];
+		
+		for ( let key: keyof iCharacterSheet  in iCharacterSheetw ) {
+ 
+			const trait  = this.getTraitByName(key)
+			if ( isBaseTrait<string, TraitValueTypeUnion>( this[ key ] ) ) {
+				logs.push(...this[key].)
+			}
+			
+		}
+	/*	*/
+
+		throw Error("Method not implemented")
+
+		return [];
+	}
+
+	private getTraitByName<T extends keyof iCharacterSheet>( key: T ): iBaseTrait<string, TraitValueTypeUnion> | null {
+		const trait = this[ key ];
+
+		if ( isBaseTrait( trait ) ) {
+			return trait;
+		}
+		return null;
 	}
 }
