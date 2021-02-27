@@ -1,7 +1,6 @@
 import { AttributeName, LogOperation } from '../../declarations/types';
 import { testCs, testCsRandom } from '../../utils/testUtils';
 import TraitCollection from './TraitCollection';
-import Attribute from './Attribute';
 import { iAttribute, iAttributeData } from '../../declarations/interfaces/trait-interfaces';
 import AddLogEvent from '../log/AddLogEvent';
 import TraitFactory from './TraitFactory';

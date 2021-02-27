@@ -1,16 +1,13 @@
-import { 
+import {
 	iAttribute,
 	iDiscipline,
 	iSkill,
 	iTouchStoneOrConviction,
-	iTouchStoneOrConvictionData, 
+	iTouchStoneOrConvictionData,
 } from '../declarations/interfaces/trait-interfaces';
 import path from 'path';
 import { iAttributeData, iDisciplineData, iSkillData } from '../declarations/interfaces/trait-interfaces';
-import Attribute from './traits/Attribute';
-import Skill from './traits/Skill';
 import TraitCollection from './traits/TraitCollection';
-import Discipline from './traits/Discipline';
 import TouchStoneOrConviction from './traits/TouchStoneOrConviction';
 import importDataFromFile from '../utils/importDataFromFile';
 import LogCollection from './log/LogCollection';

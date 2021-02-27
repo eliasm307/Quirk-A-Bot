@@ -7,12 +7,12 @@ import {
 	iTraitData,
 	iTouchStoneOrConvictionData,
 	iBaseTrait,
+	iAttribute,
+	iDiscipline,
+	iTouchStoneOrConviction,
+	iSkill,
 } from './interfaces/trait-interfaces';
-import AbstractBaseTrait from '../classes/traits/AbstractBaseTrait';
-import Attribute from '../classes/traits/Attribute';
 import TouchStoneOrConviction from '../classes/traits/TouchStoneOrConviction';
-import Skill from '../classes/traits/Skill';
-import Discipline from '../classes/traits/Discipline';
 
 export type ClanName = 'Caitiff' | string; // todo explicitly specify names
 export type AttributeCategory = typeof ATTRIBUTE_CATEGORIES[number];
@@ -42,13 +42,13 @@ export type TraitNameUnionOrString = TraitNameUnion | string;
 // todo should fallback be any?
 // todo is this required
 /** Dynamic type for trait data only interfaces */
-export type TraitData<T extends iTraitData<TraitNameUnionOrString, TraitTypeUnion>> = T extends Skill
+export type TraitData<T extends iTraitData<TraitNameUnionOrString, TraitTypeUnion>> = T extends iSkill
 	? iSkillData
-	: T extends Attribute
+	: T extends iAttribute
 	? iAttributeData
-	: T extends TouchStoneOrConviction
+	: T extends iTouchStoneOrConviction
 	? iTouchStoneOrConvictionData
-	: T extends Discipline
+	: T extends iDiscipline
 	? iDisciplineData
 	: any;
 export type TraitMap<T extends iBaseTrait<TraitNameUnionOrString, TraitTypeUnion>> = Map<TraitName<T>, T>;

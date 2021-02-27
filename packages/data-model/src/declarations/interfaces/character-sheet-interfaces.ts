@@ -1,11 +1,16 @@
-import Attribute from "../../classes/traits/Attribute";
-import Discipline from "../../classes/traits/Discipline";
-import Skill from "../../classes/traits/Skill";
-import TouchStoneOrConviction from "../../classes/traits/TouchStoneOrConviction";
-import TraitCollection from "../../classes/traits/TraitCollection";
-import { iTouchStoneOrConvictionData, iAttributeData, iSkillData, iDisciplineData, iAttribute, iDiscipline, iTouchStoneOrConviction, iSkill } from "./trait-interfaces";
-import { ClanName } from "../types";
-import { iToJson } from "./general-interfaces";
+import TraitCollection from '../../classes/traits/TraitCollection';
+import {
+	iTouchStoneOrConvictionData,
+	iAttributeData,
+	iSkillData,
+	iDisciplineData,
+	iAttribute,
+	iDiscipline,
+	iTouchStoneOrConviction,
+	iSkill,
+} from './trait-interfaces';
+import { ClanName } from '../types';
+import { iToJson } from './general-interfaces';
 
 interface iCharacterSheetPrimitiveData {
 	discordUserId: number;
