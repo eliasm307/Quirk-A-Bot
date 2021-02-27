@@ -5,6 +5,7 @@ import {
 	DisciplineName,
 	SkillName,
 	TraitNameUnionOrString,
+	CoreTraitName,
 } from './../../declarations/types';
 import {
 	iNumberTraitWithCategoryProps,
@@ -22,6 +23,8 @@ import NumberTrait from './NumberTrait';
 import StringTrait from './StringTrait';
 import getAttributeCategory from '../../utils/getAttributeCategory';
 import TraitCollection from './TraitCollection';
+import { iCharacterSheetData } from '../../declarations/interfaces/character-sheet-interfaces';
+import TypeFactory from '../TypeFactory';
 
 export default abstract class TraitFactory {
 	// methods use base trait props as all other details should be selected to match the required trait type
@@ -93,5 +96,19 @@ export default abstract class TraitFactory {
 			},
 			...initial
 		);
+	}
+
+	static newCharacterSheetDataObject({ saveAction }: iCanHaveSaveAction): iCharacterSheetData {
+		return {
+			bloodPotency: new NumberTrait<CoreTraitName>({ max: 10, name: 'Blood Potency', value: 0, saveAction }),
+			clan: new StringTrait<CoreTraitName>({ name: 'Clan', value: '', saveAction }),
+			discordUserId: -1,
+			health: new NumberTrait<CoreTraitName>({ max: 10, name: 'Health', value: 0, saveAction }),
+			humanity:  new NumberTrait<CoreTraitName>({ max: 10, name: 'Humanity', value: 0, saveAction }),,
+			hunger:  new NumberTrait<CoreTraitName>({ max: 5, name: 'Hunger', value: 0, saveAction }),,
+			name: new StringTrait<CoreTraitName>({name: 'Name', value: '', saveAction}),
+			sire: new StringTrait<CoreTraitName>({name: 'Sire', value: '', saveAction}),
+			willpower:  new NumberTrait<CoreTraitName>({name: 'Willpower', value: 0, max: 10, saveAction}),
+		};
 	}
 }

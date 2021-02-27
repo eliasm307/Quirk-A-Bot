@@ -1,4 +1,4 @@
-import { TraitDataDynamic, TraitNameUnion, TraitNameUnionOrString, TraitValueDynamic } from './../types';
+import { CoreTraitName, TraitDataDynamic, TraitNameUnion, TraitNameUnionOrString, TraitValueDynamic } from './../types';
 import { iCanHaveSaveAction, iToJson } from './general-interfaces';
 import { iLogger } from './log-interfaces';
 import {
@@ -80,7 +80,7 @@ export interface iTouchStoneOrConvictionData extends iStringTraitData<string> {}
 export interface iSkillData extends iNumberTraitData<SkillName> {}
 export interface iDisciplineData extends iNumberTraitData<DisciplineName> {
 	// todo add "specialisation" / sub types?
-}
+} 
 // -------------------------------------------------------
 // GENERIC TRAIT OBJECTS TYPES
 

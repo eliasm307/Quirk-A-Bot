@@ -6,8 +6,7 @@ export default abstract class TypeFactory {
 	static newTraitMap<N extends TraitNameUnionOrString>(...args: T[]): TraitMap<T> {
 		return new Map<TraitName<T>, T>(args.map(e => [e.name as TraitName<T>, e]));
 	}*/
-
-	static newiCharacterSheetObject(): iCharacterSheetData {
+	/*	static newiCharacterSheetObject(): iCharacterSheetData {
 		return {
 			attributes: [],
 			bloodPotency: 0,
@@ -23,5 +22,5 @@ export default abstract class TypeFactory {
 			touchstonesAndConvictions: [],
 			willpower: 0,
 		};
-	}
+	}*/
 }
