@@ -4,14 +4,15 @@ import TraitCollection from './TraitCollection';
 import Attribute from './Attribute';
 import { iAttribute, iAttributeData } from '../../declarations/interfaces/trait-interfaces';
 import AddLogEvent from '../log/AddLogEvent';
+import TraitFactory from './TraitFactory';
 
 const saveAction = () => true;
 let testName: string;
 
 test('traitCollection CRUD tests', () => {
-	const tc = new TraitCollection<Attribute>({
+	const tc = new TraitCollection<iAttribute>({
 		saveAction,
-		instanceCreator: (name, value) => new Attribute({ saveAction, name, value }),
+		instanceCreator: (name, value) => TraitFactory.newAttributeTrait({ saveAction, name, value }),
 	});
 
 	// test size method
@@ -42,7 +43,7 @@ testName = 'traitCollection instantiation with initial data and logging';
 test(testName, () => {
 	const tc = new TraitCollection<iAttribute>({
 		saveAction,
-		instanceCreator: (name, value) => new Attribute({ saveAction, name, value }),
+		instanceCreator: (name, value) => TraitFactory.newAttributeTrait({ saveAction, name, value }),
 	});
 
 	// add items
@@ -67,19 +68,19 @@ test(testName, () => {
 	const traits = tc.toJson();
 
 	// separate instance of same character sheet, no inital data
-	const tc2 = new TraitCollection<Attribute>({
+	const tc2 = new TraitCollection<iAttribute>({
 		saveAction,
-		instanceCreator: (name, value) => new Attribute({ saveAction, name, value }),
+		instanceCreator: (name, value) => TraitFactory.newAttributeTrait({ saveAction, name, value }),
 	});
 
 	// no items expected
 	expect(tc2.size).toEqual(0);
 
 	// separate instance of same character sheet, with inital data
-	const tc3 = new TraitCollection<Attribute>(
+	const tc3 = new TraitCollection<iAttribute>(
 		{
 			saveAction,
-			instanceCreator: (name, value) => new Attribute({ saveAction, name, value }),
+			instanceCreator: (name, value) => TraitFactory.newAttributeTrait({ saveAction, name, value }),
 		},
 		...tc.toJson()
 	);

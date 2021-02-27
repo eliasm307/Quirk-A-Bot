@@ -1,5 +1,5 @@
 import { iStringTrait, iStringTraitProps } from '../../declarations/interfaces/trait-interfaces';
-import { TraitNameUnion } from '../../declarations/types';
+import { TraitNameUnion, TraitNameUnionOrString } from '../../declarations/types';
 import AbstractBaseTrait from './AbstractBaseTrait';
 
 /** class with behaviour for traits that have string values */

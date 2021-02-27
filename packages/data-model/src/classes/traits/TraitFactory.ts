@@ -1,23 +1,16 @@
-import { iTraitCollection } from './../../declarations/trait-interfaces';
+import { iCanHaveSaveAction } from './../../declarations/interfaces/general-interfaces';
 import { AttributeName, AttributeCategory, DisciplineName, SkillName } from './../../declarations/types';
 import {
 	iNumberTraitWithCategoryProps,
-	iTraitData,
-	iHasCategorySelector,
 	iAttribute,
 	iDiscipline,
 	iAttributeData,
 	iNumberTraitProps,
-	iDisciplineData,
 	iSkill,
-	iSkillData,
 	iStringTraitProps,
-	iTouchStoneOrConvictionData,
 	iTouchStoneOrConviction,
-	iNumberTraitData,
 	iBaseTraitProps,
 } from './../../declarations/interfaces/trait-interfaces';
-import { iCanHaveSaveAction } from '../../declarations/interfaces/general-interfaces';
 import NumberTraitWithCategory from './NumberTraitWithCategory';
 import NumberTrait from './NumberTrait';
 import StringTrait from './StringTrait';
@@ -77,13 +70,16 @@ export default abstract class TraitFactory {
 		return new StringTrait(props);
 	}
 
-	static newAttributeTraitCollection<iAttributeTraitCollection>(...initial: iAttributeData[]) {
-		return new TraitCollection<iAttribute, AttributeName, number, iAttributeData>(
+	static newAttributeTraitCollection<iAttributeTraitCollection>(
+		{ saveAction }: iCanHaveSaveAction,
+		...initial: iAttributeData[]
+	) {
+		return new TraitCollection<iAttribute>(
 			{
 				saveAction,
 				instanceCreator: (name, value) => TraitFactory.newAttributeTrait({ saveAction, name, value }),
 			},
-			...initial 
+			...initial
 		);
 	}
 }

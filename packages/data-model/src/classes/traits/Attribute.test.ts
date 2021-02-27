@@ -1,3 +1,4 @@
+import { iAttribute } from '../../declarations/interfaces/trait-interfaces';
 import CharacterSheet from '../CharacterSheet';
 import Attribute from './Attribute';
 import TraitCollection from './TraitCollection';
