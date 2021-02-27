@@ -7,12 +7,13 @@ import {
 	iTraitData,
 	iTouchStoneOrConvictionData,
 	iBaseTrait,
-} from './interfaces';
-import BaseTrait from '../classes/traits/BaseTrait';
-import Attribute from '../classes/traits/Attribute';
-import TouchStoneOrConviction from '../classes/traits/TouchStoneOrConviction';
-import Skill from '../classes/traits/Skill';
-import Discipline from '../classes/traits/Discipline';
+	iAttribute,
+	iDiscipline,
+	iTouchStoneOrConviction,
+	iSkill,
+	iHasNumberValue,
+	iHasStringValue,
+} from './interfaces/trait-interfaces';
 
 export type ClanName = 'Caitiff' | string; // todo explicitly specify names
 export type AttributeCategory = typeof ATTRIBUTE_CATEGORIES[number];
@@ -20,8 +21,9 @@ export type AttributeName = typeof ATTRIBUTE_NAMES[number];
 export type SkillName = typeof SKILL_NAMES[number];
 export type DisciplineName = typeof DISCIPLINE_NAMES[number];
 
+// todo is this required?
 /** Dynamic type for trait name union types */
-export type TraitName<T extends iTraitData> = T extends iSkillData
+export type TraitNameDynamic<T extends iTraitData<TraitNameUnionOrString, TraitValueTypeUnion>> = T extends iSkillData
 	? SkillName
 	: T extends iAttributeData
 	? AttributeName
@@ -30,22 +32,34 @@ export type TraitName<T extends iTraitData> = T extends iSkillData
 	: string; // NOTE make sure this covers all options
 
 /** Dynamic type for trait value type */
-export type TraitValue<T> = T extends iTouchStoneOrConvictionData ? string : number;
+export type TraitValueDynamic<T> = T extends iHasStringValue
+	? string
+	: T extends iHasNumberValue
+	? number
+	: TraitValueTypeUnion;
 
+// todo add boolen for the future?
+export type TraitValueTypeUnion = number | string;
+
+export type TraitNameUnion = AttributeName | SkillName | DisciplineName;
+export type TraitNameUnionOrString = TraitNameUnion | string;
+
+// todo should fallback be any?
+// todo is this required
 /** Dynamic type for trait data only interfaces */
-export type TraitData<T extends iTraitData> = T extends Skill
+export type TraitDataDynamic<T extends iTraitData<TraitNameUnionOrString, TraitValueTypeUnion>> = T extends iSkill
 	? iSkillData
-	: T extends Attribute
+	: T extends iAttribute
 	? iAttributeData
-	: T extends TouchStoneOrConviction
+	: T extends iTouchStoneOrConviction
 	? iTouchStoneOrConvictionData
-	: T extends Discipline
+	: T extends iDiscipline
 	? iDisciplineData
-	: iTraitData;
-export type TraitMap<T extends iBaseTrait> = Map<TraitName<T>, T>;
-export type TraitType = typeof TRAIT_TYPES[number];
+	: any;
+export type TraitMap<T extends iBaseTrait<TraitNameUnionOrString, TraitValueTypeUnion>> = Map<TraitNameDynamic<T>, T>;
+export type TraitTypeNameUnion = typeof TRAIT_TYPES[number];
 
-export type LogOperation = 'ADD' | 'UPDATE' | 'DELETE';
+export type LogOperationUnion = 'ADD' | 'UPDATE' | 'DELETE';
 
-export type LogInitialValue<T, O extends LogOperation> = O extends 'ADD' ? undefined : T;
-export type LogNewValue<T, O extends LogOperation> = O extends 'DELETE' ? undefined : T;
+export type LogInitialValueDynamic<T, O extends LogOperationUnion> = O extends 'ADD' ? undefined : T;
+export type LogNewValueDynamic<T, O extends LogOperationUnion> = O extends 'DELETE' ? undefined : T;

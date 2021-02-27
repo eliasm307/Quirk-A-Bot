@@ -1,15 +1,21 @@
-import { iAbstractNumberTraitProps, iBaseTrait, iNumberValue, iTraitData } from './../../declarations/interfaces';
-import { TraitValue } from '../../declarations/types';
-import BaseTrait from './BaseTrait';
+import { iNumberTrait } from './../../declarations/interfaces/trait-interfaces';
+import {
+	iNumberTraitProps,
+	iBaseTrait,
+	iHasNumberValue,
+	iTraitData,
+} from '../../declarations/interfaces/trait-interfaces';
+import { TraitNameUnion, TraitNameUnionOrString, TraitValueDynamic } from '../../declarations/types';
+import AbstractBaseTrait from './AbstractBaseTrait';
 
-/** Abstract class with behaviour for traits that have number values */
-export default abstract class AbstractNumberTrait<T extends iTraitData>
-	extends BaseTrait<T>
-	implements iBaseTrait, iNumberValue {
+/** class with behaviour for traits that have number values */
+export default class NumberTrait<N extends TraitNameUnionOrString>
+	extends AbstractBaseTrait<N, number>
+	implements iNumberTrait<N> {
 	min: number;
 	max: number;
 
-	constructor(props: iAbstractNumberTraitProps<T>) {
+	constructor(props: iNumberTraitProps<N>) {
 		super(props);
 		const { min = 0, max } = props; // min defaults to 0
 		this.min = min;
@@ -17,7 +23,7 @@ export default abstract class AbstractNumberTrait<T extends iTraitData>
 	}
 
 	/** Only allows setting numbers within the allowed range for this trait */
-	newValueIsValid(newVal: TraitValue<T>): boolean {
+	newValueIsValid(newVal: number): boolean {
 		// assert value is a number
 		if (typeof newVal !== 'number')
 			throw Error(`Value for trait ${this.name} should be a number, received a "${typeof newVal}`);

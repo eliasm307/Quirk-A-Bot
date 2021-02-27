@@ -1,8 +1,9 @@
-import { iCharacterSheetData, iTraitData } from './../declarations/interfaces';
-import { TraitMap, TraitName } from './../declarations/types';
+import { iCharacterSheetData } from '../declarations/interfaces/character-sheet-interfaces';
+import { iTraitData } from '../declarations/interfaces/trait-interfaces';
+import { TraitMap, TraitNameDynamic } from './../declarations/types';
 export default abstract class TypeFactory {
 	/*
-	static newTraitMap<T extends iTraitData>(...args: T[]): TraitMap<T> {
+	static newTraitMap<N extends TraitNameUnionOrString>(...args: T[]): TraitMap<T> {
 		return new Map<TraitName<T>, T>(args.map(e => [e.name as TraitName<T>, e]));
 	}*/
 

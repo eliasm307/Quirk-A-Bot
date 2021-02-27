@@ -1,21 +1,20 @@
 import {
-	iCharacterSheetData,
-	iLogEvent,
-	iLogger,
+	iAttribute,
+	iDiscipline,
+	iSkill,
+	iTouchStoneOrConviction,
 	iTouchStoneOrConvictionData,
-	iLogCollection,
-} from './../declarations/interfaces';
+} from '../declarations/interfaces/trait-interfaces';
 import path from 'path';
-import { iAttributeData, iCharacterSheet, iDisciplineData, iSkillData } from '../declarations/interfaces';
-import Attribute from './traits/Attribute';
-import Skill from './traits/Skill';
+import { iAttributeData, iDisciplineData, iSkillData } from '../declarations/interfaces/trait-interfaces';
 import TraitCollection from './traits/TraitCollection';
-import Discipline from './traits/Discipline';
-import TouchStoneOrConviction from './traits/TouchStoneOrConviction';
 import importDataFromFile from '../utils/importDataFromFile';
 import LogCollection from './log/LogCollection';
 import UpdateLogEvent from './log/UpdateLogEvent';
 import exportDataToFile from '../utils/exportDataToFile';
+import { iCharacterSheet, iCharacterSheetData } from '../declarations/interfaces/character-sheet-interfaces';
+import { iLogger, iLogCollection, iLogEvent } from '../declarations/interfaces/log-interfaces';
+import TraitFactory from './traits/TraitFactory';
 
 interface iLoadFromFileArgs {
 	filePath?: string;
@@ -115,10 +114,10 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 	}
 	//-------------------------------------
 	// NON BASIC VARIABLE COLLECTIONS
-	readonly attributes: TraitCollection<Attribute>;
-	readonly skills: TraitCollection<Skill>;
-	readonly disciplines: TraitCollection<Discipline>;
-	readonly touchstonesAndConvictions: TraitCollection<TouchStoneOrConviction>;
+	readonly attributes: TraitCollection<iAttribute>;
+	readonly skills: TraitCollection<iSkill>;
+	readonly disciplines: TraitCollection<iDiscipline>;
+	readonly touchstonesAndConvictions: TraitCollection<iTouchStoneOrConviction>;
 
 	//-------------------------------------
 	// CONSTRUCTOR
@@ -184,34 +183,34 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 		const saveAction = () => this.saveToFile();
 
 		// create collections, with initial data where available
-		this.attributes = new TraitCollection<Attribute>(
+		this.attributes = new TraitCollection<iAttribute>(
 			{
 				saveAction,
-				instanceCreator: (name, value) => new Attribute({ saveAction, name, value }),
+				instanceCreator: TraitFactory.newAttributeTrait,
 			},
 			...initialAttributes
 		);
 
-		this.skills = new TraitCollection<Skill>(
+		this.skills = new TraitCollection<iSkill>(
 			{
 				saveAction,
-				instanceCreator: (name, value) => new Skill({ saveAction, name, value }),
+				instanceCreator: TraitFactory.newSkillTrait,
 			},
 			...initialSkills
 		);
 
-		this.disciplines = new TraitCollection<Discipline>(
+		this.disciplines = new TraitCollection<iDiscipline>(
 			{
 				saveAction,
-				instanceCreator: (name, value) => new Discipline({ saveAction, name, value }),
+				instanceCreator: TraitFactory.newDisciplineTrait,
 			},
 			...initialDisciplines
 		);
 
-		this.touchstonesAndConvictions = new TraitCollection<TouchStoneOrConviction>(
+		this.touchstonesAndConvictions = new TraitCollection<iTouchStoneOrConviction>(
 			{
 				saveAction,
-				instanceCreator: (name, value) => new TouchStoneOrConviction({ saveAction, name, value }),
+				instanceCreator: TraitFactory.newTouchStoneOrConvictionTrait,
 			},
 			...initialTouchstonesAndConvictions
 		);
