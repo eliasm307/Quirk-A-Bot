@@ -274,7 +274,7 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 	}
 
 	public toJson(): iCharacterSheetData {
-		return {
+		const data: iCharacterSheetData = {
 			attributes: this.attributes.toJson(),
 			bloodPotency: this.bloodPotency.toJson() as iNumberTraitData<CoreTraitName>,
 			clan: this.clan.toJson() as iStringTraitData<CoreTraitName>,
@@ -289,6 +289,8 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 			touchstonesAndConvictions: this.touchstonesAndConvictions.toJson(),
 			willpower: this.willpower.toJson() as iNumberTraitData<CoreTraitName>,
 		};
+		console.log(__filename, { data });
+		return data;
 	}
 
 	private saveToFile(): boolean {

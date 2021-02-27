@@ -104,11 +104,15 @@ export default abstract class TraitFactory {
 			clan: new StringTrait<CoreTraitName>({ name: 'Clan', value: '', saveAction }),
 			discordUserId: -1,
 			health: new NumberTrait<CoreTraitName>({ max: 10, name: 'Health', value: 0, saveAction }),
-			humanity:  new NumberTrait<CoreTraitName>({ max: 10, name: 'Humanity', value: 0, saveAction }),,
-			hunger:  new NumberTrait<CoreTraitName>({ max: 5, name: 'Hunger', value: 0, saveAction }),,
-			name: new StringTrait<CoreTraitName>({name: 'Name', value: '', saveAction}),
-			sire: new StringTrait<CoreTraitName>({name: 'Sire', value: '', saveAction}),
-			willpower:  new NumberTrait<CoreTraitName>({name: 'Willpower', value: 0, max: 10, saveAction}),
+			humanity: new NumberTrait<CoreTraitName>({ max: 10, name: 'Humanity', value: 0, saveAction }),
+			hunger: new NumberTrait<CoreTraitName>({ max: 5, name: 'Hunger', value: 0, saveAction }),
+			name: new StringTrait<CoreTraitName>({ name: 'Name', value: '', saveAction }),
+			sire: new StringTrait<CoreTraitName>({ name: 'Sire', value: '', saveAction }),
+			willpower: new NumberTrait<CoreTraitName>({ name: 'Willpower', value: 0, max: 10, saveAction }),
+			attributes: [],
+			disciplines: [],
+			skills: [],
+			touchstonesAndConvictions: [],
 		};
 	}
 }
