@@ -1,5 +1,11 @@
 import { iCanHaveSaveAction } from './../../declarations/interfaces/general-interfaces';
-import { AttributeName, AttributeCategory, DisciplineName, SkillName } from './../../declarations/types';
+import {
+	AttributeName,
+	AttributeCategory,
+	DisciplineName,
+	SkillName,
+	TraitNameUnionOrString,
+} from './../../declarations/types';
 import {
 	iNumberTraitWithCategoryProps,
 	iAttribute,
@@ -19,6 +25,12 @@ import TraitCollection from './TraitCollection';
 
 export default abstract class TraitFactory {
 	// methods use base trait props as all other details should be selected to match the required trait type
+	static newStringTrait({ name, value = '', saveAction }: iStringTraitProps<TraitNameUnionOrString>) {
+		return new StringTrait({ name, value, saveAction });
+	}
+	static newNumberTrait({ name, value = 0, saveAction, max, min = 0 }: iNumberTraitProps<TraitNameUnionOrString>) {
+		return new NumberTrait({ name, value, saveAction, max, min });
+	}
 	static newAttributeTrait({ name, value = 0, saveAction }: iBaseTraitProps<AttributeName, number>): iAttribute {
 		const props: iNumberTraitWithCategoryProps<AttributeName, AttributeCategory> = {
 			categorySelector: getAttributeCategory,
@@ -58,7 +70,7 @@ export default abstract class TraitFactory {
 
 	static newTouchStoneOrConvictionTrait({
 		name,
-		value  ,
+		value,
 		saveAction,
 	}: iBaseTraitProps<string, string>): iTouchStoneOrConviction {
 		const props: iStringTraitProps<string> = {

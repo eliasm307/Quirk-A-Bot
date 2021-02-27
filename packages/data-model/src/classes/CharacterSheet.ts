@@ -1,7 +1,9 @@
 import {
 	iAttribute,
 	iDiscipline,
+	iNumberTrait,
 	iSkill,
+	iStringTrait,
 	iTouchStoneOrConviction,
 	iTouchStoneOrConvictionData,
 } from '../declarations/interfaces/trait-interfaces';
@@ -15,6 +17,7 @@ import exportDataToFile from '../utils/exportDataToFile';
 import { iCharacterSheet, iCharacterSheetData } from '../declarations/interfaces/character-sheet-interfaces';
 import { iLogger, iLogCollection, iLogEvent } from '../declarations/interfaces/log-interfaces';
 import TraitFactory from './traits/TraitFactory';
+import TypeFactory from './TypeFactory';
 
 interface iLoadFromFileArgs {
 	filePath?: string;
@@ -63,61 +66,19 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 	#savePath: string; // specified in constructor
 
 	//-------------------------------------
-	// BASIC VARIABLE GETTERS AND SETTERS
-	public set health(newVal: number) {
-		this.onChange('health', newVal);
-	}
-	public get health() {
-		return this.#private.health;
-	}
-	public set willpower(newVal: number) {
-		this.onChange('willpower', newVal);
-	}
-	public get willpower() {
-		return this.#private.willpower;
-	}
-	public set hunger(newVal: number) {
-		this.onChange('hunger', newVal);
-	}
-	public get hunger() {
-		return this.#private.hunger;
-	}
-	public set humanity(newVal: number) {
-		this.onChange('humanity', newVal);
-	}
-	public get humanity() {
-		return this.#private.humanity;
-	}
-	public set bloodPotency(newVal: number) {
-		this.onChange('bloodPotency', newVal);
-	}
-	public get bloodPotency() {
-		return this.#private.bloodPotency;
-	}
-	public set name(newVal: string) {
-		this.onChange('name', newVal);
-	}
-	public get name() {
-		return this.#private.name;
-	}
-	public set clan(newVal: string) {
-		this.onChange('clan', newVal);
-	}
-	public get clan() {
-		return this.#private.clan;
-	}
-	public set sire(newVal: string) {
-		this.onChange('sire', newVal);
-	}
-	public get sire() {
-		return this.#private.sire;
-	}
-	//-------------------------------------
 	// NON BASIC VARIABLE COLLECTIONS
 	readonly attributes: TraitCollection<iAttribute>;
 	readonly skills: TraitCollection<iSkill>;
 	readonly disciplines: TraitCollection<iDiscipline>;
 	readonly touchstonesAndConvictions: TraitCollection<iTouchStoneOrConviction>;
+	readonly name: iStringTrait<string>;
+	readonly clan: iStringTrait<string>;
+	readonly sire: iStringTrait<string>;
+	readonly health: iNumberTrait<string>; // todo limit 0 to 10
+	readonly willpower: iNumberTrait<string>; // todo limit 0 to 10
+	readonly hunger: iNumberTrait<string>; // todo limit 0 to 5
+	readonly humanity: iNumberTrait<string>; // todo limit 0 to 10
+	readonly bloodPotency: iNumberTrait<string>; // todo limit 0 to 10
 
 	//-------------------------------------
 	// CONSTRUCTOR
@@ -127,22 +88,28 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 		let initialSkills: iSkillData[] = [];
 		let initialTouchstonesAndConvictions: iTouchStoneOrConvictionData[] = [];
 
+		// initialise with default values
+		let characterTraitInitialValues: iCharacterSheetData = {
+			discordUserId: -1,
+			health: 0,
+			willpower: 0,
+			hunger: 0,
+			humanity: 0,
+			bloodPotency: 0,
+			name: '',
+			clan: '',
+			sire: '',
+			attributes: [],
+			disciplines: [],
+			skills: [],
+			touchstonesAndConvictions: [],
+		};
+
 		if (typeof sheet === 'number') {
 			this.discordUserId = sheet;
-
-			// initialise with default values
-			this.#private = {
-				health: 0,
-				willpower: 0,
-				hunger: 0,
-				humanity: 0,
-				bloodPotency: 0,
-				name: '',
-				clan: '',
-				sire: '',
-			};
+			characterTraitInitialValues.discordUserId = this.discordUserId;
 		} else if (typeof sheet === 'object') {
-			const {
+			/*const {
 				attributes,
 				bloodPotency,
 				clan,
@@ -156,31 +123,24 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 				touchstonesAndConvictions,
 				willpower,
 				discordUserId,
-			} = sheet;
+			} = sheet;*/
 
 			// initialise using input details
-			this.discordUserId = discordUserId;
-			this.#private = {
-				health: health,
-				willpower: willpower,
-				hunger: hunger,
-				humanity: humanity,
-				bloodPotency: bloodPotency,
-				name: name,
-				clan: clan,
-				sire: sire,
-			};
-
+			this.discordUserId = sheet.discordUserId;
+			characterTraitInitialValues = sheet;
+/*
 			initialAttributes = [...attributes];
 			initialDisciplines = [...disciplines];
 			initialSkills = [...skills];
-			initialTouchstonesAndConvictions = [...touchstonesAndConvictions];
+			initialTouchstonesAndConvictions = [...touchstonesAndConvictions];*/
 		} else {
 			throw Error(`${__filename} constructor argument not defined`);
 		}
 
-		// function to save this character sheet
+		// function to save this character sheet 
 		const saveAction = () => this.saveToFile();
+
+		this.bloodPotency = TraitFactory.newNumberTrait({max: 10, name: ''})
 
 		// create collections, with initial data where available
 		this.attributes = new TraitCollection<iAttribute>(

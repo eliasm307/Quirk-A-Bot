@@ -1,4 +1,4 @@
-import { ATTRIBUTE_CATEGORIES, TRAIT_TYPES } from './../constants';
+import { ATTRIBUTE_CATEGORIES, TRAIT_TYPES, CORE_TRAITS } from './../constants';
 import { ATTRIBUTE_NAMES, SKILL_NAMES, DISCIPLINE_NAMES } from '../constants';
 import {
 	iAttributeData,
@@ -20,6 +20,7 @@ export type AttributeCategory = typeof ATTRIBUTE_CATEGORIES[number];
 export type AttributeName = typeof ATTRIBUTE_NAMES[number];
 export type SkillName = typeof SKILL_NAMES[number];
 export type DisciplineName = typeof DISCIPLINE_NAMES[number];
+export type CoreTraitName = typeof CORE_TRAITS[number];
 
 // todo is this required?
 /** Dynamic type for trait name union types */
@@ -29,7 +30,7 @@ export type TraitNameDynamic<T extends iTraitData<TraitNameUnionOrString, TraitV
 	? AttributeName
 	: T extends iDisciplineData
 	? DisciplineName
-	: string; // NOTE make sure this covers all options
+	: CoreTraitName | string ; // NOTE make sure this covers all options
 
 /** Dynamic type for trait value type */
 export type TraitValueDynamic<T> = T extends iHasStringValue
