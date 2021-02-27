@@ -23,7 +23,7 @@ interface iInstanceCreatorProps<T extends iTraitData<TraitNameDynamic<T>, TraitV
 
 export default class TraitCollection<T extends iBaseTrait<TraitNameDynamic<T>, TraitValueDynamic<T>>>
 	implements iTraitCollection<T>, iLogger {
-	#instanceCreator: (name: TraitNameDynamic<T>, value: TraitValueDynamic<T>) => T;
+	#instanceCreator: (props: iInstanceCreatorProps<T>) => T;
 	private saveAction?: () => boolean;
 	#map: TraitMap<T>;
 	#logs = new LogCollection<TraitValueDynamic<T>>();
@@ -34,7 +34,7 @@ export default class TraitCollection<T extends iBaseTrait<TraitNameDynamic<T>, T
 		this.#map = new Map<TraitNameDynamic<T>, T>(
 			initialData.map(e => [
 				e.name as TraitNameDynamic<T>,
-				instanceCreator(e.name as TraitNameDynamic<T>, e.value as TraitValueDynamic<T>),
+				instanceCreator({ name: e.name as TraitNameDynamic<T>, value: e.value as TraitValueDynamic<T> }),
 			])
 		);
 	}
@@ -102,7 +102,7 @@ export default class TraitCollection<T extends iBaseTrait<TraitNameDynamic<T>, T
 			this.#logs.log(new UpdateLogEvent({ newValue, oldValue, property: name }));
 		} else {
 			// add new trait instance
-			this.#map.set(name, this.#instanceCreator(name, newValue));
+			this.#map.set( name, this.#instanceCreator( { name, value: newValue }));
 
 			// log change
 			this.#logs.log(new AddLogEvent({ newValue, property: name }));

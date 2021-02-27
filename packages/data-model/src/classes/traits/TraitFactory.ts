@@ -77,7 +77,7 @@ export default abstract class TraitFactory {
 		return new TraitCollection<iAttribute>(
 			{
 				saveAction,
-				instanceCreator: (name, value) => TraitFactory.newAttributeTrait({ saveAction, name, value }),
+				instanceCreator: TraitFactory.newAttributeTrait,
 			},
 			...initial
 		);

@@ -186,7 +186,7 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 		this.attributes = new TraitCollection<iAttribute>(
 			{
 				saveAction,
-				instanceCreator: (name, value) => TraitFactory.newAttributeTrait({ saveAction, name, value }),
+				instanceCreator: TraitFactory.newAttributeTrait,
 			},
 			...initialAttributes
 		);
@@ -194,7 +194,7 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 		this.skills = new TraitCollection<iSkill>(
 			{
 				saveAction,
-				instanceCreator: (name, value) => TraitFactory.newSkillTrait({ saveAction, name, value }),
+				instanceCreator: TraitFactory.newSkillTrait,
 			},
 			...initialSkills
 		);
@@ -202,7 +202,7 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 		this.disciplines = new TraitCollection<iDiscipline>(
 			{
 				saveAction,
-				instanceCreator: (name, value) => TraitFactory.newDisciplineTrait({ saveAction, name, value }),
+				instanceCreator: TraitFactory.newDisciplineTrait,
 			},
 			...initialDisciplines
 		);
@@ -210,7 +210,7 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 		this.touchstonesAndConvictions = new TraitCollection<iTouchStoneOrConviction>(
 			{
 				saveAction,
-				instanceCreator: (name, value) => TraitFactory.newTouchStoneOrConvictionTrait({ saveAction, name, value }),
+				instanceCreator: TraitFactory.newTouchStoneOrConvictionTrait,
 			},
 			...initialTouchstonesAndConvictions
 		);

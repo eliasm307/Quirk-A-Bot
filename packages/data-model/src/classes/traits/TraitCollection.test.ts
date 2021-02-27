@@ -1,8 +1,6 @@
-import { AttributeName, LogOperationUnion } from '../../declarations/types';
-import { testCs, testCsRandom } from '../../utils/testUtils';
+import { LogOperationUnion } from '../../declarations/types';
 import TraitCollection from './TraitCollection';
-import { iAttribute, iAttributeData } from '../../declarations/interfaces/trait-interfaces';
-import AddLogEvent from '../log/AddLogEvent';
+import { iAttribute } from '../../declarations/interfaces/trait-interfaces';
 import TraitFactory from './TraitFactory';
 
 const saveAction = () => true;
@@ -11,7 +9,7 @@ let testName: string;
 test('traitCollection CRUD tests', () => {
 	const tc = new TraitCollection<iAttribute>({
 		saveAction,
-		instanceCreator: (name, value) => TraitFactory.newAttributeTrait({ saveAction, name, value }),
+		instanceCreator: TraitFactory.newAttributeTrait,
 	});
 
 	// test size method
@@ -42,7 +40,7 @@ testName = 'traitCollection instantiation with initial data and logging';
 test(testName, () => {
 	const tc = new TraitCollection<iAttribute>({
 		saveAction,
-		instanceCreator: (name, value) => TraitFactory.newAttributeTrait({ saveAction, name, value }),
+		instanceCreator: TraitFactory.newAttributeTrait,
 	});
 
 	// add items
@@ -69,7 +67,7 @@ test(testName, () => {
 	// separate instance of same character sheet, no inital data
 	const tc2 = new TraitCollection<iAttribute>({
 		saveAction,
-		instanceCreator: (name, value) => TraitFactory.newAttributeTrait({ saveAction, name, value }),
+		instanceCreator: TraitFactory.newAttributeTrait,
 	});
 
 	// no items expected
@@ -79,7 +77,7 @@ test(testName, () => {
 	const tc3 = new TraitCollection<iAttribute>(
 		{
 			saveAction,
-			instanceCreator: (name, value) => TraitFactory.newAttributeTrait({ saveAction, name, value }),
+			instanceCreator: TraitFactory.newAttributeTrait,
 		},
 		...tc.toJson()
 	);
@@ -91,7 +89,7 @@ test(testName, () => {
 testName = 'trait test with toJson and log data';
 test(testName, () => {
 	const tc = new TraitCollection<iAttribute>({
-		instanceCreator: (name, value) => TraitFactory.newAttributeTrait({ name, value }),
+		instanceCreator: TraitFactory.newAttributeTrait,
 	});
 	tc.set('Charisma', 3);
 
