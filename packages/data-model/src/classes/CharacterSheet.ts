@@ -8,7 +8,6 @@ import {
 import path from 'path';
 import { iAttributeData, iDisciplineData, iSkillData } from '../declarations/interfaces/trait-interfaces';
 import TraitCollection from './traits/TraitCollection';
-import TouchStoneOrConviction from './traits/TouchStoneOrConviction';
 import importDataFromFile from '../utils/importDataFromFile';
 import LogCollection from './log/LogCollection';
 import UpdateLogEvent from './log/UpdateLogEvent';
@@ -208,10 +207,10 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 			...initialDisciplines
 		);
 
-		this.touchstonesAndConvictions = new TraitCollection<TouchStoneOrConviction>(
+		this.touchstonesAndConvictions = new TraitCollection<iTouchStoneOrConviction>(
 			{
 				saveAction,
-				instanceCreator: (name, value) => new TouchStoneOrConviction({ saveAction, name, value }),
+				instanceCreator: (name, value) => TraitFactory.newTouchStoneOrConvictionTrait({ saveAction, name, value }),
 			},
 			...initialTouchstonesAndConvictions
 		);

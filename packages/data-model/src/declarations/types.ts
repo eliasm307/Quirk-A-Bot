@@ -12,7 +12,6 @@ import {
 	iTouchStoneOrConviction,
 	iSkill,
 } from './interfaces/trait-interfaces';
-import TouchStoneOrConviction from '../classes/traits/TouchStoneOrConviction';
 
 export type ClanName = 'Caitiff' | string; // todo explicitly specify names
 export type AttributeCategory = typeof ATTRIBUTE_CATEGORIES[number];
