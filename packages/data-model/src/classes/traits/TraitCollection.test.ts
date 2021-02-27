@@ -87,3 +87,17 @@ test(testName, () => {
 	// same items as initial expected
 	expect(tc3.size).toEqual(tc.size);
 });
+
+testName = 'trait test with toJson and log data';
+test(testName, () => {
+	const tc = new TraitCollection<iAttribute>({
+		instanceCreator: (name, value) => TraitFactory.newAttributeTrait({ name, value }),
+	});
+	tc.set('Charisma', 3);
+
+	console.log(__filename, { testName, tc });
+
+	expect(tc.size).toBeGreaterThan(0);
+	expect(tc.toJson().map(a => a.name)).toContain('Charisma');
+	expect(tc.getLogData().length).toBeGreaterThanOrEqual(1);
+});
