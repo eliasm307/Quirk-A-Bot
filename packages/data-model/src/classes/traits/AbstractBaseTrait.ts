@@ -1,38 +1,35 @@
-import { iBaseTrait } from './../../declarations/interfaces';
-import { TraitData, TraitName, TraitValue } from '../../declarations/types';
-import {
-	iBaseTraitProps,
-	iCharacterSheet,
-	iLogEvent,
-	iLogger,
-	iToJson,
-	iTraitData,
-} from '../../declarations/interfaces';
+import { iLogEvent } from '../../declarations/interfaces/log-interfaces';
+import { iBaseTrait } from '../../declarations/interfaces/trait-interfaces';
+import { TraitNameUnion, TraitNameUnionOrString, TraitValueTypeUnion, TraitValueDynamic } from '../../declarations/types';
+import { iBaseTraitProps, iTraitData } from '../../declarations/interfaces/trait-interfaces';
 import LogCollection from '../log/LogCollection';
 import UpdateLogEvent from '../log/UpdateLogEvent';
 
-interface iPrivateModifiableProperties<T> {
-	value: TraitValue<T>;
+interface iPrivateModifiableProperties<V> {
+	value: V;
 }
 
-export default abstract class BaseTrait<T extends iTraitData> implements iBaseTrait {
-	#private: iPrivateModifiableProperties<T>;
+export default abstract class AbstractBaseTrait<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
+	implements iBaseTrait<N, V> {
+	#private: iPrivateModifiableProperties<V>;
 	// #characterSheet: iCharacterSheet;
-	#logs = new LogCollection<TraitValue<T>>();
+
+	// todo log collections should not rely on iTraitData
+	#logs = new LogCollection<TraitValueDynamic<iTraitData<N, V>>>();
 	#saveAction?: () => boolean;
 
-	readonly name: TraitName<T>;
+	readonly name: N;
 
-	protected abstract newValueIsValid(newVal: TraitValue<T>): boolean;
+	protected abstract newValueIsValid(newVal: V): boolean;
 
-	public set value(newVal: TraitValue<T>) {
+	public set value(newVal: V) {
 		if (this.newValueIsValid(newVal)) this.onChange('value', newVal);
 	}
 	public get value() {
-		return this.#private.value as TraitValue<T>;
+		return this.#private.value;
 	}
 
-	constructor({ saveAction, name, value }: iBaseTraitProps<T>) {
+	constructor({ saveAction, name, value }: iBaseTraitProps<N, V>) {
 		this.#saveAction = saveAction;
 		this.name = name;
 		this.#private = {
@@ -43,7 +40,7 @@ export default abstract class BaseTrait<T extends iTraitData> implements iBaseTr
 		// make sure character sheet has a reference to this Skill // will this produce any cyclic behaviour? tested, and YES it does
 		// if (!this.#characterSheet.getSkillByName(name)) this.#characterSheet.setSkill(name, value);
 	}
-	toJson(): iTraitData {
+	toJson(): iTraitData<N, V> {
 		return {
 			name: this.name,
 			value: this.value,
@@ -54,12 +51,12 @@ export default abstract class BaseTrait<T extends iTraitData> implements iBaseTr
 		return this.#logs.toJson();
 	}
 
-	protected onChange<PrivateProperty extends keyof iPrivateModifiableProperties<T>>(
+	protected onChange<PrivateProperty extends keyof iPrivateModifiableProperties<V>>(
 		property: PrivateProperty,
-		newValue: TraitValue<T>
+		newValue: V
 	): void {
 		// get current value as old value
-		const oldValue: TraitValue<T> = this.#private[property];
+		const oldValue: V = this.#private[property];
 
 		// if old value is the same as new value do nothing
 		if (oldValue === newValue)

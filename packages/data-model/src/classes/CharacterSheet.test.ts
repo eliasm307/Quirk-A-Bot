@@ -1,9 +1,7 @@
 import fs from 'fs-extra';
 import path from 'path';
-import CharacterSheet from './CharacterSheet';
-import Skill from './traits/Skill';
-import Attribute from './traits/Attribute';
-import TouchStoneOrConviction from './traits/TouchStoneOrConviction';
+import CharacterSheet from './CharacterSheet'; 
+import { iAttribute, iSkill, iTouchStoneOrConviction } from '../declarations/interfaces/trait-interfaces';
 
 // todo use test utils
 const testUserId = Math.floor(Math.random() * 9);
@@ -97,9 +95,9 @@ test(testName, () => {
 	cs.touchstonesAndConvictions.set('a custom one', 'something, something, something');
 
 	expect(cs.attributes.get('Strength')).toBeTruthy();
-	expect((cs.attributes.get('Strength') as Attribute).value).toEqual(5);
-	expect((cs.skills.get('Athletics') as Skill)?.value).toEqual(3);
-	expect((cs.touchstonesAndConvictions.get('a custom one') as TouchStoneOrConviction)?.value).toEqual(
+	expect((cs.attributes.get('Strength') as iAttribute).value).toEqual(5);
+	expect((cs.skills.get('Athletics') as iSkill)?.value).toEqual(3);
+	expect((cs.touchstonesAndConvictions.get('a custom one') as iTouchStoneOrConviction)?.value).toEqual(
 		'something, something, something'
 	);
 });
