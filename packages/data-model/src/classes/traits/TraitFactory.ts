@@ -58,7 +58,7 @@ export default abstract class TraitFactory {
 
 	static newTouchStoneOrConvictionTrait({
 		name,
-		value = 'TBC...',
+		value  ,
 		saveAction,
 	}: iBaseTraitProps<string, string>): iTouchStoneOrConviction {
 		const props: iStringTraitProps<string> = {

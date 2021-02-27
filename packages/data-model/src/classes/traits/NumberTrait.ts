@@ -15,9 +15,8 @@ export default class NumberTrait<N extends TraitNameUnionOrString>
 	min: number;
 	max: number;
 
-	constructor(props: iNumberTraitProps<N>) {
-		super(props);
-		const { min = 0, max } = props; // min defaults to 0
+	constructor({ max, name, value = 0, min = 0, saveAction }: iNumberTraitProps<N>) {
+		super({ name, value, saveAction });
 		this.min = min;
 		this.max = max;
 	}

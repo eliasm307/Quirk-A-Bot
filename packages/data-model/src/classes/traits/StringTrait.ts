@@ -6,8 +6,8 @@ import AbstractBaseTrait from './AbstractBaseTrait';
 export default class StringTrait<N extends TraitNameUnionOrString>
 	extends AbstractBaseTrait<N, string>
 	implements iStringTrait<N> {
-	constructor(props: iStringTraitProps<N>) {
-		super(props);
+	constructor({ name, value = '', saveAction }: iStringTraitProps<N>) {
+		super({ name, value, saveAction });
 	}
 
 	/** Only allows setting non-empty strings */
