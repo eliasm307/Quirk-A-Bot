@@ -1,5 +1,5 @@
 import { iLogCollection, iLogEvent } from '../../declarations/interfaces/log-interfaces';
-import { LogInitialValue, LogNewValue, LogOperation } from '../../declarations/types';
+import { LogInitialValueDynamic, LogNewValueDynamic, LogOperationUnion } from '../../declarations/types';
 import { } from '../../declarations/interfaces/trait-interfaces';
 
 export default class LogCollection<T> implements iLogCollection  {

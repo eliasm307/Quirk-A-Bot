@@ -1,7 +1,7 @@
-import { TraitData, TraitNameUnion, TraitNameUnionOrString, TraitValue } from './../types';
+import { TraitDataDynamic, TraitNameUnion, TraitNameUnionOrString, TraitValueDynamic } from './../types';
 import { iCanHaveSaveAction, iToJson } from './general-interfaces';
 import { iLogger } from './log-interfaces';
-import { AttributeCategory, AttributeName, DisciplineName, SkillName, TraitName, TraitTypeUnion } from '../types';
+import { AttributeCategory, AttributeName, DisciplineName, SkillName, TraitNameDynamic, TraitValueTypeUnion } from '../types';
 
 export interface iHasCategorySelector<N extends string, C extends string> {
 	categorySelector: (name: N) => C;
@@ -28,7 +28,7 @@ export interface iHasNumberLimits {
 // -------------------------------------------------------
 // TRAIT PROPS
 
-export interface iBaseTraitProps<N extends TraitNameUnionOrString, V extends TraitTypeUnion> {
+export interface iBaseTraitProps<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion> {
 	saveAction?: () => boolean;
 	name: N;
 	value: V;
@@ -44,26 +44,21 @@ export interface iNumberTraitWithCategoryProps<N extends TraitNameUnionOrString,
 }
 // todo is this the best way to do this?
 // todo use dynamic types here?
-export interface iTraitCollectionProps<T extends iBaseTrait<TraitName<T>, TraitValue<T>>>
-	extends iCanHaveSaveAction {
+export interface iTraitCollectionProps<T extends iBaseTrait<TraitNameDynamic<T>, TraitValueDynamic<T>>> extends iCanHaveSaveAction {
 	// todo use dynamic types here?
-	instanceCreator: (name: TraitName<T>, value: TraitValue<T>) => T;
+	instanceCreator: (name: TraitNameDynamic<T>, value: TraitValueDynamic<T>) => T;
 	// todo make this more specific in terms of available names and value types
 }
 // -------------------------------------------------------
 // GENERIC TRAIT DATA TYPES
 
 /** Describes the shape of the most basic trait */
-export interface iTraitData<N extends TraitNameUnionOrString | string, V extends TraitTypeUnion> {
+export interface iTraitData<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion> {
 	name: N;
 	value: V;
 }
-export interface iNumberTraitData<N extends TraitNameUnionOrString | string>
-	extends iTraitData<N, number>,
-		iHasNumberValue {}
-export interface iStringTraitData<N extends TraitNameUnionOrString | string>
-	extends iTraitData<N, string>,
-		iHasStringValue {}
+export interface iNumberTraitData<N extends TraitNameUnionOrString> extends iTraitData<N, number>, iHasNumberValue {}
+export interface iStringTraitData<N extends TraitNameUnionOrString> extends iTraitData<N, string>, iHasStringValue {}
 // -------------------------------------------------------
 // SPECIFIC TRAIT DATA TYPES
 
@@ -77,7 +72,7 @@ export interface iDisciplineData extends iNumberTraitData<DisciplineName> {
 // GENERIC TRAIT OBJECTS TYPES
 
 /** Base interface for Trait Objects */
-export interface iBaseTrait<N extends TraitNameUnionOrString | string, V extends TraitTypeUnion>
+export interface iBaseTrait<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
 	extends iTraitData<N, V>,
 		iToJson<iTraitData<N, V>>,
 		iLogger {
@@ -85,12 +80,11 @@ export interface iBaseTrait<N extends TraitNameUnionOrString | string, V extends
 	// todo add explainValue method to describe the current value of the attribute, ie add description getter to describe the meaning of a value
 	// todo add min and max limits for trait values, shoud this be done here?
 }
-export interface iNumberTrait<N extends TraitNameUnionOrString | string>
+export interface iNumberTrait<N extends TraitNameUnionOrString>
 	extends iBaseTrait<N, number>,
-		iHasNumberValue, iHasNumberLimits {}
-export interface iStringTrait<N extends TraitNameUnionOrString | string>
-	extends iBaseTrait<N, string>,
-		iHasStringValue {}
+		iHasNumberValue,
+		iHasNumberLimits {}
+export interface iStringTrait<N extends TraitNameUnionOrString> extends iBaseTrait<N, string>, iHasStringValue {}
 export interface iNumberTraitWithCategory<N extends TraitNameUnionOrString, C extends string>
 	extends iNumberTrait<N>,
 		iHasCategory<C> {}
@@ -108,11 +102,11 @@ export interface iTouchStoneOrConviction extends iTouchStoneOrConvictionData, iS
 
 // todo is this the best way to do this?
 // todo use dynamic types here?
-export interface iTraitCollection<T extends iBaseTrait<TraitNameUnionOrString, TraitTypeUnion>>
-	extends iToJson<TraitData<T>[]> {
-	get(name: TraitName<T>): T | void;
-	set(name: TraitName<T>, value: TraitValue<T>): void;
-	delete(name: TraitName<T>): void;
-	has(name: TraitName<T>): boolean;
+export interface iTraitCollection<T extends iBaseTrait<TraitNameUnionOrString, TraitValueTypeUnion>>
+	extends iToJson<TraitDataDynamic<T>[]> {
+	get(name: TraitNameDynamic<T>): T | void;
+	set(name: TraitNameDynamic<T>, value: TraitValueDynamic<T>): void;
+	delete(name: TraitNameDynamic<T>): void;
+	has(name: TraitNameDynamic<T>): boolean;
 	readonly size: number;
 }

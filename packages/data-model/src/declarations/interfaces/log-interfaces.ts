@@ -1,4 +1,4 @@
-import { LogOperation } from './../types';
+import { LogOperationUnion } from './../types';
 import { iHasNewValue } from './general-interfaces';
 export interface iBaseLogEventProps {
 	note?: string;
@@ -7,7 +7,7 @@ export interface iBaseLogEventProps {
 
 // todo this violates interface segregation, intial and new value arent universal
 export interface iLogEvent extends iBaseLogEventProps {
-	operation: LogOperation;
+	operation: LogOperationUnion;
 	describe(): string;
 	time: Date;
 }

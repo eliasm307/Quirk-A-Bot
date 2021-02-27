@@ -70,10 +70,10 @@ export default abstract class TraitFactory {
 		return new StringTrait(props);
 	}
 
-	static newAttributeTraitCollection<iAttributeTraitCollection>(
+	static newAttributeTraitCollection(
 		{ saveAction }: iCanHaveSaveAction,
 		...initial: iAttributeData[]
-	) {
+	): TraitCollection<iAttribute> {
 		return new TraitCollection<iAttribute>(
 			{
 				saveAction,

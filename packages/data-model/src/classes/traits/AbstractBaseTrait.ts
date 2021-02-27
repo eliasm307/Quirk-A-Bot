@@ -1,6 +1,6 @@
 import { iLogEvent } from '../../declarations/interfaces/log-interfaces';
 import { iBaseTrait } from '../../declarations/interfaces/trait-interfaces';
-import { TraitNameUnion, TraitNameUnionOrString, TraitTypeUnion, TraitValue } from '../../declarations/types';
+import { TraitNameUnion, TraitNameUnionOrString, TraitValueTypeUnion, TraitValueDynamic } from '../../declarations/types';
 import { iBaseTraitProps, iTraitData } from '../../declarations/interfaces/trait-interfaces';
 import LogCollection from '../log/LogCollection';
 import UpdateLogEvent from '../log/UpdateLogEvent';
@@ -9,13 +9,13 @@ interface iPrivateModifiableProperties<V> {
 	value: V;
 }
 
-export default abstract class AbstractBaseTrait<N extends TraitNameUnionOrString | string, V extends TraitTypeUnion>
+export default abstract class AbstractBaseTrait<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
 	implements iBaseTrait<N, V> {
 	#private: iPrivateModifiableProperties<V>;
 	// #characterSheet: iCharacterSheet;
 
 	// todo log collections should not rely on iTraitData
-	#logs = new LogCollection<TraitValue<iTraitData<N, V>>>();
+	#logs = new LogCollection<TraitValueDynamic<iTraitData<N, V>>>();
 	#saveAction?: () => boolean;
 
 	readonly name: N;

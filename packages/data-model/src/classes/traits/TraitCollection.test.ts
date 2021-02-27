@@ -1,4 +1,4 @@
-import { AttributeName, LogOperation } from '../../declarations/types';
+import { AttributeName, LogOperationUnion } from '../../declarations/types';
 import { testCs, testCsRandom } from '../../utils/testUtils';
 import TraitCollection from './TraitCollection';
 import { iAttribute, iAttributeData } from '../../declarations/interfaces/trait-interfaces';
@@ -59,8 +59,8 @@ test(testName, () => {
 	// console.log({ testName, log });
 
 	// expect logs
-	expect(log[0].operation).toEqual('ADD' as LogOperation);
-	expect(log[3].operation).toEqual('UPDATE' as LogOperation);
+	expect(log[0].operation).toEqual('ADD' as LogOperationUnion);
+	expect(log[3].operation).toEqual('UPDATE' as LogOperationUnion);
 
 	const count = tc.size;
 

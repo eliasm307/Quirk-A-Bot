@@ -1,13 +1,13 @@
 import { TraitNameUnionOrString } from './../../declarations/types';
 import { iBaseTrait, iTraitCollectionProps, iTraitData } from '../../declarations/interfaces/trait-interfaces';
 import {
-	TraitName,
+	TraitNameDynamic,
 	TraitMap,
-	TraitValue,
-	TraitType,
-	TraitData,
+	TraitValueDynamic,
+	TraitTypeNameUnion,
+	TraitDataDynamic,
 	TraitNameUnion,
-	TraitTypeUnion,
+	TraitValueTypeUnion,
 } from '../../declarations/types';
 import { iTraitCollection } from '../../declarations/interfaces/trait-interfaces';
 import LogCollection from '../log/LogCollection';
@@ -16,18 +16,26 @@ import UpdateLogEvent from '../log/UpdateLogEvent';
 import AddLogEvent from '../log/AddLogEvent';
 import { iLogger, iLogEvent } from '../../declarations/interfaces/log-interfaces';
 
-export default class TraitCollection<T extends iBaseTrait<TraitName<T>, TraitValue<T>>>
+interface iInstanceCreatorProps<T extends iTraitData<TraitNameDynamic<T>, TraitValueDynamic<T>>> {
+	name: TraitNameDynamic<T>;
+	value: TraitValueDynamic<T>;
+}
+
+export default class TraitCollection<T extends iBaseTrait<TraitNameDynamic<T>, TraitValueDynamic<T>>>
 	implements iTraitCollection<T>, iLogger {
-	#instanceCreator: (name: TraitName<T>, value: TraitValue<T>) => T;
+	#instanceCreator: (name: TraitNameDynamic<T>, value: TraitValueDynamic<T>) => T;
 	private saveAction?: () => boolean;
 	#map: TraitMap<T>;
-	#logs = new LogCollection<TraitValue<T>>();
-	#typeName: TraitType | string = 'Trait';
-	constructor({ instanceCreator, saveAction }: iTraitCollectionProps<T>, ...initialData: TraitData<T>[]) {
+	#logs = new LogCollection<TraitValueDynamic<T>>();
+	#typeName: TraitTypeNameUnion | string = 'Trait';
+	constructor({ instanceCreator, saveAction }: iTraitCollectionProps<T>, ...initialData: TraitDataDynamic<T>[]) {
 		this.saveAction = saveAction;
 		this.#instanceCreator = instanceCreator;
-		this.#map = new Map<TraitName<T>, T>(
-			initialData.map(e => [e.name as TraitName<T>, instanceCreator(e.name as TraitName<T>, e.value as TraitValue<T>)])
+		this.#map = new Map<TraitNameDynamic<T>, T>(
+			initialData.map(e => [
+				e.name as TraitNameDynamic<T>,
+				instanceCreator(e.name as TraitNameDynamic<T>, e.value as TraitValueDynamic<T>),
+			])
 		);
 	}
 	getLogData(): iLogEvent[] {
@@ -43,17 +51,17 @@ export default class TraitCollection<T extends iBaseTrait<TraitName<T>, TraitVal
 		// combine logs and sort oldest to newest
 		return [...collectionLogs, ...itemLogs].sort((a, b) => Number(a.time.getTime() - b.time.getTime()));
 	}
-	toJson(): TraitData<T>[] {
-		return Array.from(this.#map.values()).map(e => e.toJson() as TraitData<T>);
+	toJson(): TraitDataDynamic<T>[] {
+		return Array.from(this.#map.values()).map(e => e.toJson() as TraitDataDynamic<T>);
 	}
 	get size(): number {
 		return this.#map.size;
 	}
 
-	get(name: TraitName<T>): T | void {
+	get(name: TraitNameDynamic<T>): T | void {
 		return this.#map.get(name);
 	}
-	delete(name: TraitName<T>): void {
+	delete(name: TraitNameDynamic<T>): void {
 		const oldValue = this.#map.get(name);
 		const property = name;
 
@@ -68,7 +76,7 @@ export default class TraitCollection<T extends iBaseTrait<TraitName<T>, TraitVal
 		// autosave if save is available
 		if (this.saveAction) this.saveAction();
 	}
-	has(name: TraitName<T>): boolean {
+	has(name: TraitNameDynamic<T>): boolean {
 		return this.#map.has(name);
 	}
 
@@ -77,7 +85,7 @@ export default class TraitCollection<T extends iBaseTrait<TraitName<T>, TraitVal
 	 * @param name name of trait to edit or create
 	 * @param newValue value to assign
 	 */
-	set(name: TraitName<T>, newValue: TraitValue<T>): void {
+	set(name: TraitNameDynamic<T>, newValue: TraitValueDynamic<T>): void {
 		// if trait already exists then just update it
 		if (this.#map.has(name)) {
 			const instance = this.#map.get(name);

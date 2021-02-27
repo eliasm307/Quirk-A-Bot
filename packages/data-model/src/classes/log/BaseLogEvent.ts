@@ -1,13 +1,13 @@
-import { LogOperation} from '../../declarations/types';
+import { LogOperationUnion} from '../../declarations/types';
 import { iBaseLogEventProps, iLogEvent } from '../../declarations/interfaces/log-interfaces';
 
 // ? this doesnt seem right
 interface iProps extends iBaseLogEventProps {
-	operation: LogOperation;
+	operation: LogOperationUnion;
 }
 
 export default abstract class BaseLogEvent<T> implements iLogEvent {
-	operation: LogOperation;
+	operation: LogOperationUnion;
 	note?: string;
 	property: string;
 	time: Date;
