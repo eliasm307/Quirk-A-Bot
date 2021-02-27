@@ -38,6 +38,8 @@ export type TraitTypeUnion = number | string;
 
 export type TraitNameUnion = AttributeName | SkillName | DisciplineName;
 export type TraitNameUnionOrString = TraitNameUnion | string;
+
+// todo should fallback be any?
 // todo is this required
 /** Dynamic type for trait data only interfaces */
 export type TraitData<T extends iTraitData<TraitNameUnionOrString, TraitTypeUnion>> = T extends Skill
@@ -48,7 +50,7 @@ export type TraitData<T extends iTraitData<TraitNameUnionOrString, TraitTypeUnio
 	? iTouchStoneOrConvictionData
 	: T extends Discipline
 	? iDisciplineData
-	: iTraitData<TraitNameUnionOrString, TraitTypeUnion>;
+	: any;
 export type TraitMap<T extends iBaseTrait<TraitNameUnionOrString, TraitTypeUnion>> = Map<TraitName<T>, T>;
 export type TraitType = typeof TRAIT_TYPES[number];
 

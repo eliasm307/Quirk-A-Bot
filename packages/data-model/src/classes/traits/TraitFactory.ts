@@ -1,3 +1,4 @@
+import { iTraitCollection } from './../../declarations/trait-interfaces';
 import { AttributeName, AttributeCategory, DisciplineName, SkillName } from './../../declarations/types';
 import {
 	iNumberTraitWithCategoryProps,
@@ -21,6 +22,7 @@ import NumberTraitWithCategory from './NumberTraitWithCategory';
 import NumberTrait from './NumberTrait';
 import StringTrait from './StringTrait';
 import getAttributeCategory from '../../utils/getAttributeCategory';
+import TraitCollection from './TraitCollection';
 
 export default abstract class TraitFactory {
 	// methods use base trait props as all other details should be selected to match the required trait type
@@ -73,5 +75,15 @@ export default abstract class TraitFactory {
 		};
 
 		return new StringTrait(props);
+	}
+
+	static newAttributeTraitCollection<iAttributeTraitCollection>(...initial: iAttributeData[]) {
+		return new TraitCollection<iAttribute, AttributeName, number, iAttributeData>(
+			{
+				saveAction,
+				instanceCreator: (name, value) => TraitFactory.newAttributeTrait({ saveAction, name, value }),
+			},
+			...initial 
+		);
 	}
 }

@@ -1,4 +1,4 @@
-import { TraitNameUnion, TraitNameUnionOrString, TraitValue } from './../types';
+import { TraitData, TraitNameUnion, TraitNameUnionOrString, TraitValue } from './../types';
 import { iCanHaveSaveAction, iToJson } from './general-interfaces';
 import { iLogger } from './log-interfaces';
 import { AttributeCategory, AttributeName, DisciplineName, SkillName, TraitName, TraitTypeUnion } from '../types';
@@ -44,7 +44,7 @@ export interface iNumberTraitWithCategoryProps<N extends TraitNameUnionOrString,
 }
 // todo is this the best way to do this?
 // todo use dynamic types here?
-export interface iTraitCollectionProps<T extends iBaseTrait<TraitNameUnion, TraitTypeUnion>>
+export interface iTraitCollectionProps<T extends iBaseTrait<TraitName<T>, TraitValue<T>>>
 	extends iCanHaveSaveAction {
 	// todo use dynamic types here?
 	instanceCreator: (name: TraitName<T>, value: TraitValue<T>) => T;
@@ -109,9 +109,9 @@ export interface iTouchStoneOrConviction extends iTouchStoneOrConvictionData, iS
 // todo is this the best way to do this?
 // todo use dynamic types here?
 export interface iTraitCollection<T extends iBaseTrait<TraitNameUnionOrString, TraitTypeUnion>>
-	extends iToJson<iTraitData<TraitNameUnion, TraitTypeUnion>[]> {
+	extends iToJson<TraitData<T>[]> {
 	get(name: TraitName<T>): T | void;
-	set(name: TraitName<T>, value: number): void;
+	set(name: TraitName<T>, value: TraitValue<T>): void;
 	delete(name: TraitName<T>): void;
 	has(name: TraitName<T>): boolean;
 	readonly size: number;
