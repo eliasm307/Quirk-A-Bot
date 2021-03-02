@@ -64,8 +64,7 @@ export interface iInstanceCreatorProps<T extends iTraitData<TraitNameDynamic<T>,
 export interface iTraitCollectionProps<
 	N extends TraitNameUnionOrString,
 	V extends TraitValueTypeUnion,
-	D extends iTraitData<N, V>,
-	T extends iBaseTrait<N, V, D>
+	T extends iBaseTrait<N, V>
 > extends iCanHaveSaveAction {
 	// todo use dynamic types here?
 	instanceCreator: (props: iBaseTraitProps<N, V>) => T;
@@ -95,22 +94,20 @@ export interface iDisciplineData extends iNumberTraitData<DisciplineName> {
 // GENERIC TRAIT OBJECTS TYPES
 
 /** Base interface for Trait Objects */
-export interface iBaseTrait<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion, D extends iTraitData<N, V>>
+export interface iBaseTrait<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
 	extends iTraitData<N, V>,
-		iToJson<D>,
+		iToJson<iTraitData<N, V>>, // ? should this use iTraitData<N, V> or generic type that extends iTraitData<N, V> to allow custom data types?
 		iLogger {
 	// todo add explain method to give a summary what this trait is for
 	// todo add explainValue method to describe the current value of the attribute, ie add description getter to describe the meaning of a value
 	// todo add min and max limits for trait values, shoud this be done here?
 }
 export interface iNumberTrait<N extends TraitNameUnionOrString>
-	extends iBaseTrait<N, number, iNumberTraitData<N>>,
+	extends iBaseTrait<N, number>,
 		iHasNumberValue,
 		iHasNumberLimits {}
 
-export interface iStringTrait<N extends TraitNameUnionOrString>
-	extends iBaseTrait<N, string, iStringTraitData<N>>,
-		iHasStringValue {}
+export interface iStringTrait<N extends TraitNameUnionOrString> extends iBaseTrait<N, string>, iHasStringValue {}
 
 export interface iNumberTraitWithCategory<N extends TraitNameUnionOrString, C extends string>
 	extends iNumberTrait<N>,

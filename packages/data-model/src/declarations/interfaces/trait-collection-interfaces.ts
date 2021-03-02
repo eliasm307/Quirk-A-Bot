@@ -17,9 +17,8 @@ import { iBaseTrait, iTraitData } from './trait-interfaces';
 export interface iTraitCollection<
 	N extends TraitNameUnionOrString,
 	V extends TraitValueTypeUnion,
-	D extends iTraitData<N, V>,
-	T extends iBaseTrait<N, V, D>
-> extends iToJson<D[]>,
+	T extends iBaseTrait<N, V>
+> extends iToJson<iTraitData<N, V>[]>,
 		iLogger {
 	get(name: N): T | void;
 	set(name: N, value: V): void;

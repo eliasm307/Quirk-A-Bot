@@ -5,10 +5,7 @@ import {
 	iTraitCollectionProps,
 	iTraitData,
 } from '../../declarations/interfaces/trait-interfaces';
-import {
-	TraitTypeNameUnion,
-	TraitValueTypeUnion,
-} from '../../declarations/types';
+import { TraitTypeNameUnion, TraitValueTypeUnion } from '../../declarations/types';
 import LogCollection from '../log/LogCollection';
 import DeleteLogEvent from '../log/DeleteLogEvent';
 import UpdateLogEvent from '../log/UpdateLogEvent';
@@ -26,18 +23,17 @@ interface iInstanceCreatorProps<N extends TraitNameUnionOrString, V extends Trai
 export default class TraitCollection<
 	N extends TraitNameUnionOrString,
 	V extends TraitValueTypeUnion,
-	D extends iTraitData<N, V>,
-	T extends iBaseTrait<N, V, D>
-> implements iTraitCollection<N, V, D, T> {
+	T extends iBaseTrait<N, V>
+> implements iTraitCollection<N, V, T> {
 	#instanceCreator: (props: iBaseTraitProps<N, V>) => T;
 	private saveAction?: () => boolean;
 	#map: Map<N, T>;
 	#logs = new LogCollection<V>();
 	#typeName: TraitTypeNameUnion | string = 'Trait';
-	constructor({ instanceCreator, saveAction }: iTraitCollectionProps<N, V, D, T>, ...initialData: D[]) {
+	constructor({ instanceCreator, saveAction }: iTraitCollectionProps<N, V, T>, ...initialData: iTraitData<N, V>[]) {
 		this.saveAction = saveAction;
 		this.#instanceCreator = instanceCreator;
-		this.#map = new Map<N, T>(initialData.map(e => [e.name, instanceCreator({ name: e.name, value: e.value })]));
+		this.#map = new Map<N, T>(initialData.map(({ name, value }) => [name, instanceCreator({ name, value })]));
 	}
 	getLogData(): iLogEvent[] {
 		const collectionLogs: iLogEvent[] = this.#logs.toJson();
@@ -52,7 +48,7 @@ export default class TraitCollection<
 		// combine logs and sort oldest to newest
 		return [...collectionLogs, ...itemLogs].sort((a, b) => Number(a.time.getTime() - b.time.getTime()));
 	}
-	toJson(): D[] {
+	toJson(): iTraitData<N, V>[] {
 		return Array.from(this.#map.values()).map(e => e.toJson());
 	}
 	get size(): number {
