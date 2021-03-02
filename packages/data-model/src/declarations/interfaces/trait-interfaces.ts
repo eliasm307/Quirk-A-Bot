@@ -21,16 +21,14 @@ export interface iHasCategorySelector<N extends string, C extends string> {
 	categorySelector: (name: N) => C;
 }
 
-export interface iHasCategory<C> {
+export interface iHasCategory<C extends string> {
 	category: C;
 }
 
-// ? is this required?
 export interface iHasStringValue {
 	value: string;
 }
 
-// ? is this required?
 export interface iHasNumberValue {
 	value: number;
 }
@@ -119,16 +117,4 @@ export interface iTouchStoneOrConviction extends iTouchStoneOrConvictionData, iS
 export interface iCoreNumberTrait extends iNumberTraitData<CoreNumberTraitName>, iNumberTrait<CoreNumberTraitName> {}
 export interface iCoreStringTrait extends iNumberTraitData<CoreStringTraitName>, iNumberTrait<CoreStringTraitName> {}
 
-// -------------------------------------------------------
-// TRAIT COLLECTION
 
-// todo is this the best way to do this?
-// todo use dynamic types here?
-export interface iTraitCollection<T extends iBaseTrait<TraitNameUnionOrString, TraitValueTypeUnion>>
-	extends iToJson<TraitDataDynamic<T>[]> {
-	get(name: TraitNameDynamic<T>): T | void;
-	set(name: TraitNameDynamic<T>, value: TraitValueDynamic<T>): void;
-	delete(name: TraitNameDynamic<T>): void;
-	has(name: TraitNameDynamic<T>): boolean;
-	readonly size: number;
-}

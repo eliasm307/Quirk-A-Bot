@@ -8,13 +8,13 @@ import {
 	TraitDataDynamic,
 	TraitNameUnion,
 	TraitValueTypeUnion,
-} from '../../declarations/types';
-import { iTraitCollection } from '../../declarations/interfaces/trait-interfaces';
+} from '../../declarations/types'; 
 import LogCollection from '../log/LogCollection';
 import DeleteLogEvent from '../log/DeleteLogEvent';
 import UpdateLogEvent from '../log/UpdateLogEvent';
 import AddLogEvent from '../log/AddLogEvent';
 import { iLogger, iLogEvent } from '../../declarations/interfaces/log-interfaces';
+import { iTraitCollection } from '../../declarations/interfaces/trait-collection-interfaces';
 
 interface iInstanceCreatorProps<T extends iTraitData<TraitNameDynamic<T>, TraitValueDynamic<T>>> {
 	name: TraitNameDynamic<T>;
