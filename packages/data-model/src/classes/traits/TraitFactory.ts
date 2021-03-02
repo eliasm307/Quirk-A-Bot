@@ -34,7 +34,6 @@ import StringTrait from './StringTrait';
 import getAttributeCategory from '../../utils/getAttributeCategory';
 import TraitCollection from './TraitCollection';
 import { iCharacterSheetData } from '../../declarations/interfaces/character-sheet-interfaces';
-import TypeFactory from '../TypeFactory';
 import { iAttributeTraitCollection } from '../../declarations/interfaces/trait-collection-interfaces';
 
 export default abstract class TraitFactory {
@@ -118,10 +117,7 @@ export default abstract class TraitFactory {
 		);
 	}
 
-	static newSkillTraitCollection(
-		props?: iCanHaveSaveAction,
-		...initial: iSkillData[]
-	): iSkillTraitCollection {
+	static newSkillTraitCollection(props?: iCanHaveSaveAction, ...initial: iSkillData[]): iSkillTraitCollection {
 		const { saveAction } = props || {};
 		return new TraitCollection<SkillName, number, iSkillData, iSkill>(
 			{

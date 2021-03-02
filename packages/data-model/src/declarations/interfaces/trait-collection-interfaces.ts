@@ -1,4 +1,4 @@
-import { AttributeName, SkillName, DisciplineName } from './../types';
+import { AttributeName, SkillName, DisciplineName, CoreStringTraitName, CoreNumberTraitName } from './../types';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../types';
 import { iToJson } from './general-interfaces';
 import { iLogger } from './log-interfaces';
@@ -13,6 +13,12 @@ import {
 	iDisciplineData,
 	iSkillData,
 	iTouchStoneOrConvictionData,
+	iStringTrait,
+	iStringTraitData,
+	iCoreStringTraitData,
+	iCoreStringTrait,
+	iCoreNumberTrait,
+	iCoreNumberTraitData,
 } from './trait-interfaces';
 
 // -------------------------------------------------------
@@ -47,3 +53,9 @@ export interface iDisciplineTraitCollection
 
 export interface iTouchStoneOrConvictionCollection
 	extends iTraitCollection<string, string, iTouchStoneOrConvictionData, iTouchStoneOrConviction> {}
+
+export interface iCoreStringTraitCollection
+	extends iTraitCollection<CoreStringTraitName, string, iCoreStringTraitData, iCoreStringTrait> {}
+
+export interface iCoreNumberTraitCollection
+	extends iTraitCollection<CoreNumberTraitName, number, iCoreNumberTraitData, iCoreNumberTrait> {}

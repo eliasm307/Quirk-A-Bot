@@ -53,8 +53,8 @@ export interface iBaseNumberTraitProps<N extends TraitNameUnionOrString, D exten
 }
 
 export interface iNumberTraitProps<N extends TraitNameUnionOrString>
-	extends iBaseNumberTraitProps<N, iNumberTraitData<N>> { }
-	
+	extends iBaseNumberTraitProps<N, iNumberTraitData<N>> {}
+
 export interface iNumberTraitWithCategoryProps<N extends TraitNameUnionOrString, C extends string>
 	extends iBaseNumberTraitProps<N, iNumberTraitData<N>> {
 	categorySelector: (name: N) => C;
@@ -97,6 +97,8 @@ export interface iSkillData extends iNumberTraitData<SkillName> {}
 export interface iDisciplineData extends iNumberTraitData<DisciplineName> {
 	// todo add "specialisation" / sub types?
 }
+export interface iCoreStringTraitData extends iStringTraitData<CoreStringTraitName> {}
+export interface iCoreNumberTraitData extends iNumberTraitData<CoreNumberTraitName> {}
 // -------------------------------------------------------
 // GENERIC TRAIT OBJECTS TYPES
 
