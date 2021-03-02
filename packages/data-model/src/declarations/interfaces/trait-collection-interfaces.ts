@@ -1,24 +1,30 @@
 import { AttributeName, SkillName, DisciplineName } from './../types';
-// -------------------------------------------------------
-// TRAIT COLLECTION
-
-import {
-	TraitNameUnionOrString,
-	TraitValueTypeUnion,
-	TraitDataDynamic,
-	TraitNameDynamic,
-	TraitValueDynamic,
-} from '../types';
+import { TraitNameUnionOrString, TraitValueTypeUnion } from '../types';
 import { iToJson } from './general-interfaces';
 import { iLogger } from './log-interfaces';
-import { iAttribute, iBaseTrait, iSkill, iTraitData, iDiscipline, iTouchStoneOrConviction } from './trait-interfaces';
+import {
+	iAttribute,
+	iBaseTrait,
+	iSkill,
+	iTraitData,
+	iDiscipline,
+	iTouchStoneOrConviction,
+	iAttributeData,
+	iDisciplineData,
+	iSkillData,
+	iTouchStoneOrConvictionData,
+} from './trait-interfaces';
+
+// -------------------------------------------------------
+// BASE TRAIT COLLECTION TYPES
 
 // todo is this the best way to do this?
 // todo use dynamic types here?
 export interface iTraitCollection<
 	N extends TraitNameUnionOrString,
 	V extends TraitValueTypeUnion,
-	T extends iBaseTrait<N, V>
+	D extends iTraitData<N, V>,
+	T extends iBaseTrait<N, V, D>
 > extends iToJson<iTraitData<N, V>[]>,
 		iLogger {
 	get(name: N): T | void;
@@ -31,10 +37,13 @@ export interface iTraitCollection<
 // -------------------------------------------------------
 // SPECIFIC TRAIT COLLECTION TYPES
 
-export interface iAttributeTraitCollection extends iTraitCollection<AttributeName, number, iAttribute> {}
+export interface iAttributeTraitCollection
+	extends iTraitCollection<AttributeName, number, iAttributeData, iAttribute> {}
 
-export interface iSkillTraitCollection extends iTraitCollection<SkillName, number, iSkill> {}
+export interface iSkillTraitCollection extends iTraitCollection<SkillName, number, iSkillData, iSkill> {}
 
-export interface iDisciplineTraitCollection extends iTraitCollection<DisciplineName, number, iDiscipline> {}
+export interface iDisciplineTraitCollection
+	extends iTraitCollection<DisciplineName, number, iDisciplineData, iDiscipline> {}
 
-export interface iTouchStoneOrConvictionCollection extends iTraitCollection<string, string, iTouchStoneOrConviction> {}
+export interface iTouchStoneOrConvictionCollection
+	extends iTraitCollection<string, string, iTouchStoneOrConvictionData, iTouchStoneOrConviction> {}

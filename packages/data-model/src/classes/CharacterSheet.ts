@@ -167,13 +167,10 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 			...initialSkills
 		);
 
-		this.disciplines = TraitFactory.newDisciplineColl({ saveAction }, ...initialDisciplines);
+		this.disciplines = TraitFactory.newDisciplineTraitCollection({ saveAction }, ...initialDisciplines);
 
-		this.touchstonesAndConvictions = new TraitCollection<iTouchStoneOrConviction>(
-			{
-				saveAction,
-				instanceCreator: TraitFactory.newTouchStoneOrConvictionTrait,
-			},
+		this.touchstonesAndConvictions = TraitFactory.newTouchstonesAndConvictionTraitCollection(
+			{ saveAction },
 			...initialTouchstonesAndConvictions
 		);
 

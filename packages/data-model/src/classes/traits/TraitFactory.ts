@@ -1,4 +1,7 @@
-import { iDisciplineTraitCollection } from './../../declarations/interfaces/trait-collection-interfaces';
+import {
+	iDisciplineTraitCollection,
+	iTouchStoneOrConvictionCollection,
+} from './../../declarations/interfaces/trait-collection-interfaces';
 import { iCanHaveSaveAction } from './../../declarations/interfaces/general-interfaces';
 import {
 	AttributeName,
@@ -22,6 +25,7 @@ import {
 	iDisciplineData,
 	iTouchStoneOrConvictionData,
 	iSkillData,
+	iTraitData,
 } from './../../declarations/interfaces/trait-interfaces';
 import NumberTraitWithCategory from './NumberTraitWithCategory';
 import NumberTrait from './NumberTrait';
@@ -127,12 +131,28 @@ export default abstract class TraitFactory {
 		);
 	}
 
+	static newTouchstonesAndConvictionTraitCollection(
+		props?: iCanHaveSaveAction,
+		...initial: iTouchStoneOrConvictionData[]
+	): iTouchStoneOrConvictionCollection {
+		const { saveAction } = props || {};
+		return new TraitCollection<string, string, iTouchStoneOrConvictionData, iTouchStoneOrConviction>(
+			{
+				saveAction,
+				instanceCreator: TraitFactory.newTouchStoneOrConvictionTrait,
+			},
+			...initial
+		);
+	}
+
+
+	// todo use factory for this
 	static newCharacterSheetDataObject(props?: iCanHaveSaveAction): iCharacterSheetData {
 		const saveAction = props?.saveAction;
 		return {
+			discordUserId: NaN,
 			bloodPotency: new NumberTrait<CoreNumberTraitName>({ max: 10, name: 'Blood Potency', value: 0, saveAction }),
 			clan: new StringTrait<CoreStringTraitName>({ name: 'Clan', value: '', saveAction }),
-			discordUserId: NaN,
 			health: new NumberTrait<CoreNumberTraitName>({ max: 10, name: 'Health', value: 0, saveAction }),
 			humanity: new NumberTrait<CoreNumberTraitName>({ max: 10, name: 'Humanity', value: 0, saveAction }),
 			hunger: new NumberTrait<CoreNumberTraitName>({ max: 5, name: 'Hunger', value: 0, saveAction }),

@@ -25,7 +25,7 @@ export default class TraitCollection<
 	V extends TraitValueTypeUnion,
 	D extends iTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
-> implements iTraitCollection<N, V, T> {
+> implements iTraitCollection<N, V, D, T> {
 	#instanceCreator: (props: iBaseTraitProps<N, V, D>) => T;
 	private saveAction?: () => boolean;
 	#map: Map<N, T>;
