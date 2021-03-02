@@ -1,53 +1,33 @@
+import { iAttributeTraitCollection, iSkillTraitCollection, iDisciplineTraitCollection, iTouchStoneOrConvictionCollection } from './../declarations/interfaces/trait-collection-interfaces';
+import { CoreNumberTraitName, CoreStringTraitName, TraitValueTypeUnion } from './../declarations/types';
 import {
-	iAttribute,
-	iDiscipline,
-	iSkill,
-	iTouchStoneOrConviction,
+	iBaseTrait,
+	iCoreStringTrait,
+	iNumberTraitData,
+	iStringTraitData,
+	iCoreNumberTrait,
+} from './../declarations/interfaces/trait-interfaces';
+import {
 	iTouchStoneOrConvictionData,
 } from '../declarations/interfaces/trait-interfaces';
 import path from 'path';
 import { iAttributeData, iDisciplineData, iSkillData } from '../declarations/interfaces/trait-interfaces';
-import TraitCollection from './traits/TraitCollection';
 import importDataFromFile from '../utils/importDataFromFile';
-import LogCollection from './log/LogCollection';
-import UpdateLogEvent from './log/UpdateLogEvent';
 import exportDataToFile from '../utils/exportDataToFile';
 import { iCharacterSheet, iCharacterSheetData } from '../declarations/interfaces/character-sheet-interfaces';
-import { iLogger, iLogCollection, iLogEvent } from '../declarations/interfaces/log-interfaces';
+import { iLogger, iLogEvent } from '../declarations/interfaces/log-interfaces';
 import TraitFactory from './traits/TraitFactory';
+import StringTrait from './traits/StringTrait';
+import { isBaseTrait, isCharacterSheetData } from '../utils/typePredicates'; 
+import NumberTrait from './traits/NumberTrait';
 
+// ! this shouldnt be here, should be in a file about persistence
 interface iLoadFromFileArgs {
 	filePath?: string;
 	fileName?: string;
 }
 
-// todo make each of these into a new type of trait object, so methods can be implemented like "Describe" etc
-interface iModifiablePrimitiveProperties {
-	health: number;
-	willpower: number;
-	hunger: number;
-	humanity: number;
-	bloodPotency: number;
-	name: string;
-	clan: string;
-	sire: string;
-}
-
-const example: iModifiablePrimitiveProperties = {
-	bloodPotency: 0,
-	clan: '',
-	health: 0,
-	humanity: 0,
-	hunger: 0,
-	name: '',
-	sire: '',
-	willpower: 0,
-};
-
 // todo split this into smaller pieces
-
-// data types of fields that will be logged
-type LogDataType = typeof example[keyof iModifiablePrimitiveProperties];
 
 export default class CharacterSheet implements iCharacterSheet, iLogger {
 	readonly discordUserId: number;
@@ -58,66 +38,25 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 	/** Existing instances of this class */
 	static instances: Map<string, iCharacterSheet> = new Map<string, iCharacterSheet>();
 
-	#private: iModifiablePrimitiveProperties;
-	#logEvents: iLogCollection = new LogCollection();
+	// #private: iModifiablePrimitiveProperties;
+	// #logEvents: iLogCollection = new LogCollection();
 	#savePath: string; // specified in constructor
 
 	//-------------------------------------
-	// BASIC VARIABLE GETTERS AND SETTERS
-	public set health(newVal: number) {
-		this.onChange('health', newVal);
-	}
-	public get health() {
-		return this.#private.health;
-	}
-	public set willpower(newVal: number) {
-		this.onChange('willpower', newVal);
-	}
-	public get willpower() {
-		return this.#private.willpower;
-	}
-	public set hunger(newVal: number) {
-		this.onChange('hunger', newVal);
-	}
-	public get hunger() {
-		return this.#private.hunger;
-	}
-	public set humanity(newVal: number) {
-		this.onChange('humanity', newVal);
-	}
-	public get humanity() {
-		return this.#private.humanity;
-	}
-	public set bloodPotency(newVal: number) {
-		this.onChange('bloodPotency', newVal);
-	}
-	public get bloodPotency() {
-		return this.#private.bloodPotency;
-	}
-	public set name(newVal: string) {
-		this.onChange('name', newVal);
-	}
-	public get name() {
-		return this.#private.name;
-	}
-	public set clan(newVal: string) {
-		this.onChange('clan', newVal);
-	}
-	public get clan() {
-		return this.#private.clan;
-	}
-	public set sire(newVal: string) {
-		this.onChange('sire', newVal);
-	}
-	public get sire() {
-		return this.#private.sire;
-	}
-	//-------------------------------------
-	// NON BASIC VARIABLE COLLECTIONS
-	readonly attributes: TraitCollection<iAttribute>;
-	readonly skills: TraitCollection<iSkill>;
-	readonly disciplines: TraitCollection<iDiscipline>;
-	readonly touchstonesAndConvictions: TraitCollection<iTouchStoneOrConviction>;
+	// NON BASIC PRIMITIVE VARIABLES
+	readonly attributes: iAttributeTraitCollection;
+	readonly skills: iSkillTraitCollection;
+	readonly disciplines: iDisciplineTraitCollection;
+	readonly touchstonesAndConvictions: iTouchStoneOrConvictionCollection;
+
+	readonly name: iCoreStringTrait;
+	readonly clan: iCoreStringTrait;
+	readonly sire: iCoreStringTrait;
+	readonly health: iCoreNumberTrait; // todo limit 0 to 10
+	readonly willpower: iCoreNumberTrait; // todo limit 0 to 10
+	readonly hunger: iCoreNumberTrait; // todo limit 0 to 5
+	readonly humanity: iCoreNumberTrait; // todo limit 0 to 10
+	readonly bloodPotency: iCoreNumberTrait; // todo limit 0 to 10
 
 	//-------------------------------------
 	// CONSTRUCTOR
@@ -127,91 +66,95 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 		let initialSkills: iSkillData[] = [];
 		let initialTouchstonesAndConvictions: iTouchStoneOrConvictionData[] = [];
 
-		if (typeof sheet === 'number') {
-			this.discordUserId = sheet;
-
-			// initialise with default values
-			this.#private = {
-				health: 0,
-				willpower: 0,
-				hunger: 0,
-				humanity: 0,
-				bloodPotency: 0,
-				name: '',
-				clan: '',
-				sire: '',
-			};
-		} else if (typeof sheet === 'object') {
-			const {
-				attributes,
-				bloodPotency,
-				clan,
-				disciplines,
-				health,
-				humanity,
-				hunger,
-				name,
-				sire,
-				skills,
-				touchstonesAndConvictions,
-				willpower,
-				discordUserId,
-			} = sheet;
-
-			// initialise using input details
-			this.discordUserId = discordUserId;
-			this.#private = {
-				health: health,
-				willpower: willpower,
-				hunger: hunger,
-				humanity: humanity,
-				bloodPotency: bloodPotency,
-				name: name,
-				clan: clan,
-				sire: sire,
-			};
-
-			initialAttributes = [...attributes];
-			initialDisciplines = [...disciplines];
-			initialSkills = [...skills];
-			initialTouchstonesAndConvictions = [...touchstonesAndConvictions];
-		} else {
-			throw Error(`${__filename} constructor argument not defined`);
-		}
+		// initialise with default values
+		let initialValues: iCharacterSheetData | null = null;
 
 		// function to save this character sheet
 		const saveAction = () => this.saveToFile();
 
+		if (typeof sheet === 'number') {
+			this.discordUserId = sheet;
+			// initialValues.discordUserId = this.discordUserId;
+			// initialValues = TraitFactory.newCharacterSheetDataObject( { saveAction });
+		} else if (typeof sheet === 'object') {
+			if (isCharacterSheetData(sheet)) {
+				const { attributes, disciplines, skills, touchstonesAndConvictions } = sheet;
+
+				// initialise using input details
+				this.discordUserId = sheet.discordUserId;
+				initialValues = sheet;
+
+				initialAttributes = [...attributes];
+				initialDisciplines = [...disciplines];
+				initialSkills = [...skills];
+				initialTouchstonesAndConvictions = [...touchstonesAndConvictions];
+			} else {
+				console.error(__filename, { sheet });
+				throw Error(`${__filename} data is an object but it is not valid character sheet data, "${sheet}"`);
+			}
+		} else {
+			throw Error(`${__filename} constructor argument not defined`);
+		}
+
+		// core number traits
+		this.bloodPotency = new NumberTrait<CoreNumberTraitName>({
+			max: 10,
+			name: 'Blood Potency',
+			value: initialValues?.bloodPotency.value || 0,
+		});
+
+		this.hunger = new NumberTrait<CoreNumberTraitName>({
+			max: 5,
+			name: 'Hunger',
+			value: initialValues?.hunger.value || 0,
+		});
+
+		this.humanity = new NumberTrait<CoreNumberTraitName>({
+			max: 10,
+			name: 'Humanity',
+			value: initialValues?.humanity.value || 0,
+		});
+
+		this.health = new NumberTrait<CoreNumberTraitName>({
+			max: 10,
+			name: 'Health',
+			value: initialValues?.health.value || 0,
+		});
+
+		this.willpower = new NumberTrait<CoreNumberTraitName>({
+			max: 10,
+			name: 'Willpower',
+			value: initialValues?.willpower.value || 0,
+		});
+
+		// core string traits
+		this.name = new StringTrait<CoreStringTraitName>({
+			name: 'Name',
+			value: initialValues?.name.value || '',
+			saveAction,
+		});
+
+		this.sire = new StringTrait<CoreStringTraitName>({
+			name: 'Sire',
+			value: initialValues?.sire.value || '',
+			saveAction,
+		});
+
+		this.clan = new StringTrait<CoreStringTraitName>({
+			name: 'Clan',
+			value: initialValues?.clan.value || '',
+			saveAction,
+		});
+
 		// create collections, with initial data where available
-		this.attributes = new TraitCollection<iAttribute>(
-			{
-				saveAction,
-				instanceCreator: TraitFactory.newAttributeTrait,
-			},
-			...initialAttributes
-		);
+		this.attributes = TraitFactory.newAttributeTraitCollection({ saveAction }, ...initialAttributes);
 
-		this.skills = new TraitCollection<iSkill>(
-			{
-				saveAction,
-				instanceCreator: TraitFactory.newSkillTrait,
-			},
-			...initialSkills
-		);
+		this.skills = TraitFactory.newSkillTraitCollection({ saveAction }, ...initialSkills);
 
-		this.disciplines = new TraitCollection<iDiscipline>(
-			{
-				saveAction,
-				instanceCreator: TraitFactory.newDisciplineTrait,
-			},
-			...initialDisciplines
-		);
+		this.disciplines = TraitFactory.newDisciplineTraitCollection({ saveAction }, ...initialDisciplines);
 
-		this.touchstonesAndConvictions = new TraitCollection<iTouchStoneOrConviction>(
-			{
-				saveAction,
-				instanceCreator: TraitFactory.newTouchStoneOrConvictionTrait,
-			},
+		this.touchstonesAndConvictions = TraitFactory.newTouchstonesAndConvictionTraitCollection(
+			{ saveAction },
 			...initialTouchstonesAndConvictions
 		);
 
@@ -260,21 +203,23 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 	}
 
 	public toJson(): iCharacterSheetData {
-		return {
+		const data: iCharacterSheetData = {
 			attributes: this.attributes.toJson(),
-			bloodPotency: this.bloodPotency,
-			clan: this.clan,
+			bloodPotency: this.bloodPotency.toJson() as iNumberTraitData<CoreNumberTraitName>,
+			clan: this.clan.toJson() as iStringTraitData<CoreStringTraitName>,
 			disciplines: this.disciplines.toJson(),
 			discordUserId: this.discordUserId,
-			health: this.health,
-			humanity: this.humanity,
-			hunger: this.hunger,
-			name: this.name,
-			sire: this.sire,
+			health: this.health.toJson() as iNumberTraitData<CoreNumberTraitName>,
+			humanity: this.humanity.toJson() as iNumberTraitData<CoreNumberTraitName>,
+			hunger: this.hunger.toJson() as iNumberTraitData<CoreNumberTraitName>,
+			name: this.name.toJson() as iStringTraitData<CoreStringTraitName>,
+			sire: this.sire.toJson() as iStringTraitData<CoreStringTraitName>,
 			skills: this.skills.toJson(),
 			touchstonesAndConvictions: this.touchstonesAndConvictions.toJson(),
-			willpower: this.willpower,
+			willpower: this.willpower.toJson() as iNumberTraitData<CoreNumberTraitName>,
 		};
+		console.log(__filename, { data });
+		return data;
 	}
 
 	private saveToFile(): boolean {
@@ -282,31 +227,37 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 		return exportDataToFile(this.toJson(), this.#savePath);
 	}
 
-	// todo can this not use an any type
-	private onChange<T extends LogDataType, PrivateProperty extends keyof iModifiablePrimitiveProperties>(
-		property: PrivateProperty,
-		newValue: any
-	): void {
-		// get current value as old value
-		const oldValue: LogDataType = this.#private[property];
-
-		// if old value is the same as new value do nothing
-		if (oldValue === newValue)
-			return console.log(__filename, `Property ${property} was changed to the same value, nothing was done.`);
-
-		// implement property change
-		this.#private[property] = newValue;
-
-		// todo record change, create a log class where this has an array of logs
-		this.#logEvents.log(new UpdateLogEvent({ oldValue, newValue, property }));
-
-		// attempt autosave
-		this.saveToFile()
-			? null /*console.log(__filename, `Successfully saved change`, { property, oldValue, newValue })*/
-			: console.error(__filename, `Error while saving change`, { property, oldValue, newValue });
-	}
-
+	// todo make this report log events grouped into objects with details about the property
 	getLogData(): iLogEvent[] {
-		return [...this.#logEvents.toJson()];
+		const exampleData = TraitFactory.newCharacterSheetDataObject();
+		const ex = this;
+		const logs: iLogEvent[] = [];
+
+		// todo put core traits into a private traitCollection then get logs as normal
+		/*
+		for ( let key: keyof iCharacterSheet  in iCharacterSheetw ) {
+ 
+			const trait  = this.getTraitByName(key)
+			if ( isBaseTrait<string, TraitValueTypeUnion>( this[ key ] ) ) {
+				logs.push(...this[key].)
+			}
+			
+		}
+	/	*/
+
+		throw Error('Method not implemented');
+
+		return [];
 	}
+
+	// todo delete
+	/*
+	private getTraitByName<T extends keyof iCharacterSheet>(key: T): iBaseTrait<string, TraitValueTypeUnion> | null {
+		const trait = this[key];
+
+		if (isBaseTrait(trait)) {
+			return trait;
+		}
+		return null;
+	}*/
 }

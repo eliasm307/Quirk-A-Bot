@@ -1,6 +1,6 @@
 import fs from 'fs-extra';
 import path from 'path';
-import CharacterSheet from './CharacterSheet'; 
+import CharacterSheet from './CharacterSheet';
 import { iAttribute, iSkill, iTouchStoneOrConviction } from '../declarations/interfaces/trait-interfaces';
 
 // todo use test utils
@@ -39,35 +39,37 @@ test(testName, () => {
 	const testHungerValue = 3;
 
 	// test changes with auto save
-	cs.health = testHealthValue;
-	cs.bloodPotency = testBloodPotencyValue;
-	cs.hunger = testHungerValue;
+	cs.health.value = testHealthValue;
+	cs.bloodPotency.value = testBloodPotencyValue;
+	cs.hunger.value = testHungerValue;
 
 	const csLoaded = CharacterSheet.loadFromFile({ filePath: filePathRandom });
-	/*
+
 	console.log({
 		testName,
-		log1: csLoaded.getLogData(),
-		log2: cs2.getLogData(),
+		healthLog1: csLoaded.health.getLogData(),
+		healthLog2: cs2.health.getLogData(),
+		health: csLoaded.health.toJson(),
 	});
-*/
+
 	// properties should be up to date on loaded instance
-	expect(csLoaded.health).toEqual(testHealthValue);
-	expect(csLoaded.bloodPotency).toEqual(testBloodPotencyValue);
-	expect(csLoaded.hunger).toEqual(testHungerValue);
+	expect(csLoaded.health.value).toEqual(testHealthValue);
+	expect(csLoaded.bloodPotency.value).toEqual(testBloodPotencyValue);
+	expect(csLoaded.hunger.value).toEqual(testHungerValue);
 
 	// separate instance properties should be up to date // ? is this good?
-	expect(cs2.health).toEqual(testHealthValue);
-	expect(cs2.bloodPotency).toEqual(testBloodPotencyValue);
-	expect(cs2.hunger).toEqual(testHungerValue);
+	expect(cs2.health.value).toEqual(testHealthValue);
+	expect(cs2.bloodPotency.value).toEqual(testBloodPotencyValue);
+	expect(cs2.hunger.value).toEqual(testHungerValue);
 
 	// check changes were logged
-	expect(csLoaded.getLogData().length).toBeGreaterThanOrEqual(3);
+	// todo make sure logs are tested, there should be a method to get all logs of a character sheet
+	expect(csLoaded.health.getLogData().length).toBeGreaterThanOrEqual(1);
 
 	// add more log items
-	csLoaded.health += 3;
-	csLoaded.bloodPotency += 3;
-	csLoaded.hunger += 3;
+	csLoaded.health.value += 3;
+	csLoaded.bloodPotency.value += 3;
+	csLoaded.hunger.value += 3;
 	/*
 	console.log({
 		testName,
@@ -76,7 +78,7 @@ test(testName, () => {
 	});*/
 
 	// check changes were logged
-	expect(csLoaded.getLogData().length).toBeGreaterThanOrEqual(6);
+	expect(csLoaded.health.getLogData().length).toBeGreaterThanOrEqual(2);
 	expect(csLoaded.getLogData()).toEqual(cs2.getLogData());
 });
 
