@@ -1,5 +1,11 @@
 import { CoreNumberTraitName, CoreStringTraitName, TraitValueTypeUnion } from './../declarations/types';
-import { iBaseTrait, iCoreStringTrait, iNumberTraitData, iStringTraitData, iCoreNumberTrait } from './../declarations/interfaces/trait-interfaces';
+import {
+	iBaseTrait,
+	iCoreStringTrait,
+	iNumberTraitData,
+	iStringTraitData,
+	iCoreNumberTrait,
+} from './../declarations/interfaces/trait-interfaces';
 import {
 	iAttribute,
 	iDiscipline,
@@ -57,10 +63,10 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 	readonly clan: iCoreStringTrait;
 	readonly sire: iCoreStringTrait;
 	readonly health: iCoreNumberTrait; // todo limit 0 to 10
-	readonly willpower:  iCoreNumberTrait; // todo limit 0 to 10
-	readonly hunger:  iCoreNumberTrait; // todo limit 0 to 5
-	readonly humanity:  iCoreNumberTrait; // todo limit 0 to 10
-	readonly bloodPotency:  iCoreNumberTrait; // todo limit 0 to 10
+	readonly willpower: iCoreNumberTrait; // todo limit 0 to 10
+	readonly hunger: iCoreNumberTrait; // todo limit 0 to 5
+	readonly humanity: iCoreNumberTrait; // todo limit 0 to 10
+	readonly bloodPotency: iCoreNumberTrait; // todo limit 0 to 10
 
 	//-------------------------------------
 	// CONSTRUCTOR
@@ -151,13 +157,7 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 		});
 
 		// create collections, with initial data where available
-		this.attributes = new TraitCollection<iAttribute>(
-			{
-				saveAction,
-				instanceCreator: TraitFactory.newAttributeTrait,
-			},
-			...initialAttributes
-		);
+		this.attributes = TraitFactory.newAttributeTraitCollection({ saveAction }, ...initialAttributes);
 
 		this.skills = new TraitCollection<iSkill>(
 			{
@@ -167,13 +167,7 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 			...initialSkills
 		);
 
-		this.disciplines = new TraitCollection<iDiscipline>(
-			{
-				saveAction,
-				instanceCreator: TraitFactory.newDisciplineTrait,
-			},
-			...initialDisciplines
-		);
+		this.disciplines = TraitFactory.newDisciplineColl({ saveAction }, ...initialDisciplines);
 
 		this.touchstonesAndConvictions = new TraitCollection<iTouchStoneOrConviction>(
 			{

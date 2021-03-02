@@ -23,14 +23,15 @@ interface iInstanceCreatorProps<N extends TraitNameUnionOrString, V extends Trai
 export default class TraitCollection<
 	N extends TraitNameUnionOrString,
 	V extends TraitValueTypeUnion,
-	T extends iBaseTrait<N, V>
+	D extends iTraitData<N, V>,
+	T extends iBaseTrait<N, V, D>
 > implements iTraitCollection<N, V, T> {
-	#instanceCreator: (props: iBaseTraitProps<N, V>) => T;
+	#instanceCreator: (props: iBaseTraitProps<N, V, D>) => T;
 	private saveAction?: () => boolean;
 	#map: Map<N, T>;
 	#logs = new LogCollection<V>();
 	#typeName: TraitTypeNameUnion | string = 'Trait';
-	constructor({ instanceCreator, saveAction }: iTraitCollectionProps<N, V, T>, ...initialData: iTraitData<N, V>[]) {
+	constructor({ instanceCreator, saveAction }: iTraitCollectionProps<N, V,D, T>, ...initialData: iTraitData<N, V>[]) {
 		this.saveAction = saveAction;
 		this.#instanceCreator = instanceCreator;
 		this.#map = new Map<N, T>(initialData.map(({ name, value }) => [name, instanceCreator({ name, value })]));

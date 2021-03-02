@@ -1,3 +1,4 @@
+import { iDisciplineTraitCollection } from './../../declarations/interfaces/trait-collection-interfaces';
 import { iCanHaveSaveAction } from './../../declarations/interfaces/general-interfaces';
 import {
 	AttributeName,
@@ -18,6 +19,9 @@ import {
 	iStringTraitProps,
 	iTouchStoneOrConviction,
 	iBaseTraitProps,
+	iDisciplineData,
+	iTouchStoneOrConvictionData,
+	iSkillData,
 } from './../../declarations/interfaces/trait-interfaces';
 import NumberTraitWithCategory from './NumberTraitWithCategory';
 import NumberTrait from './NumberTrait';
@@ -36,7 +40,11 @@ export default abstract class TraitFactory {
 	static newNumberTrait({ name, value = 0, saveAction, max, min = 0 }: iNumberTraitProps<TraitNameUnionOrString>) {
 		return new NumberTrait({ name, value, saveAction, max, min });
 	}
-	static newAttributeTrait({ name, value = 0, saveAction }: iBaseTraitProps<AttributeName, number>): iAttribute {
+	static newAttributeTrait({
+		name,
+		value = 0,
+		saveAction,
+	}: iBaseTraitProps<AttributeName, number, iAttributeData>): iAttribute {
 		const props: iNumberTraitWithCategoryProps<AttributeName, AttributeCategory> = {
 			categorySelector: getAttributeCategory,
 			min: 1,
@@ -49,7 +57,11 @@ export default abstract class TraitFactory {
 		return new NumberTraitWithCategory(props);
 	}
 
-	static newDisciplineTrait({ name, value = 0, saveAction }: iBaseTraitProps<DisciplineName, number>): iDiscipline {
+	static newDisciplineTrait({
+		name,
+		value = 0,
+		saveAction,
+	}: iBaseTraitProps<DisciplineName, number, iDisciplineData>): iDiscipline {
 		const props: iNumberTraitProps<DisciplineName> = {
 			min: 1,
 			max: 5,
@@ -61,7 +73,7 @@ export default abstract class TraitFactory {
 		return new NumberTrait(props);
 	}
 
-	static newSkillTrait({ name, value = 0, saveAction }: iBaseTraitProps<SkillName, number>): iSkill {
+	static newSkillTrait({ name, value = 0, saveAction }: iBaseTraitProps<SkillName, number, iSkillData>): iSkill {
 		const props: iNumberTraitProps<SkillName> = {
 			min: 0,
 			max: 5,
@@ -77,7 +89,7 @@ export default abstract class TraitFactory {
 		name,
 		value,
 		saveAction,
-	}: iBaseTraitProps<string, string>): iTouchStoneOrConviction {
+	}: iBaseTraitProps<string, string, iTouchStoneOrConvictionData>): iTouchStoneOrConviction {
 		const props: iStringTraitProps<string> = {
 			name,
 			value,
@@ -92,10 +104,24 @@ export default abstract class TraitFactory {
 		...initial: iAttributeData[]
 	): iAttributeTraitCollection {
 		const { saveAction } = props || {};
-		return new TraitCollection<AttributeName, number, iAttribute>(
+		return new TraitCollection<AttributeName, number, iAttributeData, iAttribute>(
 			{
 				saveAction,
 				instanceCreator: TraitFactory.newAttributeTrait,
+			},
+			...initial
+		);
+	}
+
+	static newDisciplineTraitCollection(
+		props?: iCanHaveSaveAction,
+		...initial: iDisciplineData[]
+	): iDisciplineTraitCollection {
+		const { saveAction } = props || {};
+		return new TraitCollection<DisciplineName, number, iDisciplineData, iDiscipline>(
+			{
+				saveAction,
+				instanceCreator: TraitFactory.newDisciplineTrait,
 			},
 			...initial
 		);
@@ -106,7 +132,7 @@ export default abstract class TraitFactory {
 		return {
 			bloodPotency: new NumberTrait<CoreNumberTraitName>({ max: 10, name: 'Blood Potency', value: 0, saveAction }),
 			clan: new StringTrait<CoreStringTraitName>({ name: 'Clan', value: '', saveAction }),
-			discordUserId: -1,
+			discordUserId: NaN,
 			health: new NumberTrait<CoreNumberTraitName>({ max: 10, name: 'Health', value: 0, saveAction }),
 			humanity: new NumberTrait<CoreNumberTraitName>({ max: 10, name: 'Humanity', value: 0, saveAction }),
 			hunger: new NumberTrait<CoreNumberTraitName>({ max: 5, name: 'Hunger', value: 0, saveAction }),
