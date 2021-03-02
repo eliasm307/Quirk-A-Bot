@@ -1,6 +1,11 @@
 import { iLogEvent } from '../../declarations/interfaces/log-interfaces';
 import { iBaseTrait } from '../../declarations/interfaces/trait-interfaces';
-import { TraitNameUnion, TraitNameUnionOrString, TraitValueTypeUnion, TraitValueDynamic } from '../../declarations/types';
+import {
+	TraitNameUnion,
+	TraitNameUnionOrString,
+	TraitValueTypeUnion,
+	TraitValueDynamic,
+} from '../../declarations/types';
 import { iBaseTraitProps, iTraitData } from '../../declarations/interfaces/trait-interfaces';
 import LogCollection from '../log/LogCollection';
 import UpdateLogEvent from '../log/UpdateLogEvent';
@@ -9,8 +14,11 @@ interface iPrivateModifiableProperties<V> {
 	value: V;
 }
 
-export default abstract class AbstractBaseTrait<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
-	implements iBaseTrait<N, V> {
+export default abstract class AbstractBaseTrait<
+	N extends TraitNameUnionOrString,
+	V extends TraitValueTypeUnion,
+	D extends iTraitData<N, V>
+> implements iBaseTrait<N, V, D> {
 	#private: iPrivateModifiableProperties<V>;
 	// #characterSheet: iCharacterSheet;
 
@@ -29,23 +37,20 @@ export default abstract class AbstractBaseTrait<N extends TraitNameUnionOrString
 		return this.#private.value;
 	}
 
-	constructor({ saveAction, name, value }: iBaseTraitProps<N, V>) {
+	constructor({ saveAction, name, value, toJson }: iBaseTraitProps<N, V, D>) {
 		this.#saveAction = saveAction;
 		this.name = name;
 		this.#private = {
 			value: value,
 		};
+		if (!toJson) throw Error(`${__filename} toJson function not defined`);
+		this.toJson = toJson;
 
 		// todo, account for when this is instantiated independently, not by a CharacterSheet. Maybe use a factory? Or check for this when a change is made, ie before a save needs to be made (you could update the reference to the Skill based on which one was updated last? this seems like a bad pattern)
 		// make sure character sheet has a reference to this Skill // will this produce any cyclic behaviour? tested, and YES it does
 		// if (!this.#characterSheet.getSkillByName(name)) this.#characterSheet.setSkill(name, value);
 	}
-	toJson(): iTraitData<N, V> {
-		return {
-			name: this.name,
-			value: this.value,
-		};
-	}
+	toJson: () => D;
 
 	getLogData(): iLogEvent[] {
 		return this.#logs.toJson();
