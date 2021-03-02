@@ -1,17 +1,27 @@
 // -------------------------------------------------------
 // TRAIT COLLECTION
 
-import { TraitNameUnionOrString, TraitValueTypeUnion, TraitDataDynamic, TraitNameDynamic, TraitValueDynamic } from "../types";
-import { iToJson } from "./general-interfaces";
-import { iBaseTrait } from "./trait-interfaces";
+import {
+	TraitNameUnionOrString,
+	TraitValueTypeUnion,
+	TraitDataDynamic,
+	TraitNameDynamic,
+	TraitValueDynamic,
+} from '../types';
+import { iToJson } from './general-interfaces';
+import { iBaseTrait, iTraitData } from './trait-interfaces';
 
 // todo is this the best way to do this?
 // todo use dynamic types here?
-export interface iTraitCollection<T extends iBaseTrait<TraitNameUnionOrString, TraitValueTypeUnion>>
-	extends iToJson<TraitDataDynamic<T>[]> {
-	get(name: TraitNameDynamic<T>): T | void;
-	set(name: TraitNameDynamic<T>, value: TraitValueDynamic<T>): void;
-	delete(name: TraitNameDynamic<T>): void;
-	has(name: TraitNameDynamic<T>): boolean;
+export interface iTraitCollection<
+	N extends TraitNameUnionOrString,
+	V extends TraitValueTypeUnion,
+	T extends iBaseTrait<N, V>,
+	D extends iTraitData<N, V>
+> extends iToJson<D[]> {
+	get(name: N): T | void;
+	set(name: N, value: V): void;
+	delete(name: N): void;
+	has(name: N): boolean;
 	readonly size: number;
 }
