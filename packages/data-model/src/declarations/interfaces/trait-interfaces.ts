@@ -61,14 +61,19 @@ export interface iInstanceCreatorProps<T extends iTraitData<TraitNameDynamic<T>,
 }
 // todo is this the best way to do this?
 // todo use dynamic types here?
-export interface iTraitCollectionProps<T extends iBaseTrait<TraitNameDynamic<T>, TraitValueDynamic<T>>>
-	extends iCanHaveSaveAction {
+export interface iTraitCollectionProps<
+	N extends TraitNameUnionOrString,
+	V extends TraitValueTypeUnion,
+	D extends iTraitData<N, V>,
+	T extends iBaseTrait<N, V, D>
+> extends iCanHaveSaveAction {
 	// todo use dynamic types here?
-	instanceCreator: (props: iInstanceCreatorProps<T>) => T;
+	instanceCreator: (props: iBaseTraitProps<N, V>) => T;
 	// todo make this more specific in terms of available names and value types
 }
 // -------------------------------------------------------
 // GENERIC TRAIT DATA TYPES
+// NOTE These should only contain user defined data, not computed properties such as categories based on trait names
 
 /** Describes the shape of the most basic trait */
 export interface iTraitData<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion> {
@@ -90,19 +95,23 @@ export interface iDisciplineData extends iNumberTraitData<DisciplineName> {
 // GENERIC TRAIT OBJECTS TYPES
 
 /** Base interface for Trait Objects */
-export interface iBaseTrait<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
+export interface iBaseTrait<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion, D extends iTraitData<N, V>>
 	extends iTraitData<N, V>,
-		iToJson<iTraitData<N, V>>,
+		iToJson<D>,
 		iLogger {
 	// todo add explain method to give a summary what this trait is for
 	// todo add explainValue method to describe the current value of the attribute, ie add description getter to describe the meaning of a value
 	// todo add min and max limits for trait values, shoud this be done here?
 }
 export interface iNumberTrait<N extends TraitNameUnionOrString>
-	extends iBaseTrait<N, number>,
+	extends iBaseTrait<N, number, iNumberTraitData<N>>,
 		iHasNumberValue,
 		iHasNumberLimits {}
-export interface iStringTrait<N extends TraitNameUnionOrString> extends iBaseTrait<N, string>, iHasStringValue {}
+
+export interface iStringTrait<N extends TraitNameUnionOrString>
+	extends iBaseTrait<N, string, iStringTraitData<N>>,
+		iHasStringValue {}
+
 export interface iNumberTraitWithCategory<N extends TraitNameUnionOrString, C extends string>
 	extends iNumberTrait<N>,
 		iHasCategory<C> {}
@@ -116,5 +125,3 @@ export interface iSkill extends iSkillData, iNumberTrait<SkillName> {}
 export interface iTouchStoneOrConviction extends iTouchStoneOrConvictionData, iStringTrait<string> {}
 export interface iCoreNumberTrait extends iNumberTraitData<CoreNumberTraitName>, iNumberTrait<CoreNumberTraitName> {}
 export interface iCoreStringTrait extends iNumberTraitData<CoreStringTraitName>, iNumberTrait<CoreStringTraitName> {}
-
-

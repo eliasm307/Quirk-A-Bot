@@ -69,8 +69,9 @@ export type TraitDataDynamic<T extends iTraitData<TraitNameUnionOrString, TraitV
 	? iStringTraitData<CoreTraitName>
 	: T extends iNumberTrait<CoreTraitName>
 	? iNumberTrait<CoreTraitName>*/
-	  any;
-export type TraitMap<T extends iBaseTrait<TraitNameUnionOrString, TraitValueTypeUnion>> = Map<TraitNameDynamic<T>, T>;
+	any;
+		
+// todo delete export type TraitMap<T extends iBaseTrait<TraitNameUnionOrString, TraitValueTypeUnion>> = Map<TraitNameDynamic<T>, T>;
 export type TraitTypeNameUnion = typeof TRAIT_TYPES[number];
 
 export type LogOperationUnion = 'ADD' | 'UPDATE' | 'DELETE';

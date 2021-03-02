@@ -9,6 +9,7 @@ import {
 	TraitValueDynamic,
 } from '../types';
 import { iToJson } from './general-interfaces';
+import { iLogger } from './log-interfaces';
 import { iBaseTrait, iTraitData } from './trait-interfaces';
 
 // todo is this the best way to do this?
@@ -16,9 +17,10 @@ import { iBaseTrait, iTraitData } from './trait-interfaces';
 export interface iTraitCollection<
 	N extends TraitNameUnionOrString,
 	V extends TraitValueTypeUnion,
-	T extends iBaseTrait<N, V>,
-	D extends iTraitData<N, V>
-> extends iToJson<D[]> {
+	D extends iTraitData<N, V>,
+	T extends iBaseTrait<N, V, D>
+> extends iToJson<D[]>,
+		iLogger {
 	get(name: N): T | void;
 	set(name: N, value: V): void;
 	delete(name: N): void;
