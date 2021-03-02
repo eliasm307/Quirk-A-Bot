@@ -1,6 +1,6 @@
 import { iCharacterSheetData } from '../declarations/interfaces/character-sheet-interfaces';
 import { iTraitData } from '../declarations/interfaces/trait-interfaces';
-import { TraitMap, TraitNameDynamic } from './../declarations/types';
+import {  TraitNameDynamic } from './../declarations/types';
 export default abstract class TypeFactory {
 	/*
 	static newTraitMap<N extends TraitNameUnionOrString>(...args: T[]): TraitMap<T> {

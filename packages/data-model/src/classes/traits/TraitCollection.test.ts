@@ -65,9 +65,7 @@ test(testName, () => {
 	expect(tc2.size).toEqual(0);
 
 	// separate instance of same character sheet, with inital data
-	const tc3 = TraitFactory.newAttributeTraitCollection( {}, ...tc.toJson());
-		
- 
+	const tc3 = TraitFactory.newAttributeTraitCollection({}, ...tc.toJson());
 
 	// same items as initial expected
 	expect(tc3.size).toEqual(tc.size);
@@ -75,9 +73,7 @@ test(testName, () => {
 
 testName = 'trait test with toJson and log data';
 test(testName, () => {
-	const tc = new TraitCollection<iAttribute>({
-		instanceCreator: TraitFactory.newAttributeTrait,
-	});
+	const tc = TraitFactory.newAttributeTraitCollection();
 	tc.set('Charisma', 3);
 
 	console.log(__filename, { testName, tc });

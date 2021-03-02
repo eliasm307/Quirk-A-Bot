@@ -1,3 +1,4 @@
+import { iAttributeTraitCollection, iSkillTraitCollection, iDisciplineTraitCollection, iTouchStoneOrConvictionCollection } from './../declarations/interfaces/trait-collection-interfaces';
 import { CoreNumberTraitName, CoreStringTraitName, TraitValueTypeUnion } from './../declarations/types';
 import {
 	iBaseTrait,
@@ -7,28 +8,17 @@ import {
 	iCoreNumberTrait,
 } from './../declarations/interfaces/trait-interfaces';
 import {
-	iAttribute,
-	iDiscipline,
-	iNumberTrait,
-	iSkill,
-	iStringTrait,
-	iTouchStoneOrConviction,
 	iTouchStoneOrConvictionData,
 } from '../declarations/interfaces/trait-interfaces';
 import path from 'path';
 import { iAttributeData, iDisciplineData, iSkillData } from '../declarations/interfaces/trait-interfaces';
-import TraitCollection from './traits/TraitCollection';
 import importDataFromFile from '../utils/importDataFromFile';
-import LogCollection from './log/LogCollection';
-import UpdateLogEvent from './log/UpdateLogEvent';
 import exportDataToFile from '../utils/exportDataToFile';
 import { iCharacterSheet, iCharacterSheetData } from '../declarations/interfaces/character-sheet-interfaces';
-import { iLogger, iLogCollection, iLogEvent } from '../declarations/interfaces/log-interfaces';
+import { iLogger, iLogEvent } from '../declarations/interfaces/log-interfaces';
 import TraitFactory from './traits/TraitFactory';
-import TypeFactory from './TypeFactory';
-import NumberTrait from './traits/NumberTrait';
 import StringTrait from './traits/StringTrait';
-import { isBaseTrait, isCharacterSheetData } from '../utils/typePredicates';
+import { isBaseTrait, isCharacterSheetData } from '../utils/typePredicates'; 
 import NumberTrait from './traits/NumberTrait';
 
 // ! this shouldnt be here, should be in a file about persistence
@@ -54,10 +44,10 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 
 	//-------------------------------------
 	// NON BASIC PRIMITIVE VARIABLES
-	readonly attributes: TraitCollection<iAttribute>;
-	readonly skills: TraitCollection<iSkill>;
-	readonly disciplines: TraitCollection<iDiscipline>;
-	readonly touchstonesAndConvictions: TraitCollection<iTouchStoneOrConviction>;
+	readonly attributes: iAttributeTraitCollection;
+	readonly skills: iSkillTraitCollection;
+	readonly disciplines: iDisciplineTraitCollection;
+	readonly touchstonesAndConvictions: iTouchStoneOrConvictionCollection;
 
 	readonly name: iCoreStringTrait;
 	readonly clan: iCoreStringTrait;
@@ -260,6 +250,8 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 		return [];
 	}
 
+	// todo delete
+	/*
 	private getTraitByName<T extends keyof iCharacterSheet>(key: T): iBaseTrait<string, TraitValueTypeUnion> | null {
 		const trait = this[key];
 
@@ -267,5 +259,5 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 			return trait;
 		}
 		return null;
-	}
+	}*/
 }
