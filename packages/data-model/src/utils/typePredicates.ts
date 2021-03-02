@@ -2,7 +2,7 @@ import { TraitNameUnionOrString, TraitValueTypeUnion } from './../declarations/t
 
 import { ATTRIBUTE_NAMES, SKILL_NAMES, DISCIPLINE_NAMES } from '../constants';
 import { iCharacterSheetData } from '../declarations/interfaces/character-sheet-interfaces';
-import { iBaseTrait } from '../declarations/interfaces/trait-interfaces';
+import { iBaseTrait, iTraitData } from '../declarations/interfaces/trait-interfaces';
 import { AttributeName, SkillName, DisciplineName } from '../declarations/types';
 
 export function isAttributeName(name: string): name is AttributeName {
@@ -21,9 +21,12 @@ export function isCharacterSheetData(data: iCharacterSheetData): data is iCharac
 	// todo improve this
 	return !!data.discordUserId;
 }
-export function isBaseTrait<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(
-	data: any
-): data is iBaseTrait<N, V> {
+
+export function isBaseTrait<
+	N extends TraitNameUnionOrString,
+	V extends TraitValueTypeUnion,
+	D extends iTraitData<N, V>
+>(data: any): data is iBaseTrait<N, V, D> {
 	// todo improve this to account for types
 	return !!data.name && !!data.value;
 }
