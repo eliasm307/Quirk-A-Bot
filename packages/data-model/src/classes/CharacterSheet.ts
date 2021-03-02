@@ -159,13 +159,7 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 		// create collections, with initial data where available
 		this.attributes = TraitFactory.newAttributeTraitCollection({ saveAction }, ...initialAttributes);
 
-		this.skills = new TraitCollection<iSkill>(
-			{
-				saveAction,
-				instanceCreator: TraitFactory.newSkillTrait,
-			},
-			...initialSkills
-		);
+		this.skills = TraitFactory.newSkillTraitCollection({ saveAction }, ...initialSkills);
 
 		this.disciplines = TraitFactory.newDisciplineTraitCollection({ saveAction }, ...initialDisciplines);
 

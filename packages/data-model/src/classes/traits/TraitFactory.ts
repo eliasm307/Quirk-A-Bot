@@ -1,5 +1,6 @@
 import {
 	iDisciplineTraitCollection,
+	iSkillTraitCollection,
 	iTouchStoneOrConvictionCollection,
 } from './../../declarations/interfaces/trait-collection-interfaces';
 import { iCanHaveSaveAction } from './../../declarations/interfaces/general-interfaces';
@@ -117,6 +118,20 @@ export default abstract class TraitFactory {
 		);
 	}
 
+	static newSkillTraitCollection(
+		props?: iCanHaveSaveAction,
+		...initial: iSkillData[]
+	): iSkillTraitCollection {
+		const { saveAction } = props || {};
+		return new TraitCollection<SkillName, number, iSkillData, iSkill>(
+			{
+				saveAction,
+				instanceCreator: TraitFactory.newSkillTrait,
+			},
+			...initial
+		);
+	}
+
 	static newDisciplineTraitCollection(
 		props?: iCanHaveSaveAction,
 		...initial: iDisciplineData[]
@@ -144,7 +159,6 @@ export default abstract class TraitFactory {
 			...initial
 		);
 	}
-
 
 	// todo use factory for this
 	static newCharacterSheetDataObject(props?: iCanHaveSaveAction): iCharacterSheetData {
