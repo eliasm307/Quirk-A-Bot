@@ -1,3 +1,9 @@
+import {
+	iAttributeTraitCollection,
+	iDisciplineTraitCollection,
+	iSkillTraitCollection,
+	iTouchStoneOrConvictionCollection,
+} from './trait-collection-interfaces';
 import TraitCollection from '../../classes/traits/TraitCollection';
 import {
 	iTouchStoneOrConvictionData,
@@ -11,8 +17,10 @@ import {
 	iStringTrait,
 	iNumberTrait,
 	iTraitData,
+	iCoreNumberTrait,
+	iCoreStringTrait,
 } from './trait-interfaces';
-import { ClanName, CoreNumberTraitName, CoreStringTraitName,  } from '../types';
+import { ClanName, CoreNumberTraitName, CoreStringTraitName } from '../types';
 import { iToJson } from './general-interfaces';
 
 // todo delete
@@ -27,9 +35,9 @@ export interface iCharacterSheetPrimitiveData {
 	hunger: number; // todo limit 0 to 5
 	humanity: number; // todo limit 0 to 10
 	bloodPotency: number; // todo limit 0 to 10
-	
-	
 }
+
+// todo rename to ibaseCharacterSheet and then CS data and CS object should extend this, only discord userId is common between them for now
 export interface iCharacterSheetNonPrimitiveData {}
 
 export interface iCharacterSheetData extends iCharacterSheetNonPrimitiveData {
@@ -54,16 +62,16 @@ export interface iCharacterSheet extends iToJson<iCharacterSheetData> {
 
 	readonly discordUserId: number;
 	// todo add user aliases (ie known discord names to be added by bot)
-	name: iStringTrait<string>;
-	clan: iStringTrait<string>;
-	sire: iStringTrait<string>;
-	health: iNumberTrait<string>;
-	willpower: iNumberTrait<string>;
-	hunger: iNumberTrait<string>;
-	humanity: iNumberTrait<string>;
-	bloodPotency: iNumberTrait<string>;
-	skills: TraitCollection<iSkill>;
-	attributes: TraitCollection<iAttribute>;
-	disciplines: TraitCollection<iDiscipline>;
-	touchstonesAndConvictions: TraitCollection<iTouchStoneOrConviction>;
+	name: iCoreStringTrait;
+	clan: iCoreStringTrait;
+	sire: iCoreStringTrait;
+	health: iCoreNumberTrait;
+	willpower: iCoreNumberTrait;
+	hunger: iCoreNumberTrait;
+	humanity: iCoreNumberTrait;
+	bloodPotency: iCoreNumberTrait;
+	skills: iSkillTraitCollection;
+	attributes: iAttributeTraitCollection;
+	disciplines: iDisciplineTraitCollection;
+	touchstonesAndConvictions: iTouchStoneOrConvictionCollection;
 }

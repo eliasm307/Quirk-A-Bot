@@ -1,5 +1,5 @@
 import { CoreNumberTraitName, CoreStringTraitName, TraitValueTypeUnion } from './../declarations/types';
-import { iBaseTrait, iNumberTraitData, iStringTraitData } from './../declarations/interfaces/trait-interfaces';
+import { iBaseTrait, iCoreStringTrait, iNumberTraitData, iStringTraitData, iCoreNumberTrait } from './../declarations/interfaces/trait-interfaces';
 import {
 	iAttribute,
 	iDiscipline,
@@ -23,6 +23,7 @@ import TypeFactory from './TypeFactory';
 import NumberTrait from './traits/NumberTrait';
 import StringTrait from './traits/StringTrait';
 import { isBaseTrait, isCharacterSheetData } from '../utils/typePredicates';
+import NumberTrait from './traits/NumberTrait';
 
 // ! this shouldnt be here, should be in a file about persistence
 interface iLoadFromFileArgs {
@@ -46,19 +47,20 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 	#savePath: string; // specified in constructor
 
 	//-------------------------------------
-	// NON BASIC VARIABLE COLLECTIONS
+	// NON BASIC PRIMITIVE VARIABLES
 	readonly attributes: TraitCollection<iAttribute>;
 	readonly skills: TraitCollection<iSkill>;
 	readonly disciplines: TraitCollection<iDiscipline>;
 	readonly touchstonesAndConvictions: TraitCollection<iTouchStoneOrConviction>;
-	readonly name: iStringTrait<string>;
-	readonly clan: iStringTrait<string>;
-	readonly sire: iStringTrait<string>;
-	readonly health: iNumberTrait<string>; // todo limit 0 to 10
-	readonly willpower: iNumberTrait<string>; // todo limit 0 to 10
-	readonly hunger: iNumberTrait<string>; // todo limit 0 to 5
-	readonly humanity: iNumberTrait<string>; // todo limit 0 to 10
-	readonly bloodPotency: iNumberTrait<string>; // todo limit 0 to 10
+
+	readonly name: iCoreStringTrait;
+	readonly clan: iCoreStringTrait;
+	readonly sire: iCoreStringTrait;
+	readonly health: iCoreNumberTrait; // todo limit 0 to 10
+	readonly willpower:  iCoreNumberTrait; // todo limit 0 to 10
+	readonly hunger:  iCoreNumberTrait; // todo limit 0 to 5
+	readonly humanity:  iCoreNumberTrait; // todo limit 0 to 10
+	readonly bloodPotency:  iCoreNumberTrait; // todo limit 0 to 10
 
 	//-------------------------------------
 	// CONSTRUCTOR

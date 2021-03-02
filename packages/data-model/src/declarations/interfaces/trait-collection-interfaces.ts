@@ -1,3 +1,4 @@
+import { AttributeName, SkillName, DisciplineName } from './../types';
 // -------------------------------------------------------
 // TRAIT COLLECTION
 
@@ -10,7 +11,7 @@ import {
 } from '../types';
 import { iToJson } from './general-interfaces';
 import { iLogger } from './log-interfaces';
-import { iBaseTrait, iTraitData } from './trait-interfaces';
+import { iAttribute, iBaseTrait, iSkill, iTraitData, iDiscipline, iTouchStoneOrConviction } from './trait-interfaces';
 
 // todo is this the best way to do this?
 // todo use dynamic types here?
@@ -26,3 +27,14 @@ export interface iTraitCollection<
 	has(name: N): boolean;
 	readonly size: number;
 }
+
+// -------------------------------------------------------
+// SPECIFIC TRAIT COLLECTION TYPES
+
+export interface iAttributeTraitCollection extends iTraitCollection<AttributeName, number, iAttribute> {}
+
+export interface iSkillTraitCollection extends iTraitCollection<SkillName, number, iSkill> {}
+
+export interface iDisciplineTraitCollection extends iTraitCollection<DisciplineName, number, iDiscipline> {}
+
+export interface iTouchStoneOrConvictionCollection extends iTraitCollection<string, string, iTouchStoneOrConviction> {}

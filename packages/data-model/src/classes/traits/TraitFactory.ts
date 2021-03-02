@@ -6,7 +6,7 @@ import {
 	SkillName,
 	TraitNameUnionOrString,
 	CoreNumberTraitName,
-	CoreStringTraitName, 
+	CoreStringTraitName,
 } from './../../declarations/types';
 import {
 	iNumberTraitWithCategoryProps,
@@ -26,6 +26,7 @@ import getAttributeCategory from '../../utils/getAttributeCategory';
 import TraitCollection from './TraitCollection';
 import { iCharacterSheetData } from '../../declarations/interfaces/character-sheet-interfaces';
 import TypeFactory from '../TypeFactory';
+import { iAttributeTraitCollection } from '../../declarations/interfaces/trait-collection-interfaces';
 
 export default abstract class TraitFactory {
 	// methods use base trait props as all other details should be selected to match the required trait type
@@ -87,10 +88,11 @@ export default abstract class TraitFactory {
 	}
 
 	static newAttributeTraitCollection(
-		{ saveAction }: iCanHaveSaveAction,
+		props?: iCanHaveSaveAction,
 		...initial: iAttributeData[]
-	): TraitCollection<iAttribute> {
-		return new TraitCollection<iAttribute>(
+	): iAttributeTraitCollection {
+		const { saveAction } = props || {};
+		return new TraitCollection<AttributeName, number, iAttribute>(
 			{
 				saveAction,
 				instanceCreator: TraitFactory.newAttributeTrait,
