@@ -13,7 +13,7 @@ import {
 	iSkill,
 	iHasNumberValue,
 	iHasStringValue,
-	iStringTrait,
+	iBaseStringTrait,
 	iStringTraitData,
 	iNumberTrait,
 	iNumberTraitData,
@@ -31,6 +31,7 @@ export type CoreStringTraitName = typeof CORE_STRING_TRAITS[number];
 
 // todo is this required?
 /** Dynamic type for trait name union types */
+/*
 export type TraitNameDynamic<T extends iTraitData<TraitNameUnionOrString, TraitValueTypeUnion>> = T extends iSkillData
 	? SkillName
 	: T extends iAttributeData
@@ -42,13 +43,16 @@ export type TraitNameDynamic<T extends iTraitData<TraitNameUnionOrString, TraitV
 	: T extends iNumberTraitData<CoreNumberTraitName>
 	? CoreNumberTraitName
 	: string; // NOTE make sure this covers all options
+	*/
 
 /** Dynamic type for trait value type */
+/*
 export type TraitValueDynamic<T> = T extends iHasStringValue
 	? string
 	: T extends iHasNumberValue
 	? number
 	: TraitValueTypeUnion;
+	*/
 
 // todo add boolen for the future?
 export type TraitValueTypeUnion = number | string;
@@ -59,6 +63,7 @@ export type TraitNameUnionOrString = TraitNameUnion | string;
 // todo should fallback be any?
 // todo is this required
 /** Dynamic type for trait data only interfaces */
+/*
 export type TraitDataDynamic<T extends iTraitData<TraitNameUnionOrString, TraitValueTypeUnion>> = T extends iSkill
 	? iSkillData
 	: T extends iAttribute
@@ -70,8 +75,9 @@ export type TraitDataDynamic<T extends iTraitData<TraitNameUnionOrString, TraitV
 	: /*: T extends iStringTrait<CoreTraitName>
 	? iStringTraitData<CoreTraitName>
 	: T extends iNumberTrait<CoreTraitName>
-	? iNumberTrait<CoreTraitName>*/
-	  any;
+	? iNumberTrait<CoreTraitName>
+any;
+		*/
 
 // todo delete export type TraitMap<T extends iBaseTrait<TraitNameUnionOrString, TraitValueTypeUnion>> = Map<TraitNameDynamic<T>, T>;
 export type TraitTypeNameUnion = typeof TRAIT_TYPES[number];

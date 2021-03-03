@@ -13,7 +13,7 @@ import {
 	iDisciplineData,
 	iSkillData,
 	iTouchStoneOrConvictionData,
-	iStringTrait,
+	iBaseStringTrait,
 	iStringTraitData,
 	iCoreStringTraitData,
 	iCoreStringTrait,
@@ -61,8 +61,11 @@ export interface iDisciplineTraitCollection
 export interface iTouchStoneOrConvictionCollection
 	extends iTraitCollection<string, string, iTouchStoneOrConvictionData, iTouchStoneOrConviction> {}
 
+	// todo delete
+	/*
 export interface iCoreStringTraitCollection
 	extends iTraitCollection<CoreStringTraitName, string, iCoreStringTraitData, iCoreStringTrait> {}
 
 export interface iCoreNumberTraitCollection
-	extends iTraitCollection<CoreNumberTraitName, number, iCoreNumberTraitData, iCoreNumberTrait> {}
+	extends iTraitCollection<CoreNumberTraitName, number, iCoreNumberTraitData, iCoreNumberTrait> { }
+	*/

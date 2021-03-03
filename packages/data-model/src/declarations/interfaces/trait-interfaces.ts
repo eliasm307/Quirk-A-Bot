@@ -1,14 +1,6 @@
-import { CoreNumberTraitName, CoreStringTraitName, TraitNameUnionOrString, TraitValueDynamic } from './../types';
+import { TraitNameUnionOrString, TraitValueTypeUnion, AttributeName, SkillName, DisciplineName, CoreStringTraitName, CoreNumberTraitName, AttributeCategory } from '../types';
 import { iCanHaveSaveAction, iToJson } from './general-interfaces';
-import { iLoggerSingle } from './log-interfaces';
-import {
-	AttributeCategory,
-	AttributeName,
-	DisciplineName,
-	SkillName,
-	TraitNameDynamic,
-	TraitValueTypeUnion,
-} from '../types';
+import { iLoggerSingle } from './log-interfaces'; 
 
 export interface iHasCategorySelector<N extends string, C extends string> {
 	categorySelector: (name: N) => C;
@@ -18,8 +10,8 @@ export interface iHasCategory<C extends string> {
 	category: C;
 }
 
-export interface iHasStringValue {
-	value: string;
+export interface iHasStringValue<V extends string> {
+	value: V;
 }
 
 export interface iHasNumberValue {
@@ -43,8 +35,8 @@ export interface iBaseTraitProps<
 	toJson?: () => D;
 	saveAction?: () => boolean;
 }
-export interface iStringTraitProps<N extends TraitNameUnionOrString>
-	extends iBaseTraitProps<N, string, iStringTraitData<N>> {}
+export interface iStringTraitProps<N extends TraitNameUnionOrString, V extends string>
+	extends iBaseTraitProps<N, V, iStringTraitData<N, V>> {}
 
 export interface iBaseNumberTraitProps<N extends TraitNameUnionOrString, D extends iNumberTraitData<N>>
 	extends iBaseTraitProps<N, number, D> {
@@ -60,10 +52,14 @@ export interface iNumberTraitWithCategoryProps<N extends TraitNameUnionOrString,
 	categorySelector: (name: N) => C;
 }
 
+// todo delete
+/*
 export interface iInstanceCreatorProps<T extends iTraitData<TraitNameDynamic<T>, TraitValueDynamic<T>>> {
 	name: TraitNameDynamic<T>;
 	value: TraitValueDynamic<T>;
 }
+*/
+
 // todo is this the best way to do this?
 // todo use dynamic types here?
 export interface iTraitCollectionProps<
@@ -88,18 +84,20 @@ export interface iTraitData<N extends TraitNameUnionOrString, V extends TraitVal
 }
 export interface iGeneralTraitData extends iTraitData<TraitNameUnionOrString, TraitValueTypeUnion> {}
 export interface iNumberTraitData<N extends TraitNameUnionOrString> extends iTraitData<N, number>, iHasNumberValue {}
-export interface iStringTraitData<N extends TraitNameUnionOrString> extends iTraitData<N, string>, iHasStringValue {}
+export interface iStringTraitData<N extends TraitNameUnionOrString, V extends string>
+	extends iTraitData<N, V>,
+		iHasStringValue<V> {}
 // -------------------------------------------------------
 // SPECIFIC TRAIT DATA TYPES
 // ? Data should only contain user defined data
 
 export interface iAttributeData extends iNumberTraitData<AttributeName> {}
-export interface iTouchStoneOrConvictionData extends iStringTraitData<string> {}
+export interface iTouchStoneOrConvictionData extends iStringTraitData<string, string> {}
 export interface iSkillData extends iNumberTraitData<SkillName> {}
 export interface iDisciplineData extends iNumberTraitData<DisciplineName> {
 	// todo add "specialisation" / sub types?
 }
-export interface iCoreStringTraitData extends iStringTraitData<CoreStringTraitName> {}
+export interface iCoreStringTraitData<V extends string> extends iStringTraitData<CoreStringTraitName, V> {}
 export interface iCoreNumberTraitData extends iNumberTraitData<CoreNumberTraitName> {}
 // -------------------------------------------------------
 // GENERIC TRAIT OBJECTS TYPES
@@ -126,9 +124,10 @@ export interface iBaseNumberTrait<N extends TraitNameUnionOrString, D extends iN
 
 export interface iNumberTrait<N extends TraitNameUnionOrString> extends iBaseNumberTrait<N, iNumberTraitData<N>> {}
 
-export interface iStringTrait<N extends TraitNameUnionOrString>
-	extends iBaseTrait<N, string, iStringTraitData<N>>,
-		iHasStringValue {}
+export interface iBaseStringTrait<N extends TraitNameUnionOrString, V extends string>
+	extends iBaseTrait<N, V, iTraitData<N, V>> {}
+
+export interface iStringTrait<N extends TraitNameUnionOrString> extends iBaseStringTrait<N, string> {}
 
 export interface iNumberTraitWithCategory<N extends TraitNameUnionOrString, C extends string>
 	extends iNumberTrait<N>,
@@ -142,4 +141,6 @@ export interface iDiscipline extends iDisciplineData, iNumberTrait<DisciplineNam
 export interface iSkill extends iSkillData, iNumberTrait<SkillName> {}
 export interface iTouchStoneOrConviction extends iTouchStoneOrConvictionData, iStringTrait<string> {}
 export interface iCoreNumberTrait extends iNumberTraitData<CoreNumberTraitName>, iNumberTrait<CoreNumberTraitName> {}
-export interface iCoreStringTrait extends iStringTraitData<CoreStringTraitName>, iStringTrait<CoreStringTraitName> {}
+export interface iCoreStringTrait<V extends string>
+	extends iTraitData<CoreStringTraitName, V>,
+		iBaseStringTrait<CoreStringTraitName, V> {}

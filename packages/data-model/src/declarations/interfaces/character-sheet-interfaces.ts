@@ -55,9 +55,9 @@ export interface iCharacterSheetData extends iBaseCharacterSheet {
 export interface iCharacterSheet extends iBaseCharacterSheet, iToJson<iCharacterSheetData>, iLoggerCollection {
 	// saveToFile(): boolean; // ? should this be handled by another class?
 
-	name: iCoreStringTrait;
-	clan: iCoreStringTrait;
-	sire: iCoreStringTrait;
+	name: iCoreStringTrait<string>;
+	clan: iCoreStringTrait<ClanName>; // todo allow this to specify using ClanName type union
+	sire: iCoreStringTrait<string>;
 	health: iCoreNumberTrait;
 	willpower: iCoreNumberTrait;
 	hunger: iCoreNumberTrait;

@@ -10,6 +10,7 @@ import {
 	CoreStringTraitName,
 	TraitValueTypeUnion,
 	TraitNameUnionOrString,
+	ClanName,
 } from './../declarations/types';
 import {
 	iBaseTrait,
@@ -18,6 +19,7 @@ import {
 	iStringTraitData,
 	iCoreNumberTrait,
 	iTraitData,
+	iStringTrait,
 } from './../declarations/interfaces/trait-interfaces';
 import { iTouchStoneOrConvictionData } from '../declarations/interfaces/trait-interfaces';
 import path from 'path';
@@ -59,9 +61,9 @@ export default class CharacterSheet implements iCharacterSheet {
 	readonly disciplines: iDisciplineTraitCollection;
 	readonly touchstonesAndConvictions: iTouchStoneOrConvictionCollection;
 
-	readonly name: iCoreStringTrait;
-	readonly clan: iCoreStringTrait;
-	readonly sire: iCoreStringTrait;
+	readonly name: iCoreStringTrait<string>;
+	readonly clan: iCoreStringTrait<ClanName>;
+	readonly sire: iCoreStringTrait<string>;
 	readonly health: iCoreNumberTrait;
 	readonly willpower: iCoreNumberTrait;
 	readonly hunger: iCoreNumberTrait;
@@ -138,19 +140,19 @@ export default class CharacterSheet implements iCharacterSheet {
 		});
 
 		// core string traits
-		this.name = new StringTrait<CoreStringTraitName>({
+		this.name = new StringTrait<CoreStringTraitName, string>({
 			name: 'Name',
 			value: initialValues?.name.value || '',
 			saveAction,
 		});
 
-		this.sire = new StringTrait<CoreStringTraitName>({
+		this.sire = new StringTrait<CoreStringTraitName, string>({
 			name: 'Sire',
 			value: initialValues?.sire.value || '',
 			saveAction,
 		});
 
-		this.clan = new StringTrait<CoreStringTraitName>({
+		this.clan = new StringTrait<CoreStringTraitName, ClanName>({
 			name: 'Clan',
 			value: initialValues?.clan.value || '',
 			saveAction,
@@ -218,15 +220,16 @@ export default class CharacterSheet implements iCharacterSheet {
 	public toJson(): iCharacterSheetData {
 		const data: iCharacterSheetData = {
 			attributes: this.attributes.toJson(),
-			bloodPotency: this.bloodPotency.toJson() as iNumberTraitData<CoreNumberTraitName>,
-			clan: this.clan.toJson() as iStringTraitData<CoreStringTraitName>,
 			disciplines: this.disciplines.toJson(),
+			bloodPotency: this.bloodPotency.toJson() ,
+			clan: this.clan.toJson() as iStringTraitData<CoreStringTraitName, ClanName>,
+			name: this.name.toJson() as iStringTraitData<CoreStringTraitName, string>,
+			sire: this.sire.toJson() as iStringTraitData<CoreStringTraitName, string>,
+
 			discordUserId: this.discordUserId,
 			health: this.health.toJson() as iNumberTraitData<CoreNumberTraitName>,
 			humanity: this.humanity.toJson() as iNumberTraitData<CoreNumberTraitName>,
 			hunger: this.hunger.toJson() as iNumberTraitData<CoreNumberTraitName>,
-			name: this.name.toJson() as iStringTraitData<CoreStringTraitName>,
-			sire: this.sire.toJson() as iStringTraitData<CoreStringTraitName>,
 			skills: this.skills.toJson(),
 			touchstonesAndConvictions: this.touchstonesAndConvictions.toJson(),
 			willpower: this.willpower.toJson() as iNumberTraitData<CoreNumberTraitName>,
@@ -274,5 +277,4 @@ export default class CharacterSheet implements iCharacterSheet {
 			.reduce((events, report) => [...events, ...report.logEvents], [] as iLogEvent[])
 			.sort((a, b) => Number(a.time.getTime() - b.time.getTime()));
 	}
- 
 }
