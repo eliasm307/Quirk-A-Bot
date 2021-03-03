@@ -1,10 +1,7 @@
 import { iLogCollection, iLogReport } from './../../declarations/interfaces/log-interfaces';
 import { iLogEvent } from '../../declarations/interfaces/log-interfaces';
 import { iBaseTrait } from '../../declarations/interfaces/trait-interfaces';
-import {
-	TraitNameUnionOrString,
-	TraitValueTypeUnion,
-} from '../../declarations/types';
+import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../declarations/types';
 import { iBaseTraitProps, iTraitData } from '../../declarations/interfaces/trait-interfaces';
 import LogCollection from '../log/LogCollection';
 import UpdateLogEvent from '../log/UpdateLogEvent';
@@ -30,7 +27,7 @@ export default abstract class AbstractBaseTrait<
 	protected abstract newValueIsValid(newVal: V): boolean;
 
 	public set value(newVal: V) {
-		if (this.newValueIsValid(newVal)) this.onChange('value', newVal);
+		if (this.newValueIsValid(newVal)) this.onChange('value', this.preProcessValue(newVal));
 	}
 	public get value() {
 		return this.#private.value;
@@ -40,7 +37,7 @@ export default abstract class AbstractBaseTrait<
 		this.#saveAction = saveAction;
 		this.name = name;
 		this.#private = {
-			value: value,
+			value: this.preProcessValue(value),
 		};
 		if (!toJson) throw Error(`${__filename} toJson function not defined`);
 		this.toJson = toJson;
@@ -59,12 +56,15 @@ export default abstract class AbstractBaseTrait<
 		return this.#logs.getReport();
 	}
 
+	protected abstract preProcessValue(newValueRaw: V): V;
+
 	protected onChange<PrivateProperty extends keyof iPrivateModifiableProperties<V>>(
 		property: PrivateProperty,
 		newValue: V
 	): void {
 		// get current value as old value
 		const oldValue: V = this.#private[property];
+ 
 
 		// if old value is the same as new value do nothing
 		if (oldValue === newValue)

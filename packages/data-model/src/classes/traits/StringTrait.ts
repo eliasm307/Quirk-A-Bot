@@ -34,4 +34,8 @@ export default class StringTrait<N extends TraitNameUnionOrString, V extends str
 
 		return true;
 	}
+	preProcessValue( newValueRaw: V ): V {
+		// no pre processing for string values
+		return newValueRaw;
+	}
 }

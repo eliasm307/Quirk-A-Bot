@@ -51,4 +51,9 @@ export default abstract class AbstractNumberTrait<N extends TraitNameUnionOrStri
 		// todo round the value to an integer
 		return true;
 	}
+
+	preProcessValue(newValueRaw: number): number {
+		// number values to be rounded before being used
+		return Math.round(newValueRaw);
+	}
 }
