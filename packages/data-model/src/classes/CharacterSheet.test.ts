@@ -9,6 +9,15 @@ const filePathRandom = path.resolve(__dirname, `../data/character-sheets/tempora
 
 let testName: string;
 
+testName = 'loading from file that doesnt exist';
+test(testName, () => {
+	expect(() =>
+		CharacterSheet.loadFromFile({
+			filePath: path.resolve(__dirname, `../data/character-sheets/temporary/i-dont-exist.json`),
+		})
+	).toThrowError();
+});
+
 testName = 'save new blank character sheet and load the character sheet';
 test(testName, () => {
 	// creates new sheet and does initial save

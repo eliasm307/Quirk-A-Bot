@@ -82,7 +82,7 @@ export default class CharacterSheet implements iCharacterSheet {
 		let initialValues: iCharacterSheetData | null = null;
 
 		// function to save this character sheet
-		const saveAction = () => this.saveToFile();
+		const saveAction = () => this.saveToFile(this.toJson(), this.#savePath);
 
 		if (typeof sheet === 'number') {
 			this.discordUserId = sheet;
@@ -176,7 +176,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			path.resolve(__dirname, `../data/character-sheets/${this.discordUserId}.json`);
 
 		// if only user id was provided, assume this is a new sheet then do initial save so a persistent file exists
-		if (typeof sheet === 'number') this.saveToFile();
+		if (typeof sheet === 'number') this.saveToFile(this.toJson(), this.#savePath);
 	}
 
 	// todo loading and saving should be done by a persistence management class
@@ -244,9 +244,9 @@ export default class CharacterSheet implements iCharacterSheet {
 		return data;
 	}
 
-	private saveToFile(): boolean {
+	private saveToFile(data: iCharacterSheetData, savePath: string): boolean {
 		// this.#savePath
-		return exportDataToFile(this.toJson(), this.#savePath);
+		return exportDataToFile(data, savePath);
 	}
 
 	private getAllTraits(): iBaseTrait<

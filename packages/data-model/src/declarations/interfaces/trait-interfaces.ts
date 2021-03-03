@@ -86,7 +86,7 @@ export interface iStringTraitData<N extends TraitNameUnionOrString, V extends st
 		iHasStringValue<V> {}
 // -------------------------------------------------------
 // SPECIFIC TRAIT DATA TYPES
-// ? Data should only contain user defined data
+// NOTE Data should only contain user defined data
 
 export interface iAttributeData extends iNumberTraitData<AttributeName> {}
 export interface iTouchStoneOrConvictionData extends iStringTraitData<string, string> {}
@@ -105,7 +105,7 @@ export interface iBaseTrait<
 	V extends TraitValueTypeUnion,
 	D extends iTraitData<N, V>
 > extends iTraitData<N, V>,
-		iToJson<D>, // ? should this use iTraitData<N, V> or generic type that extends iTraitData<N, V> to allow custom data types?
+		iToJson<D>, 
 		iLoggerSingle {
 	// todo add explain method to give a summary what this trait is for
 	// todo add explainValue method to describe the current value of the attribute, ie add description getter to describe the meaning of a value
