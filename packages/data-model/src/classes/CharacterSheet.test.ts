@@ -47,8 +47,8 @@ test(testName, () => {
 
 	console.log({
 		testName,
-		healthLog1: csLoaded.health.getLogData(),
-		healthLog2: cs2.health.getLogData(),
+		healthLog1: csLoaded.health.getLogReport(),
+		healthLog2: cs2.health.getLogReport(),
 		health: csLoaded.health.toJson(),
 	});
 
@@ -64,7 +64,7 @@ test(testName, () => {
 
 	// check changes were logged
 	// todo make sure logs are tested, there should be a method to get all logs of a character sheet
-	expect(csLoaded.health.getLogData().length).toBeGreaterThanOrEqual(1);
+	expect(csLoaded.health.getLogReport().logEvents.length).toBeGreaterThanOrEqual(1);
 
 	// add more log items
 	csLoaded.health.value += 3;
@@ -78,8 +78,8 @@ test(testName, () => {
 	});*/
 
 	// check changes were logged
-	expect(csLoaded.health.getLogData().length).toBeGreaterThanOrEqual(2);
-	expect(csLoaded.getLogData()).toEqual(cs2.getLogData());
+	expect(csLoaded.health.getLogReport().logEvents.length).toBeGreaterThanOrEqual(2);
+	expect(csLoaded.getLogReport()).toEqual(cs2.getLogReport());
 });
 
 testName = 'test basic trait methods';
