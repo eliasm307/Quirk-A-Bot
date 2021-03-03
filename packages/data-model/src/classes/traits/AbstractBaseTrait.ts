@@ -52,9 +52,12 @@ export default abstract class AbstractBaseTrait<
 		// make sure character sheet has a reference to this Skill // will this produce any cyclic behaviour? tested, and YES it does
 		// if (!this.#characterSheet.getSkillByName(name)) this.#characterSheet.setSkill(name, value);
 	}
+	getLogEvents(): iLogEvent[] {
+		return this.getLogReport().logEvents;
+	}
 	toJson: () => D;
 
-	getLogData(): iLogReport {
+	getLogReport(): iLogReport {
 		return this.#logs.toJson();
 	}
 

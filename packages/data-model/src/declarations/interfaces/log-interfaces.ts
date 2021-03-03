@@ -19,15 +19,22 @@ export interface iLogReport {
 
 }
 
-export interface iAddLogEvent<T> extends iLogEvent, iHasNewValue<T> {}
+export interface iAddLogEvent<T> extends iLogEvent, iHasNewValue<T> { }
+
+export interface iBaseLogger {
+	getLogEvents(): iLogEvent[];
+}
 
 /** For objects that require internal logging */
-export interface iLogger {
-	getLogData(): iLogReport;
+export interface iLoggerSingle extends iBaseLogger {
+	getLogReport(): iLogReport;
+}
+export interface iLoggerCollection extends iBaseLogger {
+	getLogReport(): iLogReport[];
 }
 
 export interface iLogReporter {
-	generateLogReport(logger: iLogger): string;
+	generateLogReport(logger: iLoggerSingle): string;
 }
 
 export interface iLogCollection {

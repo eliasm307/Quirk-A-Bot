@@ -15,7 +15,7 @@ import { iAttributeData, iDisciplineData, iSkillData } from '../declarations/int
 import importDataFromFile from '../utils/importDataFromFile';
 import exportDataToFile from '../utils/exportDataToFile';
 import { iCharacterSheet, iCharacterSheetData } from '../declarations/interfaces/character-sheet-interfaces';
-import { iLogger, iLogEvent } from '../declarations/interfaces/log-interfaces';
+import { iLoggerSingle, iLogEvent } from '../declarations/interfaces/log-interfaces';
 import TraitFactory from './traits/TraitFactory';
 import StringTrait from './traits/StringTrait';
 import { isBaseTrait, isCharacterSheetData } from '../utils/typePredicates'; 
@@ -29,7 +29,7 @@ interface iLoadFromFileArgs {
 
 // todo split this into smaller pieces
 
-export default class CharacterSheet implements iCharacterSheet, iLogger {
+export default class CharacterSheet implements iCharacterSheet, iLoggerSingle {
 	readonly discordUserId: number;
 
 	//-------------------------------------
@@ -228,7 +228,7 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 	}
 
 	// todo make this report log events grouped into objects with details about the property
-	getLogData(): iLogEvent[] {
+	getLogReport(): iLogEvent[] {
 		const exampleData = TraitFactory.newCharacterSheetDataObject();
 		const ex = this;
 		const logs: iLogEvent[] = [];

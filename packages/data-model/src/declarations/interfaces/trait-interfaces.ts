@@ -1,6 +1,6 @@
 import { CoreNumberTraitName, CoreStringTraitName, TraitNameUnionOrString, TraitValueDynamic } from './../types';
 import { iCanHaveSaveAction, iToJson } from './general-interfaces';
-import { iLogger } from './log-interfaces';
+import { iLoggerSingle } from './log-interfaces';
 import {
 	AttributeCategory,
 	AttributeName,
@@ -73,6 +73,7 @@ export interface iTraitCollectionProps<
 	T extends iBaseTrait<N, V, D>
 > extends iCanHaveSaveAction {
 	// todo use dynamic types here?
+	name: string;
 	instanceCreator: (props: iBaseTraitProps<N, V, D>) => T;
 	// todo make this more specific in terms of available names and value types
 }
@@ -109,7 +110,7 @@ export interface iBaseTrait<
 	D extends iTraitData<N, V>
 > extends iTraitData<N, V>,
 		iToJson<D>, // ? should this use iTraitData<N, V> or generic type that extends iTraitData<N, V> to allow custom data types?
-		iLogger {
+		iLoggerSingle {
 	// todo add explain method to give a summary what this trait is for
 	// todo add explainValue method to describe the current value of the attribute, ie add description getter to describe the meaning of a value
 	// todo add min and max limits for trait values, shoud this be done here?

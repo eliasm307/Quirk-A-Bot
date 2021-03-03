@@ -10,8 +10,9 @@ import LogCollection from '../log/LogCollection';
 import DeleteLogEvent from '../log/DeleteLogEvent';
 import UpdateLogEvent from '../log/UpdateLogEvent';
 import AddLogEvent from '../log/AddLogEvent';
-import { iLogEvent } from '../../declarations/interfaces/log-interfaces';
+import { iLogCollection, iLogEvent, iLogReport } from '../../declarations/interfaces/log-interfaces';
 import { iTraitCollection } from '../../declarations/interfaces/trait-collection-interfaces';
+import { threadId } from 'node:worker_threads';
 
 // todo delete
 /*
@@ -28,28 +29,31 @@ export default class TraitCollection<
 > implements iTraitCollection<N, V, D, T> {
 	#instanceCreator: (props: iBaseTraitProps<N, V, D>) => T;
 	private saveAction?: () => boolean;
+	name: string;
 	#map: Map<N, T>;
-	#logs = new LogCollection<V>();
+	#logs: iLogCollection;
 	#typeName: TraitTypeNameUnion | string = 'Trait';
-	constructor({ instanceCreator, saveAction }: iTraitCollectionProps<N, V,D, T>, ...initialData: iTraitData<N, V>[]) {
+	constructor(
+		{ instanceCreator, saveAction, name }: iTraitCollectionProps<N, V, D, T>,
+		...initialData: iTraitData<N, V>[]
+	) {
+		this.name = name;
 		this.saveAction = saveAction;
 		this.#instanceCreator = instanceCreator;
 		this.#map = new Map<N, T>(initialData.map(({ name, value }) => [name, instanceCreator({ name, value })]));
+		this.#logs = new LogCollection({ sourceName: name, sourceType: 'Trait Collection' });
 	}
-	getLogData(): iLogEvent[] {
-		const collectionLogs: iLogEvent[] = this.#logs.toJson();
-		const itemLogs: iLogEvent[] = Array.from(this.#map.values()).reduce(
-			(acc: iLogEvent[], e) => [...acc, ...e.getLogData()],
-			[]
-		);
-		//todo memoise the above
-
-		// console.warn('getLogData()', { collectionLogs, itemLogs });
-
-		// combine logs and sort oldest to newest
-		return [...collectionLogs, ...itemLogs].sort((a, b) => Number(a.time.getTime() - b.time.getTime()));
+	getLogEvents(): iLogEvent[] {
+		//todo memoise
+		// combine logs from reports and and sort oldest to newest
+		return this.getLogReport()
+			.reduce((events, report) => [...events, ...report.logEvents], [] as iLogEvent[])
+			.sort((a, b) => Number(a.time.getTime() - b.time.getTime()));
 	}
-	toJson(): iTraitData<N, V>[] {
+	getLogReport(): iLogReport[] {
+		return Array.from(this.#map.values()).map(e => e.getLogReport());
+	}
+	toJson(): D[] {
 		return Array.from(this.#map.values()).map(e => e.toJson());
 	}
 	get size(): number {
