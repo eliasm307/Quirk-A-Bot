@@ -3,7 +3,7 @@ import { iLogCollection, iLogEvent } from '../../declarations/interfaces/log-int
 import { LogInitialValueDynamic, LogNewValueDynamic, LogOperationUnion, LogSourceType } from '../../declarations/types';
 import {} from '../../declarations/interfaces/trait-interfaces';
 
-export default class LogCollection<T> implements iLogCollection {
+export default class LogCollection implements iLogCollection {
 	#logs: iLogEvent[] = [];
 	#sourceName: string;
 	#sourceType: LogSourceType;
@@ -22,5 +22,5 @@ export default class LogCollection<T> implements iLogCollection {
 			sourceName: this.#sourceName,
 			sourceType: this.#sourceType,
 		};
-	}
+	} 
 }
