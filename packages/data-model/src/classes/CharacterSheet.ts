@@ -99,7 +99,7 @@ export default class CharacterSheet implements iCharacterSheet {
 				initialSkills = [...skills];
 				initialTouchstonesAndConvictions = [...touchstonesAndConvictions];
 			} else {
-				console.error(__filename, { sheet });
+				// console.error(__filename, { sheet });
 				throw Error(`${__filename} data is an object but it is not valid character sheet data, "${sheet}"`);
 			}
 		} else {
