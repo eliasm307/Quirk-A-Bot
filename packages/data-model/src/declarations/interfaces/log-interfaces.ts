@@ -7,6 +7,7 @@ export interface iBaseLogEventProps {
 
 // todo this violates interface segregation, intial and new value arent universal
 export interface iLogEvent extends iBaseLogEventProps {
+	id: string
 	operation: LogOperationUnion;
 	describe(): string;
 	time: Date;
@@ -40,7 +41,7 @@ export interface iLogReporter {
 export interface iLogCollection {
 	log(event: iLogEvent): void;
 
-	toJson(): iLogReport;
+	getReport(): iLogReport;
 }
 
 export interface iLogCollectionProps {

@@ -31,6 +31,8 @@ export default class TraitCollection<
 	private saveAction?: () => boolean;
 	name: string;
 	#map: Map<N, T>;
+	
+	/** Collection of logs for trait collection, ie add and remove events only (update events are held in traits) */
 	#logs: iLogCollection;
 	#typeName: TraitTypeNameUnion | string = 'Trait';
 	constructor(
@@ -54,7 +56,7 @@ export default class TraitCollection<
 			.sort((a, b) => Number(a.time.getTime() - b.time.getTime()));
 	}
 	getLogReport(): iLogReport[] {
-		return this.toArray().map(e => e.getLogReport());
+		return [this.#logs.getReport(), ...this.toArray().map(e => e.getLogReport())];
 	}
 	toJson(): D[] {
 		return this.toArray().map(e => e.toJson());
@@ -103,8 +105,8 @@ export default class TraitCollection<
 			// apply change
 			instance.value = newValue;
 
-			// log change // NOTE the instances also log changes?
-			this.#logs.log(new UpdateLogEvent({ newValue, oldValue, property: name }));
+			// the instance logs changes internally
+			// this.#logs.log(new UpdateLogEvent({ newValue, oldValue, property: name }));
 		} else {
 			// add new trait instance
 			this.#map.set(name, this.#instanceCreator({ name, value: newValue }));

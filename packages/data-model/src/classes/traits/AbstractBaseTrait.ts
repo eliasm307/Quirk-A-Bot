@@ -58,7 +58,7 @@ export default abstract class AbstractBaseTrait<
 	toJson: () => D;
 
 	getLogReport(): iLogReport {
-		return this.#logs.toJson();
+		return this.#logs.getReport();
 	}
 
 	protected onChange<PrivateProperty extends keyof iPrivateModifiableProperties<V>>(

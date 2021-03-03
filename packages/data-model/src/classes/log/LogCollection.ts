@@ -16,7 +16,7 @@ export default class LogCollection implements iLogCollection {
 	log(event: iLogEvent): void {
 		this.#logs.push(event);
 	}
-	toJson(): iLogReport {
+	getReport(): iLogReport {
 		return {
 			logEvents: [...this.#logs],
 			sourceName: this.#sourceName,

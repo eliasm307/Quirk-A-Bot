@@ -228,7 +228,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			touchstonesAndConvictions: this.touchstonesAndConvictions.toJson(),
 			willpower: this.willpower.toJson() as iNumberTraitData<CoreNumberTraitName>,
 		};
-		console.log(__filename, { data });
+		// console.log(__filename, { data });
 		return data;
 	}
 
