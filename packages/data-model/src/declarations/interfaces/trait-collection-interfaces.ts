@@ -38,6 +38,7 @@ export interface iTraitCollection<
 	set(name: N, value: V): void;
 	delete(name: N): void;
 	has(name: N): boolean;
+	toArray(): T[];
 	readonly size: number;
 }
 

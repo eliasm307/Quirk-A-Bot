@@ -1,5 +1,6 @@
+import { iLogReport } from './../declarations/interfaces/log-interfaces';
 import { iAttributeTraitCollection, iSkillTraitCollection, iDisciplineTraitCollection, iTouchStoneOrConvictionCollection } from './../declarations/interfaces/trait-collection-interfaces';
-import { CoreNumberTraitName, CoreStringTraitName, TraitValueTypeUnion } from './../declarations/types';
+import { CoreNumberTraitName, CoreStringTraitName, TraitValueTypeUnion, TraitNameUnionOrString } from './../declarations/types';
 import {
 	iBaseTrait,
 	iCoreStringTrait,
@@ -29,7 +30,7 @@ interface iLoadFromFileArgs {
 
 // todo split this into smaller pieces
 
-export default class CharacterSheet implements iCharacterSheet, iLoggerSingle {
+export default class CharacterSheet implements iCharacterSheet {
 	readonly discordUserId: number;
 
 	//-------------------------------------
@@ -227,11 +228,35 @@ export default class CharacterSheet implements iCharacterSheet, iLoggerSingle {
 		return exportDataToFile(this.toJson(), this.#savePath);
 	}
 
+	private getAllTraits(): iBaseTrait<
+		TraitNameUnionOrString,
+		TraitValueTypeUnion,
+		iTraitData<TraitNameUnionOrString, TraitValueTypeUnion>
+		>[] {
+		return [
+			...this.attributes.,
+			...this.disciplines.getLogReport(),
+			...this.skills.getLogReport(),
+			...this.touchstonesAndConvictions ,
+			this.bloodPotency ,
+			this.clan,
+		];
+	}
+
 	// todo make this report log events grouped into objects with details about the property
-	getLogReport(): iLogEvent[] {
+	getLogReport(): iLogReport[] {
 		const exampleData = TraitFactory.newCharacterSheetDataObject();
 		const ex = this;
 		const logs: iLogEvent[] = [];
+
+		return [
+			...this.attributes.getLogReport(),
+			...this.disciplines.getLogReport(),
+			...this.skills.getLogReport(),
+			...this.touchstonesAndConvictions.getLogReport(),
+			this.bloodPotency.getLogReport(),
+			this.clan.g,
+		];
 
 		// todo put core traits into a private traitCollection then get logs as normal
 		/*

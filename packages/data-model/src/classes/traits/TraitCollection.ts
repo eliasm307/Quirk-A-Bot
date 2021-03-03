@@ -43,6 +43,9 @@ export default class TraitCollection<
 		this.#map = new Map<N, T>(initialData.map(({ name, value }) => [name, instanceCreator({ name, value })]));
 		this.#logs = new LogCollection({ sourceName: name, sourceType: 'Trait Collection' });
 	}
+	toArray(): T[] {
+		return Array.from(this.#map.values());
+	}
 	getLogEvents(): iLogEvent[] {
 		//todo memoise
 		// combine logs from reports and and sort oldest to newest
@@ -51,10 +54,10 @@ export default class TraitCollection<
 			.sort((a, b) => Number(a.time.getTime() - b.time.getTime()));
 	}
 	getLogReport(): iLogReport[] {
-		return Array.from(this.#map.values()).map(e => e.getLogReport());
+		return this.toArray().map(e => e.getLogReport());
 	}
 	toJson(): D[] {
-		return Array.from(this.#map.values()).map(e => e.toJson());
+		return this.toArray().map(e => e.toJson());
 	}
 	get size(): number {
 		return this.#map.size;

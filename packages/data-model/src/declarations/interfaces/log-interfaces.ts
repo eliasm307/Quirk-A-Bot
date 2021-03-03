@@ -30,7 +30,7 @@ export interface iLoggerSingle extends iBaseLogger {
 	getLogReport(): iLogReport;
 }
 export interface iLoggerCollection extends iBaseLogger {
-	getLogReport(): iLogReport[];
+	getLogReport(): iLogReport[]; 
 }
 
 export interface iLogReporter {
