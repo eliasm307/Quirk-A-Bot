@@ -20,7 +20,9 @@ export function isDisciplineName(name: string): name is DisciplineName {
 	const allowedKeys: string[] = [...DISCIPLINE_NAMES];
 	return allowedKeys.indexOf(name) !== -1;
 }
-export function isCharacterSheetData(data: iCharacterSheetData): data is iCharacterSheetData {
+export function isCharacterSheetData(data: any): data is iCharacterSheetData {
+	if (typeof data !== 'object') return false;
+
 	const {
 		attributes,
 		bloodPotency,
@@ -60,11 +62,13 @@ export function isCharacterSheetData(data: iCharacterSheetData): data is iCharac
 	// todo test this
 }
 
-export function isTraitData(data: iGeneralTraitData): data is iGeneralTraitData {
+export function isTraitData(data: any): data is iGeneralTraitData {
+	if (typeof data !== 'object') return false;
 	return !!data.name && !!data.value;
 }
 
-export function isTraitCollection(data: iGeneralTraitCollection): data is iGeneralTraitCollection {
+export function isTraitCollection(data: any): data is iGeneralTraitCollection {
+	if (typeof data !== 'object') return false;
 	return (
 		!!data.delete &&
 		!!data.get &&
@@ -79,7 +83,8 @@ export function isTraitCollection(data: iGeneralTraitCollection): data is iGener
 	);
 }
 
-export function isBaseTrait(data: iGeneralTrait): data is iGeneralTrait {
+export function isBaseTrait(data: any): data is iGeneralTrait {
+	if (typeof data !== 'object') return false;
 	// todo improve this to account for types
 	return !!data.name && !!data.value && !!data.getLogEvents && !!data.getLogReport && !!data.toJson;
 }

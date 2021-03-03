@@ -62,11 +62,11 @@ export default class CharacterSheet implements iCharacterSheet {
 	readonly name: iCoreStringTrait;
 	readonly clan: iCoreStringTrait;
 	readonly sire: iCoreStringTrait;
-	readonly health: iCoreNumberTrait;  
-	readonly willpower: iCoreNumberTrait; 
-	readonly hunger: iCoreNumberTrait; 
-	readonly humanity: iCoreNumberTrait;  
-	readonly bloodPotency: iCoreNumberTrait;  
+	readonly health: iCoreNumberTrait;
+	readonly willpower: iCoreNumberTrait;
+	readonly hunger: iCoreNumberTrait;
+	readonly humanity: iCoreNumberTrait;
+	readonly bloodPotency: iCoreNumberTrait;
 
 	//-------------------------------------
 	// CONSTRUCTOR
@@ -201,9 +201,10 @@ export default class CharacterSheet implements iCharacterSheet {
 		// todo make sure imported data matches expected schema
 		const data = importDataFromFile(resolvedPath);
 
-		if ( !data ) throw Error( `Error importing data from ${ resolvedPath }` );
-		
-		if(!isCharacterSheetData(data)) throw Error{`Data from path "${resolvedPath}" is not valid character sheet data`}
+		if (!data) throw Error(`Error importing data from ${resolvedPath}`);
+
+		// todo enable type predicate check
+		// if ( !isCharacterSheetData( data ) ) throw Error( `Data from path "${ resolvedPath }" is not valid character sheet data` );
 
 		const instance = new CharacterSheet(data, resolvedPath);
 
