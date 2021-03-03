@@ -24,27 +24,14 @@ import {
 import { ClanName, CoreNumberTraitName, CoreStringTraitName } from '../types';
 import { iToJson } from './general-interfaces';
 
-// todo delete
-export interface iCharacterSheetPrimitiveData {
-	discordUserId: number;
-	// todo add user aliases (ie known discord names to be added by bot)
-	name: string;
-	clan: ClanName;
-	sire: string;
-	health: number; // todo limit 0 to 10
-	willpower: number; // todo limit 0 to 10
-	hunger: number; // todo limit 0 to 5
-	humanity: number; // todo limit 0 to 10
-	bloodPotency: number; // todo limit 0 to 10
-}
-
 // todo rename to ibaseCharacterSheet and then CS data and CS object should extend this, only discord userId is common between them for now
 export interface iCharacterSheetNonPrimitiveData {}
 
 export interface iCharacterSheetData extends iCharacterSheetNonPrimitiveData {
+	// todo add user aliases (ie known discord names to be added by bot)
 	discordUserId: number;
 	name: iTraitData<CoreStringTraitName, string>;
-	clan: iTraitData<CoreStringTraitName, string>;
+	clan: iTraitData<CoreStringTraitName, ClanName>;
 	sire: iTraitData<CoreStringTraitName, string>;
 	health: iTraitData<CoreNumberTraitName, number>;
 	willpower: iTraitData<CoreNumberTraitName, number>;
