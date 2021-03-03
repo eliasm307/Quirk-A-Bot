@@ -8,18 +8,9 @@ import {
 import { TraitTypeNameUnion, TraitValueTypeUnion } from '../../declarations/types';
 import LogCollection from '../log/LogCollection';
 import DeleteLogEvent from '../log/DeleteLogEvent';
-import UpdateLogEvent from '../log/UpdateLogEvent';
 import AddLogEvent from '../log/AddLogEvent';
 import { iLogCollection, iLogEvent, iLogReport } from '../../declarations/interfaces/log-interfaces';
 import { iTraitCollection } from '../../declarations/interfaces/trait-collection-interfaces';
-import { threadId } from 'node:worker_threads';
-
-// todo delete
-/*
-interface iInstanceCreatorProps<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion> {
-	name: N;
-	value: V;
-}*/
 
 export default class TraitCollection<
 	N extends TraitNameUnionOrString,
@@ -31,7 +22,7 @@ export default class TraitCollection<
 	private saveAction?: () => boolean;
 	name: string;
 	#map: Map<N, T>;
-	
+
 	/** Collection of logs for trait collection, ie add and remove events only (update events are held in traits) */
 	#logs: iLogCollection;
 	#typeName: TraitTypeNameUnion | string = 'Trait';

@@ -274,15 +274,5 @@ export default class CharacterSheet implements iCharacterSheet {
 			.reduce((events, report) => [...events, ...report.logEvents], [] as iLogEvent[])
 			.sort((a, b) => Number(a.time.getTime() - b.time.getTime()));
 	}
-
-	// todo delete
-	/*
-	private getTraitByName<T extends keyof iCharacterSheet>(key: T): iBaseTrait<string, TraitValueTypeUnion> | null {
-		const trait = this[key];
-
-		if (isBaseTrait(trait)) {
-			return trait;
-		}
-		return null;
-	}*/
+ 
 }
