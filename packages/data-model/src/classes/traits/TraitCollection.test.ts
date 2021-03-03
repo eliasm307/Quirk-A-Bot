@@ -46,7 +46,7 @@ test(testName, () => {
 	// expect atleast 3 items
 	expect(tc.size).toBeGreaterThanOrEqual(3);
 
-	const log = tc.getLogReports();
+	const log = tc.getLogEvents();
 
 	// console.log({ testName, log });
 
@@ -80,5 +80,5 @@ test(testName, () => {
 
 	expect(tc.size).toBeGreaterThan(0);
 	expect(tc.toJson().map(a => a.name)).toContain('Charisma');
-	expect(tc.getLogReports().length).toBeGreaterThanOrEqual(1);
+	expect(tc.getLogReport().length).toBeGreaterThanOrEqual(1);
 });

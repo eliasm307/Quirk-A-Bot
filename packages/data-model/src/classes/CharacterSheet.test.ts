@@ -64,7 +64,7 @@ test(testName, () => {
 
 	// check changes were logged
 	// todo make sure logs are tested, there should be a method to get all logs of a character sheet
-	expect(csLoaded.health.getLogReport().length).toBeGreaterThanOrEqual(1);
+	expect(csLoaded.health.getLogReport().logEvents.length).toBeGreaterThanOrEqual(1);
 
 	// add more log items
 	csLoaded.health.value += 3;
@@ -78,7 +78,7 @@ test(testName, () => {
 	});*/
 
 	// check changes were logged
-	expect(csLoaded.health.getLogReport().length).toBeGreaterThanOrEqual(2);
+	expect(csLoaded.health.getLogReport().logEvents.length).toBeGreaterThanOrEqual(2);
 	expect(csLoaded.getLogReport()).toEqual(cs2.getLogReport());
 });
 

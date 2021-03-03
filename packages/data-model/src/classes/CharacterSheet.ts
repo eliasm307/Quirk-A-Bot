@@ -261,6 +261,7 @@ export default class CharacterSheet implements iCharacterSheet {
 
 	// todo make this report log events grouped into objects with details about the property
 	getLogReport(): iLogReport[] {
+		// todo test
 		return this.getAllTraits().map(trait => trait.getLogReport());
 	}
 	getLogEvents(): iLogEvent[] {
