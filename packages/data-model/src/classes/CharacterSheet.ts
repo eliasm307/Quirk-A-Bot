@@ -1,24 +1,34 @@
-import { iAttributeTraitCollection, iSkillTraitCollection, iDisciplineTraitCollection, iTouchStoneOrConvictionCollection } from './../declarations/interfaces/trait-collection-interfaces';
-import { CoreNumberTraitName, CoreStringTraitName, TraitValueTypeUnion } from './../declarations/types';
+import { iLogReport } from './../declarations/interfaces/log-interfaces';
+import {
+	iAttributeTraitCollection,
+	iSkillTraitCollection,
+	iDisciplineTraitCollection,
+	iTouchStoneOrConvictionCollection,
+} from './../declarations/interfaces/trait-collection-interfaces';
+import {
+	CoreNumberTraitName,
+	CoreStringTraitName,
+	TraitValueTypeUnion,
+	TraitNameUnionOrString,
+} from './../declarations/types';
 import {
 	iBaseTrait,
 	iCoreStringTrait,
 	iNumberTraitData,
 	iStringTraitData,
 	iCoreNumberTrait,
+	iTraitData,
 } from './../declarations/interfaces/trait-interfaces';
-import {
-	iTouchStoneOrConvictionData,
-} from '../declarations/interfaces/trait-interfaces';
+import { iTouchStoneOrConvictionData } from '../declarations/interfaces/trait-interfaces';
 import path from 'path';
 import { iAttributeData, iDisciplineData, iSkillData } from '../declarations/interfaces/trait-interfaces';
 import importDataFromFile from '../utils/importDataFromFile';
 import exportDataToFile from '../utils/exportDataToFile';
 import { iCharacterSheet, iCharacterSheetData } from '../declarations/interfaces/character-sheet-interfaces';
-import { iLogger, iLogEvent } from '../declarations/interfaces/log-interfaces';
+import { iLoggerSingle, iLogEvent } from '../declarations/interfaces/log-interfaces';
 import TraitFactory from './traits/TraitFactory';
 import StringTrait from './traits/StringTrait';
-import { isBaseTrait, isCharacterSheetData } from '../utils/typePredicates'; 
+import { isBaseTrait, isCharacterSheetData } from '../utils/typePredicates';
 import NumberTrait from './traits/NumberTrait';
 
 // ! this shouldnt be here, should be in a file about persistence
@@ -29,7 +39,7 @@ interface iLoadFromFileArgs {
 
 // todo split this into smaller pieces
 
-export default class CharacterSheet implements iCharacterSheet, iLogger {
+export default class CharacterSheet implements iCharacterSheet {
 	readonly discordUserId: number;
 
 	//-------------------------------------
@@ -218,7 +228,7 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 			touchstonesAndConvictions: this.touchstonesAndConvictions.toJson(),
 			willpower: this.willpower.toJson() as iNumberTraitData<CoreNumberTraitName>,
 		};
-		console.log(__filename, { data });
+		// console.log(__filename, { data });
 		return data;
 	}
 
@@ -227,27 +237,39 @@ export default class CharacterSheet implements iCharacterSheet, iLogger {
 		return exportDataToFile(this.toJson(), this.#savePath);
 	}
 
+	private getAllTraits(): iBaseTrait<
+		TraitNameUnionOrString,
+		TraitValueTypeUnion,
+		iTraitData<TraitNameUnionOrString, TraitValueTypeUnion>
+	>[] {
+		// todo make this automatic and dynamic
+		return [
+			...this.attributes.toArray(),
+			...this.disciplines.toArray(),
+			...this.skills.toArray(),
+			...this.touchstonesAndConvictions.toArray(),
+			this.bloodPotency,
+			this.clan,
+			this.health,
+			this.humanity,
+			this.hunger,
+			this.name,
+			this.sire,
+			this.willpower,
+		];
+	}
+
 	// todo make this report log events grouped into objects with details about the property
-	getLogData(): iLogEvent[] {
-		const exampleData = TraitFactory.newCharacterSheetDataObject();
-		const ex = this;
-		const logs: iLogEvent[] = [];
-
-		// todo put core traits into a private traitCollection then get logs as normal
-		/*
-		for ( let key: keyof iCharacterSheet  in iCharacterSheetw ) {
- 
-			const trait  = this.getTraitByName(key)
-			if ( isBaseTrait<string, TraitValueTypeUnion>( this[ key ] ) ) {
-				logs.push(...this[key].)
-			}
-			
-		}
-	/	*/
-
-		throw Error('Method not implemented');
-
-		return [];
+	getLogReport(): iLogReport[] {
+		// todo test
+		return this.getAllTraits().map(trait => trait.getLogReport());
+	}
+	getLogEvents(): iLogEvent[] {
+		// todo test
+		// combine logs from reports and and sort oldest to newest
+		return this.getLogReport()
+			.reduce((events, report) => [...events, ...report.logEvents], [] as iLogEvent[])
+			.sort((a, b) => Number(a.time.getTime() - b.time.getTime()));
 	}
 
 	// todo delete

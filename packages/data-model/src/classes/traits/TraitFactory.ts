@@ -110,6 +110,7 @@ export default abstract class TraitFactory {
 		const { saveAction } = props || {};
 		return new TraitCollection<AttributeName, number, iAttributeData, iAttribute>(
 			{
+				name: `AttributeTraitCollection`,
 				saveAction,
 				instanceCreator: TraitFactory.newAttributeTrait,
 			},
@@ -121,6 +122,7 @@ export default abstract class TraitFactory {
 		const { saveAction } = props || {};
 		return new TraitCollection<SkillName, number, iSkillData, iSkill>(
 			{
+				name: `SkillTraitCollection`,
 				saveAction,
 				instanceCreator: TraitFactory.newSkillTrait,
 			},
@@ -135,6 +137,7 @@ export default abstract class TraitFactory {
 		const { saveAction } = props || {};
 		return new TraitCollection<DisciplineName, number, iDisciplineData, iDiscipline>(
 			{
+				name: `DisciplineTraitCollection`,
 				saveAction,
 				instanceCreator: TraitFactory.newDisciplineTrait,
 			},
@@ -149,6 +152,7 @@ export default abstract class TraitFactory {
 		const { saveAction } = props || {};
 		return new TraitCollection<string, string, iTouchStoneOrConvictionData, iTouchStoneOrConviction>(
 			{
+				name: `TouchstonesAndConvictionTraitCollection`,
 				saveAction,
 				instanceCreator: TraitFactory.newTouchStoneOrConvictionTrait,
 			},

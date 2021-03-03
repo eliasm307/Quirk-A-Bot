@@ -1,5 +1,6 @@
-import { LogOperationUnion} from '../../declarations/types';
+import { LogOperationUnion } from '../../declarations/types';
 import { iBaseLogEventProps, iLogEvent } from '../../declarations/interfaces/log-interfaces';
+import generateId from '../../utils/generateId';
 
 // ? this doesnt seem right
 interface iProps extends iBaseLogEventProps {
@@ -7,6 +8,7 @@ interface iProps extends iBaseLogEventProps {
 }
 
 export default abstract class BaseLogEvent<T> implements iLogEvent {
+	id: string;
 	operation: LogOperationUnion;
 	note?: string;
 	property: string;
@@ -38,6 +40,7 @@ export default abstract class BaseLogEvent<T> implements iLogEvent {
 				throw Error(`Unknown operation "${operation}"`);
 		}
 */
+		this.id = generateId();
 		this.operation = operation;
 		this.note = description;
 		this.property = property;

@@ -1,3 +1,4 @@
+import { iLoggerCollection } from './log-interfaces';
 import {
 	iAttributeTraitCollection,
 	iDisciplineTraitCollection,
@@ -56,9 +57,8 @@ export interface iCharacterSheetData extends iCharacterSheetNonPrimitiveData {
 	touchstonesAndConvictions: iTouchStoneOrConvictionData[];
 }
 
-export interface iCharacterSheet extends iToJson<iCharacterSheetData> {
+export interface iCharacterSheet extends iToJson<iCharacterSheetData>, iLoggerCollection {
 	// saveToFile(): boolean; // ? should this be handled by another class?
-	// toJson(): iCharacterSheetData;
 
 	readonly discordUserId: number;
 	// todo add user aliases (ie known discord names to be added by bot)

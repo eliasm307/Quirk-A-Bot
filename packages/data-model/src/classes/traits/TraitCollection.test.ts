@@ -46,11 +46,12 @@ test(testName, () => {
 	// expect atleast 3 items
 	expect(tc.size).toBeGreaterThanOrEqual(3);
 
-	const log = tc.getLogData();
+	const log = tc.getLogEvents();
 
-	// console.log({ testName, log });
+	console.log({ testName, log });
 
 	// expect logs
+	expect(log.length).toEqual(4)
 	expect(log[0].operation).toEqual('ADD' as LogOperationUnion);
 	expect(log[3].operation).toEqual('UPDATE' as LogOperationUnion);
 
@@ -80,5 +81,5 @@ test(testName, () => {
 
 	expect(tc.size).toBeGreaterThan(0);
 	expect(tc.toJson().map(a => a.name)).toContain('Charisma');
-	expect(tc.getLogData().length).toBeGreaterThanOrEqual(1);
+	expect(tc.getLogReport().length).toBeGreaterThanOrEqual(1);
 });

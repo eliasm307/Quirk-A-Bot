@@ -1,7 +1,7 @@
 import { AttributeName, SkillName, DisciplineName, CoreStringTraitName, CoreNumberTraitName } from './../types';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../types';
 import { iToJson } from './general-interfaces';
-import { iLogger } from './log-interfaces';
+import { iLoggerSingle, iLoggerCollection } from './log-interfaces';
 import {
 	iAttribute,
 	iBaseTrait,
@@ -31,12 +31,14 @@ export interface iTraitCollection<
 	V extends TraitValueTypeUnion,
 	D extends iTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
-> extends iToJson<iTraitData<N, V>[]>,
-		iLogger {
+> extends iToJson<D[]>,
+		iLoggerCollection {
+	name: string;
 	get(name: N): T | void;
 	set(name: N, value: V): void;
 	delete(name: N): void;
 	has(name: N): boolean;
+	toArray(): T[];
 	readonly size: number;
 }
 

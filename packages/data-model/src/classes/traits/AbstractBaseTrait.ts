@@ -1,3 +1,4 @@
+import { iLogCollection, iLogReport } from './../../declarations/interfaces/log-interfaces';
 import { iLogEvent } from '../../declarations/interfaces/log-interfaces';
 import { iBaseTrait } from '../../declarations/interfaces/trait-interfaces';
 import {
@@ -23,7 +24,7 @@ export default abstract class AbstractBaseTrait<
 	// #characterSheet: iCharacterSheet;
 
 	// todo log collections should not rely on iTraitData
-	#logs = new LogCollection<TraitValueDynamic<iTraitData<N, V>>>();
+	#logs: iLogCollection;
 	#saveAction?: () => boolean;
 
 	readonly name: N;
@@ -45,15 +46,19 @@ export default abstract class AbstractBaseTrait<
 		};
 		if (!toJson) throw Error(`${__filename} toJson function not defined`);
 		this.toJson = toJson;
+		this.#logs = new LogCollection({ sourceType: 'Trait', sourceName: this.name });
 
 		// todo, account for when this is instantiated independently, not by a CharacterSheet. Maybe use a factory? Or check for this when a change is made, ie before a save needs to be made (you could update the reference to the Skill based on which one was updated last? this seems like a bad pattern)
 		// make sure character sheet has a reference to this Skill // will this produce any cyclic behaviour? tested, and YES it does
 		// if (!this.#characterSheet.getSkillByName(name)) this.#characterSheet.setSkill(name, value);
 	}
+	getLogEvents(): iLogEvent[] {
+		return this.getLogReport().logEvents;
+	}
 	toJson: () => D;
 
-	getLogData(): iLogEvent[] {
-		return this.#logs.toJson();
+	getLogReport(): iLogReport {
+		return this.#logs.getReport();
 	}
 
 	protected onChange<PrivateProperty extends keyof iPrivateModifiableProperties<V>>(

@@ -1,4 +1,4 @@
-import { LogOperationUnion } from './../types';
+import { LogOperationUnion, LogSourceType } from './../types';
 import { iHasNewValue } from './general-interfaces';
 export interface iBaseLogEventProps {
 	note?: string;
@@ -7,24 +7,44 @@ export interface iBaseLogEventProps {
 
 // todo this violates interface segregation, intial and new value arent universal
 export interface iLogEvent extends iBaseLogEventProps {
+	id: string
 	operation: LogOperationUnion;
 	describe(): string;
 	time: Date;
 }
 
-export interface iAddLogEvent<T> extends iLogEvent, iHasNewValue<T> {}
+export interface iLogReport {
+	sourceName: string;
+	sourceType: LogSourceType 
+	logEvents: iLogEvent[];
+
+}
+
+export interface iAddLogEvent<T> extends iLogEvent, iHasNewValue<T> { }
+
+export interface iBaseLogger {
+	getLogEvents(): iLogEvent[];
+}
 
 /** For objects that require internal logging */
-export interface iLogger {
-	getLogData(): iLogEvent[];
+export interface iLoggerSingle extends iBaseLogger {
+	getLogReport(): iLogReport;
+}
+export interface iLoggerCollection extends iBaseLogger {
+	getLogReport(): iLogReport[]; 
 }
 
 export interface iLogReporter {
-	generateLogReport(logger: iLogger): string;
+	generateLogReport(logger: iLoggerSingle): string;
 }
 
 export interface iLogCollection {
 	log(event: iLogEvent): void;
 
-	toJson(): iLogEvent[];
+	getReport(): iLogReport;
+}
+
+export interface iLogCollectionProps {
+	sourceName: string;
+	sourceType: LogSourceType;
 }
