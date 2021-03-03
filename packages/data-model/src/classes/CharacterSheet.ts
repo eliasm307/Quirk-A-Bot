@@ -62,11 +62,11 @@ export default class CharacterSheet implements iCharacterSheet {
 	readonly name: iCoreStringTrait;
 	readonly clan: iCoreStringTrait;
 	readonly sire: iCoreStringTrait;
-	readonly health: iCoreNumberTrait; // todo limit 0 to 10
-	readonly willpower: iCoreNumberTrait; // todo limit 0 to 10
-	readonly hunger: iCoreNumberTrait; // todo limit 0 to 5
-	readonly humanity: iCoreNumberTrait; // todo limit 0 to 10
-	readonly bloodPotency: iCoreNumberTrait; // todo limit 0 to 10
+	readonly health: iCoreNumberTrait;  
+	readonly willpower: iCoreNumberTrait; 
+	readonly hunger: iCoreNumberTrait; 
+	readonly humanity: iCoreNumberTrait;  
+	readonly bloodPotency: iCoreNumberTrait;  
 
 	//-------------------------------------
 	// CONSTRUCTOR
