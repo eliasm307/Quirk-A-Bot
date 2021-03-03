@@ -9,7 +9,35 @@ export const ATTRIBUTE_NAMES = [
 	'Wits',
 	'Resolve',
 ] as const;
-export const SKILL_NAMES = ['Athletics', 'Brawl', 'Craft'] as const; // todo add other explicitly specified names
+export const SKILL_NAMES = [
+	'Athletics',
+	'Brawl',
+	'Craft',
+	'Drive',
+	'Firearms',
+	'Larceny',
+	'Melee',
+	'Stealth',
+	'Survival',
+	'Animal Ken',
+	'Etiquette',
+	'Insight',
+	'Intimidation',
+	'Leadership',
+	'Performance',
+	'Persuasion',
+	'Streetwise',
+	'Subterfuge',
+	'Academics',
+	'Awareness',
+	'Finance',
+	'Investigation',
+	'Medicine',
+	'Occult',
+	'Politics',
+	'Science',
+	'Technology',
+] as const;  
 export const DISCIPLINE_NAMES = ['Animalism', 'Auspex', 'Prescence'] as const; // todo add other explicitly specified names
 export const ATTRIBUTE_CATEGORIES = ['Physical', 'Social', 'Mental'] as const;
 export const CORE_NUMBER_TRAITS = ['Health', 'Willpower', 'Hunger', 'Humanity', 'Blood Potency', 'Sire'] as const;
