@@ -86,6 +86,7 @@ export interface iTraitData<N extends TraitNameUnionOrString, V extends TraitVal
 	name: N;
 	value: V;
 }
+export interface iGeneralTraitData extends iTraitData<TraitNameUnionOrString, TraitValueTypeUnion> {}
 export interface iNumberTraitData<N extends TraitNameUnionOrString> extends iTraitData<N, number>, iHasNumberValue {}
 export interface iStringTraitData<N extends TraitNameUnionOrString> extends iTraitData<N, string>, iHasStringValue {}
 // -------------------------------------------------------
@@ -115,6 +116,8 @@ export interface iBaseTrait<
 	// todo add explainValue method to describe the current value of the attribute, ie add description getter to describe the meaning of a value
 	// todo add min and max limits for trait values, shoud this be done here?
 }
+
+export interface iGeneralTrait extends iBaseTrait<TraitNameUnionOrString, TraitValueTypeUnion, iGeneralTraitData> {}
 
 export interface iBaseNumberTrait<N extends TraitNameUnionOrString, D extends iNumberTraitData<N>>
 	extends iBaseTrait<N, number, D>,

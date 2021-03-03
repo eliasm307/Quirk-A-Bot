@@ -19,6 +19,7 @@ import {
 	iCoreStringTrait,
 	iCoreNumberTrait,
 	iCoreNumberTraitData,
+	iGeneralTraitData,
 } from './trait-interfaces';
 
 // -------------------------------------------------------
@@ -44,6 +45,8 @@ export interface iTraitCollection<
 
 // -------------------------------------------------------
 // SPECIFIC TRAIT COLLECTION TYPES
+
+export interface iGeneralTraitCollection extends iTraitCollection<TraitNameUnionOrString, TraitValueTypeUnion, iGeneralTraitData, iGeneralTrait> {}
 
 export interface iAttributeTraitCollection
 	extends iTraitCollection<AttributeName, number, iAttributeData, iAttribute> {}

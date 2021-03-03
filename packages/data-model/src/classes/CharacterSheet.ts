@@ -199,9 +199,11 @@ export default class CharacterSheet implements iCharacterSheet {
 
 		// todo add option to create blank instance at the specified path if it doesnt exist?
 		// todo make sure imported data matches expected schema
-		const data = importDataFromFile<iCharacterSheetData>(resolvedPath);
+		const data = importDataFromFile(resolvedPath);
 
-		if (!data) throw Error(`Error importing data from ${resolvedPath}`);
+		if ( !data ) throw Error( `Error importing data from ${ resolvedPath }` );
+		
+		if(!isCharacterSheetData(data)) throw Error{`Data from path "${resolvedPath}" is not valid character sheet data`}
 
 		const instance = new CharacterSheet(data, resolvedPath);
 
