@@ -1,7 +1,7 @@
 import { LogOperationUnion, LogSourceType } from './../types';
 import { iHasNewValue } from './general-interfaces';
 export interface iBaseLogEventProps {
-	note?: string;
+	description?: string;
 	property: string;
 }
 

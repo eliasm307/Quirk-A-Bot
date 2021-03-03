@@ -8,8 +8,8 @@ interface iProps<T> extends iBaseLogEventProps, iHasNewValue<T> {}
 export default class AddLogEvent<T> extends BaseLogEvent<T> implements iAddLogEvent<T> {
 	newValue: T;
 
-	constructor({ note: description, newValue, property }: iProps<T>) {
-		super({ operation: 'ADD', property, note: description });
+	constructor({ description, newValue, property }: iProps<T>) {
+		super({ operation: 'ADD', property, description });
 		this.newValue = newValue;
 	}
 	describe(): string {

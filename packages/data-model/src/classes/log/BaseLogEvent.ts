@@ -10,11 +10,11 @@ interface iProps extends iBaseLogEventProps {
 export default abstract class BaseLogEvent<T> implements iLogEvent {
 	id: string;
 	operation: LogOperationUnion;
-	note?: string;
+	description?: string;
 	property: string;
 	time: Date;
 
-	constructor({ operation, note: description, property }: iProps) {
+	constructor({ operation, description, property }: iProps) {
 		// check values are defined correctly
 		// todo delete this
 		/*
@@ -42,7 +42,7 @@ export default abstract class BaseLogEvent<T> implements iLogEvent {
 */
 		this.id = generateId();
 		this.operation = operation;
-		this.note = description;
+		this.description = description;
 		this.property = property;
 		this.time = new Date();
 	}
