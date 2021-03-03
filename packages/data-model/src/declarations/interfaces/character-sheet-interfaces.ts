@@ -5,18 +5,11 @@ import {
 	iSkillTraitCollection,
 	iTouchStoneOrConvictionCollection,
 } from './trait-collection-interfaces';
-import TraitCollection from '../../classes/traits/TraitCollection';
 import {
 	iTouchStoneOrConvictionData,
 	iAttributeData,
 	iSkillData,
 	iDisciplineData,
-	iAttribute,
-	iDiscipline,
-	iTouchStoneOrConviction,
-	iSkill,
-	iStringTrait,
-	iNumberTrait,
 	iTraitData,
 	iCoreNumberTrait,
 	iCoreStringTrait,
@@ -24,12 +17,26 @@ import {
 import { ClanName, CoreNumberTraitName, CoreStringTraitName } from '../types';
 import { iToJson } from './general-interfaces';
 
-// todo rename to ibaseCharacterSheet and then CS data and CS object should extend this, only discord userId is common between them for now
-export interface iCharacterSheetNonPrimitiveData {}
-
-export interface iCharacterSheetData extends iCharacterSheetNonPrimitiveData {
+/** The basic shape of a charactersheet */
+export interface iBaseCharacterSheet {
+	readonly discordUserId: number;
 	// todo add user aliases (ie known discord names to be added by bot)
-	discordUserId: number;
+	name: any;
+	clan: any;
+	sire: any;
+	health: any;
+	willpower: any;
+	hunger: any;
+	humanity: any;
+	bloodPotency: any;
+	skills: any;
+	attributes: any;
+	disciplines: any;
+	touchstonesAndConvictions: any;
+}
+
+/** The shape of character sheet as plain JSON data */
+export interface iCharacterSheetData extends iBaseCharacterSheet {
 	name: iTraitData<CoreStringTraitName, string>;
 	clan: iTraitData<CoreStringTraitName, ClanName>;
 	sire: iTraitData<CoreStringTraitName, string>;
@@ -44,11 +51,10 @@ export interface iCharacterSheetData extends iCharacterSheetNonPrimitiveData {
 	touchstonesAndConvictions: iTouchStoneOrConvictionData[];
 }
 
-export interface iCharacterSheet extends iToJson<iCharacterSheetData>, iLoggerCollection {
+/** The shape of a character sheet object instance */
+export interface iCharacterSheet extends iBaseCharacterSheet, iToJson<iCharacterSheetData>, iLoggerCollection {
 	// saveToFile(): boolean; // ? should this be handled by another class?
 
-	readonly discordUserId: number;
-	// todo add user aliases (ie known discord names to be added by bot)
 	name: iCoreStringTrait;
 	clan: iCoreStringTrait;
 	sire: iCoreStringTrait;
