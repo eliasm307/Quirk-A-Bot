@@ -109,7 +109,6 @@ export interface iBaseTrait<
 		iLoggerSingle {
 	// todo add explain method to give a summary what this trait is for
 	// todo add explainValue method to describe the current value of the attribute, ie add description getter to describe the meaning of a value
-	// todo add min and max limits for trait values, shoud this be done here?
 }
 
 export interface iGeneralTrait extends iBaseTrait<TraitNameUnionOrString, TraitValueTypeUnion, iGeneralTraitData> {}
@@ -132,7 +131,7 @@ export interface iNumberTraitWithCategory<N extends TraitNameUnionOrString, C ex
 
 // -------------------------------------------------------
 // SPECIFIC TRAIT OBJECTS
-// todo add "Trait" suffix?
+
 export interface iAttribute extends iAttributeData, iNumberTrait<AttributeName>, iHasCategory<AttributeCategory> {}
 export interface iDiscipline extends iDisciplineData, iNumberTrait<DisciplineName> {}
 export interface iSkill extends iSkillData, iNumberTrait<SkillName> {}

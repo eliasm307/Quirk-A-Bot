@@ -5,9 +5,8 @@ export interface iBaseLogEventProps {
 	property: string;
 }
 
-// todo this violates interface segregation, intial and new value arent universal
 export interface iLogEvent extends iBaseLogEventProps {
-	id: string
+	id: string;
 	operation: LogOperationUnion;
 	describe(): string;
 	time: Date;
@@ -15,12 +14,11 @@ export interface iLogEvent extends iBaseLogEventProps {
 
 export interface iLogReport {
 	sourceName: string;
-	sourceType: LogSourceType 
+	sourceType: LogSourceType;
 	logEvents: iLogEvent[];
-
 }
 
-export interface iAddLogEvent<T> extends iLogEvent, iHasNewValue<T> { }
+export interface iAddLogEvent<T> extends iLogEvent, iHasNewValue<T> {}
 
 export interface iBaseLogger {
 	getLogEvents(): iLogEvent[];
@@ -31,7 +29,7 @@ export interface iLoggerSingle extends iBaseLogger {
 	getLogReport(): iLogReport;
 }
 export interface iLoggerCollection extends iBaseLogger {
-	getLogReport(): iLogReport[]; 
+	getLogReport(): iLogReport[];
 }
 
 export interface iLogReporter {
