@@ -13,6 +13,9 @@ import {
 	iTraitData,
 	iCoreNumberTrait,
 	iCoreStringTrait,
+	iNumberTraitData,
+	iCoreNumberTraitData,
+	iCoreStringTraitData,
 } from './trait-interfaces';
 import { ClanName, CoreNumberTraitName, CoreStringTraitName } from '../types';
 import { iToJson } from './general-interfaces';
@@ -37,14 +40,14 @@ export interface iBaseCharacterSheet {
 
 /** The shape of character sheet as plain JSON data */
 export interface iCharacterSheetData extends iBaseCharacterSheet {
-	name: iTraitData<CoreStringTraitName, string>;
-	clan: iTraitData<CoreStringTraitName, ClanName>;
-	sire: iTraitData<CoreStringTraitName, string>;
-	health: iTraitData<CoreNumberTraitName, number>;
-	willpower: iTraitData<CoreNumberTraitName, number>;
-	hunger: iTraitData<CoreNumberTraitName, number>;
-	humanity: iTraitData<CoreNumberTraitName, number>;
-	bloodPotency: iTraitData<CoreNumberTraitName, number>;
+	name: iCoreStringTraitData<string>;
+	clan: iCoreStringTraitData<ClanName>;
+	sire: iCoreStringTraitData<string>;
+	health: iCoreNumberTraitData;
+	willpower: iCoreNumberTraitData;
+	hunger: iCoreNumberTraitData;
+	humanity: iCoreNumberTraitData;
+	bloodPotency: iCoreNumberTraitData;
 	attributes: iAttributeData[];
 	skills: iSkillData[];
 	disciplines: iDisciplineData[];

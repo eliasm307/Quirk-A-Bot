@@ -63,8 +63,6 @@ export default class TraitCollection<
 		const oldValue = this.#map.get(name);
 		const property = name;
 
-		// todo add error handling
-
 		// apply change
 		this.#map.delete(name);
 

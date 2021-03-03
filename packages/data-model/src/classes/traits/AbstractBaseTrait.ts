@@ -17,8 +17,6 @@ export default abstract class AbstractBaseTrait<
 > implements iBaseTrait<N, V, D> {
 	#private: iPrivateModifiableProperties<V>;
 	// #characterSheet: iCharacterSheet;
-
-	// todo log collections should not rely on iTraitData
 	#logs: iLogCollection;
 	#saveAction?: () => boolean;
 
