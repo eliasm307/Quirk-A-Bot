@@ -206,7 +206,8 @@ export default class CharacterSheet implements iCharacterSheet {
 		if (!data) throw Error(`Error importing data from ${resolvedPath}`);
 
 		// todo enable type predicate check
-		// if ( !isCharacterSheetData( data ) ) throw Error( `Data from path "${ resolvedPath }" is not valid character sheet data` );
+		if (!isCharacterSheetData(data))
+			throw Error(`Data loaded from path "${resolvedPath}" is not valid character sheet data`);
 
 		const instance = new CharacterSheet(data, resolvedPath);
 
@@ -219,20 +220,25 @@ export default class CharacterSheet implements iCharacterSheet {
 
 	public toJson(): iCharacterSheetData {
 		const data: iCharacterSheetData = {
+			discordUserId: this.discordUserId,
+
+			// trait collections
 			attributes: this.attributes.toJson(),
 			disciplines: this.disciplines.toJson(),
-			bloodPotency: this.bloodPotency.toJson() ,
-			clan: this.clan.toJson() as iStringTraitData<CoreStringTraitName, ClanName>,
-			name: this.name.toJson() as iStringTraitData<CoreStringTraitName, string>,
-			sire: this.sire.toJson() as iStringTraitData<CoreStringTraitName, string>,
-
-			discordUserId: this.discordUserId,
-			health: this.health.toJson() as iNumberTraitData<CoreNumberTraitName>,
-			humanity: this.humanity.toJson() as iNumberTraitData<CoreNumberTraitName>,
-			hunger: this.hunger.toJson() as iNumberTraitData<CoreNumberTraitName>,
 			skills: this.skills.toJson(),
 			touchstonesAndConvictions: this.touchstonesAndConvictions.toJson(),
-			willpower: this.willpower.toJson() as iNumberTraitData<CoreNumberTraitName>,
+
+			// core string traits
+			clan: this.clan.toJson(),
+			name: this.name.toJson(),
+			sire: this.sire.toJson(),
+
+			// core number traits
+			health: this.health.toJson(),
+			humanity: this.humanity.toJson(),
+			hunger: this.hunger.toJson(),
+			bloodPotency: this.bloodPotency.toJson(),
+			willpower: this.willpower.toJson(),
 		};
 		// console.log(__filename, { data });
 		return data;
@@ -265,7 +271,6 @@ export default class CharacterSheet implements iCharacterSheet {
 		];
 	}
 
-	// todo make this report log events grouped into objects with details about the property
 	getLogReport(): iLogReport[] {
 		// todo test
 		return this.getAllTraits().map(trait => trait.getLogReport());
