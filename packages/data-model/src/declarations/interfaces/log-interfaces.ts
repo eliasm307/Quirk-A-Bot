@@ -12,11 +12,18 @@ export interface iLogEvent extends iBaseLogEventProps {
 	time: Date;
 }
 
+export interface iLogReport {
+	sourceName: string;
+	sourceType: 'Trait' | 'Trait Collection'
+	logEvents: iLogEvent[];
+
+}
+
 export interface iAddLogEvent<T> extends iLogEvent, iHasNewValue<T> {}
 
 /** For objects that require internal logging */
 export interface iLogger {
-	getLogData(): iLogEvent[];
+	getLogData(): iLogReport;
 }
 
 export interface iLogReporter {
@@ -26,5 +33,5 @@ export interface iLogReporter {
 export interface iLogCollection {
 	log(event: iLogEvent): void;
 
-	toJson(): iLogEvent[];
+	toJson(): iLogReport[];
 }
