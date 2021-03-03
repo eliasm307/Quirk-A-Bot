@@ -1,16 +1,9 @@
 import {
 	iBaseNumberTrait,
 	iBaseNumberTraitProps,
-	iNumberTrait,
 	iNumberTraitData,
 } from '../../declarations/interfaces/trait-interfaces';
-import {
-	iNumberTraitProps,
-	iBaseTrait,
-	iHasNumberValue,
-	iTraitData,
-} from '../../declarations/interfaces/trait-interfaces';
-import { TraitNameUnion, TraitNameUnionOrString, TraitValueDynamic } from '../../declarations/types';
+import { TraitNameUnionOrString } from '../../declarations/types';
 import AbstractBaseTrait from './AbstractBaseTrait';
 
 /** class with behaviour for traits that have number values */
