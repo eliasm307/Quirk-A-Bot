@@ -31,9 +31,6 @@ export default abstract class AbstractNumberTrait<N extends TraitNameUnionOrStri
 		if (typeof newVal !== 'number')
 			throw Error(`Value for trait ${this.name} should be a number, received a "${typeof newVal}`);
 
-		// todo use rounded value
-		// const roundedVal: TraitValue<T> = typeof newVal === 'number' ?  Math.round(newVal) : newVal;
-
 		// make sure number is within allowable range before change
 		if (newVal < this.min) {
 			console.error(

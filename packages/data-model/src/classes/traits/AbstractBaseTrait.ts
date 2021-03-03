@@ -26,8 +26,9 @@ export default abstract class AbstractBaseTrait<
 
 	protected abstract newValueIsValid(newVal: V): boolean;
 
-	public set value(newVal: V) {
-		if (this.newValueIsValid(newVal)) this.onChange('value', this.preProcessValue(newVal));
+	public set value(newValRaw: V) {
+		const newVal = this.preProcessValue(newValRaw);
+		if (this.newValueIsValid(newVal)) this.onChange('value', newVal);
 	}
 	public get value() {
 		return this.#private.value;
@@ -64,7 +65,6 @@ export default abstract class AbstractBaseTrait<
 	): void {
 		// get current value as old value
 		const oldValue: V = this.#private[property];
- 
 
 		// if old value is the same as new value do nothing
 		if (oldValue === newValue)
