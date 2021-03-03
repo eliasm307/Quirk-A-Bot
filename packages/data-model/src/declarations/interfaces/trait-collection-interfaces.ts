@@ -26,8 +26,7 @@ import {
 // -------------------------------------------------------
 // BASE TRAIT COLLECTION TYPES
 
-// todo is this the best way to do this?
-// todo use dynamic types here?
+/** Shape of a custom trait collection with logging */
 export interface iTraitCollection<
 	N extends TraitNameUnionOrString,
 	V extends TraitValueTypeUnion,
@@ -60,12 +59,3 @@ export interface iDisciplineTraitCollection
 
 export interface iTouchStoneOrConvictionCollection
 	extends iTraitCollection<string, string, iTouchStoneOrConvictionData, iTouchStoneOrConviction> {}
-
-	// todo delete
-	/*
-export interface iCoreStringTraitCollection
-	extends iTraitCollection<CoreStringTraitName, string, iCoreStringTraitData, iCoreStringTrait> {}
-
-export interface iCoreNumberTraitCollection
-	extends iTraitCollection<CoreNumberTraitName, number, iCoreNumberTraitData, iCoreNumberTrait> { }
-	*/

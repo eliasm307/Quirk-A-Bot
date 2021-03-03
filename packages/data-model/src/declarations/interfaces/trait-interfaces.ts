@@ -1,6 +1,15 @@
-import { TraitNameUnionOrString, TraitValueTypeUnion, AttributeName, SkillName, DisciplineName, CoreStringTraitName, CoreNumberTraitName, AttributeCategory } from '../types';
+import {
+	TraitNameUnionOrString,
+	TraitValueTypeUnion,
+	AttributeName,
+	SkillName,
+	DisciplineName,
+	CoreStringTraitName,
+	CoreNumberTraitName,
+	AttributeCategory,
+} from '../types';
 import { iCanHaveSaveAction, iToJson } from './general-interfaces';
-import { iLoggerSingle } from './log-interfaces'; 
+import { iLoggerSingle } from './log-interfaces';
 
 export interface iHasCategorySelector<N extends string, C extends string> {
 	categorySelector: (name: N) => C;
@@ -52,26 +61,14 @@ export interface iNumberTraitWithCategoryProps<N extends TraitNameUnionOrString,
 	categorySelector: (name: N) => C;
 }
 
-// todo delete
-/*
-export interface iInstanceCreatorProps<T extends iTraitData<TraitNameDynamic<T>, TraitValueDynamic<T>>> {
-	name: TraitNameDynamic<T>;
-	value: TraitValueDynamic<T>;
-}
-*/
-
-// todo is this the best way to do this?
-// todo use dynamic types here?
 export interface iTraitCollectionProps<
 	N extends TraitNameUnionOrString,
 	V extends TraitValueTypeUnion,
 	D extends iTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
 > extends iCanHaveSaveAction {
-	// todo use dynamic types here?
 	name: string;
 	instanceCreator: (props: iBaseTraitProps<N, V, D>) => T;
-	// todo make this more specific in terms of available names and value types
 }
 // -------------------------------------------------------
 // GENERIC TRAIT DATA TYPES
