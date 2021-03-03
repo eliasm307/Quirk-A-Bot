@@ -1,4 +1,4 @@
-import { LogOperationUnion } from './../types';
+import { LogOperationUnion, LogSourceType } from './../types';
 import { iHasNewValue } from './general-interfaces';
 export interface iBaseLogEventProps {
 	note?: string;
@@ -14,7 +14,7 @@ export interface iLogEvent extends iBaseLogEventProps {
 
 export interface iLogReport {
 	sourceName: string;
-	sourceType: 'Trait' | 'Trait Collection'
+	sourceType: LogSourceType 
 	logEvents: iLogEvent[];
 
 }
@@ -33,5 +33,10 @@ export interface iLogReporter {
 export interface iLogCollection {
 	log(event: iLogEvent): void;
 
-	toJson(): iLogReport[];
+	toJson(): iLogReport;
+}
+
+export interface iLogCollectionProps {
+	sourceName: string;
+	sourceType: LogSourceType;
 }

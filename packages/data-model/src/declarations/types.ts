@@ -19,6 +19,8 @@ import {
 	iNumberTraitData,
 } from './interfaces/trait-interfaces';
 
+// todo delete unused types
+
 export type ClanName = 'Caitiff' | string; // todo explicitly specify names
 export type AttributeCategory = typeof ATTRIBUTE_CATEGORIES[number];
 export type AttributeName = typeof ATTRIBUTE_NAMES[number];
@@ -69,8 +71,8 @@ export type TraitDataDynamic<T extends iTraitData<TraitNameUnionOrString, TraitV
 	? iStringTraitData<CoreTraitName>
 	: T extends iNumberTrait<CoreTraitName>
 	? iNumberTrait<CoreTraitName>*/
-	any;
-		
+	  any;
+
 // todo delete export type TraitMap<T extends iBaseTrait<TraitNameUnionOrString, TraitValueTypeUnion>> = Map<TraitNameDynamic<T>, T>;
 export type TraitTypeNameUnion = typeof TRAIT_TYPES[number];
 
@@ -78,3 +80,5 @@ export type LogOperationUnion = 'ADD' | 'UPDATE' | 'DELETE';
 
 export type LogInitialValueDynamic<T, O extends LogOperationUnion> = O extends 'ADD' ? undefined : T;
 export type LogNewValueDynamic<T, O extends LogOperationUnion> = O extends 'DELETE' ? undefined : T;
+
+export type LogSourceType = 'Trait' | 'Trait Collection';
