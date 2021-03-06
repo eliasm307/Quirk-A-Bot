@@ -32,6 +32,7 @@ import StringTrait from './traits/StringTrait';
 import { isCharacterSheetData } from '../utils/typePredicates';
 import NumberTrait from './traits/NumberTrait';
 import LocalDataStorageFactory from './data-storage/LocalDataStorageFactory';
+import saveCharacterSheetToFile from '../utils/saveCharacterSheetToFile';
 
 // ! this shouldnt be here, should be in a file about persistence
 interface iLoadFromFileArgs {
@@ -85,7 +86,7 @@ export default class CharacterSheet implements iCharacterSheet {
 		let initialValues: iCharacterSheetData | null = null;
 
 		// function to save this character sheet
-		const saveAction = () => this.saveToFile(this.toJson(), this.#savePath);
+		// const saveAction = () => this.saveToFile(this.toJson(), this.#savePath);
 
 		if (typeof sheet === 'number') {
 			this.discordUserId = sheet;
@@ -123,6 +124,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			max: 5,
 			name: 'Hunger',
 			value: initialValues?.hunger.value || 0,
+
 			traitDataStorageInitialiser: this.#dataStorageFactory.newTraitDataStorageInitialiser(),
 		});
 
@@ -130,6 +132,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			max: 10,
 			name: 'Humanity',
 			value: initialValues?.humanity.value || 0,
+
 			traitDataStorageInitialiser: this.#dataStorageFactory.newTraitDataStorageInitialiser(),
 		});
 
@@ -137,6 +140,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			max: 10,
 			name: 'Health',
 			value: initialValues?.health.value || 0,
+
 			traitDataStorageInitialiser: this.#dataStorageFactory.newTraitDataStorageInitialiser(),
 		});
 
@@ -150,19 +154,19 @@ export default class CharacterSheet implements iCharacterSheet {
 		// core string traits
 		this.name = new StringTrait<CoreStringTraitName, string>({
 			name: 'Name',
-			value: initialValues?.name.value || '',
+			value: initialValues?.name.value || 'TBC',
 			traitDataStorageInitialiser: this.#dataStorageFactory.newTraitDataStorageInitialiser(),
 		});
 
 		this.sire = new StringTrait<CoreStringTraitName, string>({
 			name: 'Sire',
-			value: initialValues?.sire.value || '',
+			value: initialValues?.sire.value || 'TBC',
 			traitDataStorageInitialiser: this.#dataStorageFactory.newTraitDataStorageInitialiser(),
 		});
 
 		this.clan = new StringTrait<CoreStringTraitName, ClanName>({
 			name: 'Clan',
-			value: initialValues?.clan.value || '',
+			value: initialValues?.clan.value || 'TBC',
 			traitDataStorageInitialiser: this.#dataStorageFactory.newTraitDataStorageInitialiser(),
 		});
 
@@ -193,7 +197,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			path.resolve(__dirname, `../data/character-sheets/${this.discordUserId}.json`);
 
 		// if only user id was provided, assume this is a new sheet then do initial save so a persistent file exists
-		if (typeof sheet === 'number') this.saveToFile(this.toJson(), this.#savePath);
+		if (typeof sheet === 'number') saveCharacterSheetToFile(this.toJson(), this.#savePath);
 	}
 
 	// todo loading and saving should be done by a persistence management class
@@ -220,6 +224,8 @@ export default class CharacterSheet implements iCharacterSheet {
 		const data = importDataFromFile(resolvedPath);
 
 		if (!data) throw Error(`Error importing data from ${resolvedPath}`);
+
+		console.log(`Data imported from ${resolvedPath}`, { data });
 
 		if (!isCharacterSheetData(data))
 			throw Error(`Data loaded from path "${resolvedPath}" is not valid character sheet data`);
@@ -265,10 +271,11 @@ export default class CharacterSheet implements iCharacterSheet {
 	}
 
 	// todo delete this and use a csDataStorage object
-	private saveToFile(data: iCharacterSheetData, savePath: string): boolean {
+	/*
+	private saveToFile( data: iCharacterSheetData, savePath: string ): boolean {
 		// this.#savePath
 		return exportDataToFile(data, savePath);
-	}
+	}*/
 	private getAllTraits(): iBaseTrait<
 		TraitNameUnionOrString,
 		TraitValueTypeUnion,

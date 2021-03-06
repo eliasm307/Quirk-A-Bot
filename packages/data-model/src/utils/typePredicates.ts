@@ -102,12 +102,14 @@ export function isTraitData(data: any): data is iGeneralTraitData {
 	if (typeof data === 'object' && nameExists && valueExists) {
 		return true;
 	}
+	/*
 	console.warn(`isTraitData, not trait data`, {
 		data,
 		typeofData: typeof data,
 		nameExists,
 		valueExists,
 	});
+	*/
 	return false;
 }
 

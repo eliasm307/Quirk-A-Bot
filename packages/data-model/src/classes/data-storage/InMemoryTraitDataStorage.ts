@@ -21,15 +21,16 @@ export default class InMemoryTraitDataStorage<
 	constructor(props: iInMemoryTraitDataStorageProps<N, V>) {
 		super();
 
-		const { value, name, defaultValue } = props;
+		const {   name, defaultValueIfNotDefined  } = props;
 
 		this.name = name;
 
 		this.#private = {
-			value: value || defaultValue, // save initial value or default value if initial is not defined
+			value: defaultValueIfNotDefined, // save initial value or default value if initial is not defined
 		};
 	}
 
+	// ? should this be able to return undefined?
 	get value(): V {
 		return this.#private.value;
 	}
@@ -48,7 +49,7 @@ export default class InMemoryTraitDataStorage<
 
 		// attempt autosave for change
 		this.save()
-			? console.log(__filename, `Successfully saved "${this.name}" trait property change`, { oldValue, newValue })
+			? console.warn(__filename, `Successfully saved "${this.name}" trait property change`, { oldValue, newValue })
 			: console.error(__filename, `Error while saving "${this.name}" trait property change`, { oldValue, newValue });
 	}
 	save(): boolean {

@@ -52,7 +52,7 @@ test(testName, () => {
 
 	const log = tc.getLogEvents();
 
-	console.log({ testName, log });
+	// console.log({ testName, log });
 
 	// expect logs
 	expect(log.length).toEqual(4);

@@ -105,7 +105,11 @@ export default class TraitCollection<
 			// add new trait instance
 			this.#map.set(
 				name,
-				this.#instanceCreator({ name, value: newValue, traitDataStorageInitialiser: this.#traitDataStorageInitialiser })
+				this.#instanceCreator({
+					name,
+					value: newValue,
+					traitDataStorageInitialiser: this.#traitDataStorageInitialiser, 
+				})
 			);
 
 			// log change

@@ -1,3 +1,4 @@
+import { TraitNameUnionOrString } from './../../declarations/types';
 import { iCharacterSheet } from '../../declarations/interfaces/character-sheet-interfaces';
 import { TraitValueTypeUnion } from '../../declarations/types';
 import {
@@ -7,8 +8,8 @@ import {
 } from './../../declarations/interfaces/data-storage-interfaces';
 import InMemoryTraitDataStorage from './InMemoryTraitDataStorage';
 
-export default class InMemoryTraitDataStorageFactory implements iDataStorageFactory {
-	newTraitDataStorageInitialiser<N extends string, V extends TraitValueTypeUnion>(): (
+export default class InMemoryDataStorageFactory implements iDataStorageFactory {
+	newTraitDataStorageInitialiser(): <N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(
 		props: iBaseTraitDataStorageProps<N, V>
 	) => iTraitDataStorage<N, V> {
 		return props => new InMemoryTraitDataStorage({ ...props });

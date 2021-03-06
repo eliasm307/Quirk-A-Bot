@@ -7,9 +7,8 @@ export interface iHasTraitDataStorageInitialiser<N extends TraitNameUnionOrStrin
 }
 
 export interface iBaseTraitDataStorageProps<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion> {
-	name: N;
-	value?: V;
-	defaultValue: V;
+	name: N; 
+	defaultValueIfNotDefined: V;
 }
 
 export interface iInMemoryTraitDataStorageProps<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>

@@ -1,4 +1,9 @@
-import { iTraitDataStorage, iBaseTraitDataStorageProps, iDataStorageFactory, iHasTraitDataStorageInitialiser } from './data-storage-interfaces';
+import {
+	iTraitDataStorage,
+	iBaseTraitDataStorageProps,
+	iDataStorageFactory,
+	iHasTraitDataStorageInitialiser,
+} from './data-storage-interfaces';
 import {
 	TraitNameUnionOrString,
 	TraitValueTypeUnion,
@@ -41,8 +46,8 @@ export interface iBaseTraitProps<
 	D extends iTraitData<N, V>
 > extends iHasTraitDataStorageInitialiser<N, V> {
 	name: N;
-	value?: V;
-	toJson?: () => D; 
+	value: V; 
+	toJson?: () => D;
 }
 export interface iStringTraitProps<N extends TraitNameUnionOrString, V extends string>
 	extends iBaseTraitProps<N, V, iStringTraitData<N, V>> {}
@@ -54,7 +59,9 @@ export interface iBaseNumberTraitProps<N extends TraitNameUnionOrString, D exten
 }
 
 export interface iNumberTraitProps<N extends TraitNameUnionOrString>
-	extends iBaseNumberTraitProps<N, iNumberTraitData<N>> {}
+	extends iBaseNumberTraitProps<N, iNumberTraitData<N>> {
+ 
+	}
 
 export interface iNumberTraitWithCategoryProps<N extends TraitNameUnionOrString, C extends string>
 	extends iBaseNumberTraitProps<N, iNumberTraitData<N>> {

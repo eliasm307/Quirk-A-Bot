@@ -1,9 +1,7 @@
 import { TraitNameUnionOrString } from './../../declarations/types';
-import { iCanHaveSaveAction, iHasSaveAction } from './../../declarations/interfaces/general-interfaces';
 import { iCharacterSheet } from './../../declarations/interfaces/character-sheet-interfaces';
 import { TraitValueTypeUnion } from '../../declarations/types';
-import { iLocalTraitDataStorageProps, iTraitDataStorage } from '../../declarations/interfaces/data-storage-interfaces';
-import AbstractDataStorage from './AbstractDataStorage';
+import { iLocalTraitDataStorageProps } from '../../declarations/interfaces/data-storage-interfaces';
 import AbstractTraitDataStorage from './AbstractTraitDataStorage';
 import saveCharacterSheetToFile from '../../utils/saveCharacterSheetToFile';
 
@@ -25,12 +23,12 @@ export default class LocalTraitDataStorage<
 	constructor(props: iLocalTraitDataStorageProps<N, V>) {
 		super();
 
-		const { value, name, defaultValue, characterSheet } = props;
+		const {  name, defaultValueIfNotDefined , characterSheet } = props;
 
 		this.name = name;
 
 		this.#private = {
-			value: value || defaultValue, // save initial value or default value if initial is not defined
+			value: defaultValueIfNotDefined, // save initial value or default value if initial is not defined
 			characterSheet,
 		};
 	}

@@ -58,6 +58,7 @@ export default abstract class TraitFactory {
 	static newCoreStringTrait<V extends string>({
 		name,
 		value,
+
 		traitDataStorageInitialiser,
 	}: iStringTraitProps<CoreStringTraitName, V>) {
 		return new StringTrait({ name, value, traitDataStorageInitialiser });
@@ -69,12 +70,12 @@ export default abstract class TraitFactory {
 		max,
 		min = 0,
 	}: iNumberTraitProps<CoreNumberTraitName>) {
-		return new NumberTrait({ name, value,
-		traitDataStorageInitialiser, max, min });
+		return new NumberTrait({ name, value, traitDataStorageInitialiser, max, min });
 	}
 	static newAttributeTrait({
 		name,
 		value = 0,
+
 		traitDataStorageInitialiser,
 	}: iBaseTraitProps<AttributeName, number, iAttributeData>): iAttribute {
 		const props: iNumberTraitWithCategoryProps<AttributeName, AttributeCategory> = {
@@ -83,7 +84,8 @@ export default abstract class TraitFactory {
 			max: 5,
 			name,
 			value,
-		traitDataStorageInitialiser,
+
+			traitDataStorageInitialiser,
 		};
 
 		return new NumberTraitWithCategory(props);
@@ -92,6 +94,7 @@ export default abstract class TraitFactory {
 	static newDisciplineTrait({
 		name,
 		value = 0,
+
 		traitDataStorageInitialiser,
 	}: iBaseTraitProps<DisciplineName, number, iDisciplineData>): iDiscipline {
 		const props: iNumberTraitProps<DisciplineName> = {
@@ -99,7 +102,8 @@ export default abstract class TraitFactory {
 			max: 5,
 			name,
 			value,
-		traitDataStorageInitialiser,
+
+			traitDataStorageInitialiser,
 		};
 
 		return new NumberTrait(props);
@@ -108,6 +112,7 @@ export default abstract class TraitFactory {
 	static newSkillTrait({
 		name,
 		value = 0,
+
 		traitDataStorageInitialiser,
 	}: iBaseTraitProps<SkillName, number, iSkillData>): iSkill {
 		const props: iNumberTraitProps<SkillName> = {
@@ -115,7 +120,8 @@ export default abstract class TraitFactory {
 			max: 5,
 			name,
 			value,
-		traitDataStorageInitialiser,
+
+			traitDataStorageInitialiser,
 		};
 
 		return new NumberTrait(props);
@@ -129,7 +135,8 @@ export default abstract class TraitFactory {
 		const props: iStringTraitProps<string, string> = {
 			name,
 			value,
-		traitDataStorageInitialiser,
+
+			traitDataStorageInitialiser,
 		};
 
 		return new StringTrait(props);
@@ -155,7 +162,7 @@ export default abstract class TraitFactory {
 		return new TraitCollection<SkillName, number, iSkillData, iSkill>(
 			{
 				name: `SkillTraitCollection`,
-				
+
 				traitDataStorageInitialiser: dataStorageFactory.newTraitDataStorageInitialiser(),
 				instanceCreator: TraitFactory.newSkillTrait,
 			},
@@ -171,7 +178,7 @@ export default abstract class TraitFactory {
 		return new TraitCollection<DisciplineName, number, iDisciplineData, iDiscipline>(
 			{
 				name: `DisciplineTraitCollection`,
-				traitDataStorageInitialiser: dataStorageFactory.newTraitDataStorageInitialiser( ),
+				traitDataStorageInitialiser: dataStorageFactory.newTraitDataStorageInitialiser(),
 				instanceCreator: TraitFactory.newDisciplineTrait,
 			},
 			...initial
@@ -209,9 +216,9 @@ export default abstract class TraitFactory {
 			humanity: TraitFactory.newCoreNumberTrait({ max: 10, name: 'Humanity', value: 0, saveAction }),
 			hunger: TraitFactory.newCoreNumberTrait({ max: 5, name: 'Hunger', value: 0, saveAction }),
 			willpower: TraitFactory.newCoreNumberTrait({ name: 'Willpower', value: 0, max: 10, saveAction }),
-			name: TraitFactory.newCoreStringTrait<string>({ name: 'Name', value: '', saveAction }),
-			sire: TraitFactory.newCoreStringTrait<string>({ name: 'Sire', value: '', saveAction }),
-			clan: TraitFactory.newCoreStringTrait<ClanName>({ name: 'Clan', value: '', saveAction }),
+			name: TraitFactory.newCoreStringTrait<string>({ name: 'Name', value: 'x', saveAction }),
+			sire: TraitFactory.newCoreStringTrait<string>({ name: 'Sire', value: 'x', saveAction }),
+			clan: TraitFactory.newCoreStringTrait<ClanName>({ name: 'Clan', value: 'x', saveAction }),
 			attributes: [],
 			disciplines: [],
 			skills: [],
