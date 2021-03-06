@@ -98,13 +98,11 @@ export default abstract class TraitFactory {
 
 	static newTouchStoneOrConvictionTrait({
 		name,
-		value,
-		saveAction,
+		value, 
 	}: iBaseTraitProps<string, string, iTouchStoneOrConvictionData>): iTouchStoneOrConviction {
 		const props: iStringTraitProps<string, string> = {
 			name,
-			value,
-			saveAction,
+			value, 
 		};
 
 		return new StringTrait(props);

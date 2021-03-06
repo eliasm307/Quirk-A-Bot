@@ -8,6 +8,9 @@ export interface iBaseTraitDataStorageProps<N extends TraitNameUnionOrString, V 
 	defaultValue: V;
 }
 
+export interface iInMemoryTraitDataStorageProps<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
+	extends iBaseTraitDataStorageProps<N, V> {}
+
 export interface iLocalTraitDataStorageProps<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
 	extends iBaseTraitDataStorageProps<N, V> {
 	characterSheet: iCharacterSheet;
