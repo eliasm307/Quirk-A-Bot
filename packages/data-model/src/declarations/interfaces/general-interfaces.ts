@@ -1,8 +1,13 @@
+import { iDataStorageFactory } from './data-storage-interfaces';
 export interface iToJson<T> {
 	toJson: () => T;
 }
 export interface iCanHaveSaveAction {
 	saveAction?: () => boolean;
+}
+
+export interface iHasDataStorageFactory {
+	dataStorageFactory: iDataStorageFactory
 }
 
 export interface iHasSaveAction {

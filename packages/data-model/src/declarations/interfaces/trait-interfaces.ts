@@ -1,4 +1,4 @@
-import { iTraitDataStorage, iBaseTraitDataStorageProps } from './data-storage-interfaces';
+import { iTraitDataStorage, iBaseTraitDataStorageProps, iDataStorageFactory } from './data-storage-interfaces';
 import {
 	TraitNameUnionOrString,
 	TraitValueTypeUnion,
@@ -69,7 +69,8 @@ export interface iTraitCollectionProps<
 	T extends iBaseTrait<N, V, D>
 > extends iCanHaveSaveAction {
 	name: string;
-	instanceCreator: (props: iBaseTraitProps<N, V, D>) => T;
+	instanceCreator: ( props: iBaseTraitProps<N, V, D> ) => T;
+	dataStorageFactory: iDataStorageFactory
 }
 // -------------------------------------------------------
 // GENERIC TRAIT DATA TYPES

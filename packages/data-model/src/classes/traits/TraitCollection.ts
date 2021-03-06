@@ -27,13 +27,15 @@ export default class TraitCollection<
 	#logs: iLogCollection;
 	#typeName: TraitTypeNameUnion | string = 'Trait';
 	constructor(
-		{ instanceCreator, saveAction, name }: iTraitCollectionProps<N, V, D, T>,
+		{ instanceCreator, saveAction, name , dataStorageFactory}: iTraitCollectionProps<N, V, D, T>,
 		...initialData: iTraitData<N, V>[]
 	) {
 		this.name = name;
 		this.saveAction = saveAction;
 		this.#instanceCreator = instanceCreator;
-		this.#map = new Map<N, T>(initialData.map(({ name, value }) => [name, instanceCreator({ name, value })]));
+		this.#map = new Map<N, T>(
+			initialData.map(({ name, value }) => [name, instanceCreator({ name, value })])
+		);
 		this.#logs = new LogCollection({ sourceName: name, sourceType: 'Trait Collection' });
 	}
 	toArray(): T[] {

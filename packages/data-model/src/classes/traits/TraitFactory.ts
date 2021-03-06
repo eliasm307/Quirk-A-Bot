@@ -3,7 +3,7 @@ import {
 	iSkillTraitCollection,
 	iTouchStoneOrConvictionCollection,
 } from './../../declarations/interfaces/trait-collection-interfaces';
-import { iCanHaveSaveAction } from './../../declarations/interfaces/general-interfaces';
+import {  iHasDataStorageFactory } from './../../declarations/interfaces/general-interfaces';
 import {
 	AttributeName,
 	AttributeCategory,
@@ -135,26 +135,26 @@ export default abstract class TraitFactory {
 	}
 
 	static newAttributeTraitCollection(
-		props?: iCanHaveSaveAction,
+		props: iHasDataStorageFactory,
 		...initial: iAttributeData[]
 	): iAttributeTraitCollection {
-		const { saveAction } = props || {};
+	const { dataStorageFactory } = props || {};
 		return new TraitCollection<AttributeName, number, iAttributeData, iAttribute>(
 			{
 				name: `AttributeTraitCollection`,
-				saveAction,
+				dataStorageFactory,
 				instanceCreator: TraitFactory.newAttributeTrait,
 			},
 			...initial
 		);
 	}
 
-	static newSkillTraitCollection(props?: iCanHaveSaveAction, ...initial: iSkillData[]): iSkillTraitCollection {
-		const { saveAction } = props || {};
+	static newSkillTraitCollection(props: iHasDataStorageFactory, ...initial: iSkillData[]): iSkillTraitCollection {
+	const { dataStorageFactory } = props || {};
 		return new TraitCollection<SkillName, number, iSkillData, iSkill>(
 			{
 				name: `SkillTraitCollection`,
-				saveAction,
+				dataStorageFactory,
 				instanceCreator: TraitFactory.newSkillTrait,
 			},
 			...initial
@@ -162,14 +162,14 @@ export default abstract class TraitFactory {
 	}
 
 	static newDisciplineTraitCollection(
-		props?: iCanHaveSaveAction,
+		props : iHasDataStorageFactory,
 		...initial: iDisciplineData[]
 	): iDisciplineTraitCollection {
-		const { saveAction } = props || {};
+		const { dataStorageFactory } = props || {};
 		return new TraitCollection<DisciplineName, number, iDisciplineData, iDiscipline>(
 			{
 				name: `DisciplineTraitCollection`,
-				saveAction,
+				dataStorageFactory,
 				instanceCreator: TraitFactory.newDisciplineTrait,
 			},
 			...initial
@@ -177,14 +177,14 @@ export default abstract class TraitFactory {
 	}
 
 	static newTouchstonesAndConvictionTraitCollection(
-		props?: iCanHaveSaveAction,
+		props: iHasDataStorageFactory,
 		...initial: iTouchStoneOrConvictionData[]
 	): iTouchStoneOrConvictionCollection {
-		const { saveAction } = props || {};
+		const { dataStorageFactory } = props || {};
 		return new TraitCollection<string, string, iTouchStoneOrConvictionData, iTouchStoneOrConviction>(
 			{
 				name: `TouchstonesAndConvictionTraitCollection`,
-				saveAction,
+				dataStorageFactory,
 				instanceCreator: TraitFactory.newTouchStoneOrConvictionTrait,
 			},
 			...initial
@@ -193,7 +193,7 @@ export default abstract class TraitFactory {
 
 	// todo delete
 	/*
-	static newCharacterSheetDataObject(props?: iCanHaveSaveAction): iCharacterSheetData {
+	static newCharacterSheetDataObject(props: iHasDataStorageFactory): iCharacterSheetData {
 		const saveAction = props?.saveAction;
 		return {
 			discordUserId: NaN,

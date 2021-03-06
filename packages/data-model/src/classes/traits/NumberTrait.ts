@@ -14,7 +14,7 @@ export default class NumberTrait<N extends TraitNameUnionOrString>
 		name,
 		value = 0,
 		min = 0,
-		saveAction,
+		dataStorageInitialiser,
 		toJson = () => ({
 			name: this.name,
 			value: this.value,
@@ -23,7 +23,7 @@ export default class NumberTrait<N extends TraitNameUnionOrString>
 		super({
 			name,
 			value,
-			saveAction,
+			dataStorageInitialiser,
 			toJson,
 			min,
 			max,
