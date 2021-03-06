@@ -1,4 +1,4 @@
-import { iTraitDataStorage, iTraitDataStorageProps } from './data-storage-interfaces';
+import { iTraitDataStorage, iBaseTraitDataStorageProps } from './data-storage-interfaces';
 import {
 	TraitNameUnionOrString,
 	TraitValueTypeUnion,
@@ -43,7 +43,7 @@ export interface iBaseTraitProps<
 	name: N;
 	value?: V;
 	toJson?: () => D;
-	dataStorageInitialiser(props: iTraitDataStorageProps<N, V>): iTraitDataStorage<N, V>
+	dataStorageInitialiser(props: iBaseTraitDataStorageProps<N, V>): iTraitDataStorage<N, V>
 }
 export interface iStringTraitProps<N extends TraitNameUnionOrString, V extends string>
 	extends iBaseTraitProps<N, V, iStringTraitData<N, V>> {}

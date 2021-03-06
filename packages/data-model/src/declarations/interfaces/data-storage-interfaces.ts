@@ -1,12 +1,16 @@
-import { iCharacterSheetData } from './character-sheet-interfaces';
+import { iCharacterSheet, iCharacterSheetData } from './character-sheet-interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from './../types';
-import { iGeneralTrait, iGeneralTraitData, iTraitData } from './trait-interfaces';
-import { iCanHaveSaveAction } from './general-interfaces';
+import { iGeneralTraitData, iTraitData } from './trait-interfaces';
 
-export interface iTraitDataStorageProps<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion> {
+export interface iBaseTraitDataStorageProps<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion> {
 	name: N;
-	value?: V; // NOTE initial value required for local storage as values are kept in memory
-	defaultValue: V
+	value?: V;
+	defaultValue: V;
+}
+
+export interface iLocalTraitDataStorageProps<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
+	extends iBaseTraitDataStorageProps<N, V> {
+	characterSheet: iCharacterSheet;
 }
 
 /** The base data storage object instance shape */

@@ -4,6 +4,10 @@ export interface iToJson<T> {
 export interface iCanHaveSaveAction {
 	saveAction?: () => boolean;
 }
+
+export interface iHasSaveAction {
+	saveAction: () => boolean;
+}
 export interface iHasOldValue<T> {
 	oldValue: T;
 }

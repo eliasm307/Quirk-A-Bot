@@ -1,37 +1,35 @@
 import { TraitNameUnionOrString } from './../../declarations/types';
-import { iCanHaveSaveAction } from './../../declarations/interfaces/general-interfaces';
+import { iCanHaveSaveAction, iHasSaveAction } from './../../declarations/interfaces/general-interfaces';
 import { iCharacterSheet } from './../../declarations/interfaces/character-sheet-interfaces';
 import { TraitValueTypeUnion } from '../../declarations/types';
-import { iTraitDataStorageProps, iTraitDataStorage } from '../../declarations/interfaces/data-storage-interfaces';
+import { iLocalTraitDataStorageProps, iTraitDataStorage } from '../../declarations/interfaces/data-storage-interfaces';
 import AbstractDataStorage from './AbstractDataStorage';
 import AbstractTraitDataStorage from './AbstractTraitDataStorage';
 
 // ? does this need to be a separate interface
-interface iPrivateModifiableProperties<V extends TraitValueTypeUnion> extends iCanHaveSaveAction {
-	value: V;
+interface iPrivateModifiableProperties<V extends TraitValueTypeUnion> {
+  value: V;
+  characterSheet: iCharacterSheet;
 }
 
-interface iProps<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion> extends iCanHaveSaveAction {
-	name: N;
-	initialValue: V;
-}
 export default class LocalTraitDataStorage<
 	N extends TraitNameUnionOrString,
 	V extends TraitValueTypeUnion
 > extends AbstractTraitDataStorage<N, V> {
 	#private: iPrivateModifiableProperties<V>;
 
-	readonly name: N;
-	constructor(props: iTraitDataStorageProps<N, V>) {
+  readonly name: N;
+  
+	constructor(props: iLocalTraitDataStorageProps<N, V>) {
 		super();
 
-		const { value, name, defaultValue } = props;
+		const { value, name, defaultValue, characterSheet } = props;
 
 		this.name = name;
 
-		
 		this.#private = {
-			value: value || defaultValue, // save initial value or default value if initial is not defined
+      value: value || defaultValue, // save initial value or default value if initial is not defined
+      characterSheet
 		};
 	}
 
