@@ -16,8 +16,7 @@ export default abstract class AbstractBaseTrait<
 	// #characterSheet: iCharacterSheet;
 	#dataSorage: iTraitDataStorage<N, V>;
 	#logs: iLogCollection;
-	#saveAction?: () => boolean;
-
+	toJson: () => D;
 	readonly name: N;
 
 	protected abstract newValueIsValid(newVal: V): boolean;
@@ -43,24 +42,18 @@ export default abstract class AbstractBaseTrait<
 
 		// log change
 		this.#logs.log(new UpdateLogEvent({ newValue, oldValue, property: this.name }));
-
-		// attempt autosave, if available
-		if (this.#saveAction) {
-			this.#saveAction()
-				? console.log(__filename, `Successfully saved trait property change`, { oldValue, newValue })
-				: console.error(__filename, `Error while saving trait property change`, { oldValue, newValue });
-		}
- 
 	}
 	public get value() {
 		return this.#dataSorage.value;
 	}
 
-	constructor({ saveAction, name, value, toJson }: iBaseTraitProps<N, V, D>) {
-		this.#saveAction = saveAction;
+	protected abstract getDefaultValue(): V;
+
+	constructor({ name, value, toJson, dataStorageInitialiser }: iBaseTraitProps<N, V, D>) {
 		this.name = name;
 
 		// initialise data store
+		this.#dataSorage = dataStorageInitialiser({ name, value, defaultValue: this.getDefaultValue() });
 
 		// set initial value if specified
 		if (value) this.value = value;
@@ -79,7 +72,6 @@ export default abstract class AbstractBaseTrait<
 	getLogEvents(): iLogEvent[] {
 		return this.getLogReport().logEvents;
 	}
-	toJson: () => D;
 
 	getLogReport(): iLogReport {
 		return this.#logs.getReport();

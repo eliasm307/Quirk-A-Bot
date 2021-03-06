@@ -7,15 +7,18 @@ import AbstractBaseTrait from './AbstractBaseTrait';
 export default class StringTrait<N extends TraitNameUnionOrString, V extends string>
 	extends AbstractBaseTrait<N, V, iStringTraitData<N, V>>
 	implements iBaseStringTrait<N, V> {
-	constructor({ name, value, saveAction }: iStringTraitProps<N, V>) {
+	protected getDefaultValue(): V {
+		return '' as V;
+	}
+	constructor({ name, value, dataStorageInitialiser}: iStringTraitProps<N, V>) {
 		super({
 			name,
-			value,
-			saveAction,
+			value, 
 			toJson: () => ({
 				name: this.name,
 				value: this.value,
-			}),
+			} ),
+			dataStorageInitialiser
 		});
 	}
 
