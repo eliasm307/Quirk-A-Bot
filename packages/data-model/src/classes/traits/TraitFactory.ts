@@ -39,22 +39,42 @@ import { iAttributeTraitCollection } from '../../declarations/interfaces/trait-c
 
 export default abstract class TraitFactory {
 	// methods use base trait props as all other details should be selected to match the required trait type
-	static newStringTrait<V extends string>({ name, value, saveAction }: iStringTraitProps<TraitNameUnionOrString, V>) {
-		return new StringTrait({ name, value, saveAction });
+	static newStringTrait<V extends string>({
+		name,
+		value,
+		dataStorageInitialiser,
+	}: iStringTraitProps<TraitNameUnionOrString, V>) {
+		return new StringTrait({ name, value, dataStorageInitialiser });
 	}
-	static newNumberTrait({ name, value = 0, saveAction, max, min = 0 }: iNumberTraitProps<TraitNameUnionOrString>) {
-		return new NumberTrait({ name, value, saveAction, max, min });
+	static newNumberTrait({
+		name,
+		value = 0,
+		dataStorageInitialiser,
+		max,
+		min = 0,
+	}: iNumberTraitProps<TraitNameUnionOrString>) {
+		return new NumberTrait({ name, value, dataStorageInitialiser, max, min });
 	}
-	static newCoreStringTrait<V extends string>({ name, value, saveAction }: iStringTraitProps<CoreStringTraitName, V>) {
-		return new StringTrait({ name, value, saveAction });
+	static newCoreStringTrait<V extends string>({
+		name,
+		value,
+		dataStorageInitialiser,
+	}: iStringTraitProps<CoreStringTraitName, V>) {
+		return new StringTrait({ name, value, dataStorageInitialiser });
 	}
-	static newCoreNumberTrait({ name, value = 0, saveAction, max, min = 0 }: iNumberTraitProps<CoreNumberTraitName>) {
-		return new NumberTrait({ name, value, saveAction, max, min });
+	static newCoreNumberTrait({
+		name,
+		value = 0,
+		dataStorageInitialiser,
+		max,
+		min = 0,
+	}: iNumberTraitProps<CoreNumberTraitName>) {
+		return new NumberTrait({ name, value, dataStorageInitialiser, max, min });
 	}
 	static newAttributeTrait({
 		name,
 		value = 0,
-		saveAction,
+		dataStorageInitialiser,
 	}: iBaseTraitProps<AttributeName, number, iAttributeData>): iAttribute {
 		const props: iNumberTraitWithCategoryProps<AttributeName, AttributeCategory> = {
 			categorySelector: getAttributeCategory,
@@ -62,7 +82,7 @@ export default abstract class TraitFactory {
 			max: 5,
 			name,
 			value,
-			saveAction,
+			dataStorageInitialiser,
 		};
 
 		return new NumberTraitWithCategory(props);
@@ -71,26 +91,30 @@ export default abstract class TraitFactory {
 	static newDisciplineTrait({
 		name,
 		value = 0,
-		saveAction,
+		dataStorageInitialiser,
 	}: iBaseTraitProps<DisciplineName, number, iDisciplineData>): iDiscipline {
 		const props: iNumberTraitProps<DisciplineName> = {
 			min: 1,
 			max: 5,
 			name,
 			value,
-			saveAction,
+			dataStorageInitialiser,
 		};
 
 		return new NumberTrait(props);
 	}
 
-	static newSkillTrait({ name, value = 0, saveAction }: iBaseTraitProps<SkillName, number, iSkillData>): iSkill {
+	static newSkillTrait({
+		name,
+		value = 0,
+		dataStorageInitialiser,
+	}: iBaseTraitProps<SkillName, number, iSkillData>): iSkill {
 		const props: iNumberTraitProps<SkillName> = {
 			min: 0,
 			max: 5,
 			name,
 			value,
-			saveAction,
+			dataStorageInitialiser,
 		};
 
 		return new NumberTrait(props);
@@ -98,11 +122,13 @@ export default abstract class TraitFactory {
 
 	static newTouchStoneOrConvictionTrait({
 		name,
-		value, 
+		value,
+		dataStorageInitialiser,
 	}: iBaseTraitProps<string, string, iTouchStoneOrConvictionData>): iTouchStoneOrConviction {
 		const props: iStringTraitProps<string, string> = {
 			name,
-			value, 
+			value,
+			dataStorageInitialiser,
 		};
 
 		return new StringTrait(props);
@@ -165,7 +191,8 @@ export default abstract class TraitFactory {
 		);
 	}
 
- 
+	// todo delete
+	/*
 	static newCharacterSheetDataObject(props?: iCanHaveSaveAction): iCharacterSheetData {
 		const saveAction = props?.saveAction;
 		return {
@@ -174,7 +201,7 @@ export default abstract class TraitFactory {
 				max: 10,
 				name: 'Blood Potency',
 				value: 0,
-				saveAction,
+				dataStorageInitialiser,
 			}),
 			health: TraitFactory.newCoreNumberTrait({ max: 10, name: 'Health', value: 0, saveAction }),
 			humanity: TraitFactory.newCoreNumberTrait({ max: 10, name: 'Humanity', value: 0, saveAction }),
@@ -188,5 +215,5 @@ export default abstract class TraitFactory {
 			skills: [],
 			touchstonesAndConvictions: [],
 		};
-	}
+	}*/
 }
