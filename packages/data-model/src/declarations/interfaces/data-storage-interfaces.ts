@@ -31,7 +31,7 @@ export interface iLocalTraitDataStorageProps<N extends TraitNameUnionOrString, V
 
 /** The base data storage object instance shape */
 export interface iBaseDataStorage {
-	save(): boolean;
+	// save(): boolean;
 }
 
 export interface iTraitDataStorage<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>

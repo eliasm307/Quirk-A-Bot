@@ -5,7 +5,6 @@ import { iLocalTraitDataStorageProps } from '../../declarations/interfaces/data-
 import AbstractTraitDataStorage from './AbstractTraitDataStorage';
 import saveCharacterSheetToFile from '../../utils/saveCharacterSheetToFile';
 
-
 // ? does this need to be a separate interface
 interface iPrivateModifiableProperties<V extends TraitValueTypeUnion> {
 	value: V;
@@ -23,7 +22,7 @@ export default class LocalTraitDataStorage<
 	constructor(props: iLocalTraitDataStorageProps<N, V>) {
 		super();
 
-		const {  name, defaultValueIfNotDefined , characterSheet } = props;
+		const { name, defaultValueIfNotDefined, characterSheet } = props;
 
 		this.name = name;
 
@@ -46,15 +45,12 @@ export default class LocalTraitDataStorage<
 		// update internal value
 		this.#private.value = newValue;
 
-		// save change
-		this.save();
-
 		// attempt autosave for change
 		this.save()
 			? console.log(__filename, `Successfully saved "${this.name}" trait property change`, { oldValue, newValue })
 			: console.error(__filename, `Error while saving "${this.name}" trait property change`, { oldValue, newValue });
 	}
-	save(): boolean {
+	private save(): boolean {
 		// save if available
 		return saveCharacterSheetToFile(this.#private.characterSheet.toJson(), '../../data/character-sheets');
 	}

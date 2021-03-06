@@ -1,8 +1,6 @@
 import { TraitNameUnionOrString } from './../../declarations/types';
 import { TraitValueTypeUnion } from '../../declarations/types';
-import {
-	iInMemoryTraitDataStorageProps,
-} from '../../declarations/interfaces/data-storage-interfaces';
+import { iInMemoryTraitDataStorageProps } from '../../declarations/interfaces/data-storage-interfaces';
 import AbstractTraitDataStorage from './AbstractTraitDataStorage';
 
 // ? does this need to be a separate interface
@@ -21,7 +19,7 @@ export default class InMemoryTraitDataStorage<
 	constructor(props: iInMemoryTraitDataStorageProps<N, V>) {
 		super();
 
-		const {   name, defaultValueIfNotDefined  } = props;
+		const { name, defaultValueIfNotDefined } = props;
 
 		this.name = name;
 
@@ -43,17 +41,5 @@ export default class InMemoryTraitDataStorage<
 
 		// update internal value
 		this.#private.value = newValue;
-
-		// save change
-		this.save();
-
-		// attempt autosave for change
-		this.save()
-			? console.warn(__filename, `Successfully saved "${this.name}" trait property change`, { oldValue, newValue })
-			: console.error(__filename, `Error while saving "${this.name}" trait property change`, { oldValue, newValue });
-	}
-	save(): boolean {
-		// always true as data is saved in memory
-		return true;
 	}
 }
