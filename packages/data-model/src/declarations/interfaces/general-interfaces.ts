@@ -6,6 +6,8 @@ export interface iCanHaveSaveAction {
 	saveAction?: () => boolean;
 }
 
+
+
 export interface iHasDataStorageFactory {
 	dataStorageFactory: iDataStorageFactory
 }

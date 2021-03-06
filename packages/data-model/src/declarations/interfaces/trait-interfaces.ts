@@ -1,4 +1,4 @@
-import { iTraitDataStorage, iBaseTraitDataStorageProps, iDataStorageFactory } from './data-storage-interfaces';
+import { iTraitDataStorage, iBaseTraitDataStorageProps, iDataStorageFactory, iHasTraitDataStorageInitialiser } from './data-storage-interfaces';
 import {
 	TraitNameUnionOrString,
 	TraitValueTypeUnion,
@@ -39,11 +39,10 @@ export interface iBaseTraitProps<
 	N extends TraitNameUnionOrString,
 	V extends TraitValueTypeUnion,
 	D extends iTraitData<N, V>
->   {
+> extends iHasTraitDataStorageInitialiser<N, V> {
 	name: N;
 	value?: V;
-	toJson?: () => D;
-	dataStorageInitialiser(props: iBaseTraitDataStorageProps<N, V>): iTraitDataStorage<N, V>
+	toJson?: () => D; 
 }
 export interface iStringTraitProps<N extends TraitNameUnionOrString, V extends string>
 	extends iBaseTraitProps<N, V, iStringTraitData<N, V>> {}
@@ -67,10 +66,9 @@ export interface iTraitCollectionProps<
 	V extends TraitValueTypeUnion,
 	D extends iTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
-> extends iCanHaveSaveAction {
+> extends iHasTraitDataStorageInitialiser<N, V> {
 	name: string;
-	instanceCreator: ( props: iBaseTraitProps<N, V, D> ) => T;
-	dataStorageFactory: iDataStorageFactory
+	instanceCreator: (props: iBaseTraitProps<N, V, D>) => T;
 }
 // -------------------------------------------------------
 // GENERIC TRAIT DATA TYPES
@@ -102,12 +100,9 @@ export interface iCoreNumberTraitData extends iNumberTraitData<CoreNumberTraitNa
 // GENERIC TRAIT OBJECTS TYPES
 
 /** Base interface for Trait Objects */
-export interface iBaseTrait<
-	N extends TraitNameUnionOrString,
-	V extends TraitValueTypeUnion,
-	D extends iTraitData<N, V>
-> extends iTraitData<N, V>,
-		iToJson<D>, 
+export interface iBaseTrait<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion, D extends iTraitData<N, V>>
+	extends iTraitData<N, V>,
+		iToJson<D>,
 		iLoggerSingle {
 	// todo add explain method to give a summary what this trait is for
 	// todo add explainValue method to describe the current value of the attribute, ie add description getter to describe the meaning of a value

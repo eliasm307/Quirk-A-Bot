@@ -11,6 +11,7 @@ import DeleteLogEvent from '../log/DeleteLogEvent';
 import AddLogEvent from '../log/AddLogEvent';
 import { iLogCollection, iLogEvent, iLogReport } from '../../declarations/interfaces/log-interfaces';
 import { iTraitCollection } from '../../declarations/interfaces/trait-collection-interfaces';
+import { iBaseTraitDataStorageProps, iTraitDataStorage } from '../../declarations/interfaces/data-storage-interfaces';
 
 export default class TraitCollection<
 	N extends TraitNameUnionOrString,
@@ -19,22 +20,23 @@ export default class TraitCollection<
 	T extends iBaseTrait<N, V, D>
 > implements iTraitCollection<N, V, D, T> {
 	#instanceCreator: (props: iBaseTraitProps<N, V, D>) => T;
-	private saveAction?: () => boolean;
 	name: string;
 	#map: Map<N, T>;
 
 	/** Collection of logs for trait collection, ie add and remove events only (update events are held in traits) */
 	#logs: iLogCollection;
 	#typeName: TraitTypeNameUnion | string = 'Trait';
+	#traitDataStorageInitialiser: (props: iBaseTraitDataStorageProps<N, V>) => iTraitDataStorage<N, V>;
 	constructor(
-		{ instanceCreator, saveAction, name , dataStorageFactory}: iTraitCollectionProps<N, V, D, T>,
+		{ instanceCreator, name, traitDataStorageInitialiser }: iTraitCollectionProps<N, V, D, T>,
 		...initialData: iTraitData<N, V>[]
 	) {
 		this.name = name;
-		this.saveAction = saveAction;
 		this.#instanceCreator = instanceCreator;
+		this.#traitDataStorageInitialiser = traitDataStorageInitialiser;
+		// todo this should be moved to trait collection data storage
 		this.#map = new Map<N, T>(
-			initialData.map(({ name, value }) => [name, instanceCreator({ name, value })])
+			initialData.map(({ name, value }) => [name, instanceCreator({ name, value, traitDataStorageInitialiser })])
 		);
 		this.#logs = new LogCollection({ sourceName: name, sourceType: 'Trait Collection' });
 	}
@@ -71,8 +73,9 @@ export default class TraitCollection<
 		// log change
 		this.#logs.log(new DeleteLogEvent({ oldValue, property }));
 
+		// todo this should be done in trait collection data storage
 		// autosave if save is available
-		if (this.saveAction) this.saveAction();
+		// if (this.saveAction) this.saveAction();
 	}
 	has(name: N): boolean {
 		return this.#map.has(name);
@@ -100,13 +103,17 @@ export default class TraitCollection<
 			// this.#logs.log(new UpdateLogEvent({ newValue, oldValue, property: name }));
 		} else {
 			// add new trait instance
-			this.#map.set(name, this.#instanceCreator({ name, value: newValue }));
+			this.#map.set(
+				name,
+				this.#instanceCreator({ name, value: newValue, traitDataStorageInitialiser: this.#traitDataStorageInitialiser })
+			);
 
 			// log change
 			this.#logs.log(new AddLogEvent({ newValue, property: name }));
 		}
 
+		// todo this should be done in trait collection data storage
 		// autosave if save available
-		if (this.saveAction) this.saveAction();
+		// if (this.saveAction) this.saveAction();
 	}
 }

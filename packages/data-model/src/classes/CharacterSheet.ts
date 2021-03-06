@@ -174,7 +174,7 @@ export default class CharacterSheet implements iCharacterSheet {
 		this.disciplines = TraitFactory.newDisciplineTraitCollection({ saveAction }, ...initialDisciplines);
 
 		this.touchstonesAndConvictions = TraitFactory.newTouchstonesAndConvictionTraitCollection(
-			{ saveAction },
+			{ dataStorageFactory },
 			...initialTouchstonesAndConvictions
 		);
 

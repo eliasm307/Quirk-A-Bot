@@ -2,6 +2,10 @@ import { iCharacterSheet, iCharacterSheetData } from './character-sheet-interfac
 import { TraitNameUnionOrString, TraitValueTypeUnion } from './../types';
 import { iGeneralTraitData, iTraitData } from './trait-interfaces';
 
+export interface iHasTraitDataStorageInitialiser<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion> {
+	traitDataStorageInitialiser: (props: iBaseTraitDataStorageProps<N, V>) => iTraitDataStorage<N, V>;
+}
+
 export interface iBaseTraitDataStorageProps<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion> {
 	name: N;
 	value?: V;
@@ -47,3 +51,5 @@ export interface iDataStorageFactory {
 		characterSheet: iCharacterSheet
 	): (props: iBaseTraitDataStorageProps<N, V>) => iTraitDataStorage<N, V>;
 }
+
+
