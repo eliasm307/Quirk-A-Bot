@@ -1,13 +1,20 @@
+import { iBaseCollection } from './general-interfaces';
 import { iCharacterSheet, iCharacterSheetData } from './character-sheet-interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from './../types';
 import { iGeneralTraitData, iTraitData } from './trait-interfaces';
+
+// -------------------------------------------------------
+// GENERAL
 
 export interface iHasTraitDataStorageInitialiser<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion> {
 	traitDataStorageInitialiser: (props: iBaseTraitDataStorageProps<N, V>) => iTraitDataStorage<N, V>;
 }
 
+// -------------------------------------------------------
+// PROPS
+
 export interface iBaseTraitDataStorageProps<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion> {
-	name: N; 
+	name: N;
 	defaultValueIfNotDefined: V;
 }
 
@@ -19,6 +26,9 @@ export interface iLocalTraitDataStorageProps<N extends TraitNameUnionOrString, V
 	characterSheet: iCharacterSheet;
 }
 
+// -------------------------------------------------------
+// DATA STORAGE OBJECTS
+
 /** The base data storage object instance shape */
 export interface iBaseDataStorage {
 	save(): boolean;
@@ -29,20 +39,15 @@ export interface iTraitDataStorage<N extends TraitNameUnionOrString, V extends T
 		iTraitData<N, V> {}
 
 export interface iTraitCollectionDataStorage<N extends TraitNameUnionOrString, D extends iGeneralTraitData>
-	extends iBaseDataStorage {
-	// todo this should extend a base iCollection
-	get(name: N): D | void;
-	delete(name: N): void;
-	has(name: N): boolean;
-	toArray(): D[];
-	readonly size: number;
-}
+	extends iBaseDataStorage,
+		iBaseCollection<N, D> {}
 
 export interface iCharacterSheetDataStorage extends iBaseDataStorage {
 	get(): iCharacterSheetData;
 }
 
-// ABSTRACT FACTORY
+// -------------------------------------------------------
+// DATA STORAGE FACTORY
 
 export interface iDataStorageFactory {
 	// ? do data storage objects need to use N V generics? user wont interact with these directly
@@ -51,5 +56,3 @@ export interface iDataStorageFactory {
 		props: iBaseTraitDataStorageProps<N, V>
 	) => iTraitDataStorage<N, V>;
 }
-
-

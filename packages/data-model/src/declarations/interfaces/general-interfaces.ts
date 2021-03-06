@@ -22,3 +22,12 @@ export interface iHasOldValue<T> {
 export interface iHasNewValue<T> {
 	newValue: T;
 }
+
+export interface iBaseCollection<K extends string, V  >  {
+	// todo this should extend a base iCollection
+	get(key: K): V | void;
+	delete(key: K): void;
+	has(key: K): boolean;
+	toArray(): V[];
+	readonly size: number;
+}

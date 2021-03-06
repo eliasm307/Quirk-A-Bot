@@ -302,8 +302,7 @@ export default class CharacterSheet implements iCharacterSheet {
 		// todo test
 		return this.getAllTraits().map(trait => trait.getLogReport());
 	}
-	getLogEvents(): iLogEvent[] {
-		// todo test
+	getLogEvents(): iLogEvent[] { 
 		// combine logs from reports and and sort oldest to newest
 		return this.getLogReport()
 			.reduce((events, report) => [...events, ...report.logEvents], [] as iLogEvent[])
