@@ -1,6 +1,6 @@
 import { iDataStorageFactory } from './data-storage-interfaces';
-export interface iToJson<T> {
-	toJson: () => T;
+export interface iToJson<D> {
+	toJson: () => D;
 }
 export interface iCanHaveSaveAction {
 	saveAction?: () => boolean;
@@ -15,12 +15,12 @@ export interface iHasDataStorageFactory {
 export interface iHasSaveAction {
 	saveAction: () => boolean;
 }
-export interface iHasOldValue<T> {
-	oldValue: T;
+export interface iHasOldValue<V> {
+	oldValue: V;
 }
 
-export interface iHasNewValue<T> {
-	newValue: T;
+export interface iHasNewValue<V> {
+	newValue: V;
 }
 
 export interface iBaseCollection<K extends string, SetValue, ReturnValue> {

@@ -1,3 +1,4 @@
+import { iAddLogEventProps, iDeleteLogEventProps } from './../../declarations/interfaces/log-interfaces';
 import { iBaseTrait, iGeneralTraitData, iTraitData } from './../../declarations/interfaces/trait-interfaces';
 import { iTraitCollectionDataStorage } from './../../declarations/interfaces/data-storage-interfaces';
 import { iTraitCollection } from './../../declarations/interfaces/trait-collection-interfaces';
@@ -29,4 +30,6 @@ export default abstract class AbstractTraitCollectionDataStorage<
 	abstract has(key: N): boolean;
 	abstract toArray(): T[];
 	abstract size: number;
+	protected abstract onAdd(props: iAddLogEventProps<V>): void;
+	protected abstract onDelete(props: iDeleteLogEventProps<V>): void;
 }

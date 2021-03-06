@@ -4,7 +4,13 @@ import {
 	iTraitCollectionDataStorage,
 	iTraitDataStorage,
 } from '../../../declarations/interfaces/data-storage-interfaces';
-import { iLogCollection, iLogEvent, iLogReport } from '../../../declarations/interfaces/log-interfaces';
+import {
+	iAddLogEventProps,
+	iDeleteLogEventProps,
+	iLogCollection,
+	iLogEvent,
+	iLogReport,
+} from '../../../declarations/interfaces/log-interfaces';
 import {
 	iBaseTrait,
 	iBaseTraitProps,
@@ -26,23 +32,30 @@ export default class InMemoryTraitCollectionDataStorage<
 	>
 	extends AbstractTraitCollectionDataStorage<N, V, D, T>
 	implements iTraitCollectionDataStorage<N, V, D, T> {
+	protected onAdd: (props: iAddLogEventProps<V>) => void;
+	protected onDelete: (props: iDeleteLogEventProps<V>) => void;
 	protected map: Map<N, T>;
 
-	#logs: iLogCollection;
+	// #logs: iLogCollection;
 	#instanceCreator: (props: iBaseTraitProps<N, V, D>) => T;
 	#traitDataStorageInitialiser: (props: iBaseTraitDataStorageProps<N, V>) => iTraitDataStorage<N, V>;
 	name: string;
 
-	constructor(props: iBaseTraitCollectionDataStorageProps<N, V, D, T>, ...initialData: D[]) {
+	constructor(props: iBaseTraitCollectionDataStorageProps<N, V, D, T>) {
 		super();
-		const { instanceCreator, traitDataStorageInitialiser, name } = props;
+		const { instanceCreator, traitDataStorageInitialiser, name, onAdd, onDelete, initialData } = props;
+		this.onAdd = onAdd;
+		this.onDelete = onDelete;
+
 		this.name = name;
 		this.#instanceCreator = instanceCreator;
 		this.#traitDataStorageInitialiser = traitDataStorageInitialiser;
 		this.map = new Map<N, T>(
-			initialData.map(({ name, value }) => [name, instanceCreator({ name, value, traitDataStorageInitialiser })])
+			initialData
+				? initialData.map(({ name, value }) => [name, instanceCreator({ name, value, traitDataStorageInitialiser })])
+				: []
 		);
-		this.#logs = new LogCollection({ sourceName: name, sourceType: 'Trait Collection' });
+		// this.#logs = new LogCollection({ sourceName: name, sourceType: 'Trait Collection' });
 	}
 	toJson(): D[] {
 		return this.toArray().map(e => e.toJson());
@@ -67,13 +80,8 @@ export default class InMemoryTraitCollectionDataStorage<
 			if (!instance)
 				return console.error(__filename, `{this.#typeName} with name '${name}' is not defined but key exists`);
 
-			const oldValue = instance.value;
-
-			// apply change
+			// apply change, the instance logs changes internally
 			instance.value = newValue;
-
-			// the instance logs changes internally
-			// this.#logs.log(new UpdateLogEvent({ newValue, oldValue, property: name }));
 		} else {
 			// add new trait instance
 			this.map.set(
@@ -86,7 +94,7 @@ export default class InMemoryTraitCollectionDataStorage<
 			);
 
 			// log change
-			this.#logs.log(new AddLogEvent({ newValue, property: name }));
+			this.onAdd({ newValue, property: name });
 		}
 
 		// todo this should be done in trait collection data storage
@@ -95,14 +103,19 @@ export default class InMemoryTraitCollectionDataStorage<
 		this.save();
 	}
 	delete(name: N): void {
-		const oldValue = this.map.get(name);
+		const oldValue = this.map.get(name)?.value;
 		const property = name;
 
 		// apply change
 		this.map.delete(name);
 
 		// log change
-		this.#logs.log(new DeleteLogEvent({ oldValue, property }));
+		// this.#logs.log( new DeleteLogEvent( { oldValue, property } ) );
+		if (oldValue) {
+			this.onDelete({ oldValue, property });
+		} else {
+			console.error(__filename, `old value not defined when deleting property "${name}`);
+		}
 
 		// todo this should be done in trait collection data storage
 		// autosave if save is available

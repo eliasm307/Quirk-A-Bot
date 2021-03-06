@@ -1,9 +1,16 @@
 import { LogOperationUnion, LogSourceType } from './../types';
-import { iHasNewValue } from './general-interfaces';
+import { iHasNewValue, iHasOldValue } from './general-interfaces';
+
+// todo group these
+
 export interface iBaseLogEventProps {
 	description?: string;
 	property: string;
 }
+
+export interface iAddLogEventProps<V> extends iBaseLogEventProps, iHasNewValue<V> {}
+export interface iDeleteLogEventProps<V> extends iBaseLogEventProps, iHasOldValue<V> {}
+export interface iUpdateLogEventProps<V> extends iBaseLogEventProps, iHasOldValue<V>, iHasNewValue<V> {}
 
 export interface iLogEvent extends iBaseLogEventProps {
 	id: string;
@@ -19,7 +26,7 @@ export interface iLogReport {
 	logEvents: iLogEvent[];
 }
 
-export interface iAddLogEvent<T> extends iLogEvent, iHasNewValue<T> {}
+export interface iAddLogEvent<V> extends iLogEvent, iHasNewValue<V> {}
 
 export interface iBaseLogger {
 	getLogEvents(): iLogEvent[];

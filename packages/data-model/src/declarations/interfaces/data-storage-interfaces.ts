@@ -2,7 +2,7 @@ import { iBaseCollection, iToJson } from './general-interfaces';
 import { iCharacterSheet, iCharacterSheetData } from './character-sheet-interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from './../types';
 import { iBaseTrait, iGeneralTraitData, iHasTraitInstanceCreator, iTraitData } from './trait-interfaces';
-import { iLoggerCollection } from './log-interfaces';
+import { iLoggerCollection, iAddLogEvent, iAddLogEventProps, iDeleteLogEventProps } from './log-interfaces';
 
 // -------------------------------------------------------
 // GENERAL
@@ -38,6 +38,8 @@ export interface iBaseTraitCollectionDataStorageProps<
 		iHasTraitDataStorageInitialiser<N, V> {
 	initialData?: D[];
 	name: string;
+	onAdd: (props: iAddLogEventProps<V>) => void;
+	onDelete: (props: iDeleteLogEventProps<V>) => void;
 }
 
 export interface iLocalFileTraitCollectionDataStorageProps<

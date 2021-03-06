@@ -1,3 +1,4 @@
+import { iAddLogEventProps, iDeleteLogEventProps } from './../../declarations/interfaces/log-interfaces';
 import { iTraitCollectionDataStorage } from './../../declarations/interfaces/data-storage-interfaces';
 import { TraitNameUnionOrString } from './../../declarations/types';
 import {
@@ -27,19 +28,22 @@ export default class TraitCollection<
 	// #map: Map<N, T>;
 
 	/** Collection of logs for trait collection, ie add and remove events only (update events are held in traits) */
-	#logs: iLogCollection;
+	protected logs: iLogCollection;
 	#typeName: TraitTypeNameUnion | string = 'Trait';
 
 	constructor({ instanceCreator, name, dataStorageFactory }: iTraitCollectionProps<N, V, D, T>, ...initialData: D[]) {
 		this.name = name;
 		this.#instanceCreator = instanceCreator;
 		this.#traitDataStorageInitialiser = dataStorageFactory.newTraitDataStorageInitialiser(); // todo, reuse this function instead of making a new one each time
+		this.logs = new LogCollection({ sourceName: name, sourceType: 'Trait Collection' });
 
 		this.#dataStorage = dataStorageFactory.newTraitCollectionDataStorage({
 			instanceCreator,
 			name,
 			traitDataStorageInitialiser: this.#traitDataStorageInitialiser,
 			initialData,
+			onAdd: (props: iAddLogEventProps<V>) => this.logs.log(new AddLogEvent(props)),
+			onDelete: (props: iDeleteLogEventProps<V>) => this.logs.log(new DeleteLogEvent(props)),
 		});
 
 		// todo this should be moved to trait collection data storage
@@ -55,9 +59,8 @@ export default class TraitCollection<
 			])
 		);
 		*/
-
-		this.#logs = new LogCollection({ sourceName: name, sourceType: 'Trait Collection' });
 	}
+
 	toArray(): T[] {
 		return this.#dataStorage.toArray();
 	}
@@ -69,7 +72,7 @@ export default class TraitCollection<
 			.sort((a, b) => Number(a.timeStamp - b.timeStamp));
 	}
 	getLogReport(): iLogReport[] {
-		return [this.#logs.getReport(), ...this.toArray().map(e => e.getLogReport())];
+		return [this.logs.getReport(), ...this.toArray().map(e => e.getLogReport())];
 	}
 	toJson(): D[] {
 		return this.toArray().map(e => e.toJson());
@@ -77,7 +80,6 @@ export default class TraitCollection<
 	get size(): number {
 		return this.#dataStorage.size;
 	}
-
 	get(name: N): T | void {
 		return this.#dataStorage.get(name);
 	}
@@ -89,7 +91,7 @@ export default class TraitCollection<
 		this.#dataStorage.delete(name);
 
 		// log change
-		this.#logs.log(new DeleteLogEvent({ oldValue, property }));
+		// this.#logs.log(new DeleteLogEvent({ oldValue, property }));
 
 		// todo this should be done in trait collection data storage
 		// autosave if save is available
@@ -104,7 +106,7 @@ export default class TraitCollection<
 	 * @param name name of trait to edit or create
 	 * @param newValue value to assign
 	 */
-	set( name: N, newValue: V ): void {
+	set(name: N, newValue: V): void {
 		// todo this should have logging for modification or creation
 		this.#dataStorage.set(name, newValue);
 		// if trait already exists then just update it
@@ -134,7 +136,7 @@ export default class TraitCollection<
 			);
 
 			// log change
-			this.#logs.log(new AddLogEvent({ newValue, property: name }));
+			
 		}*/
 
 		// todo this should be done in trait collection data storage
