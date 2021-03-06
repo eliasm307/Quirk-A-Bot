@@ -242,11 +242,11 @@ export default class CharacterSheet implements iCharacterSheet {
 		return data;
 	}
 
+	 // todo delete this and use a csDataStorage object
 	private saveToFile(data: iCharacterSheetData, savePath: string): boolean {
 		// this.#savePath
 		return exportDataToFile(data, savePath);
-	}
-
+	} 
 	private getAllTraits(): iBaseTrait<
 		TraitNameUnionOrString,
 		TraitValueTypeUnion,

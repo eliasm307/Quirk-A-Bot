@@ -5,11 +5,13 @@ import { TraitValueTypeUnion } from '../../declarations/types';
 import { iLocalTraitDataStorageProps, iTraitDataStorage } from '../../declarations/interfaces/data-storage-interfaces';
 import AbstractDataStorage from './AbstractDataStorage';
 import AbstractTraitDataStorage from './AbstractTraitDataStorage';
+import saveCharacterSheetToFile from '../../utils/saveCharacterSheetToFile';
+
 
 // ? does this need to be a separate interface
 interface iPrivateModifiableProperties<V extends TraitValueTypeUnion> {
-  value: V;
-  characterSheet: iCharacterSheet;
+	value: V;
+	characterSheet: iCharacterSheet;
 }
 
 export default class LocalTraitDataStorage<
@@ -18,8 +20,8 @@ export default class LocalTraitDataStorage<
 > extends AbstractTraitDataStorage<N, V> {
 	#private: iPrivateModifiableProperties<V>;
 
-  readonly name: N;
-  
+	readonly name: N;
+
 	constructor(props: iLocalTraitDataStorageProps<N, V>) {
 		super();
 
@@ -28,8 +30,8 @@ export default class LocalTraitDataStorage<
 		this.name = name;
 
 		this.#private = {
-      value: value || defaultValue, // save initial value or default value if initial is not defined
-      characterSheet
+			value: value || defaultValue, // save initial value or default value if initial is not defined
+			characterSheet,
 		};
 	}
 
@@ -56,6 +58,6 @@ export default class LocalTraitDataStorage<
 	}
 	save(): boolean {
 		// save if available
-		return this.#private.saveAction ? this.#private.saveAction() : false;
+		return saveCharacterSheetToFile(this.#private.characterSheet.toJson(), '../../data/character-sheets');
 	}
 }
