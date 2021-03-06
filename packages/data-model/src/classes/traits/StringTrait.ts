@@ -10,7 +10,7 @@ export default class StringTrait<N extends TraitNameUnionOrString, V extends str
 	protected getDefaultValue(): V {
 		return '' as V;
 	}
-	constructor({ name, value, dataStorageInitialiser}: iStringTraitProps<N, V>) {
+	constructor({ name, value, traitDataStorageInitialiser}: iStringTraitProps<N, V>) {
 		super({
 			name,
 			value, 
@@ -18,7 +18,7 @@ export default class StringTrait<N extends TraitNameUnionOrString, V extends str
 				name: this.name,
 				value: this.value,
 			} ),
-			dataStorageInitialiser
+			traitDataStorageInitialiser
 		});
 	}
 

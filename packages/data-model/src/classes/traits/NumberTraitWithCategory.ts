@@ -20,13 +20,13 @@ export default class NumberTraitWithCategory<N extends TraitNameUnionOrString, C
 		name,
 		value,
 		min,
-		dataStorageInitialiser,
+		traitDataStorageInitialiser,
 		toJson = () => ({
 			name: this.name,
 			value: this.value,
 		}),
 	}: iNumberTraitWithCategoryProps<N, C>) {
-		super({ max, name, value, min, dataStorageInitialiser, toJson });
+		super({ max, name, value, min, traitDataStorageInitialiser, toJson });
 
 		// get the input categorySelector
 		this.#categorySelector = categorySelector;

@@ -47,9 +47,10 @@ export interface iCharacterSheetDataStorage extends iBaseDataStorage {
 
 export interface iDataStorageFactory {
 	// ? do data storage objects need to use N V generics? user wont interact with these directly
-	traitDataStorageInitialiser<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(
-		characterSheet: iCharacterSheet
-	): (props: iBaseTraitDataStorageProps<N, V>) => iTraitDataStorage<N, V>;
+
+	newTraitDataStorageInitialiser<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(): (
+		props: iBaseTraitDataStorageProps<N, V>
+	) => iTraitDataStorage<N, V>;
 }
 
 

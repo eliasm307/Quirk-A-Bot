@@ -21,10 +21,9 @@ import { ClanName, CoreNumberTraitName, CoreStringTraitName } from '../types';
 import { iToJson } from './general-interfaces';
 import { iDataStorageFactory } from './data-storage-interfaces';
 
-
 export interface iCharacterSheetProps {
 	sheet: iCharacterSheetData | number;
-	dataStorageFactory: iDataStorageFactory;
+	dataStorageFactoryInitialiser: (characterSheet: iCharacterSheet) => iDataStorageFactory;
 	customSavePath?: string;
 }
 

@@ -73,8 +73,8 @@ export default class CharacterSheet implements iCharacterSheet {
 
 	//-------------------------------------
 	// CONSTRUCTOR
-	constructor({ sheet, dataStorageFactory, customSavePath }: iCharacterSheetProps) {
-		this.#dataStorageFactory = dataStorageFactory;
+	constructor({ sheet, dataStorageFactoryInitialiser, customSavePath }: iCharacterSheetProps) {
+		this.#dataStorageFactory = dataStorageFactoryInitialiser(this);
 
 		let initialAttributes: iAttributeData[] = [];
 		let initialDisciplines: iDisciplineData[] = [];
@@ -116,65 +116,74 @@ export default class CharacterSheet implements iCharacterSheet {
 			max: 10,
 			name: 'Blood Potency',
 			value: initialValues?.bloodPotency.value || 0,
-			dataStorageInitialiser: this.#dataStorageFactory.traitDataStorageInitialiser(this),
+			traitDataStorageInitialiser: this.#dataStorageFactory.newTraitDataStorageInitialiser(),
 		});
 
 		this.hunger = new NumberTrait<CoreNumberTraitName>({
 			max: 5,
 			name: 'Hunger',
 			value: initialValues?.hunger.value || 0,
-			dataStorageInitialiser: this.#dataStorageFactory.traitDataStorageInitialiser(this),
+			traitDataStorageInitialiser: this.#dataStorageFactory.newTraitDataStorageInitialiser(),
 		});
 
 		this.humanity = new NumberTrait<CoreNumberTraitName>({
 			max: 10,
 			name: 'Humanity',
 			value: initialValues?.humanity.value || 0,
-			dataStorageInitialiser: this.#dataStorageFactory.traitDataStorageInitialiser(this),
+			traitDataStorageInitialiser: this.#dataStorageFactory.newTraitDataStorageInitialiser(),
 		});
 
 		this.health = new NumberTrait<CoreNumberTraitName>({
 			max: 10,
 			name: 'Health',
 			value: initialValues?.health.value || 0,
-			dataStorageInitialiser: this.#dataStorageFactory.traitDataStorageInitialiser(this),
+			traitDataStorageInitialiser: this.#dataStorageFactory.newTraitDataStorageInitialiser(),
 		});
 
 		this.willpower = new NumberTrait<CoreNumberTraitName>({
 			max: 10,
 			name: 'Willpower',
 			value: initialValues?.willpower.value || 0,
-			dataStorageInitialiser: this.#dataStorageFactory.traitDataStorageInitialiser(this),
+			traitDataStorageInitialiser: this.#dataStorageFactory.newTraitDataStorageInitialiser(),
 		});
 
 		// core string traits
 		this.name = new StringTrait<CoreStringTraitName, string>({
 			name: 'Name',
 			value: initialValues?.name.value || '',
-			dataStorageInitialiser: this.#dataStorageFactory.traitDataStorageInitialiser(this),
+			traitDataStorageInitialiser: this.#dataStorageFactory.newTraitDataStorageInitialiser(),
 		});
 
 		this.sire = new StringTrait<CoreStringTraitName, string>({
 			name: 'Sire',
 			value: initialValues?.sire.value || '',
-			dataStorageInitialiser: this.#dataStorageFactory.traitDataStorageInitialiser(this),
+			traitDataStorageInitialiser: this.#dataStorageFactory.newTraitDataStorageInitialiser(),
 		});
 
 		this.clan = new StringTrait<CoreStringTraitName, ClanName>({
 			name: 'Clan',
 			value: initialValues?.clan.value || '',
-			dataStorageInitialiser: this.#dataStorageFactory.traitDataStorageInitialiser(this),
+			traitDataStorageInitialiser: this.#dataStorageFactory.newTraitDataStorageInitialiser(),
 		});
 
 		// create collections, with initial data where available
-		this.attributes = TraitFactory.newAttributeTraitCollection({ saveAction }, ...initialAttributes);
+		this.attributes = TraitFactory.newAttributeTraitCollection(
+			{ dataStorageFactory: this.#dataStorageFactory },
+			...initialAttributes
+		);
 
-		this.skills = TraitFactory.newSkillTraitCollection({ saveAction }, ...initialSkills);
+		this.skills = TraitFactory.newSkillTraitCollection(
+			{ dataStorageFactory: this.#dataStorageFactory },
+			...initialSkills
+		);
 
-		this.disciplines = TraitFactory.newDisciplineTraitCollection({ saveAction }, ...initialDisciplines);
+		this.disciplines = TraitFactory.newDisciplineTraitCollection(
+			{ dataStorageFactory: this.#dataStorageFactory },
+			...initialDisciplines
+		);
 
 		this.touchstonesAndConvictions = TraitFactory.newTouchstonesAndConvictionTraitCollection(
-			{ dataStorageFactory },
+			{ dataStorageFactory: this.#dataStorageFactory },
 			...initialTouchstonesAndConvictions
 		);
 
@@ -215,10 +224,11 @@ export default class CharacterSheet implements iCharacterSheet {
 		if (!isCharacterSheetData(data))
 			throw Error(`Data loaded from path "${resolvedPath}" is not valid character sheet data`);
 
+		// ? is this ok when it specifies local data storage explicitly? this should be implemented in data storage
 		const instance = new CharacterSheet({
 			sheet: data,
 			customSavePath: resolvedPath,
-			dataStorageFactory: new LocalDataStorageFactory(),
+			dataStorageFactoryInitialiser: cs => new LocalDataStorageFactory(cs),
 		});
 
 		// save instance reference

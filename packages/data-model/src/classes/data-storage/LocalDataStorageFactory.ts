@@ -7,9 +7,11 @@ import {
 } from './../../declarations/interfaces/data-storage-interfaces';
 import LocalTraitDataStorage from './LocalTraitDataStorage';
 export default class LocalDataStorageFactory implements iDataStorageFactory {
-	traitDataStorageInitialiser<N extends string, V extends TraitValueTypeUnion>(
-		characterSheet: iCharacterSheet
-	): (props: iBaseTraitDataStorageProps<N, V>) => iTraitDataStorage<N, V> {
-		return props => new LocalTraitDataStorage({ ...props, characterSheet });
+	constructor(public characterSheet: iCharacterSheet) {}
+
+	newTraitDataStorageInitialiser<N extends string, V extends TraitValueTypeUnion>(): (
+		props: iBaseTraitDataStorageProps<N, V>
+	) => iTraitDataStorage<N, V> {
+		return props => new LocalTraitDataStorage({ ...props, characterSheet: this.characterSheet });
 	}
 }

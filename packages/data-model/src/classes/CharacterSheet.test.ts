@@ -1,3 +1,4 @@
+import { iCharacterSheet } from './../declarations/interfaces/character-sheet-interfaces';
 import fs from 'fs-extra';
 import path from 'path';
 import CharacterSheet from './CharacterSheet';
@@ -25,7 +26,7 @@ test(testName, () => {
 	const cs = new CharacterSheet({
 		sheet: testUserId,
 		customSavePath: filePathRandom,
-		dataStorageFactory: new LocalDataStorageFactory(),
+		dataStorageFactoryInitialiser: (characterSheet: iCharacterSheet) => new LocalDataStorageFactory(characterSheet),
 	});
 
 	const csLoaded = CharacterSheet.loadFromFile({ filePath: filePathRandom });
