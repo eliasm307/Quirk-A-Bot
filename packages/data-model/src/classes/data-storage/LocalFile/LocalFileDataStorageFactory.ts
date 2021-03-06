@@ -15,6 +15,14 @@ export default class LocalFileDataStorageFactory implements iDataStorageFactory 
 	constructor(characterSheet: iCharacterSheet) {
 		this.#characterSheet = characterSheet;
 	}
+	newTraitCollectionDataStorage<
+		N extends string,
+		V extends TraitValueTypeUnion,
+		D extends iTraitData<N, V>,
+		T extends iBaseTrait<N, V, D>
+	>(props: iBaseTraitCollectionDataStorageProps<N, V, D, T>): iTraitCollectionDataStorage<N, V, D, T> {
+		return new LocalFileTraitCollectionDataStorage({ ...props, characterSheet: this.#characterSheet });
+	}
 
 	newTraitDataStorageInitialiser<N extends string, V extends TraitValueTypeUnion>(): (
 		props: iBaseTraitDataStorageProps<N, V>

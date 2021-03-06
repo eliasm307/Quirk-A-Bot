@@ -36,6 +36,7 @@ export interface iBaseTraitCollectionDataStorageProps<
 	T extends iBaseTrait<N, V, D>
 > extends iHasTraitInstanceCreator<N, V, D, T>,
 		iHasTraitDataStorageInitialiser<N, V> {
+	initialData?: D[];
 	name: string;
 }
 
@@ -92,4 +93,13 @@ export interface iDataStorageFactory {
 		D extends iTraitData<N, V>,
 		T extends iBaseTrait<N, V, D>
 	>(): (props: iBaseTraitCollectionDataStorageProps<N, V, D, T>) => iTraitCollectionDataStorage<N, V, D, T>;
+
+	newTraitCollectionDataStorage<
+		N extends TraitNameUnionOrString,
+		V extends TraitValueTypeUnion,
+		D extends iTraitData<N, V>,
+		T extends iBaseTrait<N, V, D>
+	>(
+		props: iBaseTraitCollectionDataStorageProps<N, V, D, T>
+	): iTraitCollectionDataStorage<N, V, D, T>;
 }

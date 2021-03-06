@@ -1,3 +1,4 @@
+import { iTraitCollectionDataStorage } from './../../declarations/interfaces/data-storage-interfaces';
 import { TraitNameUnionOrString } from './../../declarations/types';
 import {
 	iBaseTrait,
@@ -21,6 +22,7 @@ export default class TraitCollection<
 > implements iTraitCollection<N, V, D, T> {
 	#instanceCreator: (props: iBaseTraitProps<N, V, D>) => T;
 	#traitDataStorageInitialiser: (props: iBaseTraitDataStorageProps<N, V>) => iTraitDataStorage<N, V>;
+	#traitCollectionDataStorage: iTraitCollectionDataStorage<N, V, D, T>;
 	name: string;
 	#map: Map<N, T>;
 
@@ -32,17 +34,27 @@ export default class TraitCollection<
 		this.name = name;
 		this.#instanceCreator = instanceCreator;
 		this.#traitDataStorageInitialiser = dataStorageFactory.newTraitDataStorageInitialiser(); // todo, reuse this function instead of making a new one each time
+
+		this.#traitCollectionDataStorage = dataStorageFactory.newTraitCollectionDataStorage({
+			instanceCreator,
+			name,
+			traitDataStorageInitialiser: this.#traitDataStorageInitialiser,
+			initialData,
+		});
+
 		// todo this should be moved to trait collection data storage
+
 		this.#map = new Map<N, T>(
 			initialData.map(({ name, value }) => [
 				name,
 				instanceCreator({
 					name,
 					value,
-					traitDataStorageInitialiser: dataStorageFactory.newTraitDataStorageInitialiser(),
+					traitDataStorageInitialiser: this.#traitDataStorageInitialiser,
 				}),
 			])
 		);
+
 		this.#logs = new LogCollection({ sourceName: name, sourceType: 'Trait Collection' });
 	}
 	toArray(): T[] {
@@ -113,7 +125,7 @@ export default class TraitCollection<
 				this.#instanceCreator({
 					name,
 					value: newValue,
-					 traitDataStorageInitialiser: this.#traitDataStorageInitialiser,
+					traitDataStorageInitialiser: this.#traitDataStorageInitialiser,
 				})
 			);
 

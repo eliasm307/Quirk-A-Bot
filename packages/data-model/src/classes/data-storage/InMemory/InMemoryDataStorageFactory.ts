@@ -13,6 +13,14 @@ import { iTraitData, iBaseTrait } from '../../../declarations/interfaces/trait-i
 import InMemoryTraitCollectionDataStorage from './InMemoryTraitCollectionDataStorage';
 
 export default class InMemoryDataStorageFactory implements iDataStorageFactory {
+	newTraitCollectionDataStorage<
+		N extends string,
+		V extends TraitValueTypeUnion,
+		D extends iTraitData<N, V>,
+		T extends iBaseTrait<N, V, D>
+	>(props: iBaseTraitCollectionDataStorageProps<N, V, D, T>): iTraitCollectionDataStorage<N, V, D, T> {
+		return new InMemoryTraitCollectionDataStorage({ ...props });
+	}
 	newTraitDataStorageInitialiser(): <N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(
 		props: iBaseTraitDataStorageProps<N, V>
 	) => iTraitDataStorage<N, V> {
