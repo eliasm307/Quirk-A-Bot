@@ -14,7 +14,7 @@ import {
 	CoreNumberTraitName,
 	AttributeCategory,
 } from '../types';
-import { iCanHaveSaveAction, iToJson } from './general-interfaces';
+import { iCanHaveSaveAction, iToJson, iHasDataStorageFactory } from './general-interfaces';
 import { iLoggerSingle } from './log-interfaces';
 
 export interface iHasCategorySelector<N extends string, C extends string> {
@@ -80,7 +80,7 @@ export interface iTraitCollectionProps<
 	V extends TraitValueTypeUnion,
 	D extends iTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
-> extends iHasTraitDataStorageInitialiser<N, V>,
+> extends iHasDataStorageFactory,
 		iHasTraitInstanceCreator<N, V, D, T> {
 	name: string;
 }

@@ -14,19 +14,12 @@ export default abstract class AbstractNumberTrait<N extends TraitNameUnionOrStri
 	max: number;
 
 	// todo move toJson file to external utility?
-	constructor({
-		max,
-		name,
-		min = 0,
-		value = min, 
-		toJson,
-		traitDataStorageInitialiser,
-	}: iBaseNumberTraitProps<N, D>) {
+	constructor({ max, name, min = 0, value = min, toJson, traitDataStorageInitialiser }: iBaseNumberTraitProps<N, D>) {
 		super({
 			name,
 			value,
 			toJson,
-			traitDataStorageInitialiser, 
+			traitDataStorageInitialiser,
 		});
 		this.min = min;
 		this.max = max;

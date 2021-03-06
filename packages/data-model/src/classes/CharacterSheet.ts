@@ -24,7 +24,6 @@ import { iTouchStoneOrConvictionData } from '../declarations/interfaces/trait-in
 import path from 'path';
 import { iAttributeData, iDisciplineData, iSkillData } from '../declarations/interfaces/trait-interfaces';
 import importDataFromFile from '../utils/importDataFromFile';
-import exportDataToFile from '../utils/exportDataToFile';
 import { iCharacterSheetData, iCharacterSheetProps } from '../declarations/interfaces/character-sheet-interfaces';
 import { iLogEvent } from '../declarations/interfaces/log-interfaces';
 import TraitFactory from './traits/TraitFactory';
@@ -62,7 +61,6 @@ export default class CharacterSheet implements iCharacterSheet {
 	readonly skills: iSkillTraitCollection;
 	readonly disciplines: iDisciplineTraitCollection;
 	readonly touchstonesAndConvictions: iTouchStoneOrConvictionCollection;
-
 	readonly name: iCoreStringTrait<string>;
 	readonly clan: iCoreStringTrait<ClanName>;
 	readonly sire: iCoreStringTrait<string>;

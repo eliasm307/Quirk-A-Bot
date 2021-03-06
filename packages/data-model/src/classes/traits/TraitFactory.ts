@@ -84,7 +84,6 @@ export default abstract class TraitFactory {
 			max: 5,
 			name,
 			value,
-
 			traitDataStorageInitialiser,
 		};
 
@@ -150,7 +149,7 @@ export default abstract class TraitFactory {
 		return new TraitCollection<AttributeName, number, iAttributeData, iAttribute>(
 			{
 				name: `AttributeTraitCollection`,
-				traitDataStorageInitialiser: dataStorageFactory.newTraitDataStorageInitialiser(),
+				dataStorageFactory,
 				instanceCreator: TraitFactory.newAttributeTrait,
 			},
 			...initial
@@ -163,7 +162,7 @@ export default abstract class TraitFactory {
 			{
 				name: `SkillTraitCollection`,
 
-				traitDataStorageInitialiser: dataStorageFactory.newTraitDataStorageInitialiser(),
+				dataStorageFactory,
 				instanceCreator: TraitFactory.newSkillTrait,
 			},
 			...initial
@@ -178,7 +177,7 @@ export default abstract class TraitFactory {
 		return new TraitCollection<DisciplineName, number, iDisciplineData, iDiscipline>(
 			{
 				name: `DisciplineTraitCollection`,
-				traitDataStorageInitialiser: dataStorageFactory.newTraitDataStorageInitialiser(),
+				dataStorageFactory,
 				instanceCreator: TraitFactory.newDisciplineTrait,
 			},
 			...initial
@@ -193,7 +192,7 @@ export default abstract class TraitFactory {
 		return new TraitCollection<string, string, iTouchStoneOrConvictionData, iTouchStoneOrConviction>(
 			{
 				name: `TouchstonesAndConvictionTraitCollection`,
-				traitDataStorageInitialiser: dataStorageFactory.newTraitDataStorageInitialiser(),
+				dataStorageFactory,
 				instanceCreator: TraitFactory.newTouchStoneOrConvictionTrait,
 			},
 			...initial

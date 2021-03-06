@@ -28,16 +28,20 @@ export default class TraitCollection<
 	#logs: iLogCollection;
 	#typeName: TraitTypeNameUnion | string = 'Trait';
 
-	constructor(
-		{ instanceCreator, name, traitDataStorageInitialiser }: iTraitCollectionProps<N, V, D, T>,
-		...initialData: D[]
-	) {
+	constructor({ instanceCreator, name, dataStorageFactory }: iTraitCollectionProps<N, V, D, T>, ...initialData: D[]) {
 		this.name = name;
 		this.#instanceCreator = instanceCreator;
-		this.#traitDataStorageInitialiser = traitDataStorageInitialiser;
+		this.#traitDataStorageInitialiser = dataStorageFactory.newTraitDataStorageInitialiser(); // todo, reuse this function instead of making a new one each time
 		// todo this should be moved to trait collection data storage
 		this.#map = new Map<N, T>(
-			initialData.map(({ name, value }) => [name, instanceCreator({ name, value, traitDataStorageInitialiser })])
+			initialData.map(({ name, value }) => [
+				name,
+				instanceCreator({
+					name,
+					value,
+					traitDataStorageInitialiser: dataStorageFactory.newTraitDataStorageInitialiser(),
+				}),
+			])
 		);
 		this.#logs = new LogCollection({ sourceName: name, sourceType: 'Trait Collection' });
 	}
@@ -109,7 +113,7 @@ export default class TraitCollection<
 				this.#instanceCreator({
 					name,
 					value: newValue,
-					traitDataStorageInitialiser: this.#traitDataStorageInitialiser,
+					 traitDataStorageInitialiser: this.#traitDataStorageInitialiser,
 				})
 			);
 

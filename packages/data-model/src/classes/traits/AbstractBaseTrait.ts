@@ -24,7 +24,7 @@ export default abstract class AbstractBaseTrait<
 
 	// protected abstract getDefaultValue(): V;
 
-	constructor({ name, value, toJson, traitDataStorageInitialiser }: iBaseTraitProps<N, V, D>) {
+	constructor({ name, value, toJson,   traitDataStorageInitialiser }: iBaseTraitProps<N, V, D>) {
 		this.name = name;
 
 		// initialise data store

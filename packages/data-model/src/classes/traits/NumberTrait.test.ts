@@ -9,13 +9,13 @@ test('Test rounding on instantiation and modification', () => {
 		max: 10,
 		name: 'test',
 		value: 5.2,
-		traitDataStorageInitialiser, 
+		traitDataStorageInitialiser,
 	});
 	const trait2 = new NumberTrait<string>({
 		max: 10,
 		name: 'test',
 		value: 5.8,
-		traitDataStorageInitialiser, 
+		traitDataStorageInitialiser,
 	});
 	expect(trait.value).toEqual(5);
 	expect(trait2.value).toEqual(6);
