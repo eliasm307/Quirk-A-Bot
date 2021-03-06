@@ -10,6 +10,7 @@ import {
 	CoreStringTraitName,
 	TraitValueTypeUnion,
 	TraitNameUnionOrString,
+	ClanName,
 } from './../declarations/types';
 import {
 	iBaseTrait,
@@ -18,6 +19,7 @@ import {
 	iStringTraitData,
 	iCoreNumberTrait,
 	iTraitData,
+	iStringTrait,
 } from './../declarations/interfaces/trait-interfaces';
 import { iTouchStoneOrConvictionData } from '../declarations/interfaces/trait-interfaces';
 import path from 'path';
@@ -59,14 +61,14 @@ export default class CharacterSheet implements iCharacterSheet {
 	readonly disciplines: iDisciplineTraitCollection;
 	readonly touchstonesAndConvictions: iTouchStoneOrConvictionCollection;
 
-	readonly name: iCoreStringTrait;
-	readonly clan: iCoreStringTrait;
-	readonly sire: iCoreStringTrait;
-	readonly health: iCoreNumberTrait; // todo limit 0 to 10
-	readonly willpower: iCoreNumberTrait; // todo limit 0 to 10
-	readonly hunger: iCoreNumberTrait; // todo limit 0 to 5
-	readonly humanity: iCoreNumberTrait; // todo limit 0 to 10
-	readonly bloodPotency: iCoreNumberTrait; // todo limit 0 to 10
+	readonly name: iCoreStringTrait<string>;
+	readonly clan: iCoreStringTrait<ClanName>;
+	readonly sire: iCoreStringTrait<string>;
+	readonly health: iCoreNumberTrait;
+	readonly willpower: iCoreNumberTrait;
+	readonly hunger: iCoreNumberTrait;
+	readonly humanity: iCoreNumberTrait;
+	readonly bloodPotency: iCoreNumberTrait;
 
 	//-------------------------------------
 	// CONSTRUCTOR
@@ -80,7 +82,7 @@ export default class CharacterSheet implements iCharacterSheet {
 		let initialValues: iCharacterSheetData | null = null;
 
 		// function to save this character sheet
-		const saveAction = () => this.saveToFile();
+		const saveAction = () => this.saveToFile(this.toJson(), this.#savePath);
 
 		if (typeof sheet === 'number') {
 			this.discordUserId = sheet;
@@ -99,7 +101,7 @@ export default class CharacterSheet implements iCharacterSheet {
 				initialSkills = [...skills];
 				initialTouchstonesAndConvictions = [...touchstonesAndConvictions];
 			} else {
-				console.error(__filename, { sheet });
+				// console.error(__filename, { sheet });
 				throw Error(`${__filename} data is an object but it is not valid character sheet data, "${sheet}"`);
 			}
 		} else {
@@ -138,19 +140,19 @@ export default class CharacterSheet implements iCharacterSheet {
 		});
 
 		// core string traits
-		this.name = new StringTrait<CoreStringTraitName>({
+		this.name = new StringTrait<CoreStringTraitName, string>({
 			name: 'Name',
 			value: initialValues?.name.value || '',
 			saveAction,
 		});
 
-		this.sire = new StringTrait<CoreStringTraitName>({
+		this.sire = new StringTrait<CoreStringTraitName, string>({
 			name: 'Sire',
 			value: initialValues?.sire.value || '',
 			saveAction,
 		});
 
-		this.clan = new StringTrait<CoreStringTraitName>({
+		this.clan = new StringTrait<CoreStringTraitName, ClanName>({
 			name: 'Clan',
 			value: initialValues?.clan.value || '',
 			saveAction,
@@ -174,7 +176,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			path.resolve(__dirname, `../data/character-sheets/${this.discordUserId}.json`);
 
 		// if only user id was provided, assume this is a new sheet then do initial save so a persistent file exists
-		if (typeof sheet === 'number') this.saveToFile();
+		if (typeof sheet === 'number') this.saveToFile(this.toJson(), this.#savePath);
 	}
 
 	// todo loading and saving should be done by a persistence management class
@@ -198,10 +200,12 @@ export default class CharacterSheet implements iCharacterSheet {
 		// console.log(__filename, `No existing instance for '${resolvedPath}', loading new instance`);
 
 		// todo add option to create blank instance at the specified path if it doesnt exist?
-		// todo make sure imported data matches expected schema
-		const data = importDataFromFile<iCharacterSheetData>(resolvedPath);
+		const data = importDataFromFile(resolvedPath);
 
 		if (!data) throw Error(`Error importing data from ${resolvedPath}`);
+
+		if (!isCharacterSheetData(data))
+			throw Error(`Data loaded from path "${resolvedPath}" is not valid character sheet data`);
 
 		const instance = new CharacterSheet(data, resolvedPath);
 
@@ -214,27 +218,33 @@ export default class CharacterSheet implements iCharacterSheet {
 
 	public toJson(): iCharacterSheetData {
 		const data: iCharacterSheetData = {
-			attributes: this.attributes.toJson(),
-			bloodPotency: this.bloodPotency.toJson() as iNumberTraitData<CoreNumberTraitName>,
-			clan: this.clan.toJson() as iStringTraitData<CoreStringTraitName>,
-			disciplines: this.disciplines.toJson(),
 			discordUserId: this.discordUserId,
-			health: this.health.toJson() as iNumberTraitData<CoreNumberTraitName>,
-			humanity: this.humanity.toJson() as iNumberTraitData<CoreNumberTraitName>,
-			hunger: this.hunger.toJson() as iNumberTraitData<CoreNumberTraitName>,
-			name: this.name.toJson() as iStringTraitData<CoreStringTraitName>,
-			sire: this.sire.toJson() as iStringTraitData<CoreStringTraitName>,
+
+			// trait collections
+			attributes: this.attributes.toJson(),
+			disciplines: this.disciplines.toJson(),
 			skills: this.skills.toJson(),
 			touchstonesAndConvictions: this.touchstonesAndConvictions.toJson(),
-			willpower: this.willpower.toJson() as iNumberTraitData<CoreNumberTraitName>,
+
+			// core string traits
+			clan: this.clan.toJson(),
+			name: this.name.toJson(),
+			sire: this.sire.toJson(),
+
+			// core number traits
+			health: this.health.toJson(),
+			humanity: this.humanity.toJson(),
+			hunger: this.hunger.toJson(),
+			bloodPotency: this.bloodPotency.toJson(),
+			willpower: this.willpower.toJson(),
 		};
 		// console.log(__filename, { data });
 		return data;
 	}
 
-	private saveToFile(): boolean {
+	private saveToFile(data: iCharacterSheetData, savePath: string): boolean {
 		// this.#savePath
-		return exportDataToFile(this.toJson(), this.#savePath);
+		return exportDataToFile(data, savePath);
 	}
 
 	private getAllTraits(): iBaseTrait<
@@ -259,7 +269,6 @@ export default class CharacterSheet implements iCharacterSheet {
 		];
 	}
 
-	// todo make this report log events grouped into objects with details about the property
 	getLogReport(): iLogReport[] {
 		// todo test
 		return this.getAllTraits().map(trait => trait.getLogReport());
@@ -269,17 +278,8 @@ export default class CharacterSheet implements iCharacterSheet {
 		// combine logs from reports and and sort oldest to newest
 		return this.getLogReport()
 			.reduce((events, report) => [...events, ...report.logEvents], [] as iLogEvent[])
-			.sort((a, b) => Number(a.time.getTime() - b.time.getTime()));
+			.sort((a, b) => {
+				return Number(a.timeStamp - b.timeStamp);
+			});
 	}
-
-	// todo delete
-	/*
-	private getTraitByName<T extends keyof iCharacterSheet>(key: T): iBaseTrait<string, TraitValueTypeUnion> | null {
-		const trait = this[key];
-
-		if (isBaseTrait(trait)) {
-			return trait;
-		}
-		return null;
-	}*/
 }

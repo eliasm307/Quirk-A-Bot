@@ -1,9 +1,13 @@
 import fs, { WriteOptions } from 'fs-extra';
 import path from 'path';
 
-export default function exportDataToFile(data: any, outputFilePath: string): boolean {
-	// todo account for if data is falsy
+export default function exportDataToFile(data: any, outputFilePath: string): boolean { 
 	// todo test
+
+	if (!data || typeof data !== 'object' || (!Object.keys(data).length && !Array.isArray(data))) {
+		console.error(__filename,`Data should be an object or an array`, { typeofData: typeof data, data });
+		return false;
+	}
 
 	const resolvedOutputFilePath = path.resolve(outputFilePath);
 

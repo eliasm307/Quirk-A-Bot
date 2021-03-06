@@ -12,6 +12,7 @@ import {
 	TraitNameUnionOrString,
 	CoreNumberTraitName,
 	CoreStringTraitName,
+	ClanName,
 } from './../../declarations/types';
 import {
 	iNumberTraitWithCategoryProps,
@@ -38,10 +39,16 @@ import { iAttributeTraitCollection } from '../../declarations/interfaces/trait-c
 
 export default abstract class TraitFactory {
 	// methods use base trait props as all other details should be selected to match the required trait type
-	static newStringTrait({ name, value = '', saveAction }: iStringTraitProps<TraitNameUnionOrString>) {
+	static newStringTrait<V extends string>({ name, value, saveAction }: iStringTraitProps<TraitNameUnionOrString, V>) {
 		return new StringTrait({ name, value, saveAction });
 	}
 	static newNumberTrait({ name, value = 0, saveAction, max, min = 0 }: iNumberTraitProps<TraitNameUnionOrString>) {
+		return new NumberTrait({ name, value, saveAction, max, min });
+	}
+	static newCoreStringTrait<V extends string>({ name, value, saveAction }: iStringTraitProps<CoreStringTraitName, V>) {
+		return new StringTrait({ name, value, saveAction });
+	}
+	static newCoreNumberTrait({ name, value = 0, saveAction, max, min = 0 }: iNumberTraitProps<CoreNumberTraitName>) {
 		return new NumberTrait({ name, value, saveAction, max, min });
 	}
 	static newAttributeTrait({
@@ -94,7 +101,7 @@ export default abstract class TraitFactory {
 		value,
 		saveAction,
 	}: iBaseTraitProps<string, string, iTouchStoneOrConvictionData>): iTouchStoneOrConviction {
-		const props: iStringTraitProps<string> = {
+		const props: iStringTraitProps<string, string> = {
 			name,
 			value,
 			saveAction,
@@ -160,19 +167,24 @@ export default abstract class TraitFactory {
 		);
 	}
 
-	// todo use factory for this
+ 
 	static newCharacterSheetDataObject(props?: iCanHaveSaveAction): iCharacterSheetData {
 		const saveAction = props?.saveAction;
 		return {
 			discordUserId: NaN,
-			bloodPotency: new NumberTrait<CoreNumberTraitName>({ max: 10, name: 'Blood Potency', value: 0, saveAction }),
-			clan: new StringTrait<CoreStringTraitName>({ name: 'Clan', value: '', saveAction }),
-			health: new NumberTrait<CoreNumberTraitName>({ max: 10, name: 'Health', value: 0, saveAction }),
-			humanity: new NumberTrait<CoreNumberTraitName>({ max: 10, name: 'Humanity', value: 0, saveAction }),
-			hunger: new NumberTrait<CoreNumberTraitName>({ max: 5, name: 'Hunger', value: 0, saveAction }),
-			name: new StringTrait<CoreStringTraitName>({ name: 'Name', value: '', saveAction }),
-			sire: new StringTrait<CoreStringTraitName>({ name: 'Sire', value: '', saveAction }),
-			willpower: new NumberTrait<CoreNumberTraitName>({ name: 'Willpower', value: 0, max: 10, saveAction }),
+			bloodPotency: TraitFactory.newCoreNumberTrait({
+				max: 10,
+				name: 'Blood Potency',
+				value: 0,
+				saveAction,
+			}),
+			health: TraitFactory.newCoreNumberTrait({ max: 10, name: 'Health', value: 0, saveAction }),
+			humanity: TraitFactory.newCoreNumberTrait({ max: 10, name: 'Humanity', value: 0, saveAction }),
+			hunger: TraitFactory.newCoreNumberTrait({ max: 5, name: 'Hunger', value: 0, saveAction }),
+			willpower: TraitFactory.newCoreNumberTrait({ name: 'Willpower', value: 0, max: 10, saveAction }),
+			name: TraitFactory.newCoreStringTrait<string>({ name: 'Name', value: '', saveAction }),
+			sire: TraitFactory.newCoreStringTrait<string>({ name: 'Sire', value: '', saveAction }),
+			clan: TraitFactory.newCoreStringTrait<ClanName>({ name: 'Clan', value: '', saveAction }),
 			attributes: [],
 			disciplines: [],
 			skills: [],

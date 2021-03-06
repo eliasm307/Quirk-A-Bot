@@ -1,13 +1,13 @@
 import { iStringTraitData } from './../../declarations/interfaces/trait-interfaces';
-import { iStringTrait, iStringTraitProps } from '../../declarations/interfaces/trait-interfaces';
+import { iBaseStringTrait, iStringTraitProps } from '../../declarations/interfaces/trait-interfaces';
 import { TraitNameUnion, TraitNameUnionOrString } from '../../declarations/types';
 import AbstractBaseTrait from './AbstractBaseTrait';
 
 /** class with behaviour for traits that have string values */
-export default class StringTrait<N extends TraitNameUnionOrString>
-	extends AbstractBaseTrait<N, string, iStringTraitData<N>>
-	implements iStringTrait<N> {
-	constructor({ name, value = '', saveAction }: iStringTraitProps<N>) {
+export default class StringTrait<N extends TraitNameUnionOrString, V extends string>
+	extends AbstractBaseTrait<N, V, iStringTraitData<N, V>>
+	implements iBaseStringTrait<N, V> {
+	constructor({ name, value, saveAction }: iStringTraitProps<N, V>) {
 		super({
 			name,
 			value,
@@ -33,5 +33,9 @@ export default class StringTrait<N extends TraitNameUnionOrString>
 		}
 
 		return true;
+	}
+	preProcessValue( newValueRaw: V ): V {
+		// no pre processing for string values
+		return newValueRaw;
 	}
 }

@@ -8,8 +8,8 @@ export default class UpdateLogEvent<T> extends BaseLogEvent<T> implements iLogEv
 	oldValue: T;
 	newValue: T;
 
-	constructor({ note: description, oldValue, property, newValue }: iProps<T>) {
-		super({ operation: 'UPDATE', property, note: description });
+	constructor({ description, oldValue, property, newValue }: iProps<T>) {
+		super({ operation: 'UPDATE', property, description });
 		this.oldValue = oldValue;
 		this.newValue = newValue;
 	}

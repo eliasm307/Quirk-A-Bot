@@ -1,6 +1,7 @@
 import { LogOperationUnion } from '../../declarations/types';
 import { iBaseLogEventProps, iLogEvent } from '../../declarations/interfaces/log-interfaces';
 import generateId from '../../utils/generateId';
+import { getDateWithNanoSecondTimeStamp } from '../../utils/getNanoSecondTime';
 
 // ? this doesnt seem right
 interface iProps extends iBaseLogEventProps {
@@ -10,41 +11,21 @@ interface iProps extends iBaseLogEventProps {
 export default abstract class BaseLogEvent<T> implements iLogEvent {
 	id: string;
 	operation: LogOperationUnion;
-	note?: string;
+	description?: string;
 	property: string;
-	time: Date;
+	timeStamp: bigint;
+	date: Date;
 
-	constructor({ operation, note: description, property }: iProps) {
-		// check values are defined correctly
-		// todo delete this
-		/*
-		switch (operation) {
-			case 'ADD':
-				if (!newValue) throw Error(`${operation} operation requires a newValue to be defined`);
-				if (oldValue)
-					console.warn(__filename, `${operation} operation doesnt require an old value, this will be ignored`);
-				break;
-
-			case 'DELETE':
-				if (!oldValue) throw Error(`${operation} operation requires a oldValue to be defined`);
-				if (newValue)
-					console.warn(__filename, `${operation} operation doesnt require a new value, this will be ignored`);
-				break;
-
-			case 'UPDATE':
-				if (!oldValue && !newValue)
-					throw Error(`${operation} operation requires both an initalValue and a newValue to be defined`);
-				break;
-
-			default:
-				throw Error(`Unknown operation "${operation}"`);
-		}
-*/
+	constructor({ operation, description, property }: iProps) {
 		this.id = generateId();
 		this.operation = operation;
-		this.note = description;
+		this.description = description;
 		this.property = property;
-		this.time = new Date();
+
+		// generate time stamp and save date object
+		const [date, nanoSecondTimeStamp] = getDateWithNanoSecondTimeStamp();
+		this.date = date;
+		this.timeStamp = nanoSecondTimeStamp;
 	}
 	abstract describe(): string;
 }

@@ -1,7 +1,7 @@
 import { iLogReport, iLogCollectionProps } from './../../declarations/interfaces/log-interfaces';
-import { iLogCollection, iLogEvent } from '../../declarations/interfaces/log-interfaces';
-import { LogInitialValueDynamic, LogNewValueDynamic, LogOperationUnion, LogSourceType } from '../../declarations/types';
+import { iLogCollection, iLogEvent } from '../../declarations/interfaces/log-interfaces'; 
 import {} from '../../declarations/interfaces/trait-interfaces';
+import { LogSourceType } from '../../declarations/types';
 
 export default class LogCollection implements iLogCollection {
 	#logs: iLogEvent[] = [];

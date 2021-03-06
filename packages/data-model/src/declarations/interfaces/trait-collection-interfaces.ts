@@ -13,19 +13,20 @@ import {
 	iDisciplineData,
 	iSkillData,
 	iTouchStoneOrConvictionData,
-	iStringTrait,
+	iBaseStringTrait,
 	iStringTraitData,
 	iCoreStringTraitData,
 	iCoreStringTrait,
 	iCoreNumberTrait,
 	iCoreNumberTraitData,
+	iGeneralTraitData,
+	iGeneralTrait,
 } from './trait-interfaces';
 
 // -------------------------------------------------------
 // BASE TRAIT COLLECTION TYPES
 
-// todo is this the best way to do this?
-// todo use dynamic types here?
+/** Shape of a custom trait collection with logging */
 export interface iTraitCollection<
 	N extends TraitNameUnionOrString,
 	V extends TraitValueTypeUnion,
@@ -45,6 +46,9 @@ export interface iTraitCollection<
 // -------------------------------------------------------
 // SPECIFIC TRAIT COLLECTION TYPES
 
+export interface iGeneralTraitCollection
+	extends iTraitCollection<TraitNameUnionOrString, TraitValueTypeUnion, iGeneralTraitData, iGeneralTrait> {}
+
 export interface iAttributeTraitCollection
 	extends iTraitCollection<AttributeName, number, iAttributeData, iAttribute> {}
 
@@ -55,9 +59,3 @@ export interface iDisciplineTraitCollection
 
 export interface iTouchStoneOrConvictionCollection
 	extends iTraitCollection<string, string, iTouchStoneOrConvictionData, iTouchStoneOrConviction> {}
-
-export interface iCoreStringTraitCollection
-	extends iTraitCollection<CoreStringTraitName, string, iCoreStringTraitData, iCoreStringTrait> {}
-
-export interface iCoreNumberTraitCollection
-	extends iTraitCollection<CoreNumberTraitName, number, iCoreNumberTraitData, iCoreNumberTrait> {}

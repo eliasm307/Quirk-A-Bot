@@ -1,16 +1,9 @@
 import {
 	iBaseNumberTrait,
 	iBaseNumberTraitProps,
-	iNumberTrait,
 	iNumberTraitData,
 } from '../../declarations/interfaces/trait-interfaces';
-import {
-	iNumberTraitProps,
-	iBaseTrait,
-	iHasNumberValue,
-	iTraitData,
-} from '../../declarations/interfaces/trait-interfaces';
-import { TraitNameUnion, TraitNameUnionOrString, TraitValueDynamic } from '../../declarations/types';
+import { TraitNameUnionOrString } from '../../declarations/types';
 import AbstractBaseTrait from './AbstractBaseTrait';
 
 /** class with behaviour for traits that have number values */
@@ -38,9 +31,6 @@ export default abstract class AbstractNumberTrait<N extends TraitNameUnionOrStri
 		if (typeof newVal !== 'number')
 			throw Error(`Value for trait ${this.name} should be a number, received a "${typeof newVal}`);
 
-		// todo use rounded value
-		// const roundedVal: TraitValue<T> = typeof newVal === 'number' ?  Math.round(newVal) : newVal;
-
 		// make sure number is within allowable range before change
 		if (newVal < this.min) {
 			console.error(
@@ -57,5 +47,10 @@ export default abstract class AbstractNumberTrait<N extends TraitNameUnionOrStri
 
 		// todo round the value to an integer
 		return true;
+	}
+
+	preProcessValue(newValueRaw: number): number {
+		// number values to be rounded before being used
+		return Math.round(newValueRaw);
 	}
 }

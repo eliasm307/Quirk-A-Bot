@@ -8,18 +8,9 @@ import {
 import { TraitTypeNameUnion, TraitValueTypeUnion } from '../../declarations/types';
 import LogCollection from '../log/LogCollection';
 import DeleteLogEvent from '../log/DeleteLogEvent';
-import UpdateLogEvent from '../log/UpdateLogEvent';
 import AddLogEvent from '../log/AddLogEvent';
 import { iLogCollection, iLogEvent, iLogReport } from '../../declarations/interfaces/log-interfaces';
 import { iTraitCollection } from '../../declarations/interfaces/trait-collection-interfaces';
-import { threadId } from 'node:worker_threads';
-
-// todo delete
-/*
-interface iInstanceCreatorProps<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion> {
-	name: N;
-	value: V;
-}*/
 
 export default class TraitCollection<
 	N extends TraitNameUnionOrString,
@@ -31,7 +22,7 @@ export default class TraitCollection<
 	private saveAction?: () => boolean;
 	name: string;
 	#map: Map<N, T>;
-	
+
 	/** Collection of logs for trait collection, ie add and remove events only (update events are held in traits) */
 	#logs: iLogCollection;
 	#typeName: TraitTypeNameUnion | string = 'Trait';
@@ -53,7 +44,7 @@ export default class TraitCollection<
 		// combine logs from reports and and sort oldest to newest
 		return this.getLogReport()
 			.reduce((events, report) => [...events, ...report.logEvents], [] as iLogEvent[])
-			.sort((a, b) => Number(a.time.getTime() - b.time.getTime()));
+			.sort((a, b) => Number(a.timeStamp - b.timeStamp));
 	}
 	getLogReport(): iLogReport[] {
 		return [this.#logs.getReport(), ...this.toArray().map(e => e.getLogReport())];
@@ -71,8 +62,6 @@ export default class TraitCollection<
 	delete(name: N): void {
 		const oldValue = this.#map.get(name);
 		const property = name;
-
-		// todo add error handling
 
 		// apply change
 		this.#map.delete(name);

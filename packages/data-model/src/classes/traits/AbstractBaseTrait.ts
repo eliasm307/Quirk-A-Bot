@@ -1,12 +1,7 @@
 import { iLogCollection, iLogReport } from './../../declarations/interfaces/log-interfaces';
 import { iLogEvent } from '../../declarations/interfaces/log-interfaces';
 import { iBaseTrait } from '../../declarations/interfaces/trait-interfaces';
-import {
-	TraitNameUnion,
-	TraitNameUnionOrString,
-	TraitValueTypeUnion,
-	TraitValueDynamic,
-} from '../../declarations/types';
+import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../declarations/types';
 import { iBaseTraitProps, iTraitData } from '../../declarations/interfaces/trait-interfaces';
 import LogCollection from '../log/LogCollection';
 import UpdateLogEvent from '../log/UpdateLogEvent';
@@ -22,8 +17,6 @@ export default abstract class AbstractBaseTrait<
 > implements iBaseTrait<N, V, D> {
 	#private: iPrivateModifiableProperties<V>;
 	// #characterSheet: iCharacterSheet;
-
-	// todo log collections should not rely on iTraitData
 	#logs: iLogCollection;
 	#saveAction?: () => boolean;
 
@@ -31,7 +24,8 @@ export default abstract class AbstractBaseTrait<
 
 	protected abstract newValueIsValid(newVal: V): boolean;
 
-	public set value(newVal: V) {
+	public set value(newValRaw: V) {
+		const newVal = this.preProcessValue(newValRaw);
 		if (this.newValueIsValid(newVal)) this.onChange('value', newVal);
 	}
 	public get value() {
@@ -42,7 +36,7 @@ export default abstract class AbstractBaseTrait<
 		this.#saveAction = saveAction;
 		this.name = name;
 		this.#private = {
-			value: value,
+			value: this.preProcessValue(value),
 		};
 		if (!toJson) throw Error(`${__filename} toJson function not defined`);
 		this.toJson = toJson;
@@ -60,6 +54,8 @@ export default abstract class AbstractBaseTrait<
 	getLogReport(): iLogReport {
 		return this.#logs.getReport();
 	}
+
+	protected abstract preProcessValue(newValueRaw: V): V;
 
 	protected onChange<PrivateProperty extends keyof iPrivateModifiableProperties<V>>(
 		property: PrivateProperty,
