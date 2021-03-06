@@ -24,23 +24,22 @@ export default abstract class AbstractBaseTrait<
 
 	// protected abstract getDefaultValue(): V;
 
-	constructor({ name, value, toJson, traitDataStorageInitialiser  }: iBaseTraitProps<N, V, D>) {
+	constructor({ name, value, toJson, traitDataStorageInitialiser }: iBaseTraitProps<N, V, D>) {
 		this.name = name;
 
 		// initialise data store
-		this.#dataSorage = traitDataStorageInitialiser({ name, defaultValueIfNotDefined: value  });
+		this.#dataSorage = traitDataStorageInitialiser({ name, defaultValueIfNotDefined: value });
 
 		if (!toJson) throw Error(`${__filename} toJson function not defined`);
 		this.toJson = toJson;
-		this.logs = new LogCollection( { sourceType: 'Trait', sourceName: this.name } );
-		
+		this.logs = new LogCollection({ sourceType: 'Trait', sourceName: this.name });
+
 		// set initial value if specified
 		if (value) this.value = value;
 		/*
 		this.#private = {
 			value: this.preProcessValue(value),
 		};*/
-		
 
 		// todo, account for when this is instantiated independently, not by a CharacterSheet. Maybe use a factory? Or check for this when a change is made, ie before a save needs to be made (you could update the reference to the Skill based on which one was updated last? this seems like a bad pattern)
 		// make sure character sheet has a reference to this Skill // will this produce any cyclic behaviour? tested, and YES it does
@@ -48,11 +47,10 @@ export default abstract class AbstractBaseTrait<
 	}
 
 	public set value(newValRaw: V) {
-		const newValue = this.preProcessValue(newValRaw);
-		if (!this.newValueIsValid(newValue)) {
-			console.error(__filename, `${this.name} cannot be set to ${newValue}`);
-			return;
-		}
+		const newValue = this.preProcessValue( newValRaw );
+		
+		// justification should be done in newValueIsValid function
+		if (!this.newValueIsValid(newValue)) return;
 
 		// get current value as old value
 		const oldValue: V = this.#dataSorage.value;

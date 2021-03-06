@@ -4,6 +4,7 @@ import { iBaseTrait, iTraitData } from '../../../declarations/interfaces/trait-i
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
 import saveCharacterSheetToFile from '../../../utils/saveCharacterSheetToFile';
 import InMemoryTraitCollectionDataStorage from '../InMemory/InMemoryTraitCollectionDataStorage';
+import path from 'path';
 
 export default class LocalFileTraitCollectionDataStorage<
 	N extends TraitNameUnionOrString,
@@ -23,7 +24,7 @@ export default class LocalFileTraitCollectionDataStorage<
 		// save if available
 		return saveCharacterSheetToFile(
 			this.#characterSheet.toJson(),
-			`../../data/character-sheets/${this.#characterSheet.discordUserId}`
+			path.resolve(`../../../data/character-sheets/${this.#characterSheet.discordUserId}.json`)
 		);
 	}
 }

@@ -1,3 +1,4 @@
+import path from 'path';
 import { iCharacterSheet } from '../../../declarations/interfaces/character-sheet-interfaces';
 import { iLocalTraitDataStorageProps } from '../../../declarations/interfaces/data-storage-interfaces';
 import { TraitValueTypeUnion, TraitNameUnionOrString } from '../../../declarations/types';
@@ -20,7 +21,7 @@ export default class LocalFileTraitDataStorage<
 		// save if available
 		return saveCharacterSheetToFile(
 			this.#characterSheet.toJson(),
-			`../../data/character-sheets/${this.#characterSheet.discordUserId}`
+			path.resolve(`../../../data/character-sheets/${this.#characterSheet.discordUserId}.json`)
 		);
 	}
 }
