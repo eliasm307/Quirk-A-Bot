@@ -23,11 +23,12 @@ export interface iHasNewValue<T> {
 	newValue: T;
 }
 
-export interface iBaseCollection<K extends string, V  >  {
+export interface iBaseCollection<K extends string, SetValue, ReturnValue> {
 	// todo this should extend a base iCollection
-	get(key: K): V | void;
+	get(key: K): ReturnValue | void;
+	set(key: K, value: SetValue): void;
 	delete(key: K): void;
 	has(key: K): boolean;
-	toArray(): V[];
+	toArray(): ReturnValue[];
 	readonly size: number;
 }

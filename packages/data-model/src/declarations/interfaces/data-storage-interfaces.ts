@@ -40,7 +40,7 @@ export interface iTraitDataStorage<N extends TraitNameUnionOrString, V extends T
 
 export interface iTraitCollectionDataStorage<N extends TraitNameUnionOrString, D extends iGeneralTraitData>
 	extends iBaseDataStorage,
-		iBaseCollection<N, D> {}
+		iBaseCollection<N, D, D> {}
 
 export interface iCharacterSheetDataStorage extends iBaseDataStorage {
 	get(): iCharacterSheetData;
