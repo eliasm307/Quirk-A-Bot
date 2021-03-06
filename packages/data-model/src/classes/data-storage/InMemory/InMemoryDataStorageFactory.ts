@@ -1,11 +1,11 @@
-import { TraitNameUnionOrString } from './../../declarations/types';
-import { iCharacterSheet } from '../../declarations/interfaces/character-sheet-interfaces';
-import { TraitValueTypeUnion } from '../../declarations/types';
+import { TraitNameUnionOrString } from '../../../declarations/types';
+import { iCharacterSheet } from '../../../declarations/interfaces/character-sheet-interfaces';
+import { TraitValueTypeUnion } from '../../../declarations/types';
 import {
 	iBaseTraitDataStorageProps,
 	iDataStorageFactory,
 	iTraitDataStorage,
-} from './../../declarations/interfaces/data-storage-interfaces';
+} from '../../../declarations/interfaces/data-storage-interfaces';
 import InMemoryTraitDataStorage from './InMemoryTraitDataStorage';
 
 export default class InMemoryDataStorageFactory implements iDataStorageFactory {

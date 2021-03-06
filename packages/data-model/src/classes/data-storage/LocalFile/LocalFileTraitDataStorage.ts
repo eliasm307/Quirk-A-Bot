@@ -1,9 +1,8 @@
-import { TraitNameUnionOrString } from './../../declarations/types';
-import { iCharacterSheet } from './../../declarations/interfaces/character-sheet-interfaces';
-import { TraitValueTypeUnion } from '../../declarations/types';
-import { iLocalTraitDataStorageProps } from '../../declarations/interfaces/data-storage-interfaces';
-import AbstractTraitDataStorage from './AbstractTraitDataStorage';
-import saveCharacterSheetToFile from '../../utils/saveCharacterSheetToFile';
+import { iCharacterSheet } from '../../../declarations/interfaces/character-sheet-interfaces';
+import { iLocalTraitDataStorageProps } from '../../../declarations/interfaces/data-storage-interfaces';
+import { TraitValueTypeUnion, TraitNameUnionOrString } from '../../../declarations/types';
+import saveCharacterSheetToFile from '../../../utils/saveCharacterSheetToFile';
+import AbstractTraitDataStorage from '../AbstractTraitDataStorage';
 
 // ? does this need to be a separate interface
 interface iPrivateModifiableProperties<V extends TraitValueTypeUnion> {
@@ -11,7 +10,7 @@ interface iPrivateModifiableProperties<V extends TraitValueTypeUnion> {
 	characterSheet: iCharacterSheet;
 }
 
-export default class LocalTraitDataStorage<
+export default class LocalFileTraitDataStorage<
 	N extends TraitNameUnionOrString,
 	V extends TraitValueTypeUnion
 > extends AbstractTraitDataStorage<N, V> {

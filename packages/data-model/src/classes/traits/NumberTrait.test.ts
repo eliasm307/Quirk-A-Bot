@@ -1,4 +1,4 @@
-import InMemoryDataStorageFactory from '../data-storage/InMemoryDataStorageFactory';
+import InMemoryDataStorageFactory from '../data-storage/InMemory/InMemoryDataStorageFactory';
 import NumberTrait from './NumberTrait';
 
 const dataStorageFactory = new InMemoryDataStorageFactory();

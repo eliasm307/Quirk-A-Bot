@@ -3,7 +3,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import CharacterSheet from './CharacterSheet';
 import { iAttribute, iSkill, iTouchStoneOrConviction } from '../declarations/interfaces/trait-interfaces';
-import LocalDataStorageFactory from './data-storage/LocalDataStorageFactory';
+import LocalFileDataStorageFactory from './data-storage/LocalFile/LocalFileDataStorageFactory';
 
 // todo use test utils
 const testUserId = Math.floor(Math.random() * 9);
@@ -26,7 +26,7 @@ test(testName, () => {
 	const cs = new CharacterSheet({
 		sheet: testUserId,
 		customSavePath: filePathRandom,
-		dataStorageFactoryInitialiser: (characterSheet: iCharacterSheet) => new LocalDataStorageFactory(characterSheet),
+		dataStorageFactoryInitialiser: (characterSheet: iCharacterSheet) => new LocalFileDataStorageFactory(characterSheet),
 	});
 
 	const csLoaded = CharacterSheet.loadFromFile({ filePath: filePathRandom });

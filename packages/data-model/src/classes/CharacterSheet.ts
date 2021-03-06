@@ -31,7 +31,7 @@ import TraitFactory from './traits/TraitFactory';
 import StringTrait from './traits/StringTrait';
 import { isCharacterSheetData } from '../utils/typePredicates';
 import NumberTrait from './traits/NumberTrait';
-import LocalDataStorageFactory from './data-storage/LocalDataStorageFactory';
+import LocalFileDataStorageFactory from './data-storage/LocalFile/LocalFileDataStorageFactory';
 import saveCharacterSheetToFile from '../utils/saveCharacterSheetToFile';
 
 // ! this shouldnt be here, should be in a file about persistence
@@ -234,7 +234,7 @@ export default class CharacterSheet implements iCharacterSheet {
 		const instance = new CharacterSheet({
 			sheet: data,
 			customSavePath: resolvedPath,
-			dataStorageFactoryInitialiser: cs => new LocalDataStorageFactory(cs),
+			dataStorageFactoryInitialiser: cs => new LocalFileDataStorageFactory(cs),
 		});
 
 		// save instance reference

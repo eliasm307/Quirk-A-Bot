@@ -1,7 +1,6 @@
-import { TraitNameUnionOrString } from './../../declarations/types';
-import { TraitValueTypeUnion } from '../../declarations/types';
-import { iInMemoryTraitDataStorageProps } from '../../declarations/interfaces/data-storage-interfaces';
-import AbstractTraitDataStorage from './AbstractTraitDataStorage';
+import { iInMemoryTraitDataStorageProps } from '../../../declarations/interfaces/data-storage-interfaces';
+import { TraitValueTypeUnion, TraitNameUnionOrString } from '../../../declarations/types';
+import AbstractTraitDataStorage from '../AbstractTraitDataStorage';
 
 // ? does this need to be a separate interface
 interface iPrivateModifiableProperties<V extends TraitValueTypeUnion> {

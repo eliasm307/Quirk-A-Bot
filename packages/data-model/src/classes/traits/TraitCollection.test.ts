@@ -3,7 +3,7 @@ import { LogOperationUnion } from '../../declarations/types';
 import TraitCollection from './TraitCollection';
 import { iAttribute } from '../../declarations/interfaces/trait-interfaces';
 import TraitFactory from './TraitFactory';
-import InMemoryTraitDataStorageFactory from './../data-storage/InMemoryDataStorageFactory';
+import InMemoryTraitDataStorageFactory from '../data-storage/InMemory/InMemoryDataStorageFactory';
 
 const saveAction = () => true;
 let testName: string;
