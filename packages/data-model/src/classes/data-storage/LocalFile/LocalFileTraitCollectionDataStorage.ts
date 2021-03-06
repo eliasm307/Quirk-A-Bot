@@ -15,9 +15,7 @@ export default class LocalFileTraitCollectionDataStorage<
 
 	constructor(props: iLocalFileTraitCollectionDataStorageProps<N, V, D, T>) {
 		super(props);
-
 		const { characterSheet } = props;
-
 		this.#characterSheet = characterSheet;
 	}
 

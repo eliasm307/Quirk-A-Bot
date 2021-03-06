@@ -1,3 +1,4 @@
+import { throws } from 'node:assert';
 import { iInMemoryTraitDataStorageProps } from '../../../declarations/interfaces/data-storage-interfaces';
 import { TraitValueTypeUnion, TraitNameUnionOrString } from '../../../declarations/types';
 import AbstractTraitDataStorage from '../AbstractTraitDataStorage';
@@ -40,5 +41,11 @@ export default class InMemoryTraitDataStorage<
 
 		// update internal value
 		this.#private.value = newValue;
+
+		this.save()
+	}
+
+	protected save(): boolean {
+		return true;
 	}
 }
