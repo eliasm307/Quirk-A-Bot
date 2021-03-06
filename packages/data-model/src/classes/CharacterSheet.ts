@@ -1,3 +1,5 @@
+import { iDataStorageFactory } from './../declarations/interfaces/data-storage-interfaces';
+import { iCharacterSheet } from './../declarations/interfaces/character-sheet-interfaces';
 import { iLogReport } from './../declarations/interfaces/log-interfaces';
 import {
 	iAttributeTraitCollection,
@@ -15,23 +17,21 @@ import {
 import {
 	iBaseTrait,
 	iCoreStringTrait,
-	iNumberTraitData,
-	iStringTraitData,
 	iCoreNumberTrait,
 	iTraitData,
-	iStringTrait,
 } from './../declarations/interfaces/trait-interfaces';
 import { iTouchStoneOrConvictionData } from '../declarations/interfaces/trait-interfaces';
 import path from 'path';
 import { iAttributeData, iDisciplineData, iSkillData } from '../declarations/interfaces/trait-interfaces';
 import importDataFromFile from '../utils/importDataFromFile';
 import exportDataToFile from '../utils/exportDataToFile';
-import { iCharacterSheet, iCharacterSheetData } from '../declarations/interfaces/character-sheet-interfaces';
-import { iLoggerSingle, iLogEvent } from '../declarations/interfaces/log-interfaces';
+import { iCharacterSheetData, iCharacterSheetProps } from '../declarations/interfaces/character-sheet-interfaces';
+import { iLogEvent } from '../declarations/interfaces/log-interfaces';
 import TraitFactory from './traits/TraitFactory';
 import StringTrait from './traits/StringTrait';
-import { isBaseTrait, isCharacterSheetData } from '../utils/typePredicates';
+import { isCharacterSheetData } from '../utils/typePredicates';
 import NumberTrait from './traits/NumberTrait';
+import LocalDataStorageFactory from './data-storage/LocalDataStorageFactory';
 
 // ! this shouldnt be here, should be in a file about persistence
 interface iLoadFromFileArgs {
@@ -53,6 +53,7 @@ export default class CharacterSheet implements iCharacterSheet {
 	// #private: iModifiablePrimitiveProperties;
 	// #logEvents: iLogCollection = new LogCollection();
 	#savePath: string; // specified in constructor
+	#dataStorageFactory: iDataStorageFactory;
 
 	//-------------------------------------
 	// NON BASIC PRIMITIVE VARIABLES
@@ -72,7 +73,9 @@ export default class CharacterSheet implements iCharacterSheet {
 
 	//-------------------------------------
 	// CONSTRUCTOR
-	constructor(sheet: iCharacterSheetData | number, customSavePath?: string) {
+	constructor({ sheet, dataStorageFactory, customSavePath }: iCharacterSheetProps) {
+		this.#dataStorageFactory = dataStorageFactory;
+
 		let initialAttributes: iAttributeData[] = [];
 		let initialDisciplines: iDisciplineData[] = [];
 		let initialSkills: iSkillData[] = [];
@@ -113,49 +116,54 @@ export default class CharacterSheet implements iCharacterSheet {
 			max: 10,
 			name: 'Blood Potency',
 			value: initialValues?.bloodPotency.value || 0,
+			dataStorageInitialiser: this.#dataStorageFactory.traitDataStorageInitialiser(this),
 		});
 
 		this.hunger = new NumberTrait<CoreNumberTraitName>({
 			max: 5,
 			name: 'Hunger',
 			value: initialValues?.hunger.value || 0,
+			dataStorageInitialiser: this.#dataStorageFactory.traitDataStorageInitialiser(this),
 		});
 
 		this.humanity = new NumberTrait<CoreNumberTraitName>({
 			max: 10,
 			name: 'Humanity',
 			value: initialValues?.humanity.value || 0,
+			dataStorageInitialiser: this.#dataStorageFactory.traitDataStorageInitialiser(this),
 		});
 
 		this.health = new NumberTrait<CoreNumberTraitName>({
 			max: 10,
 			name: 'Health',
 			value: initialValues?.health.value || 0,
+			dataStorageInitialiser: this.#dataStorageFactory.traitDataStorageInitialiser(this),
 		});
 
 		this.willpower = new NumberTrait<CoreNumberTraitName>({
 			max: 10,
 			name: 'Willpower',
 			value: initialValues?.willpower.value || 0,
+			dataStorageInitialiser: this.#dataStorageFactory.traitDataStorageInitialiser(this),
 		});
 
 		// core string traits
 		this.name = new StringTrait<CoreStringTraitName, string>({
 			name: 'Name',
 			value: initialValues?.name.value || '',
-			saveAction,
+			dataStorageInitialiser: this.#dataStorageFactory.traitDataStorageInitialiser(this),
 		});
 
 		this.sire = new StringTrait<CoreStringTraitName, string>({
 			name: 'Sire',
 			value: initialValues?.sire.value || '',
-			saveAction,
+			dataStorageInitialiser: this.#dataStorageFactory.traitDataStorageInitialiser(this),
 		});
 
 		this.clan = new StringTrait<CoreStringTraitName, ClanName>({
 			name: 'Clan',
 			value: initialValues?.clan.value || '',
-			saveAction,
+			dataStorageInitialiser: this.#dataStorageFactory.traitDataStorageInitialiser(this),
 		});
 
 		// create collections, with initial data where available
@@ -207,7 +215,11 @@ export default class CharacterSheet implements iCharacterSheet {
 		if (!isCharacterSheetData(data))
 			throw Error(`Data loaded from path "${resolvedPath}" is not valid character sheet data`);
 
-		const instance = new CharacterSheet(data, resolvedPath);
+		const instance = new CharacterSheet({
+			sheet: data,
+			customSavePath: resolvedPath,
+			dataStorageFactory: new LocalDataStorageFactory(),
+		});
 
 		// save instance reference
 		CharacterSheet.instances.set(resolvedPath, instance);
@@ -242,11 +254,11 @@ export default class CharacterSheet implements iCharacterSheet {
 		return data;
 	}
 
-	 // todo delete this and use a csDataStorage object
+	// todo delete this and use a csDataStorage object
 	private saveToFile(data: iCharacterSheetData, savePath: string): boolean {
 		// this.#savePath
 		return exportDataToFile(data, savePath);
-	} 
+	}
 	private getAllTraits(): iBaseTrait<
 		TraitNameUnionOrString,
 		TraitValueTypeUnion,

@@ -2,6 +2,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import CharacterSheet from './CharacterSheet';
 import { iAttribute, iSkill, iTouchStoneOrConviction } from '../declarations/interfaces/trait-interfaces';
+import LocalDataStorageFactory from './data-storage/LocalDataStorageFactory';
 
 // todo use test utils
 const testUserId = Math.floor(Math.random() * 9);
@@ -21,7 +22,11 @@ test(testName, () => {
 testName = 'save new blank character sheet and load the character sheet';
 test(testName, () => {
 	// creates new sheet and does initial save
-	const cs = new CharacterSheet(testUserId, filePathRandom);
+	const cs = new CharacterSheet({
+		sheet: testUserId,
+		customSavePath: filePathRandom,
+		dataStorageFactory: new LocalDataStorageFactory(),
+	});
 
 	const csLoaded = CharacterSheet.loadFromFile({ filePath: filePathRandom });
 
