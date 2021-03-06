@@ -1,6 +1,6 @@
 import {
+	iBaseTraitCollectionDataStorageProps,
 	iBaseTraitDataStorageProps,
-	iInMemoryTraitCollectionDataStorageProps,
 	iTraitCollectionDataStorage,
 	iTraitDataStorage,
 } from '../../../declarations/interfaces/data-storage-interfaces';
@@ -33,7 +33,7 @@ export default class InMemoryTraitCollectionDataStorage<
 	#traitDataStorageInitialiser: (props: iBaseTraitDataStorageProps<N, V>) => iTraitDataStorage<N, V>;
 	name: string;
 
-	constructor(props: iInMemoryTraitCollectionDataStorageProps<N, V, D, T>, ...initialData: D[]) {
+	constructor(props: iBaseTraitCollectionDataStorageProps<N, V, D, T>, ...initialData: D[]) {
 		super();
 		const { instanceCreator, traitDataStorageInitialiser, name } = props;
 		this.name = name;
@@ -92,6 +92,7 @@ export default class InMemoryTraitCollectionDataStorage<
 		// todo this should be done in trait collection data storage
 		// autosave if save available
 		// if (this.saveAction) this.saveAction();
+		this.save();
 	}
 	delete(name: N): void {
 		const oldValue = this.map.get(name);
@@ -106,6 +107,7 @@ export default class InMemoryTraitCollectionDataStorage<
 		// todo this should be done in trait collection data storage
 		// autosave if save is available
 		// if (this.saveAction) this.saveAction();
+		this.save();
 	}
 	has(name: N): boolean {
 		return this.map.has(name);
@@ -115,5 +117,9 @@ export default class InMemoryTraitCollectionDataStorage<
 	}
 	get size(): number {
 		return this.map.size;
+	}
+
+	protected save(): boolean {
+		return true;
 	}
 }

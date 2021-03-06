@@ -29,17 +29,23 @@ export interface iLocalTraitDataStorageProps<N extends TraitNameUnionOrString, V
 
 // -------------------------------------------------------
 // TRAIT COLLECTION DATA STORAGE PROPS
-export interface iBaseTraitCollectionDataStorageProps<N extends TraitNameUnionOrString, D extends iGeneralTraitData> {}
-
-export interface iInMemoryTraitCollectionDataStorageProps<
+export interface iBaseTraitCollectionDataStorageProps<
 	N extends TraitNameUnionOrString,
 	V extends TraitValueTypeUnion,
 	D extends iTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
-> extends iBaseTraitCollectionDataStorageProps<N, D>,
-		iHasTraitInstanceCreator<N, V, D, T>,
+> extends iHasTraitInstanceCreator<N, V, D, T>,
 		iHasTraitDataStorageInitialiser<N, V> {
 	name: string;
+}
+
+export interface iLocalFileTraitCollectionDataStorageProps<
+	N extends TraitNameUnionOrString,
+	V extends TraitValueTypeUnion,
+	D extends iTraitData<N, V>,
+	T extends iBaseTrait<N, V, D>
+> extends iBaseTraitCollectionDataStorageProps<N, V, D, T> {
+	characterSheet: iCharacterSheet;
 }
 
 // -------------------------------------------------------
@@ -79,4 +85,11 @@ export interface iDataStorageFactory {
 	newTraitDataStorageInitialiser<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(): (
 		props: iBaseTraitDataStorageProps<N, V>
 	) => iTraitDataStorage<N, V>;
+
+	newTraitCollectionDataStorageInitialiser<
+		N extends TraitNameUnionOrString,
+		V extends TraitValueTypeUnion,
+		D extends iTraitData<N, V>,
+		T extends iBaseTrait<N, V, D>
+	>(): (props: iBaseTraitCollectionDataStorageProps<N, V, D, T>) => iTraitCollectionDataStorage<N, V, D, T>;
 }

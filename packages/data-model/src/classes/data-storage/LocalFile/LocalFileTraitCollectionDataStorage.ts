@@ -1,17 +1,31 @@
-import { iTraitCollectionDataStorage } from '../../../declarations/interfaces/data-storage-interfaces';
-import { iGeneralTraitData } from '../../../declarations/interfaces/trait-interfaces';
-import { TraitNameUnionOrString } from '../../../declarations/types';
-import AbstractDataStorage from '../AbstractDataStorage';
+import { iLocalFileTraitCollectionDataStorageProps } from './../../../declarations/interfaces/data-storage-interfaces';
+import { iCharacterSheet } from './../../../declarations/interfaces/character-sheet-interfaces';
+import { iBaseTrait, iTraitData } from '../../../declarations/interfaces/trait-interfaces';
+import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
+import saveCharacterSheetToFile from '../../../utils/saveCharacterSheetToFile';
+import InMemoryTraitCollectionDataStorage from '../InMemory/InMemoryTraitCollectionDataStorage';
 
-export default class LocalFileTraitCollectionDataStorage<N extends TraitNameUnionOrString, D extends iGeneralTraitData>
-	extends AbstractDataStorage
-	implements iTraitCollectionDataStorage<N, D> {
-	get(key: N): void | D;
-	set(key: N, value: D): void;
-	delete(key: N): void;
-	has(key: N): boolean;
-	toArray(): D[];
-	size: number;
-	name: N;
-	save(): boolean;
+export default class LocalFileTraitCollectionDataStorage<
+	N extends TraitNameUnionOrString,
+	V extends TraitValueTypeUnion,
+	D extends iTraitData<N, V>,
+	T extends iBaseTrait<N, V, D>
+> extends InMemoryTraitCollectionDataStorage<N, V, D, T> {
+	#characterSheet: iCharacterSheet;
+
+	constructor(props: iLocalFileTraitCollectionDataStorageProps<N, V, D, T>) {
+		super(props);
+
+		const { characterSheet } = props;
+
+		this.#characterSheet = characterSheet;
+	}
+
+	save(): boolean {
+		// save if available
+		return saveCharacterSheetToFile(
+			this.#characterSheet.toJson(),
+			`../../data/character-sheets/${this.#characterSheet.discordUserId}`
+		);
+	}
 }
