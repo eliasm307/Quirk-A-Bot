@@ -41,7 +41,7 @@ export interface iTraitCollection<
 	has(name: N): boolean;
 	toArray(): T[];
 	readonly size: number;
-}
+} // todo create a base iCollection so data-storage trait collection can extend the same methods
 
 // -------------------------------------------------------
 // SPECIFIC TRAIT COLLECTION TYPES

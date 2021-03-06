@@ -38,11 +38,10 @@ export interface iBaseTraitProps<
 	N extends TraitNameUnionOrString,
 	V extends TraitValueTypeUnion,
 	D extends iTraitData<N, V>
-> {
+> extends iCanHaveSaveAction  {
 	name: N;
-	value: V;
-	toJson?: () => D;
-	saveAction?: () => boolean;
+	value?: V;
+	toJson?: () => D; 
 }
 export interface iStringTraitProps<N extends TraitNameUnionOrString, V extends string>
 	extends iBaseTraitProps<N, V, iStringTraitData<N, V>> {}
