@@ -8,4 +8,4 @@ export const filePath = path.resolve(__dirname, '../data/character-sheets/tempor
 
 export const testCs: CharacterSheet = CharacterSheet.loadFromFile({ filePath });
 
-export const testCsRandom = new CharacterSheet(testUserId, filePathRandom);
+// export const testCsRandom = new CharacterSheet( { sheet: testUserId, customSavePath: filePathRandom,  });

@@ -6,7 +6,8 @@ import {
 	iTraitDataStorage,
 } from './../../declarations/interfaces/data-storage-interfaces';
 import InMemoryTraitDataStorage from './InMemoryTraitDataStorage';
-export default class InMemoryDataStorageFactory implements iDataStorageFactory {
+
+export default class InMemoryTraitDataStorageFactory implements iDataStorageFactory {
 	newTraitDataStorageInitialiser<N extends string, V extends TraitValueTypeUnion>(): (
 		props: iBaseTraitDataStorageProps<N, V>
 	) => iTraitDataStorage<N, V> {
