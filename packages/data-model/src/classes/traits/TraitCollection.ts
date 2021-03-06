@@ -44,7 +44,7 @@ export default class TraitCollection<
 		// combine logs from reports and and sort oldest to newest
 		return this.getLogReport()
 			.reduce((events, report) => [...events, ...report.logEvents], [] as iLogEvent[])
-			.sort((a, b) => Number(a.time.getTime() - b.time.getTime()));
+			.sort((a, b) => Number(a.timeStamp - b.timeStamp));
 	}
 	getLogReport(): iLogReport[] {
 		return [this.#logs.getReport(), ...this.toArray().map(e => e.getLogReport())];

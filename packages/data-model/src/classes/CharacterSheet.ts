@@ -199,7 +199,7 @@ export default class CharacterSheet implements iCharacterSheet {
 		}
 		// console.log(__filename, `No existing instance for '${resolvedPath}', loading new instance`);
 
-		// todo add option to create blank instance at the specified path if it doesnt exist? 
+		// todo add option to create blank instance at the specified path if it doesnt exist?
 		const data = importDataFromFile(resolvedPath);
 
 		if (!data) throw Error(`Error importing data from ${resolvedPath}`);
@@ -278,6 +278,8 @@ export default class CharacterSheet implements iCharacterSheet {
 		// combine logs from reports and and sort oldest to newest
 		return this.getLogReport()
 			.reduce((events, report) => [...events, ...report.logEvents], [] as iLogEvent[])
-			.sort((a, b) => Number(a.time.getTime() - b.time.getTime()));
+			.sort((a, b) => {
+				return Number(a.timeStamp - b.timeStamp);
+			});
 	}
 }

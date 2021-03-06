@@ -9,7 +9,8 @@ export interface iLogEvent extends iBaseLogEventProps {
 	id: string;
 	operation: LogOperationUnion;
 	describe(): string;
-	time: Date;
+	timeStamp: bigint; // nanosecond timestamp
+	date: Date;
 }
 
 export interface iLogReport {

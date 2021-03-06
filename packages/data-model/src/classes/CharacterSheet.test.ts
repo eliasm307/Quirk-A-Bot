@@ -73,6 +73,15 @@ test(testName, () => {
 	expect(cs2.bloodPotency.value).toEqual(testBloodPotencyValue);
 	expect(cs2.hunger.value).toEqual(testHungerValue);
 
+	console.log({
+		testName,
+		logEvents: cs.getLogEvents(),
+		logEvent1Time: cs.getLogEvents()[1].timeStamp,
+		logEvent0TimeGetTime: cs.getLogEvents()[0].timeStamp,
+		logEvent1TimeGetTime: cs.getLogEvents()[1].timeStamp,
+		logEvent2TimeGetTime: cs.getLogEvents()[2].timeStamp,
+	});
+
 	// check changes were logged
 	// todo make sure logs are tested, there should be a method to get all logs of a character sheet
 	expect(csLoaded.health.getLogReport().logEvents.length).toBeGreaterThanOrEqual(1);
