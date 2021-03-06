@@ -20,16 +20,17 @@ export default class TraitCollection<
 	T extends iBaseTrait<N, V, D>
 > implements iTraitCollection<N, V, D, T> {
 	#instanceCreator: (props: iBaseTraitProps<N, V, D>) => T;
+	#traitDataStorageInitialiser: (props: iBaseTraitDataStorageProps<N, V>) => iTraitDataStorage<N, V>;
 	name: string;
 	#map: Map<N, T>;
 
 	/** Collection of logs for trait collection, ie add and remove events only (update events are held in traits) */
 	#logs: iLogCollection;
 	#typeName: TraitTypeNameUnion | string = 'Trait';
-	#traitDataStorageInitialiser: (props: iBaseTraitDataStorageProps<N, V>) => iTraitDataStorage<N, V>;
+
 	constructor(
 		{ instanceCreator, name, traitDataStorageInitialiser }: iTraitCollectionProps<N, V, D, T>,
-		...initialData: iTraitData<N, V>[]
+		...initialData: D[]
 	) {
 		this.name = name;
 		this.#instanceCreator = instanceCreator;
@@ -108,7 +109,7 @@ export default class TraitCollection<
 				this.#instanceCreator({
 					name,
 					value: newValue,
-					traitDataStorageInitialiser: this.#traitDataStorageInitialiser, 
+					traitDataStorageInitialiser: this.#traitDataStorageInitialiser,
 				})
 			);
 

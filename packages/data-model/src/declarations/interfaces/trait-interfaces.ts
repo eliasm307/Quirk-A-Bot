@@ -36,7 +36,14 @@ export interface iHasNumberLimits {
 	min: number;
 	max: number;
 }
-
+export interface iHasTraitInstanceCreator<
+	N extends TraitNameUnionOrString,
+	V extends TraitValueTypeUnion,
+	D extends iTraitData<N, V>,
+	T extends iBaseTrait<N, V, D>
+> {
+	instanceCreator: (props: iBaseTraitProps<N, V, D>) => T; // todo this should only require name and value, everything else should be pre configured
+}
 // -------------------------------------------------------
 // TRAIT PROPS
 
@@ -46,7 +53,7 @@ export interface iBaseTraitProps<
 	D extends iTraitData<N, V>
 > extends iHasTraitDataStorageInitialiser<N, V> {
 	name: N;
-	value: V; 
+	value: V;
 	toJson?: () => D;
 }
 export interface iStringTraitProps<N extends TraitNameUnionOrString, V extends string>
@@ -59,23 +66,23 @@ export interface iBaseNumberTraitProps<N extends TraitNameUnionOrString, D exten
 }
 
 export interface iNumberTraitProps<N extends TraitNameUnionOrString>
-	extends iBaseNumberTraitProps<N, iNumberTraitData<N>> {
- 
-	}
+	extends iBaseNumberTraitProps<N, iNumberTraitData<N>> {}
 
 export interface iNumberTraitWithCategoryProps<N extends TraitNameUnionOrString, C extends string>
 	extends iBaseNumberTraitProps<N, iNumberTraitData<N>> {
 	categorySelector: (name: N) => C;
 }
 
+
+
 export interface iTraitCollectionProps<
 	N extends TraitNameUnionOrString,
 	V extends TraitValueTypeUnion,
 	D extends iTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
-> extends iHasTraitDataStorageInitialiser<N, V> {
+> extends iHasTraitDataStorageInitialiser<N, V>,
+		iHasTraitInstanceCreator<N, V, D, T> {
 	name: string;
-	instanceCreator: (props: iBaseTraitProps<N, V, D>) => T;
 }
 // -------------------------------------------------------
 // GENERIC TRAIT DATA TYPES

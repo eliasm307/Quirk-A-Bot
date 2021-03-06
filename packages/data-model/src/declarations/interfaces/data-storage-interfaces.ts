@@ -1,7 +1,8 @@
-import { iBaseCollection } from './general-interfaces';
+import { iBaseCollection, iToJson } from './general-interfaces';
 import { iCharacterSheet, iCharacterSheetData } from './character-sheet-interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from './../types';
-import { iGeneralTraitData, iTraitData } from './trait-interfaces';
+import { iBaseTrait, iGeneralTraitData, iHasTraitInstanceCreator, iTraitData } from './trait-interfaces';
+import { iLoggerCollection } from './log-interfaces';
 
 // -------------------------------------------------------
 // GENERAL
@@ -11,7 +12,7 @@ export interface iHasTraitDataStorageInitialiser<N extends TraitNameUnionOrStrin
 }
 
 // -------------------------------------------------------
-// PROPS
+// TRAIT DATA STORAGE PROPS
 
 export interface iBaseTraitDataStorageProps<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion> {
 	name: N;
@@ -27,6 +28,21 @@ export interface iLocalTraitDataStorageProps<N extends TraitNameUnionOrString, V
 }
 
 // -------------------------------------------------------
+// TRAIT COLLECTION DATA STORAGE PROPS
+export interface iBaseTraitCollectionDataStorageProps<N extends TraitNameUnionOrString, D extends iGeneralTraitData> {}
+
+export interface iInMemoryTraitCollectionDataStorageProps<
+	N extends TraitNameUnionOrString,
+	V extends TraitValueTypeUnion,
+	D extends iTraitData<N, V>,
+	T extends iBaseTrait<N, V, D>
+> extends iBaseTraitCollectionDataStorageProps<N, D>,
+		iHasTraitInstanceCreator<N, V, D, T>,
+		iHasTraitDataStorageInitialiser<N, V> {
+	name: string;
+}
+
+// -------------------------------------------------------
 // DATA STORAGE OBJECTS
 
 /** The base data storage object instance shape */
@@ -38,9 +54,17 @@ export interface iTraitDataStorage<N extends TraitNameUnionOrString, V extends T
 	extends iBaseDataStorage,
 		iTraitData<N, V> {}
 
-export interface iTraitCollectionDataStorage<N extends TraitNameUnionOrString, D extends iGeneralTraitData>
-	extends iBaseDataStorage,
-		iBaseCollection<N, D, D> {}
+export interface iTraitCollectionDataStorage<
+	N extends TraitNameUnionOrString,
+	V extends TraitValueTypeUnion,
+	D extends iTraitData<N, V>,
+	T extends iBaseTrait<N, V, D>
+> extends iBaseDataStorage,
+		iBaseCollection<N, V, T>,
+		iToJson<D[]>,
+		iLoggerCollection {
+	name: string;
+}
 
 export interface iCharacterSheetDataStorage extends iBaseDataStorage {
 	get(): iCharacterSheetData;
