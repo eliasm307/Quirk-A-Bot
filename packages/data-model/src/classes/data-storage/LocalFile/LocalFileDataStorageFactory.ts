@@ -1,5 +1,8 @@
-import { iCharacterSheetDataStorage, iLocalFileDataStorageFactoryProps } from './../../../declarations/interfaces/data-storage-interfaces';
-import { iCharacterSheet, iCharacterSheetData } from './../../../declarations/interfaces/character-sheet-interfaces';
+import {
+	iCharacterSheetDataStorage,
+	iLocalFileDataStorageFactoryProps,
+	iHasCharacterSheet,
+} from './../../../declarations/interfaces/data-storage-interfaces';
 import { TraitValueTypeUnion } from '../../../declarations/types';
 import {
 	iBaseTraitCollectionDataStorageProps,
@@ -12,13 +15,10 @@ import LocalFileTraitDataStorage from './LocalFileTraitDataStorage';
 import { iTraitData, iBaseTrait } from '../../../declarations/interfaces/trait-interfaces';
 import LocalFileTraitCollectionDataStorage from './LocalFileTraitCollectionDataStorage';
 import AbstractDataStorageFactory from '../AbstractDataStorageFactory';
-import path from 'path';
-import fs from 'fs-extra';
-import CharacterSheet from '../../CharacterSheet';
-import importDataFromFile from '../../../utils/importDataFromFile';
-import { isCharacterSheetData } from '../../../utils/typePredicates';
+import LocalFileCharacterSheetDataStorage from './LocalFileCharacterSheetDataStorage';
 export default class LocalFileDataStorageFactory extends AbstractDataStorageFactory implements iDataStorageFactory {
-	// characterSheet: iCharacterSheet; 
+	// todo delete comments
+	// characterSheet: iCharacterSheet;
 	// protected readonly characterSheet: iCharacterSheet;
 
 	/*
@@ -39,7 +39,7 @@ export default class LocalFileDataStorageFactory extends AbstractDataStorageFact
 		return data;
 	}*/
 	constructor({ characterSheet }: iLocalFileDataStorageFactoryProps) {
-		super( { id: characterSheet.discordUserId } );
+		super();
 		// this.characterSheet = characterSheet
 		/*
 		// get path relative to character sheet data folder
@@ -77,7 +77,7 @@ export default class LocalFileDataStorageFactory extends AbstractDataStorageFact
 		console.warn(`Local file data storage initialised successfully for id ${id}`);*/
 	}
 	newCharacterSheetDataStorage(): iCharacterSheetDataStorage {
-		throw new Error( 'Method not implemented.' );
+	 return new LocalFileCharacterSheetDataStorage()
 	}
 	newTraitCollectionDataStorage<
 		N extends string,
@@ -99,7 +99,11 @@ export default class LocalFileDataStorageFactory extends AbstractDataStorageFact
 		V extends TraitValueTypeUnion,
 		D extends iTraitData<N, V>,
 		T extends iBaseTrait<N, V, D>
-	>(): (props: iBaseTraitCollectionDataStorageProps<N, V, D, T>) => iTraitCollectionDataStorage<N, V, D, T> {
-		return props => new LocalFileTraitCollectionDataStorage({ ...props, characterSheet: this.characterSheet });
+	>({
+		characterSheet,
+	}: iHasCharacterSheet): (
+		props: iBaseTraitCollectionDataStorageProps<N, V, D, T>
+	) => iTraitCollectionDataStorage<N, V, D, T> {
+		return props => new LocalFileTraitCollectionDataStorage({ ...props, characterSheet });
 	}
 }

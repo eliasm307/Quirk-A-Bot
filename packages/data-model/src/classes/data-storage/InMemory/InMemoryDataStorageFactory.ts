@@ -1,4 +1,7 @@
-import { iInMemoryFileDataStorageFactoryProps } from './../../../declarations/interfaces/data-storage-interfaces';
+import {
+	iCharacterSheetDataStorage,
+	iInMemoryFileDataStorageFactoryProps,
+} from './../../../declarations/interfaces/data-storage-interfaces';
 import { TraitNameUnionOrString } from '../../../declarations/types';
 import { iCharacterSheet, iCharacterSheetData } from '../../../declarations/interfaces/character-sheet-interfaces';
 import { TraitValueTypeUnion } from '../../../declarations/types';
@@ -13,18 +16,13 @@ import InMemoryTraitDataStorage from './InMemoryTraitDataStorage';
 import { iTraitData, iBaseTrait } from '../../../declarations/interfaces/trait-interfaces';
 import InMemoryTraitCollectionDataStorage from './InMemoryTraitCollectionDataStorage';
 import AbstractDataStorageFactory from '../AbstractDataStorageFactory';
+import InMemoryCharacterSheetDataStorage from './InMemoryCharacterSheetDataStorage';
 
 export default class InMemoryDataStorageFactory extends AbstractDataStorageFactory implements iDataStorageFactory {
-	// characterSheet: iCharacterSheet;
- 
-	constructor({ id = 'NA' }: iInMemoryFileDataStorageFactoryProps) {
-		super( { id } );
-		/*
-		this.characterSheet = new CharacterSheet({
-			characterSheetData: CharacterSheet.newData({ id }),
-			dataStorageFactoryInitialiser: () this,
-		});*/
+	newCharacterSheetDataStorage({}): iCharacterSheetDataStorage {
+		return new InMemoryCharacterSheetDataStorage({ id, dataStorageFactory: this });
 	}
+
 	newTraitCollectionDataStorage<
 		N extends string,
 		V extends TraitValueTypeUnion,

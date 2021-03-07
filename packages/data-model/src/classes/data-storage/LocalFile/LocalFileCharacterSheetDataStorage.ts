@@ -5,10 +5,8 @@ import { isCharacterSheetData } from '../../../utils/typePredicates';
 import CharacterSheet from '../../CharacterSheet';
 import {
 	iBaseCharacterSheetDataStorageProps,
-	iCanHaveId,
 	iCharacterSheetDataStorage,
 	iDataStorageFactory,
-	iHasId,
 } from './../../../declarations/interfaces/data-storage-interfaces';
 
 export default class LocalFileCharacterSheetDataStorage implements iCharacterSheetDataStorage {

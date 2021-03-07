@@ -7,8 +7,10 @@ import {
 	iBaseDataStorageFactoryProps,
 	iBaseTraitCollectionDataStorageProps,
 	iBaseTraitDataStorageProps,
-  iCharacterSheetDataStorage,
+	iCharacterSheetDataStorage,
 	iDataStorageFactory,
+	iHasCharacterSheet,
+	iHasId,
 	iTraitCollectionDataStorage,
 	iTraitDataStorage,
 } from './../../declarations/interfaces/data-storage-interfaces';
@@ -17,26 +19,23 @@ import {
 export default abstract class AbstractDataStorageFactory implements iDataStorageFactory {
 	// abstract readonly characterSheet: iCharacterSheet;
 
-	constructor(props: iBaseDataStorageFactoryProps) {
-		const { id } = props;
-	}
-  newCharacterSheetDataStorage(): iCharacterSheetDataStorage {
-    throw new Error( 'Method not implemented.' );
-  }
+	abstract newCharacterSheetDataStorage(props: iHasId): iCharacterSheetDataStorage;
 
 	// 	protected abstract characterSheetExists(id: string): boolean;
 	// 	protected abstract getCharacterSheetData(id: string): iCharacterSheetData;
 
-	abstract newTraitDataStorageInitialiser<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(): (
+	abstract newTraitDataStorageInitialiser(): <N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(
 		props: iBaseTraitDataStorageProps<N, V>
 	) => iTraitDataStorage<N, V>;
 
-	abstract newTraitCollectionDataStorageInitialiser<
+	abstract newTraitCollectionDataStorageInitialiser(
+		props: iHasCharacterSheet
+	): <
 		N extends TraitNameUnionOrString,
 		V extends TraitValueTypeUnion,
 		D extends iTraitData<N, V>,
 		T extends iBaseTrait<N, V, D>
-	>(): (props: iBaseTraitCollectionDataStorageProps<N, V, D, T>) => iTraitCollectionDataStorage<N, V, D, T>;
+	>(props: iBaseTraitCollectionDataStorageProps<N, V, D, T>) => iTraitCollectionDataStorage<N, V, D, T>;
 
 	abstract newTraitCollectionDataStorage<
 		N extends TraitNameUnionOrString,

@@ -108,16 +108,20 @@ export interface iCharacterSheetDataStorage extends iBaseDataStorage {
 export interface iDataStorageFactory {
 	// ? do data storage objects need to use N V generics? user wont interact with these directly
 
-	newTraitDataStorageInitialiser<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(): (
-		props: iBaseTraitDataStorageProps<N, V>
-	) => iTraitDataStorage<N, V>;
+	newTraitDataStorageInitialiser(
+		props: iHasCharacterSheet
+	): <N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(props: iBaseTraitDataStorageProps<N, V>) => iTraitDataStorage<N, V>;
 
-	newTraitCollectionDataStorageInitialiser<
+	newTraitCollectionDataStorageInitialiser(
+		props: iHasCharacterSheet
+	): <
 		N extends TraitNameUnionOrString,
 		V extends TraitValueTypeUnion,
 		D extends iTraitData<N, V>,
 		T extends iBaseTrait<N, V, D>
-	>(): (props: iBaseTraitCollectionDataStorageProps<N, V, D, T>) => iTraitCollectionDataStorage<N, V, D, T>;
+	>(
+		props: iBaseTraitCollectionDataStorageProps<N, V, D, T>
+	) => iTraitCollectionDataStorage<N, V, D, T>;
 
 	newTraitCollectionDataStorage<
 		N extends TraitNameUnionOrString,
@@ -128,7 +132,7 @@ export interface iDataStorageFactory {
 		props: iBaseTraitCollectionDataStorageProps<N, V, D, T>
 	): iTraitCollectionDataStorage<N, V, D, T>;
 
-	newCharacterSheetDataStorage(): iCharacterSheetDataStorage;
+	newCharacterSheetDataStorage(props: iHasId): iCharacterSheetDataStorage;
 }
 
 // -------------------------------------------------------
