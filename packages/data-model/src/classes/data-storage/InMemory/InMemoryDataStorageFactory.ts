@@ -1,6 +1,6 @@
 import { iInMemoryFileDataStorageFactoryProps } from './../../../declarations/interfaces/data-storage-interfaces';
 import { TraitNameUnionOrString } from '../../../declarations/types';
-import { iCharacterSheet } from '../../../declarations/interfaces/character-sheet-interfaces';
+import { iCharacterSheet, iCharacterSheetData } from '../../../declarations/interfaces/character-sheet-interfaces';
 import { TraitValueTypeUnion } from '../../../declarations/types';
 import {
 	iBaseTraitCollectionDataStorageProps,
@@ -12,14 +12,21 @@ import {
 import InMemoryTraitDataStorage from './InMemoryTraitDataStorage';
 import { iTraitData, iBaseTrait } from '../../../declarations/interfaces/trait-interfaces';
 import InMemoryTraitCollectionDataStorage from './InMemoryTraitCollectionDataStorage';
+import AbstractDataStorageFactory from '../AbstractDataStorageFactory';
 
-export default class InMemoryDataStorageFactory implements iDataStorageFactory {
-	readonly characterSheet: iCharacterSheet;
-	constructor(props: iInMemoryFileDataStorageFactoryProps) {
-		const { id } = props;
-		th
+export default class InMemoryDataStorageFactory extends AbstractDataStorageFactory implements iDataStorageFactory {
+	protected characterSheetExists(id: string): boolean {
+		// always false for in memory
+		return false;
 	}
+	protected getCharacterSheetData(id: string): iCharacterSheetData {
+		throw new Error('Method not implemented.');
+	} 
 
+	constructor({ id }: iInMemoryFileDataStorageFactoryProps) {
+		super( { id } );
+		
+	}
 	newTraitCollectionDataStorage<
 		N extends string,
 		V extends TraitValueTypeUnion,

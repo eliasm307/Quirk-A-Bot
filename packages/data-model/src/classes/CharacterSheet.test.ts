@@ -6,7 +6,7 @@ import { iAttribute, iSkill, iTouchStoneOrConviction } from '../declarations/int
 import LocalFileDataStorageFactory from './data-storage/LocalFile/LocalFileDataStorageFactory';
 
 // todo use test utils
-const testUserId = Math.floor(Math.random() * 9);
+const testUserId = `${Math.floor(Math.random() * 9)}}`;
 const filePathRandom = path.resolve(__dirname, `../data/character-sheets/temporary/${testUserId}.json`);
 
 let testName: string;
@@ -24,7 +24,7 @@ testName = 'save new blank character sheet and load the character sheet';
 test(testName, () => {
 	// creates new sheet and does initial save
 	const cs = new CharacterSheet({
-		sheet: testUserId,
+		characterSheetData: testUserId,
 		customSavePath: filePathRandom,
 		dataStorageFactoryInitialiser: (characterSheet: iCharacterSheet) => new LocalFileDataStorageFactory(characterSheet),
 	});

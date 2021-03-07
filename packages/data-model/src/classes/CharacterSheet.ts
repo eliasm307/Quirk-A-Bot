@@ -72,7 +72,7 @@ export default class CharacterSheet implements iCharacterSheet {
 
 	//-------------------------------------
 	// CONSTRUCTOR
-	constructor({ sheet, dataStorageFactory, customSavePath }: iCharacterSheetProps) {
+	constructor({ characterSheetData: sheet, dataStorageFactory, customSavePath }: iCharacterSheetProps) {
 		this.#dataStorageFactory = dataStorageFactory;
 
 		let initialAttributes: iAttributeData[] = [];
@@ -199,6 +199,7 @@ export default class CharacterSheet implements iCharacterSheet {
 	/**
 	 * Static method to create an instance from an existing character sheet JSON file
 	 */
+	/*
 	public static loadFromFile({ filePath, fileName }: iLoadFromFileArgs): CharacterSheet {
 		if (!filePath && !fileName)
 			throw Error(`${__filename}: filePath and fileName are not defined, cannot load from file`);
@@ -227,9 +228,8 @@ export default class CharacterSheet implements iCharacterSheet {
 
 		// ? is this ok when it specifies local data storage explicitly? this should be implemented in data storage
 		const instance = new CharacterSheet({
-			sheet: data,
-			customSavePath: resolvedPath,
-			dataStorageFactoryInitialiser: cs => new LocalFileDataStorageFactory(cs),
+			characterSheetData: data,
+			customSavePath: resolvedPath, dataStorageFactory
 		});
 
 		// save instance reference
@@ -237,7 +237,7 @@ export default class CharacterSheet implements iCharacterSheet {
 
 		// load the character sheet and set the current location as the save path
 		return instance;
-	}
+	}*/
 
 	public toJson(): iCharacterSheetData {
 		const data: iCharacterSheetData = {
@@ -306,7 +306,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			});
 	}
 
-	static newCharacterSheetDataObject({ id }: iHasId): iCharacterSheetData {
+	static newData({ id }: iHasId): iCharacterSheetData {
 		return {
 			discordUserId: id,
 			bloodPotency: { name: 'Blood Potency', value: 0 },

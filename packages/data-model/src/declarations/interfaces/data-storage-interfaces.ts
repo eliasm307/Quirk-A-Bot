@@ -1,4 +1,3 @@
- 
 import { iBaseCollection, iToJson } from './general-interfaces';
 import { iCharacterSheet, iCharacterSheetData } from './character-sheet-interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from './../types';
@@ -33,9 +32,7 @@ export interface iBaseDataStorageFactoryProps extends iHasId {}
 
 export interface iInMemoryFileDataStorageFactoryProps extends iHasId {}
 
-export interface iLocalFileDataStorageFactoryProps extends iCanHaveId {
-	customSavePath?: string;
-}
+export interface iLocalFileDataStorageFactoryProps extends iHasId {}
 
 // -------------------------------------------------------
 // TRAIT DATA STORAGE PROPS

@@ -22,7 +22,7 @@ import { iToJson } from './general-interfaces';
 import { iDataStorageFactory } from './data-storage-interfaces';
 
 export interface iCharacterSheetProps {
-	sheet: iCharacterSheetData;
+	characterSheetData: iCharacterSheetData;
 	dataStorageFactory: iDataStorageFactory;
 	customSavePath?: string;
 }
