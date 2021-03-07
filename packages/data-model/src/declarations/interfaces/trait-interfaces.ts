@@ -54,7 +54,7 @@ export interface iBaseTraitProps<
 	N extends TraitNameUnionOrString,
 	V extends TraitValueTypeUnion,
 	D extends iTraitData<N, V>
-> extends iHasTraitDataStorageInitialiser<N, V> {
+> extends iHasTraitDataStorageInitialiser {
 	name: N;
 	value: V;
 	toJson?: () => D;
@@ -82,8 +82,8 @@ export interface iTraitCollectionProps<
 	D extends iTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
 > extends iHasTraitInstanceCreator<N, V, D, T>,
-		iHasTraitDataStorageInitialiser<N, V>,
-		iHasTraitCollectionDataStorageInitialiser<N, V, D, T> {
+		iHasTraitDataStorageInitialiser,
+		iHasTraitCollectionDataStorageInitialiser {
 	name: string;
 }
 // -------------------------------------------------------
