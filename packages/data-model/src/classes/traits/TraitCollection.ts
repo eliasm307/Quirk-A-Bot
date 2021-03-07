@@ -22,7 +22,9 @@ export default class TraitCollection<
 	T extends iBaseTrait<N, V, D>
 > implements iTraitCollection<N, V, D, T> {
 	#instanceCreator: (props: iBaseTraitProps<N, V, D>) => T;
-	#traitDataStorageInitialiser: (props: iBaseTraitDataStorageProps<N, V>) => iTraitDataStorage<N, V>;
+	#traitDataStorageInitialiser: <N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(
+		props: iBaseTraitDataStorageProps<N, V>
+	) => iTraitDataStorage<N, V>;
 	#dataStorage: iTraitCollectionDataStorage<N, V, D, T>;
 	name: string;
 	// #map: Map<N, T>;

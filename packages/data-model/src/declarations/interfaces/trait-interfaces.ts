@@ -6,6 +6,7 @@ import {
 	iTraitCollectionDataStorage,
 	iBaseTraitCollectionDataStorageProps,
 	iHasTraitCollectionDataStorageInitialiser,
+	iTraitCollectionDataStorageInitialiserBundle,
 } from './data-storage-interfaces';
 import {
 	TraitNameUnionOrString,
@@ -82,8 +83,7 @@ export interface iTraitCollectionProps<
 	D extends iTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
 > extends iHasTraitInstanceCreator<N, V, D, T>,
-		iHasTraitDataStorageInitialiser,
-		iHasTraitCollectionDataStorageInitialiser {
+		iTraitCollectionDataStorageInitialiserBundle {
 	name: string;
 }
 // -------------------------------------------------------

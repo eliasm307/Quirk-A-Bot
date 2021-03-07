@@ -5,26 +5,6 @@ import { iBaseTrait, iGeneralTraitData, iHasTraitInstanceCreator, iTraitData } f
 import { iLoggerCollection, iAddLogEvent, iAddLogEventProps, iDeleteLogEventProps } from './log-interfaces';
 
 // -------------------------------------------------------
-// INITIALISERS
-
-export interface iHasTraitDataStorageInitialiser {
-	traitDataStorageInitialiser<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(
-		props: iBaseTraitDataStorageProps<N, V>
-	): iTraitDataStorage<N, V>;
-}
-
-export interface iHasTraitCollectionDataStorageInitialiser {
-	traitCollectionDataStorageInitialiser<
-		N extends TraitNameUnionOrString,
-		V extends TraitValueTypeUnion,
-		D extends iTraitData<N, V>,
-		T extends iBaseTrait<N, V, D>
-	>(
-		props: iBaseTraitCollectionDataStorageProps<N, V, D, T>
-	): iTraitCollectionDataStorage<N, V, D, T>;
-}
-
-// -------------------------------------------------------
 // GENERAL
 
 export interface iHasCharacterSheet {
@@ -76,7 +56,7 @@ export interface iBaseTraitCollectionDataStorageProps<
 	D extends iTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
 > extends iHasTraitInstanceCreator<N, V, D, T>,
-		iHasTraitDataStorageInitialiser<N, V> {
+		iHasTraitDataStorageInitialiser {
 	initialData?: D[];
 	name: string;
 	onAdd: (props: iAddLogEventProps<V>) => void;
@@ -150,3 +130,27 @@ export interface iDataStorageFactory {
 
 	newCharacterSheetDataStorage(): iCharacterSheetDataStorage;
 }
+
+// -------------------------------------------------------
+// INITIALISERS
+
+export interface iHasTraitDataStorageInitialiser {
+	traitDataStorageInitialiser<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(
+		props: iBaseTraitDataStorageProps<N, V>
+	): iTraitDataStorage<N, V>;
+}
+
+export interface iHasTraitCollectionDataStorageInitialiser {
+	traitCollectionDataStorageInitialiser<
+		N extends TraitNameUnionOrString,
+		V extends TraitValueTypeUnion,
+		D extends iTraitData<N, V>,
+		T extends iBaseTrait<N, V, D>
+	>(
+		props: iBaseTraitCollectionDataStorageProps<N, V, D, T>
+	): iTraitCollectionDataStorage<N, V, D, T>;
+}
+
+export interface iTraitCollectionDataStorageInitialiserBundle
+	extends iHasTraitCollectionDataStorageInitialiser,
+		iHasTraitDataStorageInitialiser {}

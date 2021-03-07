@@ -1,4 +1,8 @@
 import {
+	iHasTraitCollectionDataStorageInitialiser,
+	iTraitCollectionDataStorageInitialiserBundle,
+} from './../../declarations/interfaces/data-storage-interfaces';
+import {
 	iDisciplineTraitCollection,
 	iSkillTraitCollection,
 	iTouchStoneOrConvictionCollection,
@@ -142,27 +146,29 @@ export default abstract class TraitFactory {
 	}
 
 	static newAttributeTraitCollection(
-		props: iHasDataStorageFactory,
+		props: iTraitCollectionDataStorageInitialiserBundle,
 		...initial: iAttributeData[]
 	): iAttributeTraitCollection {
-		const { dataStorageFactory } = props || {};
+		const {} = props || {};
 		return new TraitCollection<AttributeName, number, iAttributeData, iAttribute>(
 			{
+				...props,
 				name: `AttributeTraitCollection`,
-				dataStorageFactory,
 				instanceCreator: TraitFactory.newAttributeTrait,
 			},
 			...initial
 		);
 	}
 
-	static newSkillTraitCollection(props: iHasDataStorageFactory, ...initial: iSkillData[]): iSkillTraitCollection {
-		const { dataStorageFactory } = props || {};
+	static newSkillTraitCollection(
+		props: iTraitCollectionDataStorageInitialiserBundle,
+		...initial: iSkillData[]
+	): iSkillTraitCollection {
+		const {} = props || {};
 		return new TraitCollection<SkillName, number, iSkillData, iSkill>(
 			{
+				...props,
 				name: `SkillTraitCollection`,
-
-				dataStorageFactory,
 				instanceCreator: TraitFactory.newSkillTrait,
 			},
 			...initial
@@ -170,14 +176,14 @@ export default abstract class TraitFactory {
 	}
 
 	static newDisciplineTraitCollection(
-		props: iHasDataStorageFactory,
+		props: iTraitCollectionDataStorageInitialiserBundle,
 		...initial: iDisciplineData[]
 	): iDisciplineTraitCollection {
-		const { dataStorageFactory } = props || {};
+		const {} = props || {};
 		return new TraitCollection<DisciplineName, number, iDisciplineData, iDiscipline>(
 			{
+				...props,
 				name: `DisciplineTraitCollection`,
-				dataStorageFactory,
 				instanceCreator: TraitFactory.newDisciplineTrait,
 			},
 			...initial
@@ -185,19 +191,17 @@ export default abstract class TraitFactory {
 	}
 
 	static newTouchstonesAndConvictionTraitCollection(
-		props: iHasDataStorageFactory,
+		props: iTraitCollectionDataStorageInitialiserBundle,
 		...initial: iTouchStoneOrConvictionData[]
 	): iTouchStoneOrConvictionCollection {
-		const { dataStorageFactory } = props || {};
+		const {} = props || {};
 		return new TraitCollection<string, string, iTouchStoneOrConvictionData, iTouchStoneOrConviction>(
 			{
+				...props,
 				name: `TouchstonesAndConvictionTraitCollection`,
-				dataStorageFactory,
 				instanceCreator: TraitFactory.newTouchStoneOrConvictionTrait,
 			},
 			...initial
 		);
 	}
- 
-
 }
