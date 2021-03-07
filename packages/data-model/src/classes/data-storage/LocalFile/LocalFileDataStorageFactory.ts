@@ -18,7 +18,7 @@ import CharacterSheet from '../../CharacterSheet';
 import importDataFromFile from '../../../utils/importDataFromFile';
 import { isCharacterSheetData } from '../../../utils/typePredicates';
 export default class LocalFileDataStorageFactory extends AbstractDataStorageFactory implements iDataStorageFactory {
-	characterSheet: iCharacterSheet; 
+	// characterSheet: iCharacterSheet; 
 	// protected readonly characterSheet: iCharacterSheet;
 
 	/*
@@ -40,7 +40,7 @@ export default class LocalFileDataStorageFactory extends AbstractDataStorageFact
 	}*/
 	constructor({ characterSheet }: iLocalFileDataStorageFactoryProps) {
 		super( { id: characterSheet.discordUserId } );
-		this.characterSheet = characterSheet
+		// this.characterSheet = characterSheet
 		/*
 		// get path relative to character sheet data folder
 		this.resolvedFilePath = path.resolve(__dirname, '../../../data/character-sheets/', id);

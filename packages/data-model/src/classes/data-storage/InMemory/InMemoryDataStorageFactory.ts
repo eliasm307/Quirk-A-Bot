@@ -16,14 +16,7 @@ import AbstractDataStorageFactory from '../AbstractDataStorageFactory';
 
 export default class InMemoryDataStorageFactory extends AbstractDataStorageFactory implements iDataStorageFactory {
 	// characterSheet: iCharacterSheet;
-	protected characterSheetExists(id: string): boolean {
-		// always false for in memory
-		return false;
-	}
-	protected getCharacterSheetData(id: string): iCharacterSheetData {
-		throw new Error('Method not implemented.');
-	}
-
+ 
 	constructor({ id = 'NA' }: iInMemoryFileDataStorageFactoryProps) {
 		super( { id } );
 		/*

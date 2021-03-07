@@ -83,9 +83,10 @@ export default class TraitCollection<
 	get(name: N): T | void {
 		return this.#dataStorage.get(name);
 	}
-	delete(name: N): void {
-		const oldValue = this.#dataStorage.get(name);
-		const property = name;
+	delete( name: N ): void {
+		// todo delete comments
+		// const oldValue = this.#dataStorage.get(name);
+		// const property = name;
 
 		// apply change
 		this.#dataStorage.delete(name);
@@ -106,7 +107,8 @@ export default class TraitCollection<
 	 * @param name name of trait to edit or create
 	 * @param newValue value to assign
 	 */
-	set(name: N, newValue: V): void {
+	set( name: N, newValue: V ): void {
+		// todo delete comments
 		// todo this should have logging for modification or creation
 		this.#dataStorage.set(name, newValue);
 		// if trait already exists then just update it

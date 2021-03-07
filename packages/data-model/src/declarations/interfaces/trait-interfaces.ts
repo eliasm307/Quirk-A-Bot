@@ -80,9 +80,10 @@ export interface iTraitCollectionProps<
 	V extends TraitValueTypeUnion,
 	D extends iTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
-> extends iHasDataStorageFactory,
+> extends 
 		iHasTraitInstanceCreator<N, V, D, T> {
 	name: string;
+	traitDataStorageInitialiser: iTraitDataStorage<N, V>;
 }
 // -------------------------------------------------------
 // GENERIC TRAIT DATA TYPES
