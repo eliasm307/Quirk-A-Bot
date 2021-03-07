@@ -23,7 +23,7 @@ import { iDataStorageFactory } from './data-storage-interfaces';
 
 export interface iCharacterSheetProps {
 	characterSheetData: iCharacterSheetData;
-	dataStorageFactoryInitialiser: (characterSheet: iCharacterSheet) => iDataStorageFactory;
+	dataStorageFactory:   iDataStorageFactory;
 	customSavePath?: string;
 }
 

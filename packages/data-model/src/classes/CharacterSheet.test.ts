@@ -24,7 +24,7 @@ test(testName, () => {
 testName = 'save new blank character sheet and load the character sheet';
 test(testName, () => {
 	// creates new sheet and does initial save
-	const cs = new LocalFileDataStorageFactory({ id: testUserId }).characterSheet;
+	const cs = new LocalFileDataStorageFactory({ id: testUserId,  }).characterSheet;
 
 	const csLoaded = new LocalFileDataStorageFactory({ id: testUserId }).characterSheet;
 

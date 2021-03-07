@@ -1,5 +1,5 @@
-import { iBaseCollection, iToJson } from './general-interfaces';
-import { iCharacterSheet, iCharacterSheetData } from './character-sheet-interfaces';
+import { iBaseCollection, iToJson, iHasDataStorageFactory } from './general-interfaces';
+import { iCharacterSheet, iCharacterSheetData, iBaseCharacterSheet } from './character-sheet-interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from './../types';
 import { iBaseTrait, iGeneralTraitData, iHasTraitInstanceCreator, iTraitData } from './trait-interfaces';
 import { iLoggerCollection, iAddLogEvent, iAddLogEventProps, iDeleteLogEventProps } from './log-interfaces';
@@ -76,6 +76,7 @@ export interface iLocalFileTraitCollectionDataStorageProps<
 	characterSheet: iCharacterSheet;
 }
 
+export interface iBaseCharacterSheetDataStorageProps extends iCanHaveId, iHasDataStorageFactory {}
 // -------------------------------------------------------
 // DATA STORAGE OBJECTS
 
@@ -101,7 +102,8 @@ export interface iTraitCollectionDataStorage<
 }
 
 export interface iCharacterSheetDataStorage extends iBaseDataStorage {
-	get(): iCharacterSheetData;
+	getData(): iCharacterSheetData;
+	instance: iCharacterSheet;
 }
 
 // -------------------------------------------------------

@@ -13,7 +13,6 @@ import InMemoryTraitDataStorage from './InMemoryTraitDataStorage';
 import { iTraitData, iBaseTrait } from '../../../declarations/interfaces/trait-interfaces';
 import InMemoryTraitCollectionDataStorage from './InMemoryTraitCollectionDataStorage';
 import AbstractDataStorageFactory from '../AbstractDataStorageFactory';
-import CharacterSheet from '../../CharacterSheet';
 
 export default class InMemoryDataStorageFactory extends AbstractDataStorageFactory implements iDataStorageFactory {
 	// characterSheet: iCharacterSheet;

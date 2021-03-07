@@ -72,10 +72,10 @@ export default class CharacterSheet implements iCharacterSheet {
 
 	//-------------------------------------
 	// CONSTRUCTOR
-	constructor({ characterSheetData: sheet, dataStorageFactoryInitialiser, customSavePath }: iCharacterSheetProps) {
-		this.dataStorageFactory = dataStorageFactoryInitialiser(this);
+	constructor({ characterSheetData: sheet, dataStorageFactory, customSavePath }: iCharacterSheetProps) {
+		this.dataStorageFactory = dataStorageFactory;
 
-		const data = this.dataStorageFactory.
+		// const data = this.dataStorageFactory.
 
 		// todo instantiate factory here and pass id in which is used to instantiate a CharacterSheetDataStorage object which then provides the character sheet data to initialise everything else
 
@@ -189,10 +189,16 @@ export default class CharacterSheet implements iCharacterSheet {
 			...initialTouchstonesAndConvictions
 		);
 
+		// todo this shouldnt be here, should be in a data storage object
 		// try using resolved custom path, otherwise create path in general location using the user id
 		this.#savePath =
 			(customSavePath ? path.resolve(customSavePath) : '') ||
 			path.resolve(__dirname, `../data/character-sheets/${this.discordUserId}.json`);
+
+		// ? should this be in a data storage object
+		// record this instance
+		CharacterSheet.instances.set(this.discordUserId, this);
+		CharacterSheet.instances.set(this.#savePath, this);
 
 		// ? is this required?
 		// if only user id was provided, assume this is a new sheet then do initial save so a persistent file exists

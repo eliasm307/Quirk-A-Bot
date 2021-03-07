@@ -7,6 +7,7 @@ import {
 	iBaseDataStorageFactoryProps,
 	iBaseTraitCollectionDataStorageProps,
 	iBaseTraitDataStorageProps,
+  iCharacterSheetDataStorage,
 	iDataStorageFactory,
 	iTraitCollectionDataStorage,
 	iTraitDataStorage,
@@ -19,6 +20,9 @@ export default abstract class AbstractDataStorageFactory implements iDataStorage
 	constructor(props: iBaseDataStorageFactoryProps) {
 		const { id } = props;
 	}
+  newCharacterSheetDataStorage(): iCharacterSheetDataStorage {
+    throw new Error( 'Method not implemented.' );
+  }
 
 	// 	protected abstract characterSheetExists(id: string): boolean;
 	// 	protected abstract getCharacterSheetData(id: string): iCharacterSheetData;
