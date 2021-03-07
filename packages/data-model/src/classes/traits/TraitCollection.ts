@@ -31,13 +31,21 @@ export default class TraitCollection<
 	protected logs: iLogCollection;
 	#typeName: TraitTypeNameUnion | string = 'Trait';
 
-	constructor({ instanceCreator, name, dataStorageFactory }: iTraitCollectionProps<N, V, D, T>, ...initialData: D[]) {
+	constructor(
+		{
+			instanceCreator,
+			name,
+			traitDataStorageInitialiser,
+			traitCollectionDataStorageInitialiser,
+		}: iTraitCollectionProps<N, V, D, T>,
+		...initialData: D[]
+	) {
 		this.name = name;
 		this.#instanceCreator = instanceCreator;
-		this.#traitDataStorageInitialiser = dataStorageFactory.newTraitDataStorageInitialiser(); // todo, reuse this function instead of making a new one each time
+		this.#traitDataStorageInitialiser = traitDataStorageInitialiser; // todo, reuse this function instead of making a new one each time
 		this.logs = new LogCollection({ sourceName: name, sourceType: 'Trait Collection' });
 
-		this.#dataStorage = dataStorageFactory.newTraitCollectionDataStorage({
+		this.#dataStorage = traitCollectionDataStorageInitialiser({
 			instanceCreator,
 			name,
 			traitDataStorageInitialiser: this.#traitDataStorageInitialiser,
@@ -46,6 +54,7 @@ export default class TraitCollection<
 			onDelete: (props: iDeleteLogEventProps<V>) => this.logs.log(new DeleteLogEvent(props)),
 		});
 
+		// todo delete comments
 		// todo this should be moved to trait collection data storage
 		/*
 		this.#map = new Map<N, T>(
@@ -83,7 +92,7 @@ export default class TraitCollection<
 	get(name: N): T | void {
 		return this.#dataStorage.get(name);
 	}
-	delete( name: N ): void {
+	delete(name: N): void {
 		// todo delete comments
 		// const oldValue = this.#dataStorage.get(name);
 		// const property = name;
@@ -107,7 +116,7 @@ export default class TraitCollection<
 	 * @param name name of trait to edit or create
 	 * @param newValue value to assign
 	 */
-	set( name: N, newValue: V ): void {
+	set(name: N, newValue: V): void {
 		// todo delete comments
 		// todo this should have logging for modification or creation
 		this.#dataStorage.set(name, newValue);

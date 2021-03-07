@@ -3,6 +3,9 @@ import {
 	iBaseTraitDataStorageProps,
 	iDataStorageFactory,
 	iHasTraitDataStorageInitialiser,
+	iTraitCollectionDataStorage,
+	iBaseTraitCollectionDataStorageProps,
+	iHasTraitCollectionDataStorageInitialiser,
 } from './data-storage-interfaces';
 import {
 	TraitNameUnionOrString,
@@ -73,17 +76,15 @@ export interface iNumberTraitWithCategoryProps<N extends TraitNameUnionOrString,
 	categorySelector: (name: N) => C;
 }
 
-
-
 export interface iTraitCollectionProps<
 	N extends TraitNameUnionOrString,
 	V extends TraitValueTypeUnion,
 	D extends iTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
-> extends 
-		iHasTraitInstanceCreator<N, V, D, T> {
+> extends iHasTraitInstanceCreator<N, V, D, T>,
+		iHasTraitDataStorageInitialiser<N, V>,
+		iHasTraitCollectionDataStorageInitialiser<N, V, D, T> {
 	name: string;
-	traitDataStorageInitialiser: iTraitDataStorage<N, V>;
 }
 // -------------------------------------------------------
 // GENERIC TRAIT DATA TYPES

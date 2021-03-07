@@ -11,6 +11,17 @@ export interface iHasTraitDataStorageInitialiser<N extends TraitNameUnionOrStrin
 	traitDataStorageInitialiser: (props: iBaseTraitDataStorageProps<N, V>) => iTraitDataStorage<N, V>;
 }
 
+export interface iHasTraitCollectionDataStorageInitialiser<
+	N extends TraitNameUnionOrString,
+	V extends TraitValueTypeUnion,
+	D extends iTraitData<N, V>,
+	T extends iBaseTrait<N, V, D>
+> {
+	traitCollectionDataStorageInitialiser: (
+		props: iBaseTraitCollectionDataStorageProps<N, V, D, T>
+	) => iTraitCollectionDataStorage<N, V, D, T>;
+}
+
 export interface iHasCharacterSheet {
 	characterSheet: iCharacterSheet;
 }
