@@ -28,7 +28,7 @@ export default abstract class AbstractBaseTrait<
 		this.name = name;
 
 		// initialise data store
-		this.#dataSorage = traitDataStorageInitialiser({ name, defaultValueIfNotDefined: value });
+		this.#dataSorage = traitDataStorageInitialiser({ name,  defaultValueIfNotDefined: value });
 
 		if (!toJson) throw Error(`${__filename} toJson function not defined`);
 		this.toJson = toJson;

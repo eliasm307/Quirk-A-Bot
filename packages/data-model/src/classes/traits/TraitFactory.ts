@@ -198,30 +198,6 @@ export default abstract class TraitFactory {
 			...initial
 		);
 	}
+ 
 
-	// todo delete
-	/*
-	static newCharacterSheetDataObject(props: iHasDataStorageFactory): iCharacterSheetData {
-		const saveAction = props?.saveAction;
-		return {
-			discordUserId: NaN,
-			bloodPotency: TraitFactory.newCoreNumberTrait({
-				max: 10,
-				name: 'Blood Potency',
-				value: 0,
-				dataStorageInitialiser,
-			}),
-			health: TraitFactory.newCoreNumberTrait({ max: 10, name: 'Health', value: 0, saveAction }),
-			humanity: TraitFactory.newCoreNumberTrait({ max: 10, name: 'Humanity', value: 0, saveAction }),
-			hunger: TraitFactory.newCoreNumberTrait({ max: 5, name: 'Hunger', value: 0, saveAction }),
-			willpower: TraitFactory.newCoreNumberTrait({ name: 'Willpower', value: 0, max: 10, saveAction }),
-			name: TraitFactory.newCoreStringTrait<string>({ name: 'Name', value: 'x', saveAction }),
-			sire: TraitFactory.newCoreStringTrait<string>({ name: 'Sire', value: 'x', saveAction }),
-			clan: TraitFactory.newCoreStringTrait<ClanName>({ name: 'Clan', value: 'x', saveAction }),
-			attributes: [],
-			disciplines: [],
-			skills: [],
-			touchstonesAndConvictions: [],
-		};
-	}*/
 }

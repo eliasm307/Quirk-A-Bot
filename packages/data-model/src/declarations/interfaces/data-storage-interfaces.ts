@@ -1,3 +1,4 @@
+ 
 import { iBaseCollection, iToJson } from './general-interfaces';
 import { iCharacterSheet, iCharacterSheetData } from './character-sheet-interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from './../types';
@@ -9,6 +10,31 @@ import { iLoggerCollection, iAddLogEvent, iAddLogEventProps, iDeleteLogEventProp
 
 export interface iHasTraitDataStorageInitialiser<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion> {
 	traitDataStorageInitialiser: (props: iBaseTraitDataStorageProps<N, V>) => iTraitDataStorage<N, V>;
+}
+
+export interface iHasCharacterSheet {
+	characterSheet: iCharacterSheet;
+}
+export interface iHasCharacterSheetData {
+	characterSheetData: iCharacterSheetData;
+}
+export interface iHasId {
+	id: string;
+}
+
+export interface iCanHaveId {
+	id?: string;
+}
+
+// -------------------------------------------------------
+// DATA STORAGE FACTORY PROPS
+
+export interface iBaseDataStorageFactoryProps extends iHasId {}
+
+export interface iInMemoryFileDataStorageFactoryProps extends iHasId {}
+
+export interface iLocalFileDataStorageFactoryProps extends iCanHaveId {
+	customSavePath?: string;
 }
 
 // -------------------------------------------------------
@@ -84,6 +110,8 @@ export interface iCharacterSheetDataStorage extends iBaseDataStorage {
 
 export interface iDataStorageFactory {
 	// ? do data storage objects need to use N V generics? user wont interact with these directly
+
+	readonly characterSheet: iCharacterSheet;
 
 	newTraitDataStorageInitialiser<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(): (
 		props: iBaseTraitDataStorageProps<N, V>

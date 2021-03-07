@@ -22,14 +22,14 @@ import { iToJson } from './general-interfaces';
 import { iDataStorageFactory } from './data-storage-interfaces';
 
 export interface iCharacterSheetProps {
-	sheet: iCharacterSheetData | number;
-	dataStorageFactoryInitialiser: (characterSheet: iCharacterSheet) => iDataStorageFactory;
+	sheet: iCharacterSheetData;
+	dataStorageFactory: iDataStorageFactory;
 	customSavePath?: string;
 }
 
 /** The basic shape of a charactersheet */
 export interface iBaseCharacterSheet {
-	readonly discordUserId: number;
+	readonly discordUserId: string;
 	// todo add user aliases (ie known discord names to be added by bot)
 	name: any;
 	clan: any;

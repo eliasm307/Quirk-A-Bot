@@ -1,3 +1,4 @@
+import { iInMemoryFileDataStorageFactoryProps } from './../../../declarations/interfaces/data-storage-interfaces';
 import { TraitNameUnionOrString } from '../../../declarations/types';
 import { iCharacterSheet } from '../../../declarations/interfaces/character-sheet-interfaces';
 import { TraitValueTypeUnion } from '../../../declarations/types';
@@ -13,6 +14,12 @@ import { iTraitData, iBaseTrait } from '../../../declarations/interfaces/trait-i
 import InMemoryTraitCollectionDataStorage from './InMemoryTraitCollectionDataStorage';
 
 export default class InMemoryDataStorageFactory implements iDataStorageFactory {
+	readonly characterSheet: iCharacterSheet;
+	constructor(props: iInMemoryFileDataStorageFactoryProps) {
+		const { id } = props;
+		th
+	}
+
 	newTraitCollectionDataStorage<
 		N extends string,
 		V extends TraitValueTypeUnion,

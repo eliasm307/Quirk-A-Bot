@@ -1,4 +1,4 @@
-import { iDataStorageFactory } from './../declarations/interfaces/data-storage-interfaces';
+import { iDataStorageFactory, iHasId } from './../declarations/interfaces/data-storage-interfaces';
 import { iCharacterSheet } from './../declarations/interfaces/character-sheet-interfaces';
 import { iLogReport } from './../declarations/interfaces/log-interfaces';
 import {
@@ -31,7 +31,7 @@ import StringTrait from './traits/StringTrait';
 import { isCharacterSheetData } from '../utils/typePredicates';
 import NumberTrait from './traits/NumberTrait';
 import LocalFileDataStorageFactory from './data-storage/LocalFile/LocalFileDataStorageFactory';
-import saveCharacterSheetToFile from '../utils/saveCharacterSheetToFile';
+// import saveCharacterSheetToFile from '../utils/saveCharacterSheetToFile';
 
 // ! this shouldnt be here, should be in a file about persistence
 interface iLoadFromFileArgs {
@@ -42,7 +42,7 @@ interface iLoadFromFileArgs {
 // todo split this into smaller pieces
 
 export default class CharacterSheet implements iCharacterSheet {
-	readonly discordUserId: number;
+	readonly discordUserId: string;
 
 	//-------------------------------------
 	// private properties with custom setters and/or getters
@@ -72,8 +72,8 @@ export default class CharacterSheet implements iCharacterSheet {
 
 	//-------------------------------------
 	// CONSTRUCTOR
-	constructor({ sheet, dataStorageFactoryInitialiser, customSavePath }: iCharacterSheetProps) {
-		this.#dataStorageFactory = dataStorageFactoryInitialiser(this);
+	constructor({ sheet, dataStorageFactory, customSavePath }: iCharacterSheetProps) {
+		this.#dataStorageFactory = dataStorageFactory;
 
 		let initialAttributes: iAttributeData[] = [];
 		let initialDisciplines: iDisciplineData[] = [];
@@ -97,7 +97,6 @@ export default class CharacterSheet implements iCharacterSheet {
 				// initialise using input details
 				this.discordUserId = sheet.discordUserId;
 				initialValues = sheet;
-
 				initialAttributes = [...attributes];
 				initialDisciplines = [...disciplines];
 				initialSkills = [...skills];
@@ -122,7 +121,6 @@ export default class CharacterSheet implements iCharacterSheet {
 			max: 5,
 			name: 'Hunger',
 			value: initialValues?.hunger.value || 0,
-
 			traitDataStorageInitialiser: this.#dataStorageFactory.newTraitDataStorageInitialiser(),
 		});
 
@@ -130,7 +128,6 @@ export default class CharacterSheet implements iCharacterSheet {
 			max: 10,
 			name: 'Humanity',
 			value: initialValues?.humanity.value || 0,
-
 			traitDataStorageInitialiser: this.#dataStorageFactory.newTraitDataStorageInitialiser(),
 		});
 
@@ -138,7 +135,6 @@ export default class CharacterSheet implements iCharacterSheet {
 			max: 10,
 			name: 'Health',
 			value: initialValues?.health.value || 0,
-
 			traitDataStorageInitialiser: this.#dataStorageFactory.newTraitDataStorageInitialiser(),
 		});
 
@@ -194,8 +190,9 @@ export default class CharacterSheet implements iCharacterSheet {
 			(customSavePath ? path.resolve(customSavePath) : '') ||
 			path.resolve(__dirname, `../data/character-sheets/${this.discordUserId}.json`);
 
+		// ? is this required?
 		// if only user id was provided, assume this is a new sheet then do initial save so a persistent file exists
-		if (typeof sheet === 'number') saveCharacterSheetToFile(this.toJson(), this.#savePath);
+		// if (typeof sheet === 'number') saveCharacterSheetToFile(this.toJson(), this.#savePath);
 	}
 
 	// todo loading and saving should be done by a persistence management class
@@ -300,12 +297,30 @@ export default class CharacterSheet implements iCharacterSheet {
 		// todo test
 		return this.getAllTraits().map(trait => trait.getLogReport());
 	}
-	getLogEvents(): iLogEvent[] { 
+	getLogEvents(): iLogEvent[] {
 		// combine logs from reports and and sort oldest to newest
 		return this.getLogReport()
 			.reduce((events, report) => [...events, ...report.logEvents], [] as iLogEvent[])
 			.sort((a, b) => {
 				return Number(a.timeStamp - b.timeStamp);
 			});
+	}
+
+	static newCharacterSheetDataObject({ id }: iHasId): iCharacterSheetData {
+		return {
+			discordUserId: id,
+			bloodPotency: { name: 'Blood Potency', value: 0 },
+			health: { name: 'Health', value: 0 },
+			humanity: { name: 'Humanity', value: 0 },
+			hunger: { name: 'Hunger', value: 0 },
+			willpower: { name: 'Willpower', value: 0 },
+			name: { name: 'Name', value: '' },
+			sire: { name: 'Sire', value: '' },
+			clan: { name: 'Clan', value: '' },
+			attributes: [],
+			disciplines: [],
+			skills: [],
+			touchstonesAndConvictions: [],
+		};
 	}
 }
