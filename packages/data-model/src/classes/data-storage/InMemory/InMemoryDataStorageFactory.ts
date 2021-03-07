@@ -13,19 +13,25 @@ import InMemoryTraitDataStorage from './InMemoryTraitDataStorage';
 import { iTraitData, iBaseTrait } from '../../../declarations/interfaces/trait-interfaces';
 import InMemoryTraitCollectionDataStorage from './InMemoryTraitCollectionDataStorage';
 import AbstractDataStorageFactory from '../AbstractDataStorageFactory';
+import CharacterSheet from '../../CharacterSheet';
 
 export default class InMemoryDataStorageFactory extends AbstractDataStorageFactory implements iDataStorageFactory {
+	// characterSheet: iCharacterSheet;
 	protected characterSheetExists(id: string): boolean {
 		// always false for in memory
 		return false;
 	}
 	protected getCharacterSheetData(id: string): iCharacterSheetData {
 		throw new Error('Method not implemented.');
-	} 
+	}
 
-	constructor({ id }: iInMemoryFileDataStorageFactoryProps) {
+	constructor({ id = 'NA' }: iInMemoryFileDataStorageFactoryProps) {
 		super( { id } );
-		
+		/*
+		this.characterSheet = new CharacterSheet({
+			characterSheetData: CharacterSheet.newData({ id }),
+			dataStorageFactoryInitialiser: () this,
+		});*/
 	}
 	newTraitCollectionDataStorage<
 		N extends string,

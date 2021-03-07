@@ -16,12 +16,19 @@ export default class LocalFileTraitDataStorage<
 		super(props);
 		const { characterSheet } = props;
 		this.#characterSheet = characterSheet;
+
+		if(!this.#characterSheet) throw Error(`${__filename} characterSheet is not defined`)
 	}
 	protected save(): boolean {
+
+		const resolvedPath = path.resolve( `../../../data/character-sheets/${ this.#characterSheet.discordUserId }.json` )
+		
+		console.log(__filename, "Save",  {resolvedPath, characterSheet: this.#characterSheet})
+
 		// save if available
 		return saveCharacterSheetToFile(
 			this.#characterSheet.toJson(),
-			path.resolve(`../../../data/character-sheets/${this.#characterSheet.discordUserId}.json`)
+			resolvedPath
 		);
 	}
 }

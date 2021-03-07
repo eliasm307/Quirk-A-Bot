@@ -8,7 +8,7 @@ import InMemoryTraitDataStorageFactory from '../data-storage/InMemory/InMemoryDa
 const saveAction = () => true;
 let testName: string;
 
-const dataStorageFactory = new InMemoryTraitDataStorageFactory();
+const dataStorageFactory = new InMemoryTraitDataStorageFactory( {});
 
 test('traitCollection CRUD tests', () => {
 	const tc = TraitFactory.newAttributeTraitCollection({ dataStorageFactory });
@@ -81,7 +81,7 @@ test(testName, () => {
 	const tc = TraitFactory.newAttributeTraitCollection({ dataStorageFactory });
 	tc.set('Charisma', 3);
 
-	console.log(__filename, { testName, tc });
+	// console.log(__filename, { testName, tc });
 
 	expect(tc.size).toBeGreaterThan(0);
 	expect(tc.toJson().map(a => a.name)).toContain('Charisma');

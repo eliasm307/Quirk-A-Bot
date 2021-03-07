@@ -1,7 +1,7 @@
 import InMemoryDataStorageFactory from '../data-storage/InMemory/InMemoryDataStorageFactory';
 import NumberTrait from './NumberTrait';
 
-const dataStorageFactory = new InMemoryDataStorageFactory();
+const dataStorageFactory = new InMemoryDataStorageFactory({});
 const traitDataStorageInitialiser = dataStorageFactory.newTraitDataStorageInitialiser();
 
 test('Test rounding on instantiation and modification', () => {

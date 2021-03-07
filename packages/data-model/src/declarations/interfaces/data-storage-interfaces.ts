@@ -30,9 +30,11 @@ export interface iCanHaveId {
 
 export interface iBaseDataStorageFactoryProps extends iHasId {}
 
-export interface iInMemoryFileDataStorageFactoryProps extends iHasId {}
+export interface iInMemoryFileDataStorageFactoryProps extends iCanHaveId {}
 
-export interface iLocalFileDataStorageFactoryProps extends iHasId {}
+export interface iLocalFileDataStorageFactoryProps {
+	characterSheet: iCharacterSheet;
+}
 
 // -------------------------------------------------------
 // TRAIT DATA STORAGE PROPS
@@ -108,8 +110,6 @@ export interface iCharacterSheetDataStorage extends iBaseDataStorage {
 export interface iDataStorageFactory {
 	// ? do data storage objects need to use N V generics? user wont interact with these directly
 
-	readonly characterSheet: iCharacterSheet;
-
 	newTraitDataStorageInitialiser<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(): (
 		props: iBaseTraitDataStorageProps<N, V>
 	) => iTraitDataStorage<N, V>;
@@ -129,4 +129,6 @@ export interface iDataStorageFactory {
 	>(
 		props: iBaseTraitCollectionDataStorageProps<N, V, D, T>
 	): iTraitCollectionDataStorage<N, V, D, T>;
+
+	newCharacterSheetDataStorage(): iCharacterSheetDataStorage;
 }

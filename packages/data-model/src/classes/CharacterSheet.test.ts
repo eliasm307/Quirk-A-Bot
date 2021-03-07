@@ -5,12 +5,13 @@ import CharacterSheet from './CharacterSheet';
 import { iAttribute, iSkill, iTouchStoneOrConviction } from '../declarations/interfaces/trait-interfaces';
 import LocalFileDataStorageFactory from './data-storage/LocalFile/LocalFileDataStorageFactory';
 
-// todo use test utils
-const testUserId = `${Math.floor(Math.random() * 9)}}`;
-const filePathRandom = path.resolve(__dirname, `../data/character-sheets/temporary/${testUserId}.json`);
+// todo use a constant file name that gets deleted before each test
+const testUserId = `/temporary/${Math.floor(Math.random() * 9)}}`;
+const resolvedPath = path.resolve(__dirname, '../data/character-sheets/', testUserId);
+// const filePathRandom = path.resolve(__dirname, `../data/character-sheets/temporary/${testUserId}.json`);
 
 let testName: string;
-
+/*
 testName = 'loading from file that doesnt exist';
 test(testName, () => {
 	expect(() =>
@@ -18,36 +19,33 @@ test(testName, () => {
 			filePath: path.resolve(__dirname, `../data/character-sheets/temporary/i-dont-exist.json`),
 		})
 	).toThrowError();
-});
+});*/
 
 testName = 'save new blank character sheet and load the character sheet';
 test(testName, () => {
 	// creates new sheet and does initial save
-	const cs = new CharacterSheet({
-		characterSheetData: testUserId,
-		customSavePath: filePathRandom,
-		dataStorageFactoryInitialiser: (characterSheet: iCharacterSheet) => new LocalFileDataStorageFactory(characterSheet),
-	});
+	const cs = new LocalFileDataStorageFactory({ id: testUserId }).characterSheet;
 
-	const csLoaded = CharacterSheet.loadFromFile({ filePath: filePathRandom });
+	const csLoaded = new LocalFileDataStorageFactory({ id: testUserId }).characterSheet;
 
-	// console.log({ testName, testUserId, filePath, cs, csLoaded });
+	console.log({ testName, resolvedPath });
 
 	// file should exist after save
-	expect(fs.pathExistsSync(filePathRandom)).toBe(true);
+	expect(fs.pathExistsSync(resolvedPath)).toBe(true);
 
 	// user id should be the same
 	expect(csLoaded.discordUserId).toEqual(testUserId);
 
 	// sheets should be the same
 	expect(cs.toJson()).toEqual(csLoaded.toJson());
+	expect(cs).toEqual(csLoaded);
 });
 
 testName = 'test autosave and custom setters for basic data types';
 test(testName, () => {
-	const cs = CharacterSheet.loadFromFile({ filePath: filePathRandom });
+	const cs = new LocalFileDataStorageFactory({ id: testUserId }).characterSheet;
 
-	const cs2 = CharacterSheet.loadFromFile({ filePath: filePathRandom });
+	const cs2 = new LocalFileDataStorageFactory({ id: testUserId }).characterSheet;
 
 	const testHealthValue = 1;
 	const testBloodPotencyValue = 2;
@@ -58,7 +56,7 @@ test(testName, () => {
 	cs.bloodPotency.value = testBloodPotencyValue;
 	cs.hunger.value = testHungerValue;
 
-	const csLoaded = CharacterSheet.loadFromFile({ filePath: filePathRandom });
+	const csLoaded = new LocalFileDataStorageFactory({ id: testUserId }).characterSheet;
 
 	console.log({
 		testName,
@@ -113,7 +111,7 @@ test(testName, () => {
 testName = 'test basic trait methods';
 test(testName, () => {
 	// console.log(`creating cs`);
-	const cs = CharacterSheet.loadFromFile({ filePath: filePathRandom });
+	const cs = new LocalFileDataStorageFactory({ id: testUserId }).characterSheet;
 
 	// console.log(`setting strength`);
 	cs.attributes.set('Strength', 5);

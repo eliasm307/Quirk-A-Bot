@@ -23,7 +23,7 @@ import { iDataStorageFactory } from './data-storage-interfaces';
 
 export interface iCharacterSheetProps {
 	characterSheetData: iCharacterSheetData;
-	dataStorageFactory: iDataStorageFactory;
+	dataStorageFactoryInitialiser: (characterSheet: iCharacterSheet) => iDataStorageFactory;
 	customSavePath?: string;
 }
 
@@ -63,6 +63,7 @@ export interface iCharacterSheetData extends iBaseCharacterSheet {
 
 /** The shape of a character sheet object instance */
 export interface iCharacterSheet extends iBaseCharacterSheet, iToJson<iCharacterSheetData>, iLoggerCollection {
+	dataStorageFactory: iDataStorageFactory;
 	name: iCoreStringTrait<string>;
 	clan: iCoreStringTrait<ClanName>; // todo allow this to specify using ClanName type union
 	sire: iCoreStringTrait<string>;

@@ -53,7 +53,7 @@ export default class CharacterSheet implements iCharacterSheet {
 	// #private: iModifiablePrimitiveProperties;
 	// #logEvents: iLogCollection = new LogCollection();
 	#savePath: string; // specified in constructor
-	#dataStorageFactory: iDataStorageFactory;
+	dataStorageFactory: iDataStorageFactory;
 
 	//-------------------------------------
 	// NON BASIC PRIMITIVE VARIABLES
@@ -72,8 +72,12 @@ export default class CharacterSheet implements iCharacterSheet {
 
 	//-------------------------------------
 	// CONSTRUCTOR
-	constructor({ characterSheetData: sheet, dataStorageFactory, customSavePath }: iCharacterSheetProps) {
-		this.#dataStorageFactory = dataStorageFactory;
+	constructor({ characterSheetData: sheet, dataStorageFactoryInitialiser, customSavePath }: iCharacterSheetProps) {
+		this.dataStorageFactory = dataStorageFactoryInitialiser(this);
+
+		const data = this.dataStorageFactory.
+
+		// todo instantiate factory here and pass id in which is used to instantiate a CharacterSheetDataStorage object which then provides the character sheet data to initialise everything else
 
 		let initialAttributes: iAttributeData[] = [];
 		let initialDisciplines: iDisciplineData[] = [];
@@ -114,74 +118,74 @@ export default class CharacterSheet implements iCharacterSheet {
 			max: 10,
 			name: 'Blood Potency',
 			value: initialValues?.bloodPotency.value || 0,
-			traitDataStorageInitialiser: this.#dataStorageFactory.newTraitDataStorageInitialiser(),
+			traitDataStorageInitialiser: this.dataStorageFactory.newTraitDataStorageInitialiser(),
 		});
 
 		this.hunger = new NumberTrait<CoreNumberTraitName>({
 			max: 5,
 			name: 'Hunger',
 			value: initialValues?.hunger.value || 0,
-			traitDataStorageInitialiser: this.#dataStorageFactory.newTraitDataStorageInitialiser(),
+			traitDataStorageInitialiser: this.dataStorageFactory.newTraitDataStorageInitialiser(),
 		});
 
 		this.humanity = new NumberTrait<CoreNumberTraitName>({
 			max: 10,
 			name: 'Humanity',
 			value: initialValues?.humanity.value || 0,
-			traitDataStorageInitialiser: this.#dataStorageFactory.newTraitDataStorageInitialiser(),
+			traitDataStorageInitialiser: this.dataStorageFactory.newTraitDataStorageInitialiser(),
 		});
 
 		this.health = new NumberTrait<CoreNumberTraitName>({
 			max: 10,
 			name: 'Health',
 			value: initialValues?.health.value || 0,
-			traitDataStorageInitialiser: this.#dataStorageFactory.newTraitDataStorageInitialiser(),
+			traitDataStorageInitialiser: this.dataStorageFactory.newTraitDataStorageInitialiser(),
 		});
 
 		this.willpower = new NumberTrait<CoreNumberTraitName>({
 			max: 10,
 			name: 'Willpower',
 			value: initialValues?.willpower.value || 0,
-			traitDataStorageInitialiser: this.#dataStorageFactory.newTraitDataStorageInitialiser(),
+			traitDataStorageInitialiser: this.dataStorageFactory.newTraitDataStorageInitialiser(),
 		});
 
 		// core string traits
 		this.name = new StringTrait<CoreStringTraitName, string>({
 			name: 'Name',
 			value: initialValues?.name.value || 'TBC',
-			traitDataStorageInitialiser: this.#dataStorageFactory.newTraitDataStorageInitialiser(),
+			traitDataStorageInitialiser: this.dataStorageFactory.newTraitDataStorageInitialiser(),
 		});
 
 		this.sire = new StringTrait<CoreStringTraitName, string>({
 			name: 'Sire',
 			value: initialValues?.sire.value || 'TBC',
-			traitDataStorageInitialiser: this.#dataStorageFactory.newTraitDataStorageInitialiser(),
+			traitDataStorageInitialiser: this.dataStorageFactory.newTraitDataStorageInitialiser(),
 		});
 
 		this.clan = new StringTrait<CoreStringTraitName, ClanName>({
 			name: 'Clan',
 			value: initialValues?.clan.value || 'TBC',
-			traitDataStorageInitialiser: this.#dataStorageFactory.newTraitDataStorageInitialiser(),
+			traitDataStorageInitialiser: this.dataStorageFactory.newTraitDataStorageInitialiser(),
 		});
 
 		// create collections, with initial data where available
 		this.attributes = TraitFactory.newAttributeTraitCollection(
-			{ dataStorageFactory: this.#dataStorageFactory },
+			{ dataStorageFactory: this.dataStorageFactory },
 			...initialAttributes
 		);
 
 		this.skills = TraitFactory.newSkillTraitCollection(
-			{ dataStorageFactory: this.#dataStorageFactory },
+			{ dataStorageFactory: this.dataStorageFactory },
 			...initialSkills
 		);
 
 		this.disciplines = TraitFactory.newDisciplineTraitCollection(
-			{ dataStorageFactory: this.#dataStorageFactory },
+			{ dataStorageFactory: this.dataStorageFactory },
 			...initialDisciplines
 		);
 
 		this.touchstonesAndConvictions = TraitFactory.newTouchstonesAndConvictionTraitCollection(
-			{ dataStorageFactory: this.#dataStorageFactory },
+			{ dataStorageFactory: this.dataStorageFactory },
 			...initialTouchstonesAndConvictions
 		);
 
