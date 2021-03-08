@@ -2,8 +2,7 @@ import path from 'path';
 import { iCharacterSheet } from '../../../declarations/interfaces/character-sheet-interfaces';
 import { iLocalFileTraitDataStorageProps } from '../../../declarations/interfaces/data-storage-interfaces';
 import { TraitValueTypeUnion, TraitNameUnionOrString } from '../../../declarations/types';
-import saveCharacterSheetToFile from '../../../utils/saveCharacterSheetToFile';
-import AbstractTraitDataStorage from '../AbstractTraitDataStorage';
+import saveCharacterSheetToFile from '../../../utils/saveCharacterSheetToFile'; 
 import InMemoryTraitDataStorage from '../InMemory/InMemoryTraitDataStorage';
 
 export default class LocalFileTraitDataStorage<

@@ -1,24 +1,18 @@
 import { throws } from 'node:assert';
 import { iInMemoryTraitDataStorageProps } from '../../../declarations/interfaces/data-storage-interfaces';
 import { TraitValueTypeUnion, TraitNameUnionOrString } from '../../../declarations/types';
-import AbstractTraitDataStorage from '../AbstractTraitDataStorage';
 
 // ? does this need to be a separate interface
 interface iPrivateModifiableProperties<V extends TraitValueTypeUnion> {
 	value: V;
 }
 
-export default class InMemoryTraitDataStorage<
-	N extends TraitNameUnionOrString,
-	V extends TraitValueTypeUnion
-> extends AbstractTraitDataStorage<N, V> {
+export default class InMemoryTraitDataStorage<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion> {
 	#private: iPrivateModifiableProperties<V>;
 
 	readonly name: N;
 
 	constructor(props: iInMemoryTraitDataStorageProps<N, V>) {
-		super();
-
 		const { name, defaultValueIfNotDefined } = props;
 
 		this.name = name;
@@ -42,7 +36,7 @@ export default class InMemoryTraitDataStorage<
 		// update internal value
 		this.#private.value = newValue;
 
-		this.save()
+		this.save();
 	}
 
 	protected save(): boolean {

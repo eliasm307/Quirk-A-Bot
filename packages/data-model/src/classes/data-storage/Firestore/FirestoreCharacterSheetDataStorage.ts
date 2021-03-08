@@ -1,4 +1,3 @@
-import { firestore } from 'firebase/app';
 import { Firestore } from './../../../utils/firebase';
 import path from 'path';
 import { iCharacterSheetData } from '../../../declarations/interfaces/character-sheet-interfaces';
@@ -30,7 +29,11 @@ export default class FirestoreCharacterSheetDataStorage implements iCharacterShe
 	}
 
 	exists(): boolean {
-		return this.firestore.collection(this.#characterSheetCollectionName).doc(this.id).get().then();
+		return this.firestore
+			.collection(this.#characterSheetCollectionName)
+			.doc(this.id)
+			.get()
+			.then();
 	}
 	initialise(): boolean {
 		return saveCharacterSheetToFile(CharacterSheet.newDataObject({ id: this.id }), this.resolvedFilePath);

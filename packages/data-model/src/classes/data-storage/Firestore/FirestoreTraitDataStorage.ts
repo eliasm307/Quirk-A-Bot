@@ -2,18 +2,15 @@ import path from 'path';
 import { iCharacterSheet } from '../../../declarations/interfaces/character-sheet-interfaces';
 import { iFirestoreTraitDataStorageProps } from '../../../declarations/interfaces/data-storage-interfaces';
 import { TraitValueTypeUnion, TraitNameUnionOrString } from '../../../declarations/types';
-import saveCharacterSheetToFile from '../../../utils/saveCharacterSheetToFile';
-import AbstractTraitDataStorage from '../AbstractTraitDataStorage';
+import saveCharacterSheetToFile from '../../../utils/saveCharacterSheetToFile'; 
 import InMemoryTraitDataStorage from '../InMemory/InMemoryTraitDataStorage';
 
 export default class FirestoreTraitDataStorage<
 	N extends TraitNameUnionOrString,
-	V extends TraitValueTypeUnion
-> extends InMemoryTraitDataStorage<N, V> {
+	V extends TraitValueTypeUnion  {
 	#characterSheet: iCharacterSheet;
 	#resolvedBasePath: string;
-	constructor(props: iFirestoreTraitDataStorageProps<N, V>) {
-		super(props);
+	constructor(props: iFirestoreTraitDataStorageProps<N, V>) { 
 		const { characterSheet, name, defaultValueIfNotDefined, resolvedBasePath } = props;
 		this.#characterSheet = characterSheet;
 		this.#resolvedBasePath = resolvedBasePath;
