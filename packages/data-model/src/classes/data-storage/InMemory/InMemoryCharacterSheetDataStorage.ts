@@ -23,6 +23,6 @@ export default class InMemoryCharacterSheetDataStorage implements iCharacterShee
 			  });
 	}
 	getData(): iCharacterSheetData {
-		return CharacterSheet.newData({ id: this.id });
+		return CharacterSheet.newDataObject({ id: this.id });
 	}
 }

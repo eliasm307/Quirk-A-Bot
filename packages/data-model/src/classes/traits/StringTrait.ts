@@ -1,3 +1,4 @@
+import { iCharacterSheet } from './../../declarations/interfaces/character-sheet-interfaces';
 import { iStringTraitData } from './../../declarations/interfaces/trait-interfaces';
 import { iBaseStringTrait, iStringTraitProps } from '../../declarations/interfaces/trait-interfaces';
 import { TraitNameUnion, TraitNameUnionOrString } from '../../declarations/types';
@@ -18,6 +19,8 @@ export default class StringTrait<N extends TraitNameUnionOrString, V extends str
 			traitDataStorageInitialiser,
 		});
 	}
+
+	
 
 	/** Only allows setting non-empty strings */
 	newValueIsValid(newVal: string): boolean {

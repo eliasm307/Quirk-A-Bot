@@ -21,7 +21,7 @@ export default class LocalFileTraitDataStorage<
 	}
 	protected save(): boolean {
 
-		const resolvedPath = path.resolve( `../../../data/character-sheets/${ this.#characterSheet.discordUserId }.json` )
+		const resolvedPath = path.resolve( `../../../data/character-sheets/${ this.#characterSheet.id }.json` )
 		
 		console.log(__filename, "Save",  {resolvedPath, characterSheet: this.#characterSheet})
 

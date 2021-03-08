@@ -2,6 +2,7 @@ import {
 	iCharacterSheetDataStorage,
 	iLocalFileDataStorageFactoryProps,
 	iHasCharacterSheet,
+	iHasId,
 } from './../../../declarations/interfaces/data-storage-interfaces';
 import { TraitValueTypeUnion } from '../../../declarations/types';
 import {
@@ -76,32 +77,33 @@ export default class LocalFileDataStorageFactory extends AbstractDataStorageFact
 
 		console.warn(`Local file data storage initialised successfully for id ${id}`);*/
 	}
-	newCharacterSheetDataStorage(): iCharacterSheetDataStorage {
-	 return new LocalFileCharacterSheetDataStorage()
+	newCharacterSheetDataStorage({ id }: iHasId): iCharacterSheetDataStorage {
+		return new LocalFileCharacterSheetDataStorage({ id, dataStorageFactory: this });
 	}
+	/*
 	newTraitCollectionDataStorage<
 		N extends string,
 		V extends TraitValueTypeUnion,
 		D extends iTraitData<N, V>,
 		T extends iBaseTrait<N, V, D>
 	>(props: iBaseTraitCollectionDataStorageProps<N, V, D, T>): iTraitCollectionDataStorage<N, V, D, T> {
-		return new LocalFileTraitCollectionDataStorage({ ...props, characterSheet: this.characterSheet });
-	}
+		return new LocalFileTraitCollectionDataStorage({ ...props });
+	}*/
 
-	newTraitDataStorageInitialiser<N extends string, V extends TraitValueTypeUnion>(): (
+	newTraitDataStorageInitialiser( {characterSheet }: iHasCharacterSheet): <N extends string, V extends TraitValueTypeUnion>(
 		props: iBaseTraitDataStorageProps<N, V>
 	) => iTraitDataStorage<N, V> {
-		return props => new LocalFileTraitDataStorage({ ...props, characterSheet: this.characterSheet });
+		return props => new LocalFileTraitDataStorage({ ...props, characterSheet  });
 	}
 
-	newTraitCollectionDataStorageInitialiser<
+	newTraitCollectionDataStorageInitialiser({
+		characterSheet,
+	}: iHasCharacterSheet): <
 		N extends string,
 		V extends TraitValueTypeUnion,
 		D extends iTraitData<N, V>,
 		T extends iBaseTrait<N, V, D>
-	>({
-		characterSheet,
-	}: iHasCharacterSheet): (
+	>(
 		props: iBaseTraitCollectionDataStorageProps<N, V, D, T>
 	) => iTraitCollectionDataStorage<N, V, D, T> {
 		return props => new LocalFileTraitCollectionDataStorage({ ...props, characterSheet });

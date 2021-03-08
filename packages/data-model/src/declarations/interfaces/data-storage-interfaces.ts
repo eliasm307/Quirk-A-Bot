@@ -110,7 +110,9 @@ export interface iDataStorageFactory {
 
 	newTraitDataStorageInitialiser(
 		props: iHasCharacterSheet
-	): <N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(props: iBaseTraitDataStorageProps<N, V>) => iTraitDataStorage<N, V>;
+	): <N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(
+		props: iBaseTraitDataStorageProps<N, V>
+	) => iTraitDataStorage<N, V>;
 
 	newTraitCollectionDataStorageInitialiser(
 		props: iHasCharacterSheet
@@ -122,7 +124,7 @@ export interface iDataStorageFactory {
 	>(
 		props: iBaseTraitCollectionDataStorageProps<N, V, D, T>
 	) => iTraitCollectionDataStorage<N, V, D, T>;
-
+	/*
 	newTraitCollectionDataStorage<
 		N extends TraitNameUnionOrString,
 		V extends TraitValueTypeUnion,
@@ -131,6 +133,7 @@ export interface iDataStorageFactory {
 	>(
 		props: iBaseTraitCollectionDataStorageProps<N, V, D, T>
 	): iTraitCollectionDataStorage<N, V, D, T>;
+	*/
 
 	newCharacterSheetDataStorage(props: iHasId): iCharacterSheetDataStorage;
 }

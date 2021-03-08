@@ -1,5 +1,6 @@
 import { iHasNewValue } from '../../declarations/interfaces/general-interfaces';
 import { iBaseLogEventProps, iAddLogEvent, iAddLogEventProps } from '../../declarations/interfaces/log-interfaces';
+import CharacterSheet from '../CharacterSheet';
 import BaseLogEvent from './BaseLogEvent';
 
 
@@ -12,5 +13,8 @@ export default class AddLogEvent<T> extends BaseLogEvent<T> implements iAddLogEv
 	}
 	describe(): string {
 		return `${this.property} added with inital value of ${this.newValue}`;
+	
 	}
+
+	
 }

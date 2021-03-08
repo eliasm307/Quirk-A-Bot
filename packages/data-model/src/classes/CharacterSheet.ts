@@ -1,4 +1,8 @@
-import { iDataStorageFactory, iHasId } from './../declarations/interfaces/data-storage-interfaces';
+import {
+	iDataStorageFactory,
+	iHasId,
+	iCharacterSheetDataStorage,
+} from './../declarations/interfaces/data-storage-interfaces';
 import { iCharacterSheet } from './../declarations/interfaces/character-sheet-interfaces';
 import { iLogReport } from './../declarations/interfaces/log-interfaces';
 import {
@@ -40,18 +44,18 @@ interface iLoadFromFileArgs {
 // todo split this into smaller pieces
 
 export default class CharacterSheet implements iCharacterSheet {
-	readonly discordUserId: string;
+	readonly id: string;
 
 	//-------------------------------------
 	// private properties with custom setters and/or getters
 
 	/** Existing instances of this class */
-	static instances: Map<string, iCharacterSheet> = new Map<string, iCharacterSheet>();
+	protected static instances: Map<string, CharacterSheet> = new Map<string, CharacterSheet>();
 
 	// #private: iModifiablePrimitiveProperties;
 	// #logEvents: iLogCollection = new LogCollection();
-	#savePath: string; // specified in constructor
-	dataStorageFactory: iDataStorageFactory;
+	// #savePath: string; // specified in constructor
+	#dataStorageFactory: iDataStorageFactory;
 
 	//-------------------------------------
 	// NON BASIC PRIMITIVE VARIABLES
@@ -68,10 +72,21 @@ export default class CharacterSheet implements iCharacterSheet {
 	readonly humanity: iCoreNumberTrait;
 	readonly bloodPotency: iCoreNumberTrait;
 
+	// SINGLETON CONSTRUCTOR
+	static load(props: iCharacterSheetProps): CharacterSheet {
+		return CharacterSheet.instances.get(props.id) || new CharacterSheet(props);
+	}
+
 	//-------------------------------------
 	// CONSTRUCTOR
-	constructor({ characterSheetData: sheet, dataStorageFactory, customSavePath }: iCharacterSheetProps) {
-		this.dataStorageFactory = dataStorageFactory;
+	private constructor({ id, dataStorageFactory }: iCharacterSheetProps) {
+		this.#dataStorageFactory = dataStorageFactory;
+
+		const characterSheetDataStorage = dataStorageFactory.newCharacterSheetDataStorage({ id });
+
+		const initialData = characterSheetDataStorage.getData();
+		if (!isCharacterSheetData(initialData))
+			throw Error(`${__filename} data is an object but it is not valid character sheet data, "${initialData}"`);
 
 		const traitDataStorageInitialiser = dataStorageFactory.newTraitDataStorageInitialiser({
 			characterSheet: this,
@@ -82,7 +97,7 @@ export default class CharacterSheet implements iCharacterSheet {
 		});
 
 		// todo instantiate factory here and pass id in which is used to instantiate a CharacterSheetDataStorage object which then provides the character sheet data to initialise everything else
-
+		/*
 		let initialAttributes: iAttributeData[] = [];
 		let initialDisciplines: iDisciplineData[] = [];
 		let initialSkills: iSkillData[] = [];
@@ -90,119 +105,114 @@ export default class CharacterSheet implements iCharacterSheet {
 
 		// initialise with default values
 		let initialValues: iCharacterSheetData | null = null;
+ */
 
-		// function to save this character sheet
-		// const saveAction = () => this.saveToFile(this.toJson(), this.#savePath);
+		/*
+		{
+			const { attributes, disciplines, skills, touchstonesAndConvictions } = initialData;
 
-		if (typeof sheet === 'number') {
-			this.discordUserId = sheet;
-			// initialValues.discordUserId = this.discordUserId;
-			// initialValues = TraitFactory.newCharacterSheetDataObject( { saveAction });
-		} else if (typeof sheet === 'object') {
-			if (isCharacterSheetData(sheet)) {
-				const { attributes, disciplines, skills, touchstonesAndConvictions } = sheet;
-
-				// initialise using input details
-				this.discordUserId = sheet.discordUserId;
-				initialValues = sheet;
-				initialAttributes = [...attributes];
-				initialDisciplines = [...disciplines];
-				initialSkills = [...skills];
-				initialTouchstonesAndConvictions = [...touchstonesAndConvictions];
-			} else {
-				// console.error(__filename, { sheet });
-				throw Error(`${__filename} data is an object but it is not valid character sheet data, "${sheet}"`);
-			}
+			// initialise using input details
+			this.discordUserId = initialData.discordUserId;
+			initialValues = initialData;
+			initialAttributes = [...attributes];
+			initialDisciplines = [...disciplines];
+			initialSkills = [...skills];
+			initialTouchstonesAndConvictions = [...touchstonesAndConvictions];
 		} else {
-			throw Error(`${__filename} constructor argument not defined`);
-		}
+			// console.error(__filename, { sheet });
+			throw Error(`${__filename} data is an object but it is not valid character sheet data, "${initialData}"`);
+		}*/
+
+		this.id = id;
 
 		// core number traits
 		this.bloodPotency = new NumberTrait<CoreNumberTraitName>({
 			max: 10,
 			name: 'Blood Potency',
-			value: initialValues?.bloodPotency.value || 0,
+			value: initialData.bloodPotency.value || 0,
 			traitDataStorageInitialiser,
 		});
 
 		this.hunger = new NumberTrait<CoreNumberTraitName>({
 			max: 5,
 			name: 'Hunger',
-			value: initialValues?.hunger.value || 0,
+			value: initialData.hunger.value || 0,
 			traitDataStorageInitialiser,
 		});
 
 		this.humanity = new NumberTrait<CoreNumberTraitName>({
 			max: 10,
 			name: 'Humanity',
-			value: initialValues?.humanity.value || 0,
+			value: initialData.humanity.value || 0,
 			traitDataStorageInitialiser,
 		});
 
 		this.health = new NumberTrait<CoreNumberTraitName>({
 			max: 10,
 			name: 'Health',
-			value: initialValues?.health.value || 0,
+			value: initialData.health.value || 0,
 			traitDataStorageInitialiser,
 		});
 
 		this.willpower = new NumberTrait<CoreNumberTraitName>({
 			max: 10,
 			name: 'Willpower',
-			value: initialValues?.willpower.value || 0,
+			value: initialData.willpower.value || 0,
 			traitDataStorageInitialiser,
 		});
 
 		// core string traits
 		this.name = new StringTrait<CoreStringTraitName, string>({
 			name: 'Name',
-			value: initialValues?.name.value || 'TBC',
+			value: initialData.name.value || 'TBC',
 			traitDataStorageInitialiser,
 		});
 
 		this.sire = new StringTrait<CoreStringTraitName, string>({
 			name: 'Sire',
-			value: initialValues?.sire.value || 'TBC',
+			value: initialData.sire.value || 'TBC',
 			traitDataStorageInitialiser,
 		});
 
 		this.clan = new StringTrait<CoreStringTraitName, ClanName>({
 			name: 'Clan',
-			value: initialValues?.clan.value || 'TBC',
+			value: initialData.clan.value || 'TBC',
 			traitDataStorageInitialiser,
 		});
 
 		// create collections, with initial data where available
 		this.attributes = TraitFactory.newAttributeTraitCollection(
 			{ traitCollectionDataStorageInitialiser, traitDataStorageInitialiser },
-			...initialAttributes
+			...initialData.attributes
 		);
 
 		this.skills = TraitFactory.newSkillTraitCollection(
 			{ traitCollectionDataStorageInitialiser, traitDataStorageInitialiser },
-			...initialSkills
+			...initialData.skills
 		);
 
 		this.disciplines = TraitFactory.newDisciplineTraitCollection(
 			{ traitCollectionDataStorageInitialiser, traitDataStorageInitialiser },
-			...initialDisciplines
+			...initialData.disciplines
 		);
 
 		this.touchstonesAndConvictions = TraitFactory.newTouchstonesAndConvictionTraitCollection(
 			{ traitCollectionDataStorageInitialiser, traitDataStorageInitialiser },
-			...initialTouchstonesAndConvictions
+			...initialData.touchstonesAndConvictions
 		);
 
 		// todo this shouldnt be here, should be in a data storage object
 		// try using resolved custom path, otherwise create path in general location using the user id
+		/*
 		this.#savePath =
 			(customSavePath ? path.resolve(customSavePath) : '') ||
-			path.resolve(__dirname, `../data/character-sheets/${this.discordUserId}.json`);
+			path.resolve( __dirname, `../data/character-sheets/${ this.discordUserId }.json` );
+		*/
 
 		// ? should this be in a data storage object
 		// record this instance
-		CharacterSheet.instances.set(this.discordUserId, this);
-		CharacterSheet.instances.set(this.#savePath, this);
+		CharacterSheet.instances.set(id, this);
+		// CharacterSheet.instances.set(this.#savePath, this);
 
 		// ? is this required?
 		// if only user id was provided, assume this is a new sheet then do initial save so a persistent file exists
@@ -255,7 +265,7 @@ export default class CharacterSheet implements iCharacterSheet {
 
 	public toJson(): iCharacterSheetData {
 		const data: iCharacterSheetData = {
-			discordUserId: this.discordUserId,
+			id: this.id,
 
 			// trait collections
 			attributes: this.attributes.toJson(),
@@ -320,9 +330,9 @@ export default class CharacterSheet implements iCharacterSheet {
 			});
 	}
 
-	static newData({ id }: iHasId): iCharacterSheetData {
+	static newDataObject({ id }: iHasId): iCharacterSheetData {
 		return {
-			discordUserId: id,
+			id: id,
 			bloodPotency: { name: 'Blood Potency', value: 0 },
 			health: { name: 'Health', value: 0 },
 			humanity: { name: 'Humanity', value: 0 },

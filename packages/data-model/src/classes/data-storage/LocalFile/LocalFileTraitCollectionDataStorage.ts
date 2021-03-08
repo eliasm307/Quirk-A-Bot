@@ -24,7 +24,7 @@ export default class LocalFileTraitCollectionDataStorage<
 		// save if available
 		return saveCharacterSheetToFile(
 			this.#characterSheet.toJson(),
-			path.resolve(`../../../data/character-sheets/${this.#characterSheet.discordUserId}.json`)
+			path.resolve(`../../../data/character-sheets/${this.#characterSheet.id}.json`)
 		);
 	}
 }

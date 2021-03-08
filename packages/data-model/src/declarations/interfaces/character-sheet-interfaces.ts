@@ -22,14 +22,13 @@ import { iToJson } from './general-interfaces';
 import { iDataStorageFactory } from './data-storage-interfaces';
 
 export interface iCharacterSheetProps {
-	characterSheetData: iCharacterSheetData;
-	dataStorageFactory:   iDataStorageFactory;
-	customSavePath?: string;
+	id: string;
+	dataStorageFactory: iDataStorageFactory;
 }
 
 /** The basic shape of a charactersheet */
 export interface iBaseCharacterSheet {
-	readonly discordUserId: string;
+	readonly id: string;
 	// todo add user aliases (ie known discord names to be added by bot)
 	name: any;
 	clan: any;
@@ -63,7 +62,7 @@ export interface iCharacterSheetData extends iBaseCharacterSheet {
 
 /** The shape of a character sheet object instance */
 export interface iCharacterSheet extends iBaseCharacterSheet, iToJson<iCharacterSheetData>, iLoggerCollection {
-	dataStorageFactory: iDataStorageFactory;
+	#dataStorageFactory: iDataStorageFactory;
 	name: iCoreStringTrait<string>;
 	clan: iCoreStringTrait<ClanName>; // todo allow this to specify using ClanName type union
 	sire: iCoreStringTrait<string>;
