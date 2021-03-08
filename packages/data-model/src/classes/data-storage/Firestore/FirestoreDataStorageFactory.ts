@@ -12,19 +12,20 @@ import {
 	iDataStorageFactory,
 	iTraitCollectionDataStorage,
 	iTraitDataStorage,
-} from '../../../declarations/interfaces/data-storage-interfaces'; 
+} from '../../../declarations/interfaces/data-storage-interfaces';
 import { iTraitData, iBaseTrait } from '../../../declarations/interfaces/trait-interfaces';
+import { Firestore } from '../../../utils/firebase';
 export default class FirestoreDataStorageFactory implements iDataStorageFactory {
-	#resolvedBasePath: string;
+	#firestore: Firestore;
 
-	constructor({ resolvedBasePath }: iFirestoreDataStorageFactoryProps) {
-		this.#resolvedBasePath = resolvedBasePath;
+	constructor({ firestore }: iFirestoreDataStorageFactoryProps) {
+		this.#firestore = firestore;
 	}
 	newCharacterSheetDataStorage({ id }: iHasId): iCharacterSheetDataStorage {
 		return new FirestoreCharacterSheetDataStorage({
 			id,
 			dataStorageFactory: this,
-			resolvedBasePath: this.#resolvedBasePath,
+			firestore: this.#firestore,
 		});
 	}
 
@@ -33,8 +34,7 @@ export default class FirestoreDataStorageFactory implements iDataStorageFactory 
 	}: iTraitDataStorageInitialiserProps): <N extends string, V extends TraitValueTypeUnion>(
 		props: iBaseTraitDataStorageProps<N, V>
 	) => iTraitDataStorage<N, V> {
-		return props =>
-			new FirestoreTraitDataStorage({ ...props, characterSheet, resolvedBasePath: this.#resolvedBasePath });
+		return props => new FirestoreTraitDataStorage({ ...props, characterSheet, firestore: this.#firestore });
 	}
 
 	newTraitCollectionDataStorageInitialiser({
@@ -47,6 +47,6 @@ export default class FirestoreDataStorageFactory implements iDataStorageFactory 
 	>(
 		props: iBaseTraitCollectionDataStorageProps<N, V, D, T>
 	) => iTraitCollectionDataStorage<N, V, D, T> {
-		return props => new FirestoreTraitCollectionDataStorage({ ...props, characterSheet });
+		return props => new FirestoreTraitCollectionDataStorage({ ...props, characterSheet, firestore: this.#firestore });
 	}
 }

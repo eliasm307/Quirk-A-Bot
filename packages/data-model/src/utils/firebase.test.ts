@@ -40,7 +40,11 @@ describe('firestore emulator', () => {
 		).resolves.toBeGreaterThanOrEqual(1);
 	});
 
-	it('can detect changes to firestore collections', () => {});
+	it( 'can detect changes to firestore collections', () => { } );
+	
+	it( 'can test if firestore collections exist', async () => {
+		firestoreEmulator.collection(`${testCollectionName}WhichDoesntExist`).
+	});
 
 	it('can delete items from firestore collections', async () => {
 		expect.assertions(1);

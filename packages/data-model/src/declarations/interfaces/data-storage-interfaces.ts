@@ -61,10 +61,15 @@ export interface iBaseTraitDataStorageProps<N extends TraitNameUnionOrString, V 
 export interface iInMemoryTraitDataStorageProps<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
 	extends iBaseTraitDataStorageProps<N, V> {}
 
-export interface iLocalTraitDataStorageProps<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
+export interface iLocalFileTraitDataStorageProps<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
 	extends iBaseTraitDataStorageProps<N, V>,
 		iHasCharacterSheet,
 		iHasResolvedBasePath {}
+
+export interface iFirestoreTraitDataStorageProps<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
+	extends iBaseTraitDataStorageProps<N, V>,
+		iHasCharacterSheet,
+		iHasFirestore {}
 
 // -------------------------------------------------------
 // TRAIT COLLECTION DATA STORAGE PROPS
@@ -95,6 +100,9 @@ export interface iBaseCharacterSheetDataStorageProps extends iHasId, iHasDataSto
 export interface iLocalFileCharacterSheetDataStorageProps
 	extends iBaseCharacterSheetDataStorageProps,
 		iHasResolvedBasePath {}
+
+export interface iFirestoreCharacterSheetDataStorageProps extends iBaseCharacterSheetDataStorageProps, iHasFirestore {}
+
 // -------------------------------------------------------
 // DATA STORAGE OBJECTS
 
