@@ -16,10 +16,21 @@ test('Test rounding on instantiation and modification', () => {
 		name: 'test',
 		value: 5.8,
 		traitDataStorageInitialiser,
-	});
+	} );
+	
+	// test rounding at initialisation
 	expect(trait.value).toEqual(5);
 	expect(trait2.value).toEqual(6);
 
+	// test round up on modification
 	trait.value = 0.5;
-	expect(trait.value).toEqual(1);
+	expect( trait.value ).toEqual( 1 );
+	
+	// test round down on modification
+	trait.value = 0.4;
+	expect( trait.value ).toEqual( 0 );
+	
+	// make sure trait logs are good
+	expect( trait.getLogEvents().length ).toEqual( 3 );
+	
 });
