@@ -1,3 +1,4 @@
+import { Firestore } from './../../utils/firebase';
 import { iBaseCollection, iToJson, iHasDataStorageFactory } from './general-interfaces';
 import { iCharacterSheet, iCharacterSheetData, iBaseCharacterSheet } from './character-sheet-interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from './../types';
@@ -23,6 +24,10 @@ export interface iHasResolvedBasePath {
 	resolvedBasePath: string;
 }
 
+export interface iHasFirestore {
+	firestore: Firestore;
+}
+
 // -------------------------------------------------------
 // DATA STORAGE FACTORY PROPS
 // Note the props should be for initialising the data storage
@@ -33,6 +38,8 @@ export interface iInMemoryFileDataStorageFactoryProps {}
 
 export interface iLocalFileDataStorageFactoryProps extends iHasResolvedBasePath {}
 
+export interface iFirestoreDataStorageFactoryProps extends iHasFirestore {}
+
 // -------------------------------------------------------
 // DATA STORAGE INSTANTIATOR PROPS
 // Note the props should be the minimal required to instantiate the required object, they should be consistent for all factory classes as these are what the client will interact with
@@ -40,6 +47,8 @@ export interface iLocalFileDataStorageFactoryProps extends iHasResolvedBasePath 
 // todo implement these for instantiator props
 
 export interface iCharacterSheetDataStorageInstantiatorProps extends iHasId {}
+export interface iTraitDataStorageInitialiserProps extends iHasCharacterSheet {}
+export interface iTraitCollectionDataStorageInitialiserProps extends iHasCharacterSheet {}
 
 // -------------------------------------------------------
 // TRAIT DATA STORAGE PROPS
@@ -122,13 +131,13 @@ export interface iDataStorageFactory {
 	// ? do data storage objects need to use N V generics? user wont interact with these directly
 
 	newTraitDataStorageInitialiser(
-		props: iHasCharacterSheet
+		props: iTraitDataStorageInitialiserProps
 	): <N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(
 		props: iBaseTraitDataStorageProps<N, V>
 	) => iTraitDataStorage<N, V>;
 
 	newTraitCollectionDataStorageInitialiser(
-		props: iHasCharacterSheet
+		props: iTraitCollectionDataStorageInitialiserProps
 	): <
 		N extends TraitNameUnionOrString,
 		V extends TraitValueTypeUnion,

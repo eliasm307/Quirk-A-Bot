@@ -70,8 +70,9 @@ export function isFirestoreEmulatorRunning() {
 	return urlExistSync('http://localhost:4000/firestore');
 }
 
+// ? is a deep recursive delete util required?
 // from https://firebase.google.com/docs/firestore/manage-data/delete-data
-export async function deleteDocumentsCompletely(query: firebase.firestore.Query) {
+async function deleteDocumentsCompletely(query: firebase.firestore.Query) {
 	return new Promise((resolve, reject) => {
 		deleteQueryBatch(query, resolve).catch(reject);
 	});
@@ -100,3 +101,6 @@ async function deleteQueryBatch(query: firebase.firestore.Query, resolve: (value
 		deleteQueryBatch(query, resolve);
 	});
 }
+
+// firebase types
+export interface Firestore extends firebase.firestore.Firestore { }
