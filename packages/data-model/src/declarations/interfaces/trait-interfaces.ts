@@ -1,11 +1,5 @@
 import {
-	iTraitDataStorage,
-	iBaseTraitDataStorageProps,
-	iDataStorageFactory,
 	iHasTraitDataStorageInitialiser,
-	iTraitCollectionDataStorage,
-	iBaseTraitCollectionDataStorageProps,
-	iHasTraitCollectionDataStorageInitialiser,
 	iTraitCollectionDataStorageInitialiserBundle,
 } from './data-storage-interfaces';
 import {
@@ -18,7 +12,7 @@ import {
 	CoreNumberTraitName,
 	AttributeCategory,
 } from '../types';
-import { iCanHaveSaveAction, iToJson, iHasDataStorageFactory } from './general-interfaces';
+import { iToJson } from './general-interfaces';
 import { iLoggerSingle } from './log-interfaces';
 
 export interface iHasCategorySelector<N extends string, C extends string> {

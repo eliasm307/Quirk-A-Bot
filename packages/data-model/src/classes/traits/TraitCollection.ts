@@ -20,14 +20,12 @@ export default class TraitCollection<
 	V extends TraitValueTypeUnion,
 	D extends iTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
-> implements iTraitCollection<N, V, D, T> {
-	#instanceCreator: (props: iBaseTraitProps<N, V, D>) => T;
+> implements iTraitCollection<N, V, D, T> { 
 	#traitDataStorageInitialiser: <N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(
 		props: iBaseTraitDataStorageProps<N, V>
 	) => iTraitDataStorage<N, V>;
 	#dataStorage: iTraitCollectionDataStorage<N, V, D, T>;
-	name: string;
-	// #map: Map<N, T>;
+	name: string; 
 
 	/** Collection of logs for trait collection, ie add and remove events only (update events are held in traits) */
 	protected logs: iLogCollection;
@@ -42,8 +40,7 @@ export default class TraitCollection<
 		}: iTraitCollectionProps<N, V, D, T>,
 		...initialData: D[]
 	) {
-		this.name = name;
-		this.#instanceCreator = instanceCreator;
+		this.name = name; 
 		this.#traitDataStorageInitialiser = traitDataStorageInitialiser; // todo, reuse this function instead of making a new one each time
 		this.logs = new LogCollection({ sourceName: name, sourceType: 'Trait Collection' });
 
@@ -55,21 +52,6 @@ export default class TraitCollection<
 			onAdd: (props: iAddLogEventProps<V>) => this.logs.log(new AddLogEvent(props)),
 			onDelete: (props: iDeleteLogEventProps<V>) => this.logs.log(new DeleteLogEvent(props)),
 		});
-
-		// todo delete comments
-		// todo this should be moved to trait collection data storage
-		/*
-		this.#map = new Map<N, T>(
-			initialData.map(({ name, value }) => [
-				name,
-				instanceCreator({
-					name,
-					value,
-					traitDataStorageInitialiser: this.#traitDataStorageInitialiser,
-				}),
-			])
-		);
-		*/
 	}
 
 	toArray(): T[] {
@@ -95,19 +77,7 @@ export default class TraitCollection<
 		return this.#dataStorage.get(name);
 	}
 	delete(name: N): void {
-		// todo delete comments
-		// const oldValue = this.#dataStorage.get(name);
-		// const property = name;
-
-		// apply change
 		this.#dataStorage.delete(name);
-
-		// log change
-		// this.#logs.log(new DeleteLogEvent({ oldValue, property }));
-
-		// todo this should be done in trait collection data storage
-		// autosave if save is available
-		// if (this.saveAction) this.saveAction();
 	}
 	has(name: N): boolean {
 		return this.#dataStorage.has(name);
@@ -118,42 +88,7 @@ export default class TraitCollection<
 	 * @param name name of trait to edit or create
 	 * @param newValue value to assign
 	 */
-	set(name: N, newValue: V): void {
-		// todo delete comments
-		// todo this should have logging for modification or creation
+	set(name: N, newValue: V): void { 
 		this.#dataStorage.set(name, newValue);
-		// if trait already exists then just update it
-		/*
-		if (this.#map.has(name)) {
-			const instance = this.#map.get(name);
-
-			if (!instance)
-				return console.error(__filename, `${this.#typeName} with name '${name}' is not defined but key exists`);
-
-			const oldValue = instance.value;
-
-			// apply change
-			instance.value = newValue;
-
-			// the instance logs changes internally
-			// this.#logs.log(new UpdateLogEvent({ newValue, oldValue, property: name }));
-		} else {
-			// add new trait instance
-			this.#map.set(
-				name,
-				this.#instanceCreator({
-					name,
-					value: newValue,
-					traitDataStorageInitialiser: this.#traitDataStorageInitialiser,
-				})
-			);
-
-			// log change
-			
-		}*/
-
-		// todo this should be done in trait collection data storage
-		// autosave if save available
-		// if (this.saveAction) this.saveAction();
 	}
 }

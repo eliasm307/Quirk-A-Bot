@@ -1,7 +1,7 @@
-import { AttributeName, SkillName, DisciplineName, CoreStringTraitName, CoreNumberTraitName } from './../types';
+import { AttributeName, SkillName, DisciplineName } from './../types';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../types';
 import { iBaseCollection, iToJson } from './general-interfaces';
-import { iLoggerSingle, iLoggerCollection } from './log-interfaces';
+import { iLoggerCollection } from './log-interfaces';
 import {
 	iAttribute,
 	iBaseTrait,
@@ -13,12 +13,6 @@ import {
 	iDisciplineData,
 	iSkillData,
 	iTouchStoneOrConvictionData,
-	iBaseStringTrait,
-	iStringTraitData,
-	iCoreStringTraitData,
-	iCoreStringTrait,
-	iCoreNumberTrait,
-	iCoreNumberTraitData,
 	iGeneralTraitData,
 	iGeneralTrait,
 } from './trait-interfaces';

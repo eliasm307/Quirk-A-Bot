@@ -15,8 +15,7 @@ export default abstract class AbstractBaseTrait<
 	// #private: iPrivateModifiableProperties<V>;
 	// #characterSheet: iCharacterSheet;
 	#dataSorage: iTraitDataStorage<N, V>;
-	// todo logs should be #logs
-	logs: iLogCollection;
+	#logs: iLogCollection;
 	toJson: () => D;
 	readonly name: N;
 
@@ -32,7 +31,7 @@ export default abstract class AbstractBaseTrait<
 
 		if (!toJson) throw Error(`${__filename} toJson function not defined`);
 		this.toJson = toJson;
-		this.logs = new LogCollection({ sourceType: 'Trait', sourceName: this.name });
+		this.#logs = new LogCollection({ sourceType: 'Trait', sourceName: this.name });
 
 		// todo this shouldnt overwrite existing values in data storage
 		// set initial value if specified
@@ -65,12 +64,12 @@ export default abstract class AbstractBaseTrait<
 		// implement property change
 		this.#dataSorage.value = newValue;
 
-		if (!this.logs) {
+		if (!this.#logs) {
 			console.error(__filename, `this.#logs is not defined`);
 		}
 
 		// log change
-		this.logs.log(new UpdateLogEvent({ newValue, oldValue, property: this.name }));
+		this.#logs.log(new UpdateLogEvent({ newValue, oldValue, property: this.name }));
 	}
 	public get value() {
 		return this.#dataSorage.value;
@@ -81,7 +80,7 @@ export default abstract class AbstractBaseTrait<
 	}
 
 	getLogReport(): iLogReport {
-		return this.logs.getReport();
+		return this.#logs.getReport();
 	}
 
 	protected abstract preProcessValue(newValueRaw: V): V;
