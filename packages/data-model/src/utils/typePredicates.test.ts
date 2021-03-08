@@ -29,7 +29,7 @@ test('Character sheet data predicate', () => {
 		disciplines: [],
 		skills: [],
 		touchstonesAndConvictions: [],
-		discordUserId: 0,
+		id: '0',
 		bloodPotency: { name: 'Blood Potency', value: 2 },
 		clan: { name: 'Clan', value: 'clan' },
 		health: { name: 'Health', value: 2 },
@@ -37,13 +37,12 @@ test('Character sheet data predicate', () => {
 		hunger: { name: 'Hunger', value: 2 },
 		name: { name: 'Name', value: 'name' },
 		sire: { name: 'Sire', value: 'name' },
-    willpower: { name: 'Willpower', value: 2 },
-  
+		willpower: { name: 'Willpower', value: 2 },
 	};
 
 	// copy and invalidate good data
 	const badData1: any = { ...correctData, health: {} };
 
 	expect(isCharacterSheetData(correctData)).toBeTruthy();
-	expect(isCharacterSheetData(badData1)).toBeFalsy(); 
+	expect(isCharacterSheetData(badData1)).toBeFalsy();
 });

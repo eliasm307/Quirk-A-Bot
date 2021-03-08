@@ -1,0 +1,39 @@
+{
+  "discordUserId": 5,
+  "attributes": [],
+  "disciplines": [],
+  "skills": [],
+  "touchstonesAndConvictions": [],
+  "clan": {
+    "name": "Clan",
+    "value": "TBC"
+  },
+  "name": {
+    "name": "Name",
+    "value": "TBC"
+  },
+  "sire": {
+    "name": "Sire",
+    "value": "TBC"
+  },
+  "health": {
+    "name": "Health",
+    "value": 4
+  },
+  "humanity": {
+    "name": "Humanity",
+    "value": 0
+  },
+  "hunger": {
+    "name": "Hunger",
+    "value": 3
+  },
+  "bloodPotency": {
+    "name": "Blood Potency",
+    "value": 5
+  },
+  "willpower": {
+    "name": "Willpower",
+    "value": 0
+  }
+}

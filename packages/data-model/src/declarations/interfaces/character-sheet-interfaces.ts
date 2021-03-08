@@ -19,10 +19,16 @@ import {
 } from './trait-interfaces';
 import { ClanName, CoreNumberTraitName, CoreStringTraitName } from '../types';
 import { iToJson } from './general-interfaces';
+import { iDataStorageFactory } from './data-storage-interfaces';
+
+export interface iCharacterSheetProps {
+	id: string;
+	dataStorageFactory: iDataStorageFactory;
+}
 
 /** The basic shape of a charactersheet */
 export interface iBaseCharacterSheet {
-	readonly discordUserId: number;
+	readonly id: string;
 	// todo add user aliases (ie known discord names to be added by bot)
 	name: any;
 	clan: any;
@@ -55,7 +61,7 @@ export interface iCharacterSheetData extends iBaseCharacterSheet {
 }
 
 /** The shape of a character sheet object instance */
-export interface iCharacterSheet extends iBaseCharacterSheet, iToJson<iCharacterSheetData>, iLoggerCollection {
+export interface iCharacterSheet extends iBaseCharacterSheet, iToJson<iCharacterSheetData>, iLoggerCollection { 
 	name: iCoreStringTrait<string>;
 	clan: iCoreStringTrait<ClanName>; // todo allow this to specify using ClanName type union
 	sire: iCoreStringTrait<string>;

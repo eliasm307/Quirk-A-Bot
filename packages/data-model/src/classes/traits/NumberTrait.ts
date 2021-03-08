@@ -7,14 +7,13 @@ import AbstractNumberTrait from './AbstractNumberTrait';
 export default class NumberTrait<N extends TraitNameUnionOrString>
 	extends AbstractNumberTrait<N, iNumberTraitData<N>>
 	implements iNumberTrait<N> {
-	
 	// todo move toJson file to external utility?
 	constructor({
 		max,
 		name,
-		value = 0,
 		min = 0,
-		saveAction,
+		value = min,
+		traitDataStorageInitialiser,
 		toJson = () => ({
 			name: this.name,
 			value: this.value,
@@ -23,7 +22,7 @@ export default class NumberTrait<N extends TraitNameUnionOrString>
 		super({
 			name,
 			value,
-			saveAction,
+			traitDataStorageInitialiser,
 			toJson,
 			min,
 			max,

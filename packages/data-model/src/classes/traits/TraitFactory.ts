@@ -1,9 +1,13 @@
 import {
+	iHasTraitCollectionDataStorageInitialiser,
+	iTraitCollectionDataStorageInitialiserBundle,
+} from './../../declarations/interfaces/data-storage-interfaces';
+import {
 	iDisciplineTraitCollection,
 	iSkillTraitCollection,
 	iTouchStoneOrConvictionCollection,
 } from './../../declarations/interfaces/trait-collection-interfaces';
-import { iCanHaveSaveAction } from './../../declarations/interfaces/general-interfaces';
+import { iHasDataStorageFactory } from './../../declarations/interfaces/general-interfaces';
 import {
 	AttributeName,
 	AttributeCategory,
@@ -39,22 +43,44 @@ import { iAttributeTraitCollection } from '../../declarations/interfaces/trait-c
 
 export default abstract class TraitFactory {
 	// methods use base trait props as all other details should be selected to match the required trait type
-	static newStringTrait<V extends string>({ name, value, saveAction }: iStringTraitProps<TraitNameUnionOrString, V>) {
-		return new StringTrait({ name, value, saveAction });
+	static newStringTrait<V extends string>({
+		name,
+		value,
+		traitDataStorageInitialiser,
+	}: iStringTraitProps<TraitNameUnionOrString, V>) {
+		return new StringTrait({ name, value, traitDataStorageInitialiser });
 	}
-	static newNumberTrait({ name, value = 0, saveAction, max, min = 0 }: iNumberTraitProps<TraitNameUnionOrString>) {
-		return new NumberTrait({ name, value, saveAction, max, min });
+	static newNumberTrait({
+		name,
+		value = 0,
+		traitDataStorageInitialiser,
+		max,
+		min = 0,
+	}: iNumberTraitProps<TraitNameUnionOrString>) {
+		return new NumberTrait({ name, value, traitDataStorageInitialiser, max, min });
 	}
-	static newCoreStringTrait<V extends string>({ name, value, saveAction }: iStringTraitProps<CoreStringTraitName, V>) {
-		return new StringTrait({ name, value, saveAction });
+	static newCoreStringTrait<V extends string>({
+		name,
+		value,
+
+		traitDataStorageInitialiser,
+	}: iStringTraitProps<CoreStringTraitName, V>) {
+		return new StringTrait({ name, value, traitDataStorageInitialiser });
 	}
-	static newCoreNumberTrait({ name, value = 0, saveAction, max, min = 0 }: iNumberTraitProps<CoreNumberTraitName>) {
-		return new NumberTrait({ name, value, saveAction, max, min });
+	static newCoreNumberTrait({
+		name,
+		value = 0,
+		traitDataStorageInitialiser,
+		max,
+		min = 0,
+	}: iNumberTraitProps<CoreNumberTraitName>) {
+		return new NumberTrait({ name, value, traitDataStorageInitialiser, max, min });
 	}
 	static newAttributeTrait({
 		name,
 		value = 0,
-		saveAction,
+
+		traitDataStorageInitialiser,
 	}: iBaseTraitProps<AttributeName, number, iAttributeData>): iAttribute {
 		const props: iNumberTraitWithCategoryProps<AttributeName, AttributeCategory> = {
 			categorySelector: getAttributeCategory,
@@ -62,7 +88,7 @@ export default abstract class TraitFactory {
 			max: 5,
 			name,
 			value,
-			saveAction,
+			traitDataStorageInitialiser,
 		};
 
 		return new NumberTraitWithCategory(props);
@@ -71,26 +97,34 @@ export default abstract class TraitFactory {
 	static newDisciplineTrait({
 		name,
 		value = 0,
-		saveAction,
+
+		traitDataStorageInitialiser,
 	}: iBaseTraitProps<DisciplineName, number, iDisciplineData>): iDiscipline {
 		const props: iNumberTraitProps<DisciplineName> = {
 			min: 1,
 			max: 5,
 			name,
 			value,
-			saveAction,
+
+			traitDataStorageInitialiser,
 		};
 
 		return new NumberTrait(props);
 	}
 
-	static newSkillTrait({ name, value = 0, saveAction }: iBaseTraitProps<SkillName, number, iSkillData>): iSkill {
+	static newSkillTrait({
+		name,
+		value = 0,
+
+		traitDataStorageInitialiser,
+	}: iBaseTraitProps<SkillName, number, iSkillData>): iSkill {
 		const props: iNumberTraitProps<SkillName> = {
 			min: 0,
 			max: 5,
 			name,
 			value,
-			saveAction,
+
+			traitDataStorageInitialiser,
 		};
 
 		return new NumberTrait(props);
@@ -99,38 +133,42 @@ export default abstract class TraitFactory {
 	static newTouchStoneOrConvictionTrait({
 		name,
 		value,
-		saveAction,
+		traitDataStorageInitialiser,
 	}: iBaseTraitProps<string, string, iTouchStoneOrConvictionData>): iTouchStoneOrConviction {
 		const props: iStringTraitProps<string, string> = {
 			name,
 			value,
-			saveAction,
+
+			traitDataStorageInitialiser,
 		};
 
 		return new StringTrait(props);
 	}
 
 	static newAttributeTraitCollection(
-		props?: iCanHaveSaveAction,
+		props: iTraitCollectionDataStorageInitialiserBundle,
 		...initial: iAttributeData[]
 	): iAttributeTraitCollection {
-		const { saveAction } = props || {};
+		const {} = props || {};
 		return new TraitCollection<AttributeName, number, iAttributeData, iAttribute>(
 			{
+				...props,
 				name: `AttributeTraitCollection`,
-				saveAction,
 				instanceCreator: TraitFactory.newAttributeTrait,
 			},
 			...initial
 		);
 	}
 
-	static newSkillTraitCollection(props?: iCanHaveSaveAction, ...initial: iSkillData[]): iSkillTraitCollection {
-		const { saveAction } = props || {};
+	static newSkillTraitCollection(
+		props: iTraitCollectionDataStorageInitialiserBundle,
+		...initial: iSkillData[]
+	): iSkillTraitCollection {
+		const {} = props || {};
 		return new TraitCollection<SkillName, number, iSkillData, iSkill>(
 			{
+				...props,
 				name: `SkillTraitCollection`,
-				saveAction,
 				instanceCreator: TraitFactory.newSkillTrait,
 			},
 			...initial
@@ -138,14 +176,14 @@ export default abstract class TraitFactory {
 	}
 
 	static newDisciplineTraitCollection(
-		props?: iCanHaveSaveAction,
+		props: iTraitCollectionDataStorageInitialiserBundle,
 		...initial: iDisciplineData[]
 	): iDisciplineTraitCollection {
-		const { saveAction } = props || {};
+		const {} = props || {};
 		return new TraitCollection<DisciplineName, number, iDisciplineData, iDiscipline>(
 			{
+				...props,
 				name: `DisciplineTraitCollection`,
-				saveAction,
 				instanceCreator: TraitFactory.newDisciplineTrait,
 			},
 			...initial
@@ -153,42 +191,17 @@ export default abstract class TraitFactory {
 	}
 
 	static newTouchstonesAndConvictionTraitCollection(
-		props?: iCanHaveSaveAction,
+		props: iTraitCollectionDataStorageInitialiserBundle,
 		...initial: iTouchStoneOrConvictionData[]
 	): iTouchStoneOrConvictionCollection {
-		const { saveAction } = props || {};
+		const {} = props || {};
 		return new TraitCollection<string, string, iTouchStoneOrConvictionData, iTouchStoneOrConviction>(
 			{
+				...props,
 				name: `TouchstonesAndConvictionTraitCollection`,
-				saveAction,
 				instanceCreator: TraitFactory.newTouchStoneOrConvictionTrait,
 			},
 			...initial
 		);
-	}
-
- 
-	static newCharacterSheetDataObject(props?: iCanHaveSaveAction): iCharacterSheetData {
-		const saveAction = props?.saveAction;
-		return {
-			discordUserId: NaN,
-			bloodPotency: TraitFactory.newCoreNumberTrait({
-				max: 10,
-				name: 'Blood Potency',
-				value: 0,
-				saveAction,
-			}),
-			health: TraitFactory.newCoreNumberTrait({ max: 10, name: 'Health', value: 0, saveAction }),
-			humanity: TraitFactory.newCoreNumberTrait({ max: 10, name: 'Humanity', value: 0, saveAction }),
-			hunger: TraitFactory.newCoreNumberTrait({ max: 5, name: 'Hunger', value: 0, saveAction }),
-			willpower: TraitFactory.newCoreNumberTrait({ name: 'Willpower', value: 0, max: 10, saveAction }),
-			name: TraitFactory.newCoreStringTrait<string>({ name: 'Name', value: '', saveAction }),
-			sire: TraitFactory.newCoreStringTrait<string>({ name: 'Sire', value: '', saveAction }),
-			clan: TraitFactory.newCoreStringTrait<ClanName>({ name: 'Clan', value: '', saveAction }),
-			attributes: [],
-			disciplines: [],
-			skills: [],
-			touchstonesAndConvictions: [],
-		};
 	}
 }

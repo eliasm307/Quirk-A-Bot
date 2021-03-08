@@ -28,7 +28,7 @@ export function isCharacterSheetData(data: any): data is iCharacterSheetData {
 		bloodPotency,
 		clan,
 		disciplines,
-		discordUserId,
+		id,
 		health,
 		humanity,
 		hunger,
@@ -40,9 +40,9 @@ export function isCharacterSheetData(data: any): data is iCharacterSheetData {
 	} = data;
 
 	// check primitve values
-	if (typeof discordUserId !== 'number' && typeof discordUserId !== 'string') {
-		console.warn(`isCharacterSheetData, discordUserId is not a number or string, it is ${typeof discordUserId}`, {
-			discordUserId,
+	if (typeof id !== 'number' && typeof id !== 'string') {
+		console.warn(`isCharacterSheetData, id is not a number or string, it is ${typeof id}`, {
+			id,
 		});
 		return false;
 	}
@@ -81,10 +81,11 @@ export function isCharacterSheetData(data: any): data is iCharacterSheetData {
 		}
 		for (let traitData of tc) {
 			if (!isTraitData(traitData)) {
-				console.warn(
-					`isCharacterSheetData, item in trait collection is not a valid trait data, it is "${traitData}"`,
-					{ traitData, isTraitData: isTraitData(traitData), typeofValue: typeof traitData.value }
-				);
+				console.warn(`isCharacterSheetData, item in trait collection is not a valid trait data, it is "${traitData}"`, {
+					traitData,
+					isTraitData: isTraitData(traitData),
+					typeofValue: typeof traitData.value,
+				});
 				return false;
 			}
 		}
@@ -102,12 +103,14 @@ export function isTraitData(data: any): data is iGeneralTraitData {
 	if (typeof data === 'object' && nameExists && valueExists) {
 		return true;
 	}
+	/*
 	console.warn(`isTraitData, not trait data`, {
 		data,
 		typeofData: typeof data,
 		nameExists,
 		valueExists,
 	});
+	*/
 	return false;
 }
 
