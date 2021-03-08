@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 
 // Add the Firebase services that you want to use
 import 'firebase/auth';
-import 'firebase/database';
+import 'firebase/firestore';
 
 // load dotenv entries
 dotenv.config();
@@ -59,4 +59,8 @@ const firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
-export const database = firebase.database();
+export const firestoreLive = firebase.firestore();
+
+const _firestoreEmulator = firebase.firestore();
+_firestoreEmulator.useEmulator('localhost', 8080);
+export const firestoreEmulator = _firestoreEmulator;

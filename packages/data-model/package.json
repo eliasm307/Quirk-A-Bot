@@ -8,7 +8,8 @@
 		"test": "rm -rf dist && yarn build && npx tsc && jest --logHeapUsage",
 		"start": "yarn build && node .",
 		"dev": "yarn build && nodemon .",
-		"build": "yarn && npx tsc"
+		"build": "yarn && npx tsc",
+		"firebase:start-emulators": "firebase emulators:start"
 	},
 	"author": "",
 	"license": "ISC",
