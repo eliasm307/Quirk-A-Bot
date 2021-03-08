@@ -53,8 +53,9 @@ export interface iInMemoryTraitDataStorageProps<N extends TraitNameUnionOrString
 	extends iBaseTraitDataStorageProps<N, V> {}
 
 export interface iLocalTraitDataStorageProps<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
-	extends iBaseTraitDataStorageProps<N, V>, iHasCharacterSheet, iHasResolvedBasePath { 
-}
+	extends iBaseTraitDataStorageProps<N, V>,
+		iHasCharacterSheet,
+		iHasResolvedBasePath {}
 
 // -------------------------------------------------------
 // TRAIT COLLECTION DATA STORAGE PROPS
@@ -88,30 +89,22 @@ export interface iLocalFileCharacterSheetDataStorageProps
 // -------------------------------------------------------
 // DATA STORAGE OBJECTS
 
-/** The base data storage object instance shape */
-export interface iBaseDataStorage {
-	// save(): boolean;
-}
-
 export interface iTraitDataStorage<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
-	extends iBaseDataStorage,
-		iTraitData<N, V> {}
+	extends iTraitData<N, V> {}
 
 export interface iTraitCollectionDataStorage<
 	N extends TraitNameUnionOrString,
 	V extends TraitValueTypeUnion,
 	D extends iTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
-> extends iBaseDataStorage,
-		iBaseCollection<N, V, T>,
+> extends iBaseCollection<N, V, T>,
 		iToJson<D[]>,
 		iLoggerCollection {
 	name: string;
 }
 
 /** Represents character sheet data in a data store */
-export interface iCharacterSheetDataStorage extends iBaseDataStorage {
-
+export interface iCharacterSheetDataStorage {
 	/** Returns the character sheet data from the data storage */
 	getData(): iCharacterSheetData;
 

@@ -7,21 +7,15 @@ import {
 import {
 	iAddLogEventProps,
 	iDeleteLogEventProps,
-	iLogCollection,
 	iLogEvent,
 	iLogReport,
 } from '../../../declarations/interfaces/log-interfaces';
 import {
 	iBaseTrait,
 	iBaseTraitProps,
-	iGeneralTraitData,
 	iTraitData,
 } from '../../../declarations/interfaces/trait-interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
-import AddLogEvent from '../../log/AddLogEvent';
-import DeleteLogEvent from '../../log/DeleteLogEvent';
-import LogCollection from '../../log/LogCollection';
-import AbstractDataStorage from '../AbstractDataStorage';
 import AbstractTraitCollectionDataStorage from '../AbstractTraitCollectionDataStorage';
 
 export default class InMemoryTraitCollectionDataStorage<

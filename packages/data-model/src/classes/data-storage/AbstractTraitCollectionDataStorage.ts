@@ -4,8 +4,7 @@ import { iTraitCollectionDataStorage } from './../../declarations/interfaces/dat
 import { iTraitCollection } from './../../declarations/interfaces/trait-collection-interfaces';
 import { TraitNameUnionOrString } from './../../declarations/types';
 import { TraitValueTypeUnion } from '../../declarations/types';
-import { iTraitDataStorage } from '../../declarations/interfaces/data-storage-interfaces';
-import AbstractDataStorage from './AbstractDataStorage';
+import { iTraitDataStorage } from '../../declarations/interfaces/data-storage-interfaces'; 
 import { iLogReport, iLogEvent } from '../../declarations/interfaces/log-interfaces';
 
 // todo delete?
@@ -14,8 +13,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
 		V extends TraitValueTypeUnion,
 		D extends iTraitData<N, V>,
 		T extends iBaseTrait<N, V, D>
-	>
-	extends AbstractDataStorage
+	> 
 	implements iTraitCollectionDataStorage<N, V, D, T> {
 	abstract name: string;
 	abstract toJson(): D[];
