@@ -1,4 +1,7 @@
-import { iInMemoryTraitDataStorageProps } from './../../declarations/interfaces/data-storage-interfaces';
+import {
+	iInMemoryTraitDataStorageProps,
+	iTraitCollectionDataStorageInitialiserBundle,
+} from './../../declarations/interfaces/data-storage-interfaces';
 import { LogOperationUnion } from '../../declarations/types';
 import TraitCollection from './TraitCollection';
 import { iAttribute } from '../../declarations/interfaces/trait-interfaces';
@@ -8,10 +11,15 @@ import InMemoryTraitDataStorageFactory from '../data-storage/InMemory/InMemoryDa
 const saveAction = () => true;
 let testName: string;
 
-const dataStorageFactory = new InMemoryTraitDataStorageFactory( {});
+const dataStorageFactory = new InMemoryTraitDataStorageFactory({});
+
+const traitCollectionDataStorageInitialiserBundle: iTraitCollectionDataStorageInitialiserBundle = {
+	traitCollectionDataStorageInitialiser: dataStorageFactory.newTraitCollectionDataStorageInitialiser(),
+	traitDataStorageInitialiser: dataStorageFactory.newTraitDataStorageInitialiser(),
+};
 
 test('traitCollection CRUD tests', () => {
-	const tc = TraitFactory.newAttributeTraitCollection({ dataStorageFactory });
+	const tc = TraitFactory.newAttributeTraitCollection(traitCollectionDataStorageInitialiserBundle);
 
 	// test size method
 	expect(tc.size).toEqual(0);
@@ -39,7 +47,7 @@ test('traitCollection CRUD tests', () => {
 
 testName = 'traitCollection instantiation with initial data and logging';
 test(testName, () => {
-	const tc = TraitFactory.newAttributeTraitCollection({ dataStorageFactory });
+	const tc = TraitFactory.newAttributeTraitCollection(traitCollectionDataStorageInitialiserBundle);
 
 	// add items
 	tc.set('Wits', 3);
@@ -64,13 +72,13 @@ test(testName, () => {
 	const traits = tc.toJson();
 
 	// separate instance of same character sheet, no inital data
-	const tc2 = TraitFactory.newAttributeTraitCollection({ dataStorageFactory });
+	const tc2 = TraitFactory.newAttributeTraitCollection(traitCollectionDataStorageInitialiserBundle);
 
 	// no items expected
 	expect(tc2.size).toEqual(0);
 
 	// separate instance of same character sheet, with inital data
-	const tc3 = TraitFactory.newAttributeTraitCollection({ dataStorageFactory }, ...tc.toJson());
+	const tc3 = TraitFactory.newAttributeTraitCollection(traitCollectionDataStorageInitialiserBundle, ...tc.toJson());
 
 	// same items as initial expected
 	expect(tc3.size).toEqual(tc.size);
@@ -78,7 +86,7 @@ test(testName, () => {
 
 testName = 'trait test with toJson and log data';
 test(testName, () => {
-	const tc = TraitFactory.newAttributeTraitCollection({ dataStorageFactory });
+	const tc = TraitFactory.newAttributeTraitCollection(traitCollectionDataStorageInitialiserBundle);
 	tc.set('Charisma', 3);
 
 	// console.log(__filename, { testName, tc });

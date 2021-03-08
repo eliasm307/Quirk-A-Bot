@@ -38,7 +38,9 @@ export default class InMemoryTraitCollectionDataStorage<
 
 	// #logs: iLogCollection;
 	#instanceCreator: (props: iBaseTraitProps<N, V, D>) => T;
-	#traitDataStorageInitialiser: (props: iBaseTraitDataStorageProps<N, V>) => iTraitDataStorage<N, V>;
+	#traitDataStorageInitialiser: <N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(
+		props: iBaseTraitDataStorageProps<N, V>
+	) => iTraitDataStorage<N, V>;
 	name: string;
 
 	constructor(props: iBaseTraitCollectionDataStorageProps<N, V, D, T>) {
@@ -111,10 +113,10 @@ export default class InMemoryTraitCollectionDataStorage<
 
 		// log change
 		// this.#logs.log( new DeleteLogEvent( { oldValue, property } ) );
-		if (oldValue) {
+		if (typeof oldValue !== 'undefined') {
 			this.onDelete({ oldValue, property });
 		} else {
-			console.error(__filename, `old value not defined when deleting property "${name}`);
+			console.error(__filename, `old value was "${oldValue}" when deleting property "${name}"`);
 		}
 
 		// todo this should be done in trait collection data storage

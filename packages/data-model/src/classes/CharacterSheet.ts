@@ -74,7 +74,19 @@ export default class CharacterSheet implements iCharacterSheet {
 
 	// SINGLETON CONSTRUCTOR
 	static load(props: iCharacterSheetProps): CharacterSheet {
-		return CharacterSheet.instances.get(props.id) || new CharacterSheet(props);
+		const { dataStorageFactory, id } = props;
+		const preExistingInstance = CharacterSheet.instances.get(id);
+
+		// if an instance has already been created with this id then use that instance
+		if (preExistingInstance) return preExistingInstance;
+
+		// check if a character sheet with this id doesnt exist in the data storage, initialise a blank character sheet if not
+		const characterSheetDataStorage = dataStorageFactory.newCharacterSheetDataStorage({ id });
+		if (!characterSheetDataStorage.exists()) characterSheetDataStorage.initialise(); // todo make this an internal class method named 'assert' or something
+
+		// return a new character sheet instance as requested
+		// Note a character sheet instance only creates an object that is connected to a character sheet on the data source, it doesnt initialise a new character sheet on the data source
+		return new CharacterSheet(props);
 	}
 
 	//-------------------------------------

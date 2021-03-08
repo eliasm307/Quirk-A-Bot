@@ -16,10 +16,11 @@ import {
 import InMemoryTraitDataStorage from './InMemoryTraitDataStorage';
 import { iTraitData, iBaseTrait } from '../../../declarations/interfaces/trait-interfaces';
 import InMemoryTraitCollectionDataStorage from './InMemoryTraitCollectionDataStorage';
-import AbstractDataStorageFactory from '../AbstractDataStorageFactory';
 import InMemoryCharacterSheetDataStorage from './InMemoryCharacterSheetDataStorage';
 
-export default class InMemoryDataStorageFactory extends AbstractDataStorageFactory implements iDataStorageFactory {
+export default class InMemoryDataStorageFactory implements iDataStorageFactory {
+	constructor({}: iInMemoryFileDataStorageFactoryProps) { 
+	}
 	newCharacterSheetDataStorage({ id }: iHasId): iCharacterSheetDataStorage {
 		return new InMemoryCharacterSheetDataStorage({ id, dataStorageFactory: this });
 	}

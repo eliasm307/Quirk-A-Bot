@@ -29,7 +29,7 @@ test('Character sheet data predicate', () => {
 		disciplines: [],
 		skills: [],
 		touchstonesAndConvictions: [],
-		discordUserId: '0',
+		id: '0',
 		bloodPotency: { name: 'Blood Potency', value: 2 },
 		clan: { name: 'Clan', value: 'clan' },
 		health: { name: 'Health', value: 2 },

@@ -24,16 +24,17 @@ export default abstract class AbstractBaseTrait<
 
 	// protected abstract getDefaultValue(): V;
 
-	constructor({ name, value, toJson,   traitDataStorageInitialiser }: iBaseTraitProps<N, V, D>) {
+	constructor({ name, value, toJson, traitDataStorageInitialiser }: iBaseTraitProps<N, V, D>) {
 		this.name = name;
 
 		// initialise data store
-		this.#dataSorage = traitDataStorageInitialiser({ name,  defaultValueIfNotDefined: value });
+		this.#dataSorage = traitDataStorageInitialiser({ name, defaultValueIfNotDefined: value });
 
 		if (!toJson) throw Error(`${__filename} toJson function not defined`);
 		this.toJson = toJson;
 		this.logs = new LogCollection({ sourceType: 'Trait', sourceName: this.name });
 
+		// todo this shouldnt overwrite existing values in data storage
 		// set initial value if specified
 		if (value) this.value = value;
 		/*
@@ -47,8 +48,8 @@ export default abstract class AbstractBaseTrait<
 	}
 
 	public set value(newValRaw: V) {
-		const newValue = this.preProcessValue( newValRaw );
-		
+		const newValue = this.preProcessValue(newValRaw);
+
 		// justification should be done in newValueIsValid function
 		if (!this.newValueIsValid(newValue)) return;
 

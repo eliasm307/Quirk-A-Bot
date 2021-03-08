@@ -1,8 +1,7 @@
-import { iCharacterSheet, iCharacterSheetData } from '../../../declarations/interfaces/character-sheet-interfaces';
+import { iCharacterSheetData } from '../../../declarations/interfaces/character-sheet-interfaces';
 import CharacterSheet from '../../CharacterSheet';
 import {
 	iBaseCharacterSheetDataStorageProps,
-	iCanHaveId,
 	iCharacterSheetDataStorage,
 	iDataStorageFactory,
 	iHasId,
@@ -14,6 +13,14 @@ export default class InMemoryCharacterSheetDataStorage implements iCharacterShee
 		this.id = id;
 		this.dataStorageFactory = dataStorageFactory;
 	}
+	exists(   ): boolean {
+		// for in memory, assume any character sheet already exists as this will be always initialised from scratch
+		return true
+	}
+	initialise(  ): boolean {
+		throw new Error( 'Method not implemented because it is not required.' );
+	}
+	/*
 	get instance(): iCharacterSheet {
 		return CharacterSheet.instances.has(this.id)
 			? CharacterSheet.instances.get(this.id)!
@@ -21,7 +28,7 @@ export default class InMemoryCharacterSheetDataStorage implements iCharacterShee
 					characterSheetData: this.getData(),
 					dataStorageFactory: this.dataStorageFactory,
 			  });
-	}
+	}*/
 	getData(): iCharacterSheetData {
 		return CharacterSheet.newDataObject({ id: this.id });
 	}

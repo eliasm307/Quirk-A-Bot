@@ -11,24 +11,21 @@ export default class LocalFileTraitDataStorage<
 	V extends TraitValueTypeUnion
 > extends InMemoryTraitDataStorage<N, V> {
 	#characterSheet: iCharacterSheet;
-
+	#resolvedBasePath: string;
 	constructor(props: iLocalTraitDataStorageProps<N, V>) {
 		super(props);
-		const { characterSheet } = props;
+		const { characterSheet, name, defaultValueIfNotDefined, resolvedBasePath } = props;
 		this.#characterSheet = characterSheet;
+		this.#resolvedBasePath = resolvedBasePath;
 
-		if(!this.#characterSheet) throw Error(`${__filename} characterSheet is not defined`)
+		if (!this.#characterSheet) throw Error(`${__filename} characterSheet is not defined`);
 	}
 	protected save(): boolean {
+		const resolvedPath = path.resolve(this.#resolvedBasePath, `${this.#characterSheet.id}.json`);
 
-		const resolvedPath = path.resolve( `../../../data/character-sheets/${ this.#characterSheet.id }.json` )
-		
-		console.log(__filename, "Save",  {resolvedPath, characterSheet: this.#characterSheet})
+		 // console.warn(__filename, "Save",  {resolvedPath })
 
 		// save if available
-		return saveCharacterSheetToFile(
-			this.#characterSheet.toJson(),
-			resolvedPath
-		);
+		return saveCharacterSheetToFile(this.#characterSheet.toJson(), resolvedPath);
 	}
 }

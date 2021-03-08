@@ -16,21 +16,30 @@ export interface iHasCharacterSheetData {
 export interface iHasId {
 	id: string;
 }
-
 export interface iCanHaveId {
 	id?: string;
+}
+export interface iHasResolvedBasePath {
+	resolvedBasePath: string;
 }
 
 // -------------------------------------------------------
 // DATA STORAGE FACTORY PROPS
+// Note the props should be for initialising the data storage
 
-export interface iBaseDataStorageFactoryProps extends iHasId {}
+export interface iBaseDataStorageFactoryProps {}
 
-export interface iInMemoryFileDataStorageFactoryProps extends iCanHaveId {}
+export interface iInMemoryFileDataStorageFactoryProps {}
 
-export interface iLocalFileDataStorageFactoryProps {
-	characterSheet: iCharacterSheet;
-}
+export interface iLocalFileDataStorageFactoryProps extends iHasResolvedBasePath {}
+
+// -------------------------------------------------------
+// DATA STORAGE INSTANTIATOR PROPS
+// Note the props should be the minimal required to instantiate the required object, they should be consistent for all factory classes as these are what the client will interact with
+
+// todo implement these for instantiator props
+
+export interface iCharacterSheetDataStorageInstantiatorProps extends iHasId {}
 
 // -------------------------------------------------------
 // TRAIT DATA STORAGE PROPS
@@ -44,8 +53,7 @@ export interface iInMemoryTraitDataStorageProps<N extends TraitNameUnionOrString
 	extends iBaseTraitDataStorageProps<N, V> {}
 
 export interface iLocalTraitDataStorageProps<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
-	extends iBaseTraitDataStorageProps<N, V> {
-	characterSheet: iCharacterSheet;
+	extends iBaseTraitDataStorageProps<N, V>, iHasCharacterSheet, iHasResolvedBasePath { 
 }
 
 // -------------------------------------------------------
@@ -72,7 +80,11 @@ export interface iLocalFileTraitCollectionDataStorageProps<
 	characterSheet: iCharacterSheet;
 }
 
-export interface iBaseCharacterSheetDataStorageProps extends iCanHaveId, iHasDataStorageFactory {}
+export interface iBaseCharacterSheetDataStorageProps extends iHasId, iHasDataStorageFactory {}
+
+export interface iLocalFileCharacterSheetDataStorageProps
+	extends iBaseCharacterSheetDataStorageProps,
+		iHasResolvedBasePath {}
 // -------------------------------------------------------
 // DATA STORAGE OBJECTS
 
@@ -97,9 +109,17 @@ export interface iTraitCollectionDataStorage<
 	name: string;
 }
 
+/** Represents character sheet data in a data store */
 export interface iCharacterSheetDataStorage extends iBaseDataStorage {
+
+	/** Returns the character sheet data from the data storage */
 	getData(): iCharacterSheetData;
-	instance: iCharacterSheet;
+
+	/** Tests if a character sheet with the given id actually exists in the given data storage */
+	exists(): boolean;
+
+	/** Creates new character sheet data for the given id, with default values */
+	initialise(): boolean;
 }
 
 // -------------------------------------------------------
@@ -135,7 +155,7 @@ export interface iDataStorageFactory {
 	): iTraitCollectionDataStorage<N, V, D, T>;
 	*/
 
-	newCharacterSheetDataStorage(props: iHasId): iCharacterSheetDataStorage;
+	newCharacterSheetDataStorage(props: iCharacterSheetDataStorageInstantiatorProps): iCharacterSheetDataStorage;
 }
 
 // -------------------------------------------------------
