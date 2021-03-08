@@ -1,3 +1,4 @@
+import { iTraitDataStorage } from './../../../declarations/interfaces/data-storage-interfaces';
 import { throws } from 'node:assert';
 import { iInMemoryTraitDataStorageProps } from '../../../declarations/interfaces/data-storage-interfaces';
 import { TraitValueTypeUnion, TraitNameUnionOrString } from '../../../declarations/types';
@@ -7,7 +8,10 @@ interface iPrivateModifiableProperties<V extends TraitValueTypeUnion> {
 	value: V;
 }
 
-export default class InMemoryTraitDataStorage<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion> {
+export default class InMemoryTraitDataStorage<
+	N extends TraitNameUnionOrString,
+	V extends TraitValueTypeUnion
+> implements iTraitDataStorage<N,V> {
 	#private: iPrivateModifiableProperties<V>;
 
 	readonly name: N;
