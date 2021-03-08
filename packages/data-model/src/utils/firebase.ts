@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 // Add the Firebase services that you want to use
 import 'firebase/auth';
 import 'firebase/firestore';
+import urlExistSync from 'url-exist-sync';
 
 // load dotenv entries
 dotenv.config();
@@ -64,3 +65,7 @@ export const firestoreLive = firebase.firestore();
 const _firestoreEmulator = firebase.firestore();
 _firestoreEmulator.useEmulator('localhost', 8080);
 export const firestoreEmulator = _firestoreEmulator;
+
+export function isFirestoreEmulatorRunning() {
+	return urlExistSync('http://localhost:4000/firestore'); 
+}
