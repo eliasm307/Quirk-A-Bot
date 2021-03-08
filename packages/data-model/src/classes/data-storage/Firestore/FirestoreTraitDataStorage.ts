@@ -8,12 +8,14 @@ import {
 import { TraitValueTypeUnion, TraitNameUnionOrString } from '../../../declarations/types';
 import saveCharacterSheetToFile from '../../../utils/saveCharacterSheetToFile';
 import InMemoryTraitDataStorage from '../InMemory/InMemoryTraitDataStorage';
+import AbstractTraitDataStorage from '../AbstractTraitDataStorage';
 
 interface iPrivateModifiableProperties<V extends TraitValueTypeUnion> {
 	value: V;
 }
 
 export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
+	extends AbstractTraitDataStorage<N, V>
 	implements iTraitDataStorage<N, V> {
 	#characterSheet: iCharacterSheet;
 	#firestore: Firestore;
@@ -22,6 +24,7 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 	name: N;
 
 	constructor(props: iFirestoreTraitDataStorageProps<N, V>) {
+		super();
 		const { characterSheet, name, defaultValueIfNotDefined, firestore } = props;
 		this.#characterSheet = characterSheet;
 		if (!this.#characterSheet) throw Error(`${__filename} characterSheet is not defined`);

@@ -3,10 +3,11 @@ import { iCharacterSheet } from '../../../declarations/interfaces/character-shee
 import { iLocalFileTraitDataStorageProps, iTraitDataStorage } from '../../../declarations/interfaces/data-storage-interfaces';
 import { TraitValueTypeUnion, TraitNameUnionOrString } from '../../../declarations/types';
 import saveCharacterSheetToFile from '../../../utils/saveCharacterSheetToFile'; 
+import AbstractTraitDataStorage from '../AbstractTraitDataStorage';
 import InMemoryTraitDataStorage from '../InMemory/InMemoryTraitDataStorage';
 
 export default class LocalFileTraitDataStorage<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
-	extends InMemoryTraitDataStorage<N, V>
+	extends InMemoryTraitDataStorage<N, V> 
 	implements iTraitDataStorage<N, V> {
 	#characterSheet: iCharacterSheet;
 	#resolvedBasePath: string;
