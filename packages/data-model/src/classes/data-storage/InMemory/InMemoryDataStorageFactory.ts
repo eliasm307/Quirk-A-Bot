@@ -14,7 +14,7 @@ import {
 	iTraitDataStorage,
 } from '../../../declarations/interfaces/data-storage-interfaces';
 import InMemoryTraitDataStorage from './InMemoryTraitDataStorage';
-import { iTraitData, iBaseTrait } from '../../../declarations/interfaces/trait-interfaces';
+import { iBaseTraitData, iBaseTrait } from '../../../declarations/interfaces/trait-interfaces';
 import InMemoryTraitCollectionDataStorage from './InMemoryTraitCollectionDataStorage';
 import InMemoryCharacterSheetDataStorage from './InMemoryCharacterSheetDataStorage';
 
@@ -28,7 +28,7 @@ export default class InMemoryDataStorageFactory implements iDataStorageFactory {
 	newTraitCollectionDataStorage<
 		N extends string,
 		V extends TraitValueTypeUnion,
-		D extends iTraitData<N, V>,
+		D extends iBaseTraitData<N, V>,
 		T extends iBaseTrait<N, V, D>
 	>(props: iBaseTraitCollectionDataStorageProps<N, V, D, T>): iTraitCollectionDataStorage<N, V, D, T> {
 		return new InMemoryTraitCollectionDataStorage({ ...props });
@@ -42,7 +42,7 @@ export default class InMemoryDataStorageFactory implements iDataStorageFactory {
 	newTraitCollectionDataStorageInitialiser(): <
 		N extends string,
 		V extends TraitValueTypeUnion,
-		D extends iTraitData<N, V>,
+		D extends iBaseTraitData<N, V>,
 		T extends iBaseTrait<N, V, D>
 	>(
 		props: iBaseTraitCollectionDataStorageProps<N, V, D, T>

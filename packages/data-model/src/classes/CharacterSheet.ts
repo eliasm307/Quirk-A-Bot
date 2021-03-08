@@ -22,7 +22,7 @@ import {
 	iBaseTrait,
 	iCoreStringTrait,
 	iCoreNumberTrait,
-	iTraitData,
+	iBaseTraitData,
 	iGeneralTrait,
 } from './../declarations/interfaces/trait-interfaces';
 import { iTouchStoneOrConvictionData } from '../declarations/interfaces/trait-interfaces';

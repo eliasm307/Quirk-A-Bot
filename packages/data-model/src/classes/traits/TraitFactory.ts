@@ -31,7 +31,7 @@ import {
 	iDisciplineData,
 	iTouchStoneOrConvictionData,
 	iSkillData,
-	iTraitData,
+	iBaseTraitData,
 } from './../../declarations/interfaces/trait-interfaces';
 import NumberTraitWithCategory from './NumberTraitWithCategory';
 import NumberTrait from './NumberTrait';

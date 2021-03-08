@@ -5,7 +5,7 @@ import {
 	iBaseTrait,
 	iBaseTraitProps,
 	iTraitCollectionProps,
-	iTraitData,
+	iBaseTraitData,
 } from '../../declarations/interfaces/trait-interfaces';
 import { TraitTypeNameUnion, TraitValueTypeUnion } from '../../declarations/types';
 import LogCollection from '../log/LogCollection';
@@ -18,7 +18,7 @@ import { iBaseTraitDataStorageProps, iTraitDataStorage } from '../../declaration
 export default class TraitCollection<
 	N extends TraitNameUnionOrString,
 	V extends TraitValueTypeUnion,
-	D extends iTraitData<N, V>,
+	D extends iBaseTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
 > implements iTraitCollection<N, V, D, T> {
 	#traitDataStorageInitialiser: <N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(

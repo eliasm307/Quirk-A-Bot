@@ -13,7 +13,7 @@ import {
 	iTraitDataStorage,
 } from '../../../declarations/interfaces/data-storage-interfaces';
 import LocalFileTraitDataStorage from './LocalFileTraitDataStorage';
-import { iTraitData, iBaseTrait } from '../../../declarations/interfaces/trait-interfaces';
+import { iBaseTraitData, iBaseTrait } from '../../../declarations/interfaces/trait-interfaces';
 import LocalFileTraitCollectionDataStorage from './LocalFileTraitCollectionDataStorage';
 import LocalFileCharacterSheetDataStorage from './LocalFileCharacterSheetDataStorage';
 export default class LocalFileDataStorageFactory implements iDataStorageFactory {
@@ -44,7 +44,7 @@ export default class LocalFileDataStorageFactory implements iDataStorageFactory 
 	}: iHasCharacterSheet): <
 		N extends string,
 		V extends TraitValueTypeUnion,
-		D extends iTraitData<N, V>,
+		D extends iBaseTraitData<N, V>,
 		T extends iBaseTrait<N, V, D>
 	>(
 		props: iBaseTraitCollectionDataStorageProps<N, V, D, T>

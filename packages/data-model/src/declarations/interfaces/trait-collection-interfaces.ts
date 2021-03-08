@@ -6,7 +6,7 @@ import {
 	iAttribute,
 	iBaseTrait,
 	iSkill,
-	iTraitData,
+	iBaseTraitData,
 	iDiscipline,
 	iTouchStoneOrConviction,
 	iAttributeData,
@@ -24,7 +24,7 @@ import {
 export interface iTraitCollection<
 	N extends TraitNameUnionOrString,
 	V extends TraitValueTypeUnion,
-	D extends iTraitData<N, V>,
+	D extends iBaseTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
 > extends iBaseCollection<N, V, T, iTraitCollection<N, V, D, T>>,
 		iToJson<D[]>,

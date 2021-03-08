@@ -13,7 +13,7 @@ import {
 	iTraitCollectionDataStorage,
 	iTraitDataStorage,
 } from '../../../declarations/interfaces/data-storage-interfaces';
-import { iTraitData, iBaseTrait } from '../../../declarations/interfaces/trait-interfaces';
+import { iBaseTraitData, iBaseTrait } from '../../../declarations/interfaces/trait-interfaces';
 import { Firestore } from '../../../utils/firebase';
 export default class FirestoreDataStorageFactory implements iDataStorageFactory {
 	#firestore: Firestore;
@@ -42,7 +42,7 @@ export default class FirestoreDataStorageFactory implements iDataStorageFactory 
 	}: iHasCharacterSheet): <
 		N extends string,
 		V extends TraitValueTypeUnion,
-		D extends iTraitData<N, V>,
+		D extends iBaseTraitData<N, V>,
 		T extends iBaseTrait<N, V, D>
 	>(
 		props: iBaseTraitCollectionDataStorageProps<N, V, D, T>

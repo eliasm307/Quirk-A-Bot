@@ -10,7 +10,7 @@ import {
 	iAttributeData,
 	iSkillData,
 	iDisciplineData,
-	iTraitData,
+	iBaseTraitData,
 	iCoreNumberTrait,
 	iCoreStringTrait,
 	iNumberTraitData,

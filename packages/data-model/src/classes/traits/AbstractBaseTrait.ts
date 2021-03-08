@@ -2,7 +2,7 @@ import { iLogCollection, iLogReport } from './../../declarations/interfaces/log-
 import { iLogEvent } from '../../declarations/interfaces/log-interfaces';
 import { iBaseTrait } from '../../declarations/interfaces/trait-interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../declarations/types';
-import { iBaseTraitProps, iTraitData } from '../../declarations/interfaces/trait-interfaces';
+import { iBaseTraitProps, iBaseTraitData } from '../../declarations/interfaces/trait-interfaces';
 import LogCollection from '../log/LogCollection';
 import UpdateLogEvent from '../log/UpdateLogEvent';
 import { iTraitDataStorage } from '../../declarations/interfaces/data-storage-interfaces';
@@ -10,7 +10,7 @@ import { iTraitDataStorage } from '../../declarations/interfaces/data-storage-in
 export default abstract class AbstractBaseTrait<
 	N extends TraitNameUnionOrString,
 	V extends TraitValueTypeUnion,
-	D extends iTraitData<N, V>
+	D extends iBaseTraitData<N, V>
 > implements iBaseTrait<N, V, D> {
 	// #private: iPrivateModifiableProperties<V>;
 	// #characterSheet: iCharacterSheet;

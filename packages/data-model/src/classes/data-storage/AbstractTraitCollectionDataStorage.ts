@@ -1,5 +1,5 @@
 import { iAddLogEventProps, iDeleteLogEventProps } from './../../declarations/interfaces/log-interfaces';
-import { iBaseTrait, iTraitData } from './../../declarations/interfaces/trait-interfaces';
+import { iBaseTrait, iBaseTraitData } from './../../declarations/interfaces/trait-interfaces';
 import { iTraitCollectionDataStorage } from './../../declarations/interfaces/data-storage-interfaces';
 import { TraitNameUnionOrString } from './../../declarations/types';
 import { TraitValueTypeUnion } from '../../declarations/types';
@@ -8,7 +8,7 @@ import { iLogReport, iLogEvent } from '../../declarations/interfaces/log-interfa
 export default abstract class AbstractTraitCollectionDataStorage<
 	N extends TraitNameUnionOrString,
 	V extends TraitValueTypeUnion,
-	D extends iTraitData<N, V>,
+	D extends iBaseTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
 > implements iTraitCollectionDataStorage<N, V, D, T> {
 	abstract name: string;
