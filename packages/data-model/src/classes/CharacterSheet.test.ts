@@ -5,14 +5,20 @@ import { iAttribute, iSkill, iTouchStoneOrConviction } from '../declarations/int
 import LocalFileDataStorageFactory from './data-storage/LocalFile/LocalFileDataStorageFactory';
 import InMemoryDataStorageFactory from './data-storage/InMemory/InMemoryDataStorageFactory';
 
-// todo use a constant file name that gets deleted before each test
-const testId = `character-sheet-test`;
-const resolvedBasePath = path.resolve(__dirname, '../data/character-sheets/temporary/');
-const resolvedPath = path.resolve(resolvedBasePath, `${testId}.json`);
+// ids for test data
+const newDataId = `character-sheet-test-new`;
+const existingDataId = `character-sheet-test-existing`;
 
-if ( fs.pathExistsSync( resolvedPath ) ) {
-	console.warn(__filename, `Deleting file "${resolvedPath}" before testing`)
-	fs.removeSync(resolvedPath);
+// base path for test data
+const resolvedBasePath = path.resolve(__dirname, '../data/character-sheets/temporary/');
+
+// resolved paths
+const newDataResolvedPath = path.resolve(resolvedBasePath, `${newDataId}.json`);
+const existingDataResolvedPath = path.resolve(resolvedBasePath, `${existingDataId}.json`);
+
+if (fs.pathExistsSync(newDataResolvedPath)) {
+	console.warn(__filename, `Deleting file "${newDataResolvedPath}" before testing`);
+	fs.removeSync(newDataResolvedPath);
 }
 
 // const filePathRandom = path.resolve(__dirname, `../data/character-sheets/temporary/${testUserId}.json`);
@@ -34,28 +40,28 @@ test(testName, () => {
 testName = 'save new blank character sheet and load the character sheet';
 test(testName, () => {
 	// creates new sheet and does initial save
-	const cs: CharacterSheet = CharacterSheet.load({ dataStorageFactory: localDataStorageFactory, id: testId });
+	const cs: CharacterSheet = CharacterSheet.load({ dataStorageFactory: localDataStorageFactory, id: newDataId });
 
-	const csLoaded: CharacterSheet = CharacterSheet.load({ dataStorageFactory: localDataStorageFactory, id: testId });
+	const csLoaded: CharacterSheet = CharacterSheet.load({ dataStorageFactory: localDataStorageFactory, id: newDataId });
 
 	// console.log({ testName, resolvedPath });
 
 	// file should exist after save
-	expect(fs.pathExistsSync(resolvedPath)).toBe(true);
+	expect(fs.pathExistsSync(newDataResolvedPath)).toBe(true);
 
 	// user id should be the same
-	expect(csLoaded.id).toEqual(testId);
+	expect(csLoaded.id).toEqual(newDataId);
 
 	// sheets should be the same
 	expect(cs.toJson()).toEqual(csLoaded.toJson());
 	expect(cs).toEqual(csLoaded);
 });
 
-testName = 'test autosave and custom setters for basic data types';
+testName = 'test new file, autosave and custom setters for basic data types';
 test(testName, () => {
-	const cs: CharacterSheet = CharacterSheet.load({ dataStorageFactory: localDataStorageFactory, id: testId });
+	const cs: CharacterSheet = CharacterSheet.load({ dataStorageFactory: localDataStorageFactory, id: newDataId });
 
-	const cs2: CharacterSheet = CharacterSheet.load({ dataStorageFactory: localDataStorageFactory, id: testId });
+	const cs2: CharacterSheet = CharacterSheet.load({ dataStorageFactory: localDataStorageFactory, id: newDataId });
 
 	const testHealthValue = 1;
 	const testBloodPotencyValue = 2;
@@ -66,7 +72,7 @@ test(testName, () => {
 	cs.bloodPotency.value = testBloodPotencyValue;
 	cs.hunger.value = testHungerValue;
 
-	const csLoaded: CharacterSheet = CharacterSheet.load({ dataStorageFactory: localDataStorageFactory, id: testId });
+	const csLoaded: CharacterSheet = CharacterSheet.load({ dataStorageFactory: localDataStorageFactory, id: newDataId });
 
 	console.log({
 		testName,
@@ -100,11 +106,19 @@ test(testName, () => {
 	// todo make sure logs are tested, there should be a method to get all logs of a character sheet
 	expect(cs.getLogEvents()).toBeTruthy();
 	expect(cs.getLogReport()).toBeTruthy();
-	expect(csLoaded.health.getLogReport().logEvents.length).toBeGreaterThanOrEqual(1);
+	expect(csLoaded.health.getLogReport().logEvents.length).toEqual(1);
 	expect(cs.getLogEvents().length).toEqual(3);
 	expect(cs.getLogEvents()[0]?.property).toEqual('Health');
 	expect(cs.getLogEvents()[1]?.property).toEqual('Blood Potency');
 	expect(cs.getLogEvents()[2]?.property).toEqual('Hunger');
+
+	// Changing values to same values should not generate more log items
+	cs.health.value = testHealthValue;
+	cs.bloodPotency.value = testBloodPotencyValue;
+	cs.hunger.value = testHungerValue;
+
+	expect(csLoaded.health.getLogReport().logEvents.length).toEqual(1);
+	expect(cs.getLogEvents().length).toEqual(3);
 
 	// add more log items
 	csLoaded.health.value += 3;
@@ -122,10 +136,45 @@ test(testName, () => {
 	expect(csLoaded.getLogReport()).toEqual(cs2.getLogReport());
 });
 
+testName = 'test existing file, autosave and custom setters for basic data types';
+test(testName, () => {
+	const cs: CharacterSheet = CharacterSheet.load({ dataStorageFactory: localDataStorageFactory, id: existingDataId });
+	const cs2: CharacterSheet = CharacterSheet.load({ dataStorageFactory: localDataStorageFactory, id: existingDataId });
+
+	const randVal = (min: number, max: number) => Math.random() * max + min;
+
+	// test changes to values with random values, some logs should generate
+	[cs.health, cs.bloodPotency, cs.hunger].forEach(trait => (trait.value = randVal(trait.min, trait.max)));
+
+	const csLoaded: CharacterSheet = CharacterSheet.load({
+		dataStorageFactory: localDataStorageFactory,
+		id: existingDataId,
+	});
+
+	console.log({
+		testName,
+		healthLog1: csLoaded.health.getLogReport(),
+		healthLog2: cs2.health.getLogReport(),
+		health: csLoaded.health.toJson(),
+		logEvents: cs.getLogEvents(),
+		logReport: cs.getLogReport(),
+	});
+
+	// some logs should exist
+	// todo make sure logs are tested, there should be a method to get all logs of a character sheet
+	expect(cs.getLogEvents()).toBeTruthy();
+	expect(cs.getLogReport()).toBeTruthy();
+	expect(cs.getLogEvents().length).toBeGreaterThan(0);
+
+	// check changes were logged
+	expect(csLoaded.getLogReport()).toEqual(cs2.getLogReport());
+});
+
+// todo move these to trait collection tests
 testName = 'test basic trait methods';
 test(testName, () => {
 	// console.log(`creating cs`);
-	const cs: CharacterSheet = CharacterSheet.load({ dataStorageFactory: localDataStorageFactory, id: testId });
+	const cs: CharacterSheet = CharacterSheet.load({ dataStorageFactory: localDataStorageFactory, id: newDataId });
 
 	// console.log(`setting strength`);
 	cs.attributes.set('Strength', 5);
