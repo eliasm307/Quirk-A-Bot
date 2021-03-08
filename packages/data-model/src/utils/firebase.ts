@@ -67,5 +67,36 @@ _firestoreEmulator.useEmulator('localhost', 8080);
 export const firestoreEmulator = _firestoreEmulator;
 
 export function isFirestoreEmulatorRunning() {
-	return urlExistSync('http://localhost:4000/firestore'); 
+	return urlExistSync('http://localhost:4000/firestore');
+}
+
+// from https://firebase.google.com/docs/firestore/manage-data/delete-data
+export async function deleteDocumentsCompletely(query: firebase.firestore.Query) {
+	return new Promise((resolve, reject) => {
+		deleteQueryBatch(query, resolve).catch(reject);
+	});
+}
+
+async function deleteQueryBatch(query: firebase.firestore.Query, resolve: (value?: unknown) => void) {
+	const snapshot = await query.get();
+
+	const batchSize = snapshot.size;
+	if (batchSize === 0) {
+		// When there are no documents left, we are done
+		resolve();
+		return;
+	}
+
+	// Delete documents in a batch
+	const batch = query.firestore.batch();
+	snapshot.docs.forEach(doc => {
+		batch.delete(doc.ref);
+	});
+	await batch.commit();
+
+	// Recurse on the next process tick, to avoid
+	// exploding the stack.
+	process.nextTick(() => {
+		deleteQueryBatch(query, resolve);
+	});
 }
