@@ -7,7 +7,6 @@ import AbstractNumberTrait from './AbstractNumberTrait';
 export default class NumberTrait<N extends TraitNameUnionOrString>
 	extends AbstractNumberTrait<N, iNumberTraitData<N>>
 	implements iNumberTrait<N> {
-	// todo move toJson file to external utility?
 	constructor({
 		max,
 		name,

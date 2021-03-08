@@ -102,8 +102,7 @@ test(testName, () => {
 		logEvent2TimeGetTime: cs.getLogEvents()[2]?.timeStamp,
 	});
 
-	// check changes were logged
-	// todo make sure logs are tested, there should be a method to get all logs of a character sheet
+	// check changes were logged 
 	expect(cs.getLogEvents()).toBeTruthy();
 	expect(cs.getLogReport()).toBeTruthy();
 	expect(csLoaded.health.getLogReport().logEvents.length).toEqual(1);
@@ -160,8 +159,7 @@ test(testName, () => {
 		logReport: cs.getLogReport(),
 	});
 
-	// some logs should exist
-	// todo make sure logs are tested, there should be a method to get all logs of a character sheet
+	// some logs should exist 
 	expect(cs.getLogEvents()).toBeTruthy();
 	expect(cs.getLogReport()).toBeTruthy();
 	expect(cs.getLogEvents().length).toBeGreaterThan(0);

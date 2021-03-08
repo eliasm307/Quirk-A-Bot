@@ -52,11 +52,6 @@ export default class CharacterSheet implements iCharacterSheet {
 	/** Existing instances of this class */
 	protected static instances: Map<string, CharacterSheet> = new Map<string, CharacterSheet>();
 
-	// #private: iModifiablePrimitiveProperties;
-	// #logEvents: iLogCollection = new LogCollection();
-	// #savePath: string; // specified in constructor
-	#dataStorageFactory: iDataStorageFactory;
-
 	//-------------------------------------
 	// NON BASIC PRIMITIVE VARIABLES
 	readonly attributes: iAttributeTraitCollection;
@@ -90,16 +85,8 @@ export default class CharacterSheet implements iCharacterSheet {
 	}
 
 	//-------------------------------------
-	// CONSTRUCTOR
+	// PRIVATE CONSTRUCTOR
 	private constructor({ id, dataStorageFactory }: iCharacterSheetProps) {
-		this.#dataStorageFactory = dataStorageFactory;
-
-		const characterSheetDataStorage = dataStorageFactory.newCharacterSheetDataStorage({ id });
-
-		const initialData = characterSheetDataStorage.getData();
-		if (!isCharacterSheetData(initialData))
-			throw Error(`${__filename} data is an object but it is not valid character sheet data, "${initialData}"`);
-
 		const traitDataStorageInitialiser = dataStorageFactory.newTraitDataStorageInitialiser({
 			characterSheet: this,
 		});
@@ -108,32 +95,12 @@ export default class CharacterSheet implements iCharacterSheet {
 			characterSheet: this,
 		});
 
-		// todo instantiate factory here and pass id in which is used to instantiate a CharacterSheetDataStorage object which then provides the character sheet data to initialise everything else
-		/*
-		let initialAttributes: iAttributeData[] = [];
-		let initialDisciplines: iDisciplineData[] = [];
-		let initialSkills: iSkillData[] = [];
-		let initialTouchstonesAndConvictions: iTouchStoneOrConvictionData[] = [];
+		const characterSheetDataStorage = dataStorageFactory.newCharacterSheetDataStorage({ id });
 
-		// initialise with default values
-		let initialValues: iCharacterSheetData | null = null;
- */
+		const initialData = characterSheetDataStorage.getData();
 
-		/*
-		{
-			const { attributes, disciplines, skills, touchstonesAndConvictions } = initialData;
-
-			// initialise using input details
-			this.discordUserId = initialData.discordUserId;
-			initialValues = initialData;
-			initialAttributes = [...attributes];
-			initialDisciplines = [...disciplines];
-			initialSkills = [...skills];
-			initialTouchstonesAndConvictions = [...touchstonesAndConvictions];
-		} else {
-			// console.error(__filename, { sheet });
+		if (!isCharacterSheetData(initialData))
 			throw Error(`${__filename} data is an object but it is not valid character sheet data, "${initialData}"`);
-		}*/
 
 		this.id = id;
 
@@ -213,67 +180,10 @@ export default class CharacterSheet implements iCharacterSheet {
 			...initialData.touchstonesAndConvictions
 		);
 
-		// todo this shouldnt be here, should be in a data storage object
-		// try using resolved custom path, otherwise create path in general location using the user id
-		/*
-		this.#savePath =
-			(customSavePath ? path.resolve(customSavePath) : '') ||
-			path.resolve( __dirname, `../data/character-sheets/${ this.discordUserId }.json` );
-		*/
-
 		// ? should this be in a data storage object
 		// record this instance
 		CharacterSheet.instances.set(id, this);
-		// CharacterSheet.instances.set(this.#savePath, this);
-
-		// ? is this required?
-		// if only user id was provided, assume this is a new sheet then do initial save so a persistent file exists
-		// if (typeof sheet === 'number') saveCharacterSheetToFile(this.toJson(), this.#savePath);
 	}
-
-	// todo loading and saving should be done by a persistence management class
-	/**
-	 * Static method to create an instance from an existing character sheet JSON file
-	 */
-	/*
-	public static loadFromFile({ filePath, fileName }: iLoadFromFileArgs): CharacterSheet {
-		if (!filePath && !fileName)
-			throw Error(`${__filename}: filePath and fileName are not defined, cannot load from file`);
-
-		// try using the input filePath resolved, otherwise create path using filename in general location
-		const resolvedPath =
-			(filePath ? path.resolve(filePath) : '') ||
-			path.resolve(__dirname, `../data/character-sheets/${fileName}${/\.json$/i.test(fileName || '') ? `` : `.json`}`);
-
-		// check if an instance exists
-		if (CharacterSheet.instances.has(resolvedPath)) {
-			// console.log(__filename, `Using existing instance for '${resolvedPath}'`);
-			return CharacterSheet.instances.get(resolvedPath) as CharacterSheet;
-		}
-		// console.log(__filename, `No existing instance for '${resolvedPath}', loading new instance`);
-
-		// todo add option to create blank instance at the specified path if it doesnt exist?
-		const data = importDataFromFile(resolvedPath);
-
-		if (!data) throw Error(`Error importing data from ${resolvedPath}`);
-
-		console.log(`Data imported from ${resolvedPath}`, { data });
-
-		if (!isCharacterSheetData(data))
-			throw Error(`Data loaded from path "${resolvedPath}" is not valid character sheet data`);
-
-		// ? is this ok when it specifies local data storage explicitly? this should be implemented in data storage
-		const instance = new CharacterSheet({
-			characterSheetData: data,
-			customSavePath: resolvedPath, dataStorageFactory
-		});
-
-		// save instance reference
-		CharacterSheet.instances.set(resolvedPath, instance);
-
-		// load the character sheet and set the current location as the save path
-		return instance;
-	}*/
 
 	public toJson(): iCharacterSheetData {
 		const data: iCharacterSheetData = {
@@ -301,12 +211,7 @@ export default class CharacterSheet implements iCharacterSheet {
 		return data;
 	}
 
-	// todo delete this and use a csDataStorage object
-	/*
-	private saveToFile( data: iCharacterSheetData, savePath: string ): boolean {
-		// this.#savePath
-		return exportDataToFile(data, savePath);
-	}*/
+	// ? should this be public?
 	private getAllTraits(): iBaseTrait<
 		TraitNameUnionOrString,
 		TraitValueTypeUnion,
@@ -342,6 +247,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			});
 	}
 
+	/** Returns a new iCharacterSheetData object with default values */
 	static newDataObject({ id }: iHasId): iCharacterSheetData {
 		return {
 			id: id,

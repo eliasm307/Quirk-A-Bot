@@ -45,7 +45,6 @@ export default abstract class AbstractNumberTrait<N extends TraitNameUnionOrStri
 			return false;
 		}
 
-		// todo round the value to an integer
 		return true;
 	}
 
