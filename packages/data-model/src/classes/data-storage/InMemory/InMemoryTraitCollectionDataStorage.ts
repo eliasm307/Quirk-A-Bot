@@ -10,11 +10,7 @@ import {
 	iLogEvent,
 	iLogReport,
 } from '../../../declarations/interfaces/log-interfaces';
-import {
-	iBaseTrait,
-	iBaseTraitProps,
-	iTraitData,
-} from '../../../declarations/interfaces/trait-interfaces';
+import { iBaseTrait, iBaseTraitProps, iTraitData } from '../../../declarations/interfaces/trait-interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
 import AbstractTraitCollectionDataStorage from '../AbstractTraitCollectionDataStorage';
 
@@ -99,23 +95,25 @@ export default class InMemoryTraitCollectionDataStorage<
 		this.save();
 	}
 	delete(name: N): void {
-		const oldValue = this.map.get(name)?.value;
-		const property = name;
+		if (!this.map.has(name))
+			return console.warn(
+				__filename,
+				`Cannot delete property "${name}" from "${this.name}" trait collection as it doesnt exist in the collection`
+			);
 
-		// apply change
-		this.map.delete(name);
+		const oldValue = this.map.get(name)!.value;
 
-		// log change
-		// this.#logs.log( new DeleteLogEvent( { oldValue, property } ) );
 		if (typeof oldValue !== 'undefined') {
-			this.onDelete({ oldValue, property });
+			// apply change
+			this.map.delete(name);
+			// log change
+			this.onDelete({ oldValue, property: name });
 		} else {
-			console.error(__filename, `old value was "${oldValue}" when deleting property "${name}"`);
+			return console.error(__filename, `old value was "${oldValue}" when deleting property "${name}"`);
 		}
 
 		// todo this should be done in trait collection data storage
-		// autosave if save is available
-		// if (this.saveAction) this.saveAction();
+		// autosave if save is available 
 		this.save();
 	}
 	has(name: N): boolean {

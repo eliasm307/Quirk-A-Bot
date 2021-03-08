@@ -149,7 +149,7 @@ test(testName, () => {
 		dataStorageFactory: localDataStorageFactory,
 		id: existingDataId,
 	});
-
+/*
 	console.log({
 		testName,
 		healthLog1: csLoaded.health.getLogReport(),
@@ -158,6 +158,7 @@ test(testName, () => {
 		logEvents: cs.getLogEvents(),
 		logReport: cs.getLogReport(),
 	});
+	*/
 
 	// some logs should exist 
 	expect(cs.getLogEvents()).toBeTruthy();

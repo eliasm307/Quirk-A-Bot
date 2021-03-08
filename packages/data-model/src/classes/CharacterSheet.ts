@@ -23,6 +23,7 @@ import {
 	iCoreStringTrait,
 	iCoreNumberTrait,
 	iTraitData,
+	iGeneralTrait,
 } from './../declarations/interfaces/trait-interfaces';
 import { iTouchStoneOrConvictionData } from '../declarations/interfaces/trait-interfaces';
 import path from 'path';
@@ -68,7 +69,8 @@ export default class CharacterSheet implements iCharacterSheet {
 	readonly bloodPotency: iCoreNumberTrait;
 
 	// SINGLETON CONSTRUCTOR
-	static load(props: iCharacterSheetProps): CharacterSheet {
+	static load( props: iCharacterSheetProps ): CharacterSheet {
+		// todo move to standalone util
 		const { dataStorageFactory, id } = props;
 		const preExistingInstance = CharacterSheet.instances.get(id);
 
@@ -212,11 +214,7 @@ export default class CharacterSheet implements iCharacterSheet {
 	}
 
 	// ? should this be public?
-	private getAllTraits(): iBaseTrait<
-		TraitNameUnionOrString,
-		TraitValueTypeUnion,
-		iTraitData<TraitNameUnionOrString, TraitValueTypeUnion>
-	>[] {
+	private getAllTraits(): iGeneralTrait[] {
 		// todo make this automatic and dynamic
 		return [
 			...this.attributes.toArray(),
@@ -248,7 +246,8 @@ export default class CharacterSheet implements iCharacterSheet {
 	}
 
 	/** Returns a new iCharacterSheetData object with default values */
-	static newDataObject({ id }: iHasId): iCharacterSheetData {
+	static newDataObject( { id }: iHasId ): iCharacterSheetData {
+		// todo move to standalone util
 		return {
 			id: id,
 			bloodPotency: { name: 'Blood Potency', value: 0 },
