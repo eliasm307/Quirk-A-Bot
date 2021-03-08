@@ -19,8 +19,8 @@ export default abstract class AbstractTraitCollectionDataStorage<
 	get(key: N): T | void {
 		return this.map.get(key);
 	}
-	abstract set(key: N, value: V): void;
-	abstract delete(key: N): void;
+	abstract set(key: N, value: V): iTraitCollectionDataStorage<N, V, D, T>;
+	abstract delete(key: N): iTraitCollectionDataStorage<N, V, D, T>;
 	abstract has(key: N): boolean;
 	abstract toArray(): T[];
 	abstract size: number;

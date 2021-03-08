@@ -64,13 +64,15 @@ export default class InMemoryTraitCollectionDataStorage<
 	 * @param name name of trait to edit or create
 	 * @param newValue value to assign
 	 */
-	set(name: N, newValue: V): void {
+	set(name: N, newValue: V): iTraitCollectionDataStorage<N, V, D, T> {
 		// if trait already exists then just update it
 		if (this.map.has(name)) {
 			const instance = this.map.get(name);
 
-			if (!instance)
-				return console.error(__filename, `{this.#typeName} with name '${name}' is not defined but key exists`);
+			if (!instance) {
+				console.error(__filename, `{this.#typeName} with name '${name}' is not defined but key exists`);
+				return this;
+			}
 
 			// apply change, the instance logs changes internally
 			instance.value = newValue;
@@ -89,17 +91,18 @@ export default class InMemoryTraitCollectionDataStorage<
 			this.onAdd({ newValue, property: name });
 		}
 
-		// todo this should be done in trait collection data storage
-		// autosave if save available
-		// if (this.saveAction) this.saveAction();
+		// call save function, not relevant for this class but can be used by classes extending this
 		this.save();
+		return this;
 	}
-	delete(name: N): void {
-		if (!this.map.has(name))
-			return console.warn(
+	delete(name: N): iTraitCollectionDataStorage<N, V, D, T> {
+		if (!this.map.has(name)) {
+			console.warn(
 				__filename,
 				`Cannot delete property "${name}" from "${this.name}" trait collection as it doesnt exist in the collection`
 			);
+			return this;
+		}
 
 		const oldValue = this.map.get(name)!.value;
 
@@ -109,12 +112,14 @@ export default class InMemoryTraitCollectionDataStorage<
 			// log change
 			this.onDelete({ oldValue, property: name });
 		} else {
-			return console.error(__filename, `old value was "${oldValue}" when deleting property "${name}"`);
+			console.error(__filename, `old value was "${oldValue}" when deleting property "${name}"`);
+			return this;
 		}
 
 		// todo this should be done in trait collection data storage
-		// autosave if save is available 
+		// autosave if save is available
 		this.save();
+		return this;
 	}
 	has(name: N): boolean {
 		return this.map.has(name);

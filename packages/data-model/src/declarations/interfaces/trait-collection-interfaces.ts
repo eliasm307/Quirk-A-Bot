@@ -26,9 +26,9 @@ export interface iTraitCollection<
 	V extends TraitValueTypeUnion,
 	D extends iTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
-	> extends iBaseCollection<N, V, T>,
-	iToJson<D[]>,
-	iLoggerCollection {
+> extends iBaseCollection<N, V, T, iTraitCollection<N, V, D, T>>,
+		iToJson<D[]>,
+		iLoggerCollection {
 	name: string;
 }
 

@@ -49,11 +49,8 @@ testName = 'traitCollection instantiation with initial data and logging';
 test(testName, () => {
 	const tc = TraitFactory.newAttributeTraitCollection(traitCollectionDataStorageInitialiserBundle);
 
-	// add items
-	tc.set('Wits', 3);
-	tc.set('Charisma', 4);
-	tc.set('Manipulation', 1);
-	tc.set('Wits', 1);
+	// add items using chaining
+	tc.set('Wits', 3).set('Charisma', 4).set('Manipulation', 1).set('Wits', 1);
 
 	// expect 3 items
 	expect(tc.size).toEqual(3);
@@ -61,10 +58,10 @@ test(testName, () => {
 	// delete an existing item
 	tc.delete('Wits');
 
-	// delete a non-existing item, should not generate log item
-	tc.delete('Wits');
+	// delete non-existing items, should not generate log item
+	tc.delete('Wits').delete('Composure').delete('Dexterity');
 
-	// expect 2 items
+	// expect 2 items, 1 deleted
 	expect(tc.size).toEqual(2);
 
 	const log = tc.getLogEvents();
@@ -72,13 +69,20 @@ test(testName, () => {
 	console.log({ testName, log });
 
 	// expect logs
-	expect( log.length ).toEqual( 5 ); // ! when wits is deleted, this also deletes its logs, 
+	expect(log.length).toEqual(5); // ! when wits is deleted, this also deletes its logs,
 	// todo maybe logging should be handled by a single top level object that distributes sub classes todo logging and report back to the master e.g. the charactersheet logger can produce traitCollection and trait loggers, and the traitCollection logger can produce trait loggers, all of which save a local record of logs but also report back any logs up the tree, benefit of this would be that logs are automatically sorted as they come in
 	expect(log[0].operation).toEqual('ADD' as LogOperationUnion);
 	expect(log[1].operation).toEqual('ADD' as LogOperationUnion);
 	expect(log[2].operation).toEqual('ADD' as LogOperationUnion);
 	expect(log[3].operation).toEqual('UPDATE' as LogOperationUnion);
 	expect(log[4].operation).toEqual('DELETE' as LogOperationUnion);
+
+	tc.delete('Charisma').delete('Manipulation');
+
+	expect(tc.size).toEqual(0); // all items deleted
+	expect(log.length).toEqual(7); // 2 new delete logs
+	expect(log[5].operation).toEqual('DELETE' as LogOperationUnion);
+	expect(log[6].operation).toEqual('DELETE' as LogOperationUnion);
 
 	const count = tc.size;
 

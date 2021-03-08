@@ -20,12 +20,12 @@ export default class TraitCollection<
 	V extends TraitValueTypeUnion,
 	D extends iTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
-> implements iTraitCollection<N, V, D, T> { 
+> implements iTraitCollection<N, V, D, T> {
 	#traitDataStorageInitialiser: <N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(
 		props: iBaseTraitDataStorageProps<N, V>
 	) => iTraitDataStorage<N, V>;
 	#dataStorage: iTraitCollectionDataStorage<N, V, D, T>;
-	name: string; 
+	name: string;
 
 	/** Collection of logs for trait collection, ie add and remove events only (update events are held in traits) */
 	protected logs: iLogCollection;
@@ -40,7 +40,7 @@ export default class TraitCollection<
 		}: iTraitCollectionProps<N, V, D, T>,
 		...initialData: D[]
 	) {
-		this.name = name; 
+		this.name = name;
 		this.#traitDataStorageInitialiser = traitDataStorageInitialiser; // todo, reuse this function instead of making a new one each time
 		this.logs = new LogCollection({ sourceName: name, sourceType: 'Trait Collection' });
 
@@ -76,8 +76,9 @@ export default class TraitCollection<
 	get(name: N): T | void {
 		return this.#dataStorage.get(name);
 	}
-	delete(name: N): void {
+	delete(name: N): iTraitCollection<N, V, D, T> {
 		this.#dataStorage.delete(name);
+		return this;
 	}
 	has(name: N): boolean {
 		return this.#dataStorage.has(name);
@@ -88,7 +89,8 @@ export default class TraitCollection<
 	 * @param name name of trait to edit or create
 	 * @param newValue value to assign
 	 */
-	set(name: N, newValue: V): void { 
+	set(name: N, newValue: V): iTraitCollection<N, V, D, T> {
 		this.#dataStorage.set(name, newValue);
+		return this;
 	}
 }

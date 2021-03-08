@@ -97,7 +97,7 @@ export interface iTraitCollectionDataStorage<
 	V extends TraitValueTypeUnion,
 	D extends iTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
-> extends iBaseCollection<N, V, T>,
+> extends iBaseCollection<N, V, T, iTraitCollectionDataStorage<N, V, D, T>>,
 		iToJson<D[]>,
 		iLoggerCollection {
 	name: string;
