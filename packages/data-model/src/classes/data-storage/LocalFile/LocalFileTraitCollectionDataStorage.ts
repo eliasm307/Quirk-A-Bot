@@ -1,30 +1,39 @@
 import { iLocalFileTraitCollectionDataStorageProps } from './../../../declarations/interfaces/data-storage-interfaces';
 import { iCharacterSheet } from './../../../declarations/interfaces/character-sheet-interfaces';
-import { iBaseTrait, iTraitData } from '../../../declarations/interfaces/trait-interfaces';
+import { iBaseTrait, iBaseTraitData } from '../../../declarations/interfaces/trait-interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
 import saveCharacterSheetToFile from '../../../utils/saveCharacterSheetToFile';
 import InMemoryTraitCollectionDataStorage from '../InMemory/InMemoryTraitCollectionDataStorage';
 import path from 'path';
+import AbstractTraitCollectionDataStorage from '../AbstractTraitCollectionDataStorage';
 
 export default class LocalFileTraitCollectionDataStorage<
 	N extends TraitNameUnionOrString,
 	V extends TraitValueTypeUnion,
-	D extends iTraitData<N, V>,
+	D extends iBaseTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
-> extends InMemoryTraitCollectionDataStorage<N, V, D, T> {
+> extends AbstractTraitCollectionDataStorage<N, V, D, T> {
+	protected afterAdd(name: N): void {
+		this.save();
+	}
+	protected deleteTraitFromDataStorage(name: N): void {
+		this.save();
+	}
 	#characterSheet: iCharacterSheet;
+	#resolvedBasePath: string;
 
 	constructor(props: iLocalFileTraitCollectionDataStorageProps<N, V, D, T>) {
 		super(props);
-		const { characterSheet } = props;
+		const { characterSheet, resolvedBasePath } = props;
 		this.#characterSheet = characterSheet;
+		this.#resolvedBasePath = resolvedBasePath;
 	}
 
-	save(): boolean {
+	protected save(): boolean {
 		// save if available
 		return saveCharacterSheetToFile(
 			this.#characterSheet.toJson(),
-			path.resolve(`../../../data/character-sheets/${this.#characterSheet.id}.json`)
+			path.resolve(this.#resolvedBasePath, `${this.#characterSheet.id}.json`)
 		);
 	}
 }

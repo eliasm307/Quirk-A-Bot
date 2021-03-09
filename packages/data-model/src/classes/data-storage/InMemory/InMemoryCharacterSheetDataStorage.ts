@@ -17,7 +17,7 @@ export default class InMemoryCharacterSheetDataStorage implements iCharacterShee
 		// for in memory, assume any character sheet already exists as this will be always initialised from scratch
 		return true
 	}
-	initialise(  ): boolean {
+	initialise(  ): Promise<boolean> {
 		throw new Error( 'Method not implemented because it is not required.' );
 	}
 	/*

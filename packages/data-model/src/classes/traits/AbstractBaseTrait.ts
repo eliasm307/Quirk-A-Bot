@@ -2,32 +2,39 @@ import { iLogCollection, iLogReport } from './../../declarations/interfaces/log-
 import { iLogEvent } from '../../declarations/interfaces/log-interfaces';
 import { iBaseTrait } from '../../declarations/interfaces/trait-interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../declarations/types';
-import { iBaseTraitProps, iTraitData } from '../../declarations/interfaces/trait-interfaces';
+import { iBaseTraitProps, iBaseTraitData } from '../../declarations/interfaces/trait-interfaces';
 import LogCollection from '../log/LogCollection';
 import UpdateLogEvent from '../log/UpdateLogEvent';
 import { iTraitDataStorage } from '../../declarations/interfaces/data-storage-interfaces';
+import { createPath } from '../../utils/createPath';
 
 export default abstract class AbstractBaseTrait<
 	N extends TraitNameUnionOrString,
 	V extends TraitValueTypeUnion,
-	D extends iTraitData<N, V>
+	D extends iBaseTraitData<N, V>
 > implements iBaseTrait<N, V, D> {
 	// #private: iPrivateModifiableProperties<V>;
 	// #characterSheet: iCharacterSheet;
 	#dataSorage: iTraitDataStorage<N, V>;
 	#logs: iLogCollection;
 	toJson: () => D;
+	readonly path: string;
 	readonly name: N;
 
 	protected abstract newValueIsValid(newVal: V): boolean;
 
 	// protected abstract getDefaultValue(): V;
 
-	constructor({ name, value, toJson, traitDataStorageInitialiser }: iBaseTraitProps<N, V, D>) {
+	constructor({ name, value, toJson, traitDataStorageInitialiser, parentPath }: iBaseTraitProps<N, V, D>) {
 		this.name = name;
 
+		// todo test this works as expected, ie uses '/' not '\\'
+		// ? should this be done by a function passed in as a prop? not all storage systems might use path, they might require a random number etc
+		// ? path.resolve wasnt working here, why?
+		this.path = createPath(parentPath, name);
+
 		// initialise data store
-		this.#dataSorage = traitDataStorageInitialiser({ name, defaultValueIfNotDefined: value });
+		this.#dataSorage = traitDataStorageInitialiser({ name, defaultValueIfNotDefined: value, path: this.path });
 
 		if (!toJson) throw Error(`${__filename} toJson function not defined`);
 		this.toJson = toJson;

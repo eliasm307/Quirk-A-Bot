@@ -1,8 +1,4 @@
-import {
-	iDataStorageFactory,
-	iHasId,
-	iCharacterSheetDataStorage,
-} from './../declarations/interfaces/data-storage-interfaces';
+import { iHasId } from './../declarations/interfaces/data-storage-interfaces';
 import { iCharacterSheet } from './../declarations/interfaces/character-sheet-interfaces';
 import { iLogReport } from './../declarations/interfaces/log-interfaces';
 import {
@@ -11,23 +7,8 @@ import {
 	iDisciplineTraitCollection,
 	iTouchStoneOrConvictionCollection,
 } from './../declarations/interfaces/trait-collection-interfaces';
-import {
-	CoreNumberTraitName,
-	CoreStringTraitName,
-	TraitValueTypeUnion,
-	TraitNameUnionOrString,
-	ClanName,
-} from './../declarations/types';
-import {
-	iBaseTrait,
-	iCoreStringTrait,
-	iCoreNumberTrait,
-	iTraitData,
-	iGeneralTrait,
-} from './../declarations/interfaces/trait-interfaces';
-import { iTouchStoneOrConvictionData } from '../declarations/interfaces/trait-interfaces';
-import path from 'path';
-import { iAttributeData, iDisciplineData, iSkillData } from '../declarations/interfaces/trait-interfaces';
+import { CoreNumberTraitName, CoreStringTraitName, ClanName } from './../declarations/types';
+import { iCoreStringTrait, iCoreNumberTrait, iGeneralTrait } from './../declarations/interfaces/trait-interfaces';
 import { iCharacterSheetData, iCharacterSheetProps } from '../declarations/interfaces/character-sheet-interfaces';
 import { iLogEvent } from '../declarations/interfaces/log-interfaces';
 import TraitFactory from './traits/TraitFactory';
@@ -43,6 +24,8 @@ interface iLoadFromFileArgs {
 }
 
 // todo split this into smaller pieces
+
+// todo add a method to clean up when a character sheet is not in use anymore, ie detach all event listeners to data storage etc
 
 export default class CharacterSheet implements iCharacterSheet {
 	readonly id: string;
@@ -69,7 +52,7 @@ export default class CharacterSheet implements iCharacterSheet {
 	readonly bloodPotency: iCoreNumberTrait;
 
 	// SINGLETON CONSTRUCTOR
-	static load( props: iCharacterSheetProps ): CharacterSheet {
+	static async load(props: iCharacterSheetProps): Promise<CharacterSheet> {
 		// todo move to standalone util
 		const { dataStorageFactory, id } = props;
 		const preExistingInstance = CharacterSheet.instances.get(id);
@@ -79,7 +62,8 @@ export default class CharacterSheet implements iCharacterSheet {
 
 		// check if a character sheet with this id doesnt exist in the data storage, initialise a blank character sheet if not
 		const characterSheetDataStorage = dataStorageFactory.newCharacterSheetDataStorage({ id });
-		if (!characterSheetDataStorage.exists()) characterSheetDataStorage.initialise(); // todo make this an internal class method named 'assert' or something
+		
+		await characterSheetDataStorage.assertDataExistsOnDataStorage(); // todo make this an internal class method named 'assert' or something
 
 		// return a new character sheet instance as requested
 		// Note a character sheet instance only creates an object that is connected to a character sheet on the data source, it doesnt initialise a new character sheet on the data source
@@ -112,6 +96,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			name: 'Blood Potency',
 			value: initialData.bloodPotency.value || 0,
 			traitDataStorageInitialiser,
+			parentPath: id,
 		});
 
 		this.hunger = new NumberTrait<CoreNumberTraitName>({
@@ -119,6 +104,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			name: 'Hunger',
 			value: initialData.hunger.value || 0,
 			traitDataStorageInitialiser,
+			parentPath: id,
 		});
 
 		this.humanity = new NumberTrait<CoreNumberTraitName>({
@@ -126,6 +112,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			name: 'Humanity',
 			value: initialData.humanity.value || 0,
 			traitDataStorageInitialiser,
+			parentPath: id,
 		});
 
 		this.health = new NumberTrait<CoreNumberTraitName>({
@@ -133,6 +120,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			name: 'Health',
 			value: initialData.health.value || 0,
 			traitDataStorageInitialiser,
+			parentPath: id,
 		});
 
 		this.willpower = new NumberTrait<CoreNumberTraitName>({
@@ -140,6 +128,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			name: 'Willpower',
 			value: initialData.willpower.value || 0,
 			traitDataStorageInitialiser,
+			parentPath: id,
 		});
 
 		// core string traits
@@ -147,38 +136,41 @@ export default class CharacterSheet implements iCharacterSheet {
 			name: 'Name',
 			value: initialData.name.value || 'TBC',
 			traitDataStorageInitialiser,
+			parentPath: id,
 		});
 
 		this.sire = new StringTrait<CoreStringTraitName, string>({
 			name: 'Sire',
 			value: initialData.sire.value || 'TBC',
 			traitDataStorageInitialiser,
+			parentPath: id,
 		});
 
 		this.clan = new StringTrait<CoreStringTraitName, ClanName>({
 			name: 'Clan',
 			value: initialData.clan.value || 'TBC',
 			traitDataStorageInitialiser,
+			parentPath: id,
 		});
 
 		// create collections, with initial data where available
 		this.attributes = TraitFactory.newAttributeTraitCollection(
-			{ traitCollectionDataStorageInitialiser, traitDataStorageInitialiser },
+			{ traitCollectionDataStorageInitialiser, traitDataStorageInitialiser, parentPath: id },
 			...initialData.attributes
 		);
 
 		this.skills = TraitFactory.newSkillTraitCollection(
-			{ traitCollectionDataStorageInitialiser, traitDataStorageInitialiser },
+			{ traitCollectionDataStorageInitialiser, traitDataStorageInitialiser, parentPath: id },
 			...initialData.skills
 		);
 
 		this.disciplines = TraitFactory.newDisciplineTraitCollection(
-			{ traitCollectionDataStorageInitialiser, traitDataStorageInitialiser },
+			{ traitCollectionDataStorageInitialiser, traitDataStorageInitialiser, parentPath: id },
 			...initialData.disciplines
 		);
 
 		this.touchstonesAndConvictions = TraitFactory.newTouchstonesAndConvictionTraitCollection(
-			{ traitCollectionDataStorageInitialiser, traitDataStorageInitialiser },
+			{ traitCollectionDataStorageInitialiser, traitDataStorageInitialiser, parentPath: id },
 			...initialData.touchstonesAndConvictions
 		);
 
@@ -246,10 +238,10 @@ export default class CharacterSheet implements iCharacterSheet {
 	}
 
 	/** Returns a new iCharacterSheetData object with default values */
-	static newDataObject( { id }: iHasId ): iCharacterSheetData {
+	static newDataObject({ id }: iHasId): iCharacterSheetData {
 		// todo move to standalone util
 		return {
-			id: id,
+			id,
 			bloodPotency: { name: 'Blood Potency', value: 0 },
 			health: { name: 'Health', value: 0 },
 			humanity: { name: 'Humanity', value: 0 },

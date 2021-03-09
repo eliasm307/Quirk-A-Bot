@@ -38,11 +38,14 @@ test(testName, () => {
 });*/
 
 testName = 'save new blank character sheet and load the character sheet';
-test(testName, () => {
+test(testName, async () => {
 	// creates new sheet and does initial save
-	const cs: CharacterSheet = CharacterSheet.load({ dataStorageFactory: localDataStorageFactory, id: newDataId });
+	const cs: CharacterSheet = await CharacterSheet.load({ dataStorageFactory: localDataStorageFactory, id: newDataId });
 
-	const csLoaded: CharacterSheet = CharacterSheet.load({ dataStorageFactory: localDataStorageFactory, id: newDataId });
+	const csLoaded: CharacterSheet = await CharacterSheet.load({
+		dataStorageFactory: localDataStorageFactory,
+		id: newDataId,
+	});
 
 	// console.log({ testName, resolvedPath });
 
@@ -58,10 +61,10 @@ test(testName, () => {
 });
 
 testName = 'test new file, autosave and custom setters for basic data types';
-test(testName, () => {
-	const cs: CharacterSheet = CharacterSheet.load({ dataStorageFactory: localDataStorageFactory, id: newDataId });
+test(testName, async () => {
+	const cs: CharacterSheet = await CharacterSheet.load({ dataStorageFactory: localDataStorageFactory, id: newDataId });
 
-	const cs2: CharacterSheet = CharacterSheet.load({ dataStorageFactory: localDataStorageFactory, id: newDataId });
+	const cs2: CharacterSheet = await CharacterSheet.load({ dataStorageFactory: localDataStorageFactory, id: newDataId });
 
 	const testHealthValue = 1;
 	const testBloodPotencyValue = 2;
@@ -72,7 +75,10 @@ test(testName, () => {
 	cs.bloodPotency.value = testBloodPotencyValue;
 	cs.hunger.value = testHungerValue;
 
-	const csLoaded: CharacterSheet = CharacterSheet.load({ dataStorageFactory: localDataStorageFactory, id: newDataId });
+	const csLoaded: CharacterSheet = await CharacterSheet.load({
+		dataStorageFactory: localDataStorageFactory,
+		id: newDataId,
+	});
 
 	console.log({
 		testName,
@@ -102,7 +108,7 @@ test(testName, () => {
 		logEvent2TimeGetTime: cs.getLogEvents()[2]?.timeStamp,
 	});
 
-	// check changes were logged 
+	// check changes were logged
 	expect(cs.getLogEvents()).toBeTruthy();
 	expect(cs.getLogReport()).toBeTruthy();
 	expect(csLoaded.health.getLogReport().logEvents.length).toEqual(1);
@@ -136,20 +142,26 @@ test(testName, () => {
 });
 
 testName = 'test existing file, autosave and custom setters for basic data types';
-test(testName, () => {
-	const cs: CharacterSheet = CharacterSheet.load({ dataStorageFactory: localDataStorageFactory, id: existingDataId });
-	const cs2: CharacterSheet = CharacterSheet.load({ dataStorageFactory: localDataStorageFactory, id: existingDataId });
+test(testName, async () => {
+	const cs: CharacterSheet = await CharacterSheet.load({
+		dataStorageFactory: localDataStorageFactory,
+		id: existingDataId,
+	});
+	const cs2: CharacterSheet = await CharacterSheet.load({
+		dataStorageFactory: localDataStorageFactory,
+		id: existingDataId,
+	});
 
 	const randVal = (min: number, max: number) => Math.random() * max + min;
 
 	// test changes to values with random values, some logs should generate
 	[cs.health, cs.bloodPotency, cs.hunger].forEach(trait => (trait.value = randVal(trait.min, trait.max)));
 
-	const csLoaded: CharacterSheet = CharacterSheet.load({
+	const csLoaded: CharacterSheet = await CharacterSheet.load({
 		dataStorageFactory: localDataStorageFactory,
 		id: existingDataId,
 	});
-/*
+	/*
 	console.log({
 		testName,
 		healthLog1: csLoaded.health.getLogReport(),
@@ -160,7 +172,7 @@ test(testName, () => {
 	});
 	*/
 
-	// some logs should exist 
+	// some logs should exist
 	expect(cs.getLogEvents()).toBeTruthy();
 	expect(cs.getLogReport()).toBeTruthy();
 	expect(cs.getLogEvents().length).toBeGreaterThan(0);
@@ -171,9 +183,9 @@ test(testName, () => {
 
 // todo move these to trait collection tests
 testName = 'test basic trait methods';
-test(testName, () => {
+test(testName, async () => {
 	// console.log(`creating cs`);
-	const cs: CharacterSheet = CharacterSheet.load({ dataStorageFactory: localDataStorageFactory, id: newDataId });
+	const cs: CharacterSheet = await CharacterSheet.load({ dataStorageFactory: localDataStorageFactory, id: newDataId });
 
 	// console.log(`setting strength`);
 	cs.attributes.set('Strength', 5);

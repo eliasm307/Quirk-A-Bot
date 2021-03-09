@@ -5,7 +5,7 @@ import {
 	iBaseTrait,
 	iBaseTraitProps,
 	iTraitCollectionProps,
-	iTraitData,
+	iBaseTraitData,
 } from '../../declarations/interfaces/trait-interfaces';
 import { TraitTypeNameUnion, TraitValueTypeUnion } from '../../declarations/types';
 import LogCollection from '../log/LogCollection';
@@ -14,11 +14,13 @@ import AddLogEvent from '../log/AddLogEvent';
 import { iLogCollection, iLogEvent, iLogReport } from '../../declarations/interfaces/log-interfaces';
 import { iTraitCollection } from '../../declarations/interfaces/trait-collection-interfaces';
 import { iBaseTraitDataStorageProps, iTraitDataStorage } from '../../declarations/interfaces/data-storage-interfaces';
+import path from 'path';
+import { createPath } from '../../utils/createPath';
 
 export default class TraitCollection<
 	N extends TraitNameUnionOrString,
 	V extends TraitValueTypeUnion,
-	D extends iTraitData<N, V>,
+	D extends iBaseTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
 > implements iTraitCollection<N, V, D, T> {
 	#traitDataStorageInitialiser: <N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(
@@ -26,10 +28,11 @@ export default class TraitCollection<
 	) => iTraitDataStorage<N, V>;
 	#dataStorage: iTraitCollectionDataStorage<N, V, D, T>;
 	name: string;
+	path: string;
 
 	/** Collection of logs for trait collection, ie add and remove events only (update events are held in traits) */
 	protected logs: iLogCollection;
-	#typeName: TraitTypeNameUnion | string = 'Trait';
+	#typeName: TraitTypeNameUnion | string = 'Trait Collection';
 
 	constructor(
 		{
@@ -37,16 +40,19 @@ export default class TraitCollection<
 			name,
 			traitDataStorageInitialiser,
 			traitCollectionDataStorageInitialiser,
+			parentPath,
 		}: iTraitCollectionProps<N, V, D, T>,
 		...initialData: D[]
 	) {
 		this.name = name;
+		this.path = createPath(parentPath, name);
 		this.#traitDataStorageInitialiser = traitDataStorageInitialiser; // todo, reuse this function instead of making a new one each time
 		this.logs = new LogCollection({ sourceName: name, sourceType: 'Trait Collection' });
 
 		this.#dataStorage = traitCollectionDataStorageInitialiser({
 			instanceCreator,
 			name,
+			parentPath,
 			traitDataStorageInitialiser: this.#traitDataStorageInitialiser,
 			initialData,
 			onAdd: (props: iAddLogEventProps<V>) => this.logs.log(new AddLogEvent(props)),
