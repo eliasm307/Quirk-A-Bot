@@ -1,30 +1,30 @@
 import path from 'path';
 import { iCharacterSheet } from '../../../declarations/interfaces/character-sheet-interfaces';
-import { iLocalFileTraitDataStorageProps, iTraitDataStorage } from '../../../declarations/interfaces/data-storage-interfaces';
+import {
+	iLocalFileTraitDataStorageProps,
+	iTraitDataStorage,
+} from '../../../declarations/interfaces/data-storage-interfaces';
 import { TraitValueTypeUnion, TraitNameUnionOrString } from '../../../declarations/types';
-import saveCharacterSheetToFile from '../../../utils/saveCharacterSheetToFile'; 
+import saveCharacterSheetToFile from '../../../utils/saveCharacterSheetToFile';
 import AbstractTraitDataStorage from '../AbstractTraitDataStorage';
-import InMemoryTraitDataStorage from '../InMemory/InMemoryTraitDataStorage';
 
 export default class LocalFileTraitDataStorage<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
-	extends InMemoryTraitDataStorage<N, V> 
+	extends AbstractTraitDataStorage<N, V>
 	implements iTraitDataStorage<N, V> {
+	#resolvedFilePath: string;
 	#characterSheet: iCharacterSheet;
-	#resolvedBasePath: string;
 	constructor(props: iLocalFileTraitDataStorageProps<N, V>) {
 		super(props);
-		const { characterSheet, name, defaultValueIfNotDefined, resolvedBasePath } = props;
+		const { characterSheet, resolvedBasePath } = props;
+
+		// ? is this required, needed to do some debugging before
+		if (!characterSheet) throw Error(`${__filename} characterSheet is not defined`);
+
 		this.#characterSheet = characterSheet;
-		this.#resolvedBasePath = resolvedBasePath;
-
-		if (!this.#characterSheet) throw Error(`${__filename} characterSheet is not defined`);
+		this.#resolvedFilePath = path.resolve(resolvedBasePath, `${characterSheet.id}.json`);
 	}
-	protected save(): boolean {
-		const resolvedPath = path.resolve(this.#resolvedBasePath, `${this.#characterSheet.id}.json`);
-
-		// console.warn(__filename, "Save",  {resolvedPath })
-
-		// save if available
-		return saveCharacterSheetToFile(this.#characterSheet.toJson(), resolvedPath);
+	protected afterValueChange(): boolean {
+		// auto save character sheet to file
+		return saveCharacterSheetToFile(this.#characterSheet.toJson(), this.#resolvedFilePath);
 	}
 }
