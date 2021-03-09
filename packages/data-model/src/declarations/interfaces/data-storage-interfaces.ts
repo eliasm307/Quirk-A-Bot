@@ -1,5 +1,5 @@
 import { Firestore } from './../../utils/firebase';
-import { iBaseCollection, iHasToJson, iHasDataStorageFactory, iHasParentPath, iHasPath } from './general-interfaces';
+import { iBaseCollection, iHasToJson, iHasDataStorageFactory, iHasParentPath, iHasPath, iHasCleanUp } from './general-interfaces';
 import { iCharacterSheet, iCharacterSheetData, iBaseCharacterSheet } from './character-sheet-interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from './../types';
 import {
@@ -137,7 +137,7 @@ export interface iFirestoreCharacterSheetDataStorageProps extends iBaseCharacter
 // DATA STORAGE OBJECTS
 
 export interface iTraitDataStorage<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
-	extends iBaseTraitData<N, V> {}
+	extends iBaseTraitData<N, V>, iHasCleanUp {}
 
 export interface iTraitCollectionDataStorage<
 	N extends TraitNameUnionOrString,

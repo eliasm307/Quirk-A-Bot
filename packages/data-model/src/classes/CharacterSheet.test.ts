@@ -94,7 +94,7 @@ test(testName, async () => {
 		id: newDataId,
 		parentPath,
 	});
-
+	/*
 	console.log({
 		testName,
 		healthLog1: csLoaded.health.getLogReport(),
@@ -102,7 +102,8 @@ test(testName, async () => {
 		health: csLoaded.health.toJson(),
 		logEvents: cs.getLogEvents(),
 		logReport: cs.getLogReport(),
-	});
+	} );
+	*/
 
 	// properties should be up to date on loaded instance
 	expect(csLoaded.health.value).toEqual(testHealthValue);
@@ -113,7 +114,7 @@ test(testName, async () => {
 	expect(cs2.health.value).toEqual(testHealthValue);
 	expect(cs2.bloodPotency.value).toEqual(testBloodPotencyValue);
 	expect(cs2.hunger.value).toEqual(testHungerValue);
-
+	/*
 	console.log({
 		testName,
 		logEvents: cs.getLogEvents(),
@@ -121,7 +122,8 @@ test(testName, async () => {
 		logEvent0TimeGetTime: cs.getLogEvents()[0]?.timeStamp,
 		logEvent1TimeGetTime: cs.getLogEvents()[1]?.timeStamp,
 		logEvent2TimeGetTime: cs.getLogEvents()[2]?.timeStamp,
-	});
+	} );
+	*/
 
 	// check changes were logged
 	expect(cs.getLogEvents()).toBeTruthy();

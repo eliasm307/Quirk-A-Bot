@@ -85,10 +85,12 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 				.where('name', '==', this.name)
 				.onSnapshot(querySnapshot => {
 					// confirm query only returns 1 result
-					if (querySnapshot.size !== 1)
+					if (querySnapshot.size !== 1) {
+						console.error(__filename, { traitName: this.name, traitPath: this.#path });
 						throw Error(
-							`There should be exactly 1 trait named ${this.name} in collection ${parentCollectionPath}, however ${querySnapshot.size} where found`
+							`There should be exactly 1 trait named "${this.name}" in collection "${parentCollectionPath}", however ${querySnapshot.size} where found`
 						);
+					}
 
 					querySnapshot.docChanges().forEach(change => {
 						const data: any = change.doc.data();
@@ -150,6 +152,15 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 			console.error(__filename, `Error updating trait ${this.name} (${this.#path}) from ${oldValue} to ${newValue}`, {
 				error,
 			});
+		}
+	}
+	cleanUp(): boolean {
+		try {
+			this.#unsubscribeFromEventListeners();
+			return true;
+		} catch (error) {
+			console.error(__filename, `Error cleaning up listeners for trait with path ${this.#path}`);
+			return false;
 		}
 	}
 }

@@ -16,4 +16,8 @@ export default class InMemoryTraitDataStorage<N extends TraitNameUnionOrString, 
 	protected afterValueChange(): void {
 		// do nothing
 	}
+	cleanUp(): boolean {
+		// no special clean up actions
+		return true;
+	}
 }

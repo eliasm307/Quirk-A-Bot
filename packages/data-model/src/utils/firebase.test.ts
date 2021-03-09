@@ -57,39 +57,39 @@ describe('firestore emulator', () => {
 		const unsubscribeToDocument = firestoreEmulator.doc(`${localTestCollectionName}/${testDocumentName}`).onSnapshot({
 			next: snapshot => {
 				const data: any = snapshot.data();
-				console.warn('doc change', { data });
+				console.log('doc change', { data });
 				if (snapshot.exists) {
 					if (snapshot.metadata.hasPendingWrites) {
-						console.warn('Modified document: ', { data });
+						console.log('Modified document: ', { data });
 						expect(data).toBeTruthy();
 					} else {
-						console.warn('snapshot has no pending writes', data);
+						console.log('snapshot has no pending writes', data);
 					}
 				} else {
-					console.warn('snapshot does not exist, deleted?', data);
+					console.log('snapshot does not exist, was this document deleted?', data);
 					expect(data).toBeFalsy();
 				}
 			},
 			error: console.error,
 		});
 
-		console.warn('document observer attached');
+		console.log('document observer attached');
 
 		// subscribe to collection level changes
 		const unsubscribeToCollection = firestoreEmulator.collection(localTestCollectionName).onSnapshot(querySnapshot => {
 			querySnapshot.docChanges().forEach(change => {
 				const data: any = change.doc.data();
-				logFirestoreChange(change, console.warn);
+				logFirestoreChange(change, console.log);
 				if (change.type === 'added') {
-					console.warn('New item: ', { data });
+					console.log('New item: ', { data });
 					expect(data).toEqual(testDocData);
 				}
 				if (change.type === 'modified') {
-					console.warn('Modified document: ', { data });
+					console.log('Modified document: ', { data });
 					expect(data.added).toBeTruthy();
 				}
 				if (change.type === 'removed') {
-					console.warn('Removed document: ', { data });
+					console.log('Removed document: ', { data });
 					expect(
 						firestoreEmulator
 							.collection(localTestCollectionName)
@@ -100,7 +100,7 @@ describe('firestore emulator', () => {
 			});
 		});
 
-		console.warn('collection observer attached');
+		console.log('collection observer attached');
 
 		// assertion 1 & 2 (collection and document events)
 		console.log('creating document');
@@ -117,7 +117,7 @@ describe('firestore emulator', () => {
 		// detach observers
 		unsubscribeToCollection();
 		unsubscribeToDocument();
-		console.warn('observers detached');
+		await console.warn('observers detached');
 
 		// these should not create any events on observer
 		await firestoreEmulator.doc(`${localTestCollectionName}/${testDocumentName}`).set(testDocData);

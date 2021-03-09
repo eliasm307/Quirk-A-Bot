@@ -67,7 +67,7 @@ test(testName, () => {
 
 	const log = tc.getLogEvents();
 
-	console.log({ testName, log });
+	// console.log({ testName, log });
 
 	// expect logs
 	expect(log.length).toEqual(5); // ! when wits is deleted, this also deletes its logs,

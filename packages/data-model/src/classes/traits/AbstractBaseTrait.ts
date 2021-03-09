@@ -52,6 +52,9 @@ export default abstract class AbstractBaseTrait<
 		// make sure character sheet has a reference to this Skill // will this produce any cyclic behaviour? tested, and YES it does
 		// if (!this.#characterSheet.getSkillByName(name)) this.#characterSheet.setSkill(name, value);
 	}
+	cleanUp(): boolean {
+		return this.#dataSorage.cleanUp();
+	}
 
 	public set value(newValRaw: V) {
 		const newValue = this.preProcessValue(newValRaw);

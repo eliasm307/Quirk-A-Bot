@@ -24,6 +24,10 @@ export default class LocalFileTraitDataStorage<N extends TraitNameUnionOrString,
 		this.#characterSheet = characterSheet;
 		this.#resolvedFilePath = path.resolve(resolvedBasePath, `${characterSheet.id}.json`);
 	}
+	cleanUp(): boolean {
+		// no special clean up actions
+		return true;
+	}
 	protected afterValueChange(): boolean {
 		// auto save character sheet to file
 		return saveCharacterSheetToFile(this.#characterSheet.toJson(), this.#resolvedFilePath);
