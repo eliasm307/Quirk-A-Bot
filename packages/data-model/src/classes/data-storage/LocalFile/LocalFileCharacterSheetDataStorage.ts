@@ -1,4 +1,4 @@
-import path from 'path';
+import pathModule from 'path';
 import { iCharacterSheet, iCharacterSheetData } from '../../../declarations/interfaces/character-sheet-interfaces';
 import importDataFromFile from '../../../utils/importDataFromFile';
 import { isCharacterSheetData } from '../../../utils/typePredicates';
@@ -26,7 +26,7 @@ export default class LocalFileCharacterSheetDataStorage implements iCharacterShe
 		this.id = id;
 		this.dataStorageFactory = dataStorageFactory;
 		this.resolvedBasePath = resolvedBasePath;
-		this.resolvedFilePath = path.resolve(resolvedBasePath, `${this.preProcessId(id)}.json`); 
+		this.resolvedFilePath = path.resolve(resolvedBasePath, `${this.preProcessId(id)}.json`);
 	}
 
 	private preProcessId(id: string) {
@@ -36,7 +36,7 @@ export default class LocalFileCharacterSheetDataStorage implements iCharacterShe
 	exists(): boolean {
 		return fs.pathExistsSync(this.resolvedFilePath); // check file path exists
 	}
-	initialise(): boolean {
+	async initialise(): Promise<boolean> {
 		return saveCharacterSheetToFile(CharacterSheet.newDataObject({ id: this.id }), this.resolvedFilePath);
 	}
 

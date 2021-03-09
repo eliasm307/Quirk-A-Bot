@@ -1,4 +1,4 @@
-import path from 'path';
+import pathModule from 'path';
 import { iCharacterSheet } from '../../../declarations/interfaces/character-sheet-interfaces';
 import {
 	iLocalFileTraitDataStorageProps,
@@ -12,9 +12,6 @@ import AbstractTraitDataStorage from '../AbstractTraitDataStorage';
 export default class LocalFileTraitDataStorage<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
 	extends AbstractTraitDataStorage<N, V>
 	implements iTraitDataStorage<N, V> {
-	protected assertTraitExistsOnDataStorage( { }: iBaseTraitData<N, V> ): void {
-		// todo implement this
-	}
 	#resolvedFilePath: string;
 	#characterSheet: iCharacterSheet;
 	constructor(props: iLocalFileTraitDataStorageProps<N, V>) {

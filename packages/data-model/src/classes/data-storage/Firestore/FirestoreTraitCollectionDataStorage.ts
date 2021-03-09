@@ -15,6 +15,10 @@ export default class FirestoreTraitCollectionDataStorage<
 	D extends iBaseTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
 > extends AbstractTraitCollectionDataStorage<N, V, D, T> {
+	protected afterAdd(name: N): void {
+		// ? do nothing
+	}
+	/*
 	protected addTraitToDataStorage(name: N): void {
 		const traitData = this.map.get(name)?.toJson;
 
@@ -24,11 +28,28 @@ export default class FirestoreTraitCollectionDataStorage<
 			);
 		this.#firestore.collection(this.path).add(traitData);
 	}
+	*/
 	protected deleteTraitFromDataStorage(name: N): void {
-		throw new Error('Method not implemented.');
+		this.#firestore
+			.collection(this.path)
+			.where('name', '==', name)
+			.get()
+			.then(queryDocs => {
+				if (queryDocs.size !== 1)
+					throw Error(
+						`There should have been exactly 1 trait with name ${name} in collection at path ${this.path}, instead found ${queryDocs.size}`
+					);
+				queryDocs.forEach(doc => {
+					doc.ref.delete().catch(error => {
+						console.error(__filename, { error });
+						throw Error(`Could not delete trait with name ${name}`);
+					});
+				});
+			});
 	}
 	#characterSheet: iCharacterSheet; // ? remove if unused
 	#firestore: Firestore;
+	#unsubscribeFromEventListeners: () => void;
 
 	constructor(props: iFirestoreTraitCollectionDataStorageProps<N, V, D, T>) {
 		super(props);
@@ -37,5 +58,10 @@ export default class FirestoreTraitCollectionDataStorage<
 		this.#firestore = firestore;
 
 		// todo init event listeners
+		this.#unsubscribeFromEventListeners = this.attachFirestoreEventListeners()
+	}
+
+	protected attachFirestoreEventListeners(): () => void {
+		// todo
 	}
 }

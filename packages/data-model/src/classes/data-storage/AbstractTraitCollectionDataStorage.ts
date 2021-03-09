@@ -9,7 +9,7 @@ import {
 import { TraitNameUnionOrString } from './../../declarations/types';
 import { TraitValueTypeUnion } from '../../declarations/types';
 import { iLogReport, iLogEvent } from '../../declarations/interfaces/log-interfaces';
-import path from 'path';
+import pathModule from 'path';
 
 export default abstract class AbstractTraitCollectionDataStorage<
 	N extends TraitNameUnionOrString,
@@ -54,7 +54,8 @@ export default abstract class AbstractTraitCollectionDataStorage<
 		);
 	}
 
-	protected abstract addTraitToDataStorage(name: N): void;
+	// ? is this required? if colleciton adds data to storage this means creating trait data and connecting data to trait instances would be done by 2 classes async, so it might be done in the wrong order. Opted to have these both on the trait side
+	protected abstract afterAdd(name: N): void;
 
 	protected abstract deleteTraitFromDataStorage(name: N): void;
 
@@ -95,7 +96,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
 			// NOTE traits will handle changes internally, no need to do anything here
 			trait.value = newValue;
 		} else {
-			// add new trait instance locally
+			// add new trait instance locally, instantiating new trait will assert that it exists
 			this.map.set(
 				name,
 				this.instanceCreator({
@@ -106,12 +107,11 @@ export default abstract class AbstractTraitCollectionDataStorage<
 				})
 			);
 
-			// ? is this required? if colleciton adds data to storage this means creating trait data and connecting data to trait instances would be done by 2 classes async, so it might be done in the wrong order. Opted to have these both on the trait side
-			// apply change to data storage
-			// this.addTraitToDataStorage(name);
-
 			// log change
 			this.onAdd({ newValue, property: name });
+
+			// post add event
+			this.afterAdd(name);
 		}
 
 		return this; // return this instance for chaining
@@ -130,8 +130,8 @@ export default abstract class AbstractTraitCollectionDataStorage<
 
 		if (typeof oldValue !== 'undefined') {
 			// apply change locally
-			this.map.delete( name );
-			
+			this.map.delete(name);
+
 			// apply change to data storage
 			this.deleteTraitFromDataStorage(name);
 			// log change

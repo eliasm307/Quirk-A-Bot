@@ -4,7 +4,7 @@ import { iBaseTrait, iBaseTraitData } from '../../../declarations/interfaces/tra
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
 import saveCharacterSheetToFile from '../../../utils/saveCharacterSheetToFile';
 import InMemoryTraitCollectionDataStorage from '../InMemory/InMemoryTraitCollectionDataStorage';
-import path from 'path';
+import pathModule from 'path';
 import AbstractTraitCollectionDataStorage from '../AbstractTraitCollectionDataStorage';
 
 export default class LocalFileTraitCollectionDataStorage<
@@ -13,7 +13,7 @@ export default class LocalFileTraitCollectionDataStorage<
 	D extends iBaseTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
 > extends AbstractTraitCollectionDataStorage<N, V, D, T> {
-	protected addTraitToDataStorage(name: N): void {
+	protected afterAdd(name: N): void {
 		this.save();
 	}
 	protected deleteTraitFromDataStorage(name: N): void {

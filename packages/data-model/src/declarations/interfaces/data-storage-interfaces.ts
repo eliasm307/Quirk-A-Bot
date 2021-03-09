@@ -110,8 +110,7 @@ export interface iFirestoreTraitCollectionDataStorageProps<
 	V extends TraitValueTypeUnion,
 	D extends iBaseTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
-> extends iBaseTraitCollectionDataStorageProps<N, V, D, T>,
-		iHasResolvedBasePath,
+> extends iBaseTraitCollectionDataStorageProps<N, V, D, T>, 
 		iHasFirestore {
 	characterSheet: iCharacterSheet;
 }
@@ -151,7 +150,7 @@ export interface iCharacterSheetDataStorage {
 	exists(): boolean;
 
 	/** Creates new character sheet data for the given id, with default values */
-	initialise(): boolean;
+	initialise(): Promise<boolean>;
 }
 
 // -------------------------------------------------------

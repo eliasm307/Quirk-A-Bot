@@ -33,7 +33,7 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 	#characterSheet: iCharacterSheet;
 	#firestore: Firestore;
 	#path: string;
-	#unsubscribeToCollection: () => void = () => null; // todo add cleanup method which calls this
+	#unsubscribeFromEventListeners: () => void = () => null; // todo add cleanup method which calls this
 
 	constructor(props: iFirestoreTraitDataStorageProps<N, V>) {
 		super(props);
@@ -47,7 +47,7 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 			.then(_ => {
 				// add event liseners
 				const parentPath = pathModule.dirname(this.#path);
-				this.#unsubscribeToCollection = this.attachFirestoreEventListeners(parentPath);
+				this.#unsubscribeFromEventListeners = this.attachFirestoreEventListeners(parentPath);
 			})
 			.catch(error => {
 				throw Error(`Could not assert that trait with name ${this.name} exists in collection at path ${this.#path}`);
@@ -93,7 +93,7 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 		} catch (error) {
 			console.error(__filename, { error });
 			try {
-				this.#unsubscribeToCollection();
+				this.#unsubscribeFromEventListeners();
 			} finally {
 				throw Error(`Error setting change listener on trait named ${this.name} in collection ${parentCollectionPath}}`);
 			}

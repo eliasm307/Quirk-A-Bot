@@ -18,6 +18,8 @@ export default class FirestoreCharacterSheetDataStorage implements iCharacterShe
 	protected firestore: Firestore;
 	readonly #characterSheetCollectionName = 'CharacterSheets';
 
+	#exists?: boolean ;
+
 	constructor({
 		id = `default/${Math.random() * 9}`,
 		dataStorageFactory,
@@ -35,24 +37,10 @@ export default class FirestoreCharacterSheetDataStorage implements iCharacterShe
 			.get()
 			.then();
 	}
-	initialise(): boolean {
-		return saveCharacterSheetToFile(CharacterSheet.newDataObject({ id: this.id }), this.resolvedFilePath);
+	async initialise(): Promise<boolean> {
+		 
 	}
-	resolvedFilePath( arg0: iCharacterSheetData, resolvedFilePath: any ): boolean {
-		throw new Error( 'Method not implemented.' );
-	}
-	/*
-	get instance(): iCharacterSheet {
-		// check if an instance exists
-		if (CharacterSheet.instances.has(this.resolvedFilePath)) {
-			// console.log(__filename, `Using existing instance for '${resolvedPath}'`);
-			return CharacterSheet.instances.get(this.resolvedFilePath) as CharacterSheet;
-		}
-		return new CharacterSheet({
-			characterSheetData: this.getData(),
-			dataStorageFactory: this.dataStorageFactory,
-		});
-	}*/
+ 
 	getData(): iCharacterSheetData {
 		// todo add option to create blank instance at the specified path if it doesnt exist?
 		const data = importDataFromFile(this.resolvedFilePath);

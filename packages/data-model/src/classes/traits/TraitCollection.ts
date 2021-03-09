@@ -14,7 +14,7 @@ import AddLogEvent from '../log/AddLogEvent';
 import { iLogCollection, iLogEvent, iLogReport } from '../../declarations/interfaces/log-interfaces';
 import { iTraitCollection } from '../../declarations/interfaces/trait-collection-interfaces';
 import { iBaseTraitDataStorageProps, iTraitDataStorage } from '../../declarations/interfaces/data-storage-interfaces';
-import path from 'path'
+import pathModule from 'path'
 
 export default class TraitCollection<
 	N extends TraitNameUnionOrString,

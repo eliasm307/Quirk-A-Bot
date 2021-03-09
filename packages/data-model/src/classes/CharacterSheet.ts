@@ -52,7 +52,7 @@ export default class CharacterSheet implements iCharacterSheet {
 	readonly bloodPotency: iCoreNumberTrait;
 
 	// SINGLETON CONSTRUCTOR
-	static load(props: iCharacterSheetProps): CharacterSheet {
+	static async load(props: iCharacterSheetProps): Promise<CharacterSheet> {
 		// todo move to standalone util
 		const { dataStorageFactory, id } = props;
 		const preExistingInstance = CharacterSheet.instances.get(id);
@@ -62,7 +62,7 @@ export default class CharacterSheet implements iCharacterSheet {
 
 		// check if a character sheet with this id doesnt exist in the data storage, initialise a blank character sheet if not
 		const characterSheetDataStorage = dataStorageFactory.newCharacterSheetDataStorage({ id });
-		if (!characterSheetDataStorage.exists()) characterSheetDataStorage.initialise(); // todo make this an internal class method named 'assert' or something
+		if (!characterSheetDataStorage.exists()) await characterSheetDataStorage.initialise(); // todo make this an internal class method named 'assert' or something
 
 		// return a new character sheet instance as requested
 		// Note a character sheet instance only creates an object that is connected to a character sheet on the data source, it doesnt initialise a new character sheet on the data source

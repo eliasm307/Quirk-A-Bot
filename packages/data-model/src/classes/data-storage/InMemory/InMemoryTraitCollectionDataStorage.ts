@@ -1,4 +1,4 @@
-import path from 'path';
+import pathModule from 'path';
 import {
 	iBaseTraitCollectionDataStorageProps,
 	iBaseTraitDataStorageProps,
@@ -23,7 +23,7 @@ export default class InMemoryTraitCollectionDataStorage<
 	>
 	extends AbstractTraitCollectionDataStorage<N, V, D, T>
 	implements iTraitCollectionDataStorage<N, V, D, T> {
-	protected addTraitToDataStorage( name: N ): void {
+	protected afterAdd( name: N ): void {
 		throw new Error( 'Method not implemented.' );
 	}
 	protected deleteTraitFromDataStorage( name: N ): void {

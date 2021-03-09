@@ -6,7 +6,6 @@ import { iBaseTraitProps, iBaseTraitData } from '../../declarations/interfaces/t
 import LogCollection from '../log/LogCollection';
 import UpdateLogEvent from '../log/UpdateLogEvent';
 import { iTraitDataStorage } from '../../declarations/interfaces/data-storage-interfaces';
-import path from 'path';
 
 export default abstract class AbstractBaseTrait<
 	N extends TraitNameUnionOrString,
@@ -30,7 +29,8 @@ export default abstract class AbstractBaseTrait<
 
 		// todo test this works as expected, ie uses '/' not '\\'
 		// ? should this be done by a function passed in as a prop? not all storage systems might use path, they might require a random number etc
-		this.path = path.resolve(parentPath, name);
+		// ? path.resolve wasnt working here, why?
+		this.path = `${parentPath}/${name}`;
 
 		// initialise data store
 		this.#dataSorage = traitDataStorageInitialiser({ name, defaultValueIfNotDefined: value, path: this.path });
