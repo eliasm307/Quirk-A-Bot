@@ -13,7 +13,7 @@ let testName: string;
 
 const dataStorageFactory = new InMemoryTraitDataStorageFactory({});
 
-const traitCollectionDataStorageInitialiserBundle: iTraitCollectionDataStorageInitialiserBundle = {
+const traitCollectionDataStorageInitialiserBundle: iTraitCollectionFactoryMethod = {
 	traitCollectionDataStorageInitialiser: dataStorageFactory.newTraitCollectionDataStorageInitialiser(),
 	traitDataStorageInitialiser: dataStorageFactory.newTraitDataStorageInitialiser(),
 };

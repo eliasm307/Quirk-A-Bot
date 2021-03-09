@@ -12,6 +12,7 @@ export default class NumberTrait<N extends TraitNameUnionOrString>
 		name,
 		min = 0,
 		value = min,
+		parentPath,
 		traitDataStorageInitialiser,
 		toJson = () => ({
 			name: this.name,
@@ -25,6 +26,7 @@ export default class NumberTrait<N extends TraitNameUnionOrString>
 			toJson,
 			min,
 			max,
+			parentPath,
 		});
 	}
 }

@@ -49,6 +49,7 @@ export default class LocalFileDataStorageFactory implements iDataStorageFactory 
 	>(
 		props: iBaseTraitCollectionDataStorageProps<N, V, D, T>
 	) => iTraitCollectionDataStorage<N, V, D, T> {
-		return props => new LocalFileTraitCollectionDataStorage({ ...props, characterSheet });
+		return props =>
+			new LocalFileTraitCollectionDataStorage({ ...props, characterSheet, resolvedBasePath: this.#resolvedBasePath });
 	}
 }

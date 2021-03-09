@@ -1,6 +1,5 @@
 import {
-	iHasTraitDataStorageInitialiser,
-	iTraitCollectionDataStorageInitialiserBundle,
+	iHasTraitDataStorageInitialiser, 
 } from './data-storage-interfaces';
 import {
 	TraitNameUnionOrString,
@@ -12,8 +11,9 @@ import {
 	CoreNumberTraitName,
 	AttributeCategory,
 } from '../types';
-import { iToJson } from './general-interfaces';
+import { iCanHaveParentPath, iCanHaveToJson, iHasParentPath, iHasPath, iHasToJson } from './general-interfaces';
 import { iLoggerSingle } from './log-interfaces';
+import { iTraitCollectionDataStorageInitialiserBundle } from './trait-collection-interfaces';
 
 export interface iHasCategorySelector<N extends string, C extends string> {
 	categorySelector: (name: N) => C;
@@ -49,10 +49,11 @@ export interface iBaseTraitProps<
 	N extends TraitNameUnionOrString,
 	V extends TraitValueTypeUnion,
 	D extends iBaseTraitData<N, V>
-> extends iHasTraitDataStorageInitialiser {
+> extends iHasTraitDataStorageInitialiser,
+		iHasParentPath,
+		iCanHaveToJson<D> {
 	name: N;
 	value: V;
-	toJson?: () => D;
 }
 export interface iStringTraitProps<N extends TraitNameUnionOrString, V extends string>
 	extends iBaseTraitProps<N, V, iStringTraitData<N, V>> {}
@@ -77,7 +78,7 @@ export interface iTraitCollectionProps<
 	D extends iBaseTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
 > extends iHasTraitInstanceCreator<N, V, D, T>,
-		iTraitCollectionDataStorageInitialiserBundle {
+		iTraitCollectionDataStorageInitialiserBundle, iHasParentPath {
 	name: string;
 }
 // -------------------------------------------------------
@@ -124,8 +125,9 @@ export interface iBaseTrait<
 	V extends TraitValueTypeUnion,
 	D extends iBaseTraitData<N, V>
 > extends iBaseTraitData<N, V>,
-		iToJson<D>,
-		iLoggerSingle {
+		iHasToJson<D>,
+		iLoggerSingle,
+		iHasPath {
 	// todo add explain method to give a summary what this trait is for
 	// todo add explainValue method to describe the current value of the attribute, ie add description getter to describe the meaning of a value
 }

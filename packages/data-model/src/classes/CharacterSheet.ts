@@ -69,7 +69,7 @@ export default class CharacterSheet implements iCharacterSheet {
 	readonly bloodPotency: iCoreNumberTrait;
 
 	// SINGLETON CONSTRUCTOR
-	static load( props: iCharacterSheetProps ): CharacterSheet {
+	static load(props: iCharacterSheetProps): CharacterSheet {
 		// todo move to standalone util
 		const { dataStorageFactory, id } = props;
 		const preExistingInstance = CharacterSheet.instances.get(id);
@@ -112,6 +112,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			name: 'Blood Potency',
 			value: initialData.bloodPotency.value || 0,
 			traitDataStorageInitialiser,
+			parentPath: id,
 		});
 
 		this.hunger = new NumberTrait<CoreNumberTraitName>({
@@ -119,6 +120,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			name: 'Hunger',
 			value: initialData.hunger.value || 0,
 			traitDataStorageInitialiser,
+			parentPath: id,
 		});
 
 		this.humanity = new NumberTrait<CoreNumberTraitName>({
@@ -126,6 +128,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			name: 'Humanity',
 			value: initialData.humanity.value || 0,
 			traitDataStorageInitialiser,
+			parentPath: id,
 		});
 
 		this.health = new NumberTrait<CoreNumberTraitName>({
@@ -133,6 +136,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			name: 'Health',
 			value: initialData.health.value || 0,
 			traitDataStorageInitialiser,
+			parentPath: id,
 		});
 
 		this.willpower = new NumberTrait<CoreNumberTraitName>({
@@ -140,6 +144,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			name: 'Willpower',
 			value: initialData.willpower.value || 0,
 			traitDataStorageInitialiser,
+			parentPath: id,
 		});
 
 		// core string traits
@@ -147,38 +152,41 @@ export default class CharacterSheet implements iCharacterSheet {
 			name: 'Name',
 			value: initialData.name.value || 'TBC',
 			traitDataStorageInitialiser,
+			parentPath: id,
 		});
 
 		this.sire = new StringTrait<CoreStringTraitName, string>({
 			name: 'Sire',
 			value: initialData.sire.value || 'TBC',
 			traitDataStorageInitialiser,
+			parentPath: id,
 		});
 
 		this.clan = new StringTrait<CoreStringTraitName, ClanName>({
 			name: 'Clan',
 			value: initialData.clan.value || 'TBC',
 			traitDataStorageInitialiser,
+			parentPath: id,
 		});
 
 		// create collections, with initial data where available
 		this.attributes = TraitFactory.newAttributeTraitCollection(
-			{ traitCollectionDataStorageInitialiser, traitDataStorageInitialiser },
+			{ traitCollectionDataStorageInitialiser, traitDataStorageInitialiser, parentPath: id },
 			...initialData.attributes
 		);
 
 		this.skills = TraitFactory.newSkillTraitCollection(
-			{ traitCollectionDataStorageInitialiser, traitDataStorageInitialiser },
+			{ traitCollectionDataStorageInitialiser, traitDataStorageInitialiser, parentPath: id },
 			...initialData.skills
 		);
 
 		this.disciplines = TraitFactory.newDisciplineTraitCollection(
-			{ traitCollectionDataStorageInitialiser, traitDataStorageInitialiser },
+			{ traitCollectionDataStorageInitialiser, traitDataStorageInitialiser, parentPath: id },
 			...initialData.disciplines
 		);
 
 		this.touchstonesAndConvictions = TraitFactory.newTouchstonesAndConvictionTraitCollection(
-			{ traitCollectionDataStorageInitialiser, traitDataStorageInitialiser },
+			{ traitCollectionDataStorageInitialiser, traitDataStorageInitialiser, parentPath: id },
 			...initialData.touchstonesAndConvictions
 		);
 
@@ -246,7 +254,7 @@ export default class CharacterSheet implements iCharacterSheet {
 	}
 
 	/** Returns a new iCharacterSheetData object with default values */
-	static newDataObject( { id }: iHasId ): iCharacterSheetData {
+	static newDataObject({ id }: iHasId): iCharacterSheetData {
 		// todo move to standalone util
 		return {
 			id: id,

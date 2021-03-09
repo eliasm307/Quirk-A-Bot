@@ -1,6 +1,6 @@
 import { AttributeName, SkillName, DisciplineName } from './../types';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../types';
-import { iBaseCollection, iToJson } from './general-interfaces';
+import { iBaseCollection, iHasToJson, iHasPath, iHasParentPath } from './general-interfaces';
 import { iLoggerCollection } from './log-interfaces';
 import {
 	iAttribute,
@@ -16,6 +16,21 @@ import {
 	iGeneralTraitData,
 	iGeneralTrait,
 } from './trait-interfaces';
+import { iHasTraitCollectionDataStorageInitialiser, iHasTraitDataStorageInitialiser } from './data-storage-interfaces';
+
+// -------------------------------------------------------
+// GENERAL
+
+export interface iTraitCollectionDataStorageInitialiserBundle
+	extends iHasTraitCollectionDataStorageInitialiser,
+		iHasTraitDataStorageInitialiser {}
+
+// -------------------------------------------------------
+// FACTORY METHOD PROPS
+
+export interface iTraitCollectionFactoryMethodProps
+	extends iTraitCollectionDataStorageInitialiserBundle,
+		iHasParentPath {}
 
 // -------------------------------------------------------
 // BASE TRAIT COLLECTION TYPES
@@ -27,8 +42,9 @@ export interface iTraitCollection<
 	D extends iBaseTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
 > extends iBaseCollection<N, V, T, iTraitCollection<N, V, D, T>>,
-		iToJson<D[]>,
-		iLoggerCollection {
+		iHasToJson<D[]>,
+		iLoggerCollection,
+		iHasPath {
 	name: string;
 }
 

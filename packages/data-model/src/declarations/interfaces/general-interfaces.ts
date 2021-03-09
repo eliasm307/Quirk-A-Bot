@@ -1,15 +1,19 @@
+import { TraitTypeNameUnion } from './../types';
 import { iDataStorageFactory } from './data-storage-interfaces';
-export interface iToJson<D> {
+export interface iHasToJson<D> {
 	toJson: () => D;
 }
+
+export interface iCanHaveToJson<D> {
+	toJson?: () => D;
+}
+
 export interface iCanHaveSaveAction {
 	saveAction?: () => boolean;
 }
 
-
-
 export interface iHasDataStorageFactory {
-	dataStorageFactory: iDataStorageFactory
+	dataStorageFactory: iDataStorageFactory;
 }
 
 export interface iHasSaveAction {
@@ -26,9 +30,32 @@ export interface iHasNewValue<V> {
 export interface iBaseCollection<K extends string, SetValue, ReturnValue, C> {
 	// todo this should extend a base iCollection
 	get(key: K): ReturnValue | void;
+
+	/**
+	 * Update trait value if it exists, otherwise add a new one
+	 * @param name name of trait to edit or create
+	 * @param newValue value to assign
+	 */
 	set(key: K, value: SetValue): C;
 	delete(key: K): C;
 	has(key: K): boolean;
 	toArray(): ReturnValue[];
 	readonly size: number;
+}
+
+// ? should this be renamed to id?
+export interface iHasParentPath {
+	/** Path from the root to reach the parent of this item */
+	parentPath: string;
+}
+
+export interface iCanHaveParentPath {
+	/** Path from the root to reach the parent of this item */
+	parentPath?: string;
+}
+
+// ? should this be renamed to id?
+export interface iHasPath {
+	/** Path from the root to reach this item */
+	path: string;
 }

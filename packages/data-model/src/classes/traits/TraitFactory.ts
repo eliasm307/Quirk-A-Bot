@@ -1,13 +1,9 @@
 import {
-	iHasTraitCollectionDataStorageInitialiser,
-	iTraitCollectionDataStorageInitialiserBundle,
-} from './../../declarations/interfaces/data-storage-interfaces';
-import {
 	iDisciplineTraitCollection,
 	iSkillTraitCollection,
 	iTouchStoneOrConvictionCollection,
+	iTraitCollectionFactoryMethodProps,
 } from './../../declarations/interfaces/trait-collection-interfaces';
-import { iHasDataStorageFactory } from './../../declarations/interfaces/general-interfaces';
 import {
 	AttributeName,
 	AttributeCategory,
@@ -16,7 +12,6 @@ import {
 	TraitNameUnionOrString,
 	CoreNumberTraitName,
 	CoreStringTraitName,
-	ClanName,
 } from './../../declarations/types';
 import {
 	iNumberTraitWithCategoryProps,
@@ -31,41 +26,31 @@ import {
 	iDisciplineData,
 	iTouchStoneOrConvictionData,
 	iSkillData,
-	iBaseTraitData,
 } from './../../declarations/interfaces/trait-interfaces';
 import NumberTraitWithCategory from './NumberTraitWithCategory';
 import NumberTrait from './NumberTrait';
 import StringTrait from './StringTrait';
 import getAttributeCategory from '../../utils/getAttributeCategory';
 import TraitCollection from './TraitCollection';
-import { iCharacterSheetData } from '../../declarations/interfaces/character-sheet-interfaces';
-import { iAttributeTraitCollection } from '../../declarations/interfaces/trait-collection-interfaces';
+import { iAttributeTraitCollection } from '../../declarations/interfaces/trait-collection-interfaces'; 
 
 export default abstract class TraitFactory {
 	// methods use base trait props as all other details should be selected to match the required trait type
-	static newStringTrait<V extends string>({
-		name,
-		value,
-		traitDataStorageInitialiser,
-	}: iStringTraitProps<TraitNameUnionOrString, V>) {
-		return new StringTrait({ name, value, traitDataStorageInitialiser });
+	static newStringTrait<V extends string>(props: iStringTraitProps<TraitNameUnionOrString, V>) {
+		return new StringTrait(props);
 	}
 	static newNumberTrait({
 		name,
 		value = 0,
+		parentPath,
 		traitDataStorageInitialiser,
 		max,
 		min = 0,
 	}: iNumberTraitProps<TraitNameUnionOrString>) {
-		return new NumberTrait({ name, value, traitDataStorageInitialiser, max, min });
+		return new NumberTrait({ name, value, parentPath, traitDataStorageInitialiser, max, min });
 	}
-	static newCoreStringTrait<V extends string>({
-		name,
-		value,
-
-		traitDataStorageInitialiser,
-	}: iStringTraitProps<CoreStringTraitName, V>) {
-		return new StringTrait({ name, value, traitDataStorageInitialiser });
+	static newCoreStringTrait<V extends string>(props: iStringTraitProps<CoreStringTraitName, V>) {
+		return new StringTrait(props);
 	}
 	static newCoreNumberTrait({
 		name,
@@ -73,13 +58,14 @@ export default abstract class TraitFactory {
 		traitDataStorageInitialiser,
 		max,
 		min = 0,
+		parentPath,
 	}: iNumberTraitProps<CoreNumberTraitName>) {
-		return new NumberTrait({ name, value, traitDataStorageInitialiser, max, min });
+		return new NumberTrait({ name, value, parentPath, traitDataStorageInitialiser, max, min });
 	}
 	static newAttributeTrait({
 		name,
 		value = 0,
-
+		parentPath,
 		traitDataStorageInitialiser,
 	}: iBaseTraitProps<AttributeName, number, iAttributeData>): iAttribute {
 		const props: iNumberTraitWithCategoryProps<AttributeName, AttributeCategory> = {
@@ -89,6 +75,7 @@ export default abstract class TraitFactory {
 			name,
 			value,
 			traitDataStorageInitialiser,
+			parentPath,
 		};
 
 		return new NumberTraitWithCategory(props);
@@ -97,7 +84,7 @@ export default abstract class TraitFactory {
 	static newDisciplineTrait({
 		name,
 		value = 0,
-
+		parentPath,
 		traitDataStorageInitialiser,
 	}: iBaseTraitProps<DisciplineName, number, iDisciplineData>): iDiscipline {
 		const props: iNumberTraitProps<DisciplineName> = {
@@ -105,7 +92,7 @@ export default abstract class TraitFactory {
 			max: 5,
 			name,
 			value,
-
+			parentPath,
 			traitDataStorageInitialiser,
 		};
 
@@ -115,7 +102,7 @@ export default abstract class TraitFactory {
 	static newSkillTrait({
 		name,
 		value = 0,
-
+		parentPath,
 		traitDataStorageInitialiser,
 	}: iBaseTraitProps<SkillName, number, iSkillData>): iSkill {
 		const props: iNumberTraitProps<SkillName> = {
@@ -123,7 +110,7 @@ export default abstract class TraitFactory {
 			max: 5,
 			name,
 			value,
-
+			parentPath,
 			traitDataStorageInitialiser,
 		};
 
@@ -134,11 +121,12 @@ export default abstract class TraitFactory {
 		name,
 		value,
 		traitDataStorageInitialiser,
+		parentPath,
 	}: iBaseTraitProps<string, string, iTouchStoneOrConvictionData>): iTouchStoneOrConviction {
 		const props: iStringTraitProps<string, string> = {
 			name,
 			value,
-
+			parentPath,
 			traitDataStorageInitialiser,
 		};
 
@@ -146,14 +134,14 @@ export default abstract class TraitFactory {
 	}
 
 	static newAttributeTraitCollection(
-		props: iTraitCollectionDataStorageInitialiserBundle,
+		props: iTraitCollectionFactoryMethodProps,
 		...initial: iAttributeData[]
 	): iAttributeTraitCollection {
 		const {} = props || {};
 		return new TraitCollection<AttributeName, number, iAttributeData, iAttribute>(
 			{
 				...props,
-				name: `AttributeTraitCollection`,
+				name: `Attributes`,
 				instanceCreator: TraitFactory.newAttributeTrait,
 			},
 			...initial
@@ -161,14 +149,14 @@ export default abstract class TraitFactory {
 	}
 
 	static newSkillTraitCollection(
-		props: iTraitCollectionDataStorageInitialiserBundle,
+		props: iTraitCollectionFactoryMethodProps,
 		...initial: iSkillData[]
 	): iSkillTraitCollection {
 		const {} = props || {};
 		return new TraitCollection<SkillName, number, iSkillData, iSkill>(
 			{
 				...props,
-				name: `SkillTraitCollection`,
+				name: `Skills`,
 				instanceCreator: TraitFactory.newSkillTrait,
 			},
 			...initial
@@ -176,14 +164,14 @@ export default abstract class TraitFactory {
 	}
 
 	static newDisciplineTraitCollection(
-		props: iTraitCollectionDataStorageInitialiserBundle,
+		props: iTraitCollectionFactoryMethodProps,
 		...initial: iDisciplineData[]
 	): iDisciplineTraitCollection {
 		const {} = props || {};
 		return new TraitCollection<DisciplineName, number, iDisciplineData, iDiscipline>(
 			{
 				...props,
-				name: `DisciplineTraitCollection`,
+				name: `Disciplines`,
 				instanceCreator: TraitFactory.newDisciplineTrait,
 			},
 			...initial
@@ -191,14 +179,14 @@ export default abstract class TraitFactory {
 	}
 
 	static newTouchstonesAndConvictionTraitCollection(
-		props: iTraitCollectionDataStorageInitialiserBundle,
+		props: iTraitCollectionFactoryMethodProps,
 		...initial: iTouchStoneOrConvictionData[]
 	): iTouchStoneOrConvictionCollection {
 		const {} = props || {};
 		return new TraitCollection<string, string, iTouchStoneOrConvictionData, iTouchStoneOrConviction>(
 			{
 				...props,
-				name: `TouchstonesAndConvictionTraitCollection`,
+				name: `TouchstonesAndConvictions`,
 				instanceCreator: TraitFactory.newTouchStoneOrConvictionTrait,
 			},
 			...initial

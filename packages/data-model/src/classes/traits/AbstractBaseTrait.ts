@@ -6,6 +6,7 @@ import { iBaseTraitProps, iBaseTraitData } from '../../declarations/interfaces/t
 import LogCollection from '../log/LogCollection';
 import UpdateLogEvent from '../log/UpdateLogEvent';
 import { iTraitDataStorage } from '../../declarations/interfaces/data-storage-interfaces';
+import path from 'path';
 
 export default abstract class AbstractBaseTrait<
 	N extends TraitNameUnionOrString,
@@ -17,17 +18,22 @@ export default abstract class AbstractBaseTrait<
 	#dataSorage: iTraitDataStorage<N, V>;
 	#logs: iLogCollection;
 	toJson: () => D;
+	readonly path: string;
 	readonly name: N;
 
 	protected abstract newValueIsValid(newVal: V): boolean;
 
 	// protected abstract getDefaultValue(): V;
 
-	constructor({ name, value, toJson, traitDataStorageInitialiser }: iBaseTraitProps<N, V, D>) {
+	constructor({ name, value, toJson, traitDataStorageInitialiser, parentPath }: iBaseTraitProps<N, V, D>) {
 		this.name = name;
 
+		// todo test this works as expected, ie uses '/' not '\\'
+		// ? should this be done by a function passed in as a prop? not all storage systems might use path, they might require a random number etc
+		this.path = path.resolve(parentPath, name);
+
 		// initialise data store
-		this.#dataSorage = traitDataStorageInitialiser({ name, defaultValueIfNotDefined: value });
+		this.#dataSorage = traitDataStorageInitialiser({ name, defaultValueIfNotDefined: value, path: this.path });
 
 		if (!toJson) throw Error(`${__filename} toJson function not defined`);
 		this.toJson = toJson;

@@ -38,6 +38,9 @@ export default class FirestoreCharacterSheetDataStorage implements iCharacterShe
 	initialise(): boolean {
 		return saveCharacterSheetToFile(CharacterSheet.newDataObject({ id: this.id }), this.resolvedFilePath);
 	}
+	resolvedFilePath( arg0: iCharacterSheetData, resolvedFilePath: any ): boolean {
+		throw new Error( 'Method not implemented.' );
+	}
 	/*
 	get instance(): iCharacterSheet {
 		// check if an instance exists
