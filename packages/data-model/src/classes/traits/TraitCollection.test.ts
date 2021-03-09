@@ -8,12 +8,12 @@ let testName: string;
 
 const dataStorageFactory = new InMemoryTraitDataStorageFactory({});
 
-const parentPath = 'traitCollectionTests';
+const rootCollectionPath = 'traitCollectionTests';
 
 const traitCollectionFactoryMethodProps: iTraitCollectionFactoryMethodProps = {
 	traitCollectionDataStorageInitialiser: dataStorageFactory.newTraitCollectionDataStorageInitialiser(),
 	traitDataStorageInitialiser: dataStorageFactory.newTraitDataStorageInitialiser(),
-	parentPath,
+	parentPath: rootCollectionPath,
 };
 
 test('traitCollection CRUD tests', () => {
@@ -29,7 +29,7 @@ test('traitCollection CRUD tests', () => {
 	expect(tc.size).toEqual(1);
 
 	const trait = tc.get('Wits') as iGeneralTrait;
-	expect(trait.path).toEqual(`${parentPath}/Wits`);
+	expect(trait.path).toEqual(`${rootCollectionPath}/Attributes/Wits`);
 
 	// test changing existing item value
 	tc.set('Wits', 2);

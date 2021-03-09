@@ -148,7 +148,6 @@ export interface iTraitCollectionDataStorage<
 		iLoggerCollection,
 		iHasPath {
 	name: string;
-
 }
 
 /** Represents character sheet data in a data store */
@@ -156,11 +155,14 @@ export interface iCharacterSheetDataStorage {
 	/** Returns the character sheet data from the data storage */
 	getData(): iCharacterSheetData;
 
+	/** Makes sure that a character sheet with the given id actually exists in the given data storage, otherwise it creates it with default values */
+	assertDataExistsOnDataStorage(): Promise<void>;
+
 	/** Tests if a character sheet with the given id actually exists in the given data storage */
-	exists(): boolean;
+	// exists(): Promise<boolean>;
 
 	/** Creates new character sheet data for the given id, with default values */
-	initialise(): Promise<boolean>;
+	// initialise(): Promise<boolean>;
 }
 
 // -------------------------------------------------------

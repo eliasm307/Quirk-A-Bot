@@ -28,16 +28,17 @@ export default class LocalFileCharacterSheetDataStorage implements iCharacterShe
 		this.resolvedBasePath = resolvedBasePath;
 		this.resolvedFilePath = path.resolve(resolvedBasePath, `${this.preProcessId(id)}.json`);
 	}
+	async assertDataExistsOnDataStorage(): Promise<void> {
+		const exists = await fs.pathExistsSync(this.resolvedFilePath); // check file path exists
+
+		if (exists) return;
+
+		// if it doesnt exist initialise it as a blank character sheet
+		await saveCharacterSheetToFile(CharacterSheet.newDataObject({ id: this.id }), this.resolvedFilePath);
+	}
 
 	private preProcessId(id: string) {
 		return id.replace(/\.json$/i, '.json');
-	}
-
-	exists(): boolean {
-		return fs.pathExistsSync(this.resolvedFilePath); // check file path exists
-	}
-	async initialise(): Promise<boolean> {
-		return saveCharacterSheetToFile(CharacterSheet.newDataObject({ id: this.id }), this.resolvedFilePath);
 	}
 
 	getData(): iCharacterSheetData {

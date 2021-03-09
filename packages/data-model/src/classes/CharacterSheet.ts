@@ -62,7 +62,8 @@ export default class CharacterSheet implements iCharacterSheet {
 
 		// check if a character sheet with this id doesnt exist in the data storage, initialise a blank character sheet if not
 		const characterSheetDataStorage = dataStorageFactory.newCharacterSheetDataStorage({ id });
-		if (!characterSheetDataStorage.exists()) await characterSheetDataStorage.initialise(); // todo make this an internal class method named 'assert' or something
+		
+		await characterSheetDataStorage.assertDataExistsOnDataStorage(); // todo make this an internal class method named 'assert' or something
 
 		// return a new character sheet instance as requested
 		// Note a character sheet instance only creates an object that is connected to a character sheet on the data source, it doesnt initialise a new character sheet on the data source
@@ -240,7 +241,7 @@ export default class CharacterSheet implements iCharacterSheet {
 	static newDataObject({ id }: iHasId): iCharacterSheetData {
 		// todo move to standalone util
 		return {
-			id: id,
+			id,
 			bloodPotency: { name: 'Blood Potency', value: 0 },
 			health: { name: 'Health', value: 0 },
 			humanity: { name: 'Humanity', value: 0 },
