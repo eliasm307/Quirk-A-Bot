@@ -104,13 +104,22 @@ export interface iLocalFileTraitCollectionDataStorageProps<
 		iHasResolvedBasePath {
 	characterSheet: iCharacterSheet;
 }
+export interface iFirestoreTraitCollectionDataStorageProps<
+	N extends TraitNameUnionOrString,
+	V extends TraitValueTypeUnion,
+	D extends iBaseTraitData<N, V>,
+	T extends iBaseTrait<N, V, D>
+> extends iBaseTraitCollectionDataStorageProps<N, V, D, T>,
+		iHasFirestore {
+	characterSheet: iCharacterSheet;
+}
 
 export interface iFirestoreTraitCollectionDataStorageProps<
 	N extends TraitNameUnionOrString,
 	V extends TraitValueTypeUnion,
 	D extends iBaseTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
-> extends iBaseTraitCollectionDataStorageProps<N, V, D, T>, 
+> extends iBaseTraitCollectionDataStorageProps<N, V, D, T>,
 		iHasFirestore {
 	characterSheet: iCharacterSheet;
 }
@@ -139,6 +148,7 @@ export interface iTraitCollectionDataStorage<
 		iLoggerCollection,
 		iHasPath {
 	name: string;
+
 }
 
 /** Represents character sheet data in a data store */

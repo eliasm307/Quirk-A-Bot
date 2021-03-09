@@ -63,5 +63,6 @@ export default class FirestoreTraitCollectionDataStorage<
 
 	protected attachFirestoreEventListeners(): () => void {
 		// todo
+		throw Error('Method not implemented')
 	}
 }

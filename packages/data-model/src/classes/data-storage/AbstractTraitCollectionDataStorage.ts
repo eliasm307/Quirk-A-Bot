@@ -9,7 +9,8 @@ import {
 import { TraitNameUnionOrString } from './../../declarations/types';
 import { TraitValueTypeUnion } from '../../declarations/types';
 import { iLogReport, iLogEvent } from '../../declarations/interfaces/log-interfaces';
-import pathModule from 'path';
+import path from 'path';
+import { createPath } from '../../utils/createPath';
 
 export default abstract class AbstractTraitCollectionDataStorage<
 	N extends TraitNameUnionOrString,
@@ -40,7 +41,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
 	}: iBaseTraitCollectionDataStorageProps<N, V, D, T>) {
 		this.onAdd = onAdd;
 		this.onDelete = onDelete;
-		this.path = path.resolve(parentPath, name);
+		this.path = createPath(parentPath, name);
 		this.name = name;
 		this.instanceCreator = instanceCreator;
 		this.traitDataStorageInitialiser = traitDataStorageInitialiser;
@@ -53,6 +54,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
 				: []
 		);
 	}
+ 
 
 	// ? is this required? if colleciton adds data to storage this means creating trait data and connecting data to trait instances would be done by 2 classes async, so it might be done in the wrong order. Opted to have these both on the trait side
 	protected abstract afterAdd(name: N): void;

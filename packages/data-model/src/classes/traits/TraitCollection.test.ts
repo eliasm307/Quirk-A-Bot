@@ -4,7 +4,6 @@ import TraitFactory from './TraitFactory';
 import InMemoryTraitDataStorageFactory from '../data-storage/InMemory/InMemoryDataStorageFactory';
 import { iTraitCollectionFactoryMethodProps } from '../../declarations/interfaces/trait-collection-interfaces';
 
-const saveAction = () => true;
 let testName: string;
 
 const dataStorageFactory = new InMemoryTraitDataStorageFactory({});

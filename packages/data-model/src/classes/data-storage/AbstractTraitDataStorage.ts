@@ -10,11 +10,11 @@ interface iPrivateModifiableProperties<V extends TraitValueTypeUnion> {
 export default abstract class AbstractTraitDataStorage<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
 	implements iTraitDataStorage<N, V> {
 	name: N;
-	protected private: iPrivateModifiableProperties<V>;
+	protected private: iPrivateModifiableProperties<V>; 
 
 	constructor(props: iBaseTraitDataStorageProps<N, V>) {
-		const { name, defaultValueIfNotDefined } = props;
-		this.name = name;
+		const { name, defaultValueIfNotDefined  } = props;
+		this.name = name; 
 		this.private = {
 			value: defaultValueIfNotDefined, // assign initial value
 		};

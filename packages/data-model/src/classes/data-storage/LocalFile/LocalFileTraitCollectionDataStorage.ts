@@ -4,7 +4,7 @@ import { iBaseTrait, iBaseTraitData } from '../../../declarations/interfaces/tra
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
 import saveCharacterSheetToFile from '../../../utils/saveCharacterSheetToFile';
 import InMemoryTraitCollectionDataStorage from '../InMemory/InMemoryTraitCollectionDataStorage';
-import pathModule from 'path';
+import path from 'path';
 import AbstractTraitCollectionDataStorage from '../AbstractTraitCollectionDataStorage';
 
 export default class LocalFileTraitCollectionDataStorage<

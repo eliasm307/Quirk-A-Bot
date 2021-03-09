@@ -1,5 +1,5 @@
 import fs, { WriteOptions } from 'fs-extra';
-import pathModule from 'path';
+import path from 'path';
 
 export default function exportDataToFile(data: any, outputFilePath: string): boolean { 
 	// todo test

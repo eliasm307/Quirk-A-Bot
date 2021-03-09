@@ -1,4 +1,4 @@
-import pathModule from 'path';
+import path from 'path';
 import { iCharacterSheet, iCharacterSheetData } from '../../../declarations/interfaces/character-sheet-interfaces';
 import importDataFromFile from '../../../utils/importDataFromFile';
 import { isCharacterSheetData } from '../../../utils/typePredicates';

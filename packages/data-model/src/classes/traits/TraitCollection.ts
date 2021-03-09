@@ -14,7 +14,8 @@ import AddLogEvent from '../log/AddLogEvent';
 import { iLogCollection, iLogEvent, iLogReport } from '../../declarations/interfaces/log-interfaces';
 import { iTraitCollection } from '../../declarations/interfaces/trait-collection-interfaces';
 import { iBaseTraitDataStorageProps, iTraitDataStorage } from '../../declarations/interfaces/data-storage-interfaces';
-import pathModule from 'path'
+import path from 'path';
+import { createPath } from '../../utils/createPath';
 
 export default class TraitCollection<
 	N extends TraitNameUnionOrString,
@@ -31,7 +32,7 @@ export default class TraitCollection<
 
 	/** Collection of logs for trait collection, ie add and remove events only (update events are held in traits) */
 	protected logs: iLogCollection;
-	#typeName: TraitTypeNameUnion | string = 'Trait';
+	#typeName: TraitTypeNameUnion | string = 'Trait Collection';
 
 	constructor(
 		{
@@ -44,7 +45,7 @@ export default class TraitCollection<
 		...initialData: D[]
 	) {
 		this.name = name;
-		this.path = path.resolve(parentPath, name)
+		this.path = createPath(parentPath, name);
 		this.#traitDataStorageInitialiser = traitDataStorageInitialiser; // todo, reuse this function instead of making a new one each time
 		this.logs = new LogCollection({ sourceName: name, sourceType: 'Trait Collection' });
 

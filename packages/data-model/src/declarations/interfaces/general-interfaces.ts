@@ -27,19 +27,19 @@ export interface iHasNewValue<V> {
 	newValue: V;
 }
 
-export interface iBaseCollection<K extends string, SetValue, ReturnValue, C> {
+export interface iBaseCollection<K extends string, SetValueType, ReturnValueType, CollectionType> {
 	// todo this should extend a base iCollection
-	get(key: K): ReturnValue | void;
+	get(key: K): ReturnValueType | void;
 
 	/**
 	 * Update trait value if it exists, otherwise add a new one
 	 * @param name name of trait to edit or create
 	 * @param newValue value to assign
 	 */
-	set(key: K, value: SetValue): C;
-	delete(key: K): C;
+	set(key: K, value: SetValueType): CollectionType;
+	delete(key: K): CollectionType;
 	has(key: K): boolean;
-	toArray(): ReturnValue[];
+	toArray(): ReturnValueType[];
 	readonly size: number;
 }
 

@@ -24,7 +24,7 @@ export default class InMemoryDataStorageFactory implements iDataStorageFactory {
 	newCharacterSheetDataStorage({ id }: iHasId): iCharacterSheetDataStorage {
 		return new InMemoryCharacterSheetDataStorage({ id, dataStorageFactory: this });
 	}
-
+/*
 	newTraitCollectionDataStorage<
 		N extends string,
 		V extends TraitValueTypeUnion,
@@ -32,7 +32,7 @@ export default class InMemoryDataStorageFactory implements iDataStorageFactory {
 		T extends iBaseTrait<N, V, D>
 	>(props: iBaseTraitCollectionDataStorageProps<N, V, D, T>): iTraitCollectionDataStorage<N, V, D, T> {
 		return new InMemoryTraitCollectionDataStorage({ ...props });
-	}
+	}*/
 	newTraitDataStorageInitialiser(): <N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(
 		props: iBaseTraitDataStorageProps<N, V>
 	) => iTraitDataStorage<N, V> {

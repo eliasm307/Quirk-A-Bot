@@ -1,4 +1,4 @@
-import pathModule from 'path';
+import path from 'path';
 import { iCharacterSheet } from '../../../declarations/interfaces/character-sheet-interfaces';
 import {
 	iLocalFileTraitDataStorageProps,
