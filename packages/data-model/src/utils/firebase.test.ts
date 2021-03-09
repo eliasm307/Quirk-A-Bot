@@ -1,5 +1,6 @@
 import urlExistSync from 'url-exist-sync';
 import { firestoreEmulator, isFirestoreEmulatorRunning } from './firebase';
+import logFirestoreChange from './logFirestoreChange';
 
 const testDocData = { test: `test @ ${new Date().toLocaleString()}` };
 const testCollectionName = 'test';
@@ -78,7 +79,7 @@ describe('firestore emulator', () => {
 		const unsubscribeToCollection = firestoreEmulator.collection(localTestCollectionName).onSnapshot(querySnapshot => {
 			querySnapshot.docChanges().forEach(change => {
 				const data: any = change.doc.data();
-				console.warn('item change', change);
+				logFirestoreChange(change, console.warn);
 				if (change.type === 'added') {
 					console.warn('New item: ', { data });
 					expect(data).toEqual(testDocData);
@@ -102,15 +103,15 @@ describe('firestore emulator', () => {
 		console.warn('collection observer attached');
 
 		// assertion 1 & 2 (collection and document events)
-		console.warn('creating document');
+		console.log('creating document');
 		await firestoreEmulator.doc(`${localTestCollectionName}/${testDocumentName}`).set(testDocData);
 
 		// assertion 3 & 4 (collection and document events)
-		console.warn('updating document');
+		console.log('updating document');
 		await firestoreEmulator.doc(`${localTestCollectionName}/${testDocumentName}`).update({ added: 'something' });
 
 		// assertion 5 & 6 (collection and document events)
-		console.warn('deleting document');
+		console.log('deleting document');
 		await firestoreEmulator.doc(`${localTestCollectionName}/${testDocumentName}`).delete();
 
 		// detach observers

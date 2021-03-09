@@ -52,10 +52,10 @@ export function isCharacterSheetData(data: any): data is iCharacterSheetData {
 
 	for (let traitData of coreNumberTraitData) {
 		if (!isTraitData(traitData) || typeof traitData.value !== 'number') {
-			console.warn(
+			/*console.warn(
 				`isCharacterSheetData, core number trait ${traitData} is not a valid trait data or does not have a number value`,
 				{ traitData, isTraitData: isTraitData(traitData), typeofValue: typeof traitData.value }
-			);
+			);*/
 			return false;
 		}
 	}

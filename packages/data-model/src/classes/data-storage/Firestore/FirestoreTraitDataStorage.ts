@@ -9,6 +9,7 @@ import AbstractTraitDataStorage from '../AbstractTraitDataStorage';
 import pathModule from 'path';
 import { isTraitData } from '../../../utils/typePredicates';
 import { iBaseTraitData } from '../../../declarations/interfaces/trait-interfaces';
+import logFirestoreChange from '../../../utils/logFirestoreChange';
 
 export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
 	extends AbstractTraitDataStorage<N, V>
@@ -79,7 +80,7 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 
 		try {
 			// subscribe to collection level changes
-			unsubscriber = this.#firestore
+			unsubscriber = await this.#firestore
 				.collection(parentCollectionPath)
 				.where('name', '==', this.name)
 				.onSnapshot(querySnapshot => {
@@ -101,7 +102,7 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 								)}`
 							);
 
-						console.warn('item change', change);
+						logFirestoreChange(change, console.warn);
 						if (change.type === 'modified') {
 							console.warn('Modified document: ', { data });
 							// apply private modification
@@ -114,11 +115,9 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 			try {
 				unsubscriber();
 			} finally {
-				setTimeout((_: any) => {
-					throw Error(
-						`Error setting change listener on trait named ${this.name} in collection ${parentCollectionPath}}`
-					);
-				});
+				console.error(
+					`Error setting change listener on trait named ${this.name} in collection ${parentCollectionPath}}`
+				);
 			}
 		}
 		return unsubscriber;
@@ -126,30 +125,31 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 
 	/** Function to be called after the local value is changed, to signal that the data storage value should also be changed */
 	protected afterValueChange(oldValue: V, newValue: V): void {
-		this.#firestore
-			.doc(this.#path)
-			.get()
-			.then(doc => {
-				// check document exists
-				if (!doc.exists) {
-					try {
-						// if it doesnt exist, it might be a left over from an old delete, delete it again just incase
-						console.log(__filename, `Attempting to delet trait document ${this.#path}, it is shown as not existing`);
-						doc.ref.delete();
-					} catch (error) {
-						console.error(__filename, { error });
-					} finally {
-						throw Error(`Trait document does not exist at path ${this.#path}`);
-					}
-				}
-				return doc.ref;
-			})
-			.then(doc => doc.update({ value: this.value }))
-			.catch(error => {
+		this.handleChangeAsync(oldValue, newValue);
+	}
+
+	private async handleChangeAsync(oldValue: V, newValue: V) {
+		const doc = await this.#firestore.doc(this.#path).get();
+
+		// check document exists
+		if (!doc.exists) {
+			try {
+				// if it doesnt exist, it might be a left over from an old delete, delete it again just incase
+				console.log(__filename, `Attempting to delete trait document ${this.#path}, it is shown as not existing`);
+				await doc.ref.delete();
+			} catch (error) {
 				console.error(__filename, { error });
-				return setTimeout((_: any) => {
-					throw Error(`Error updating trait ${this.name} (${this.#path}) from ${oldValue} to ${newValue}`);
-				});
+			}
+			return console.error(`Trait document does not exist at path ${this.#path}`);
+		}
+
+		// try updating value
+		try {
+			await doc.ref.update({ value: this.value });
+		} catch (error) {
+			console.error(__filename, `Error updating trait ${this.name} (${this.#path}) from ${oldValue} to ${newValue}`, {
+				error,
 			});
+		}
 	}
 }

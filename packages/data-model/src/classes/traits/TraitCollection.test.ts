@@ -59,7 +59,7 @@ test(testName, () => {
 	// delete an existing item
 	tc.delete('Wits');
 
-	// delete non-existing items, should not generate log item
+	// delete non-existing items, should not generate log items
 	tc.delete('Wits').delete('Composure').delete('Dexterity');
 
 	// expect 2 items, 1 deleted
