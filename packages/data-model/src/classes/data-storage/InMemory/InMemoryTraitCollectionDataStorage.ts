@@ -23,10 +23,10 @@ export default class InMemoryTraitCollectionDataStorage<
 	>
 	extends AbstractTraitCollectionDataStorage<N, V, D, T>
 	implements iTraitCollectionDataStorage<N, V, D, T> {
-	protected afterAdd( name: N ): void {
+	protected addTraitToDataStorage( name: N ): void {
 		throw new Error( 'Method not implemented.' );
 	}
-	protected afterDelete( name: N ): void {
+	protected deleteTraitFromDataStorage( name: N ): void {
 		throw new Error( 'Method not implemented.' );
 	}
  

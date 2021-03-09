@@ -8,25 +8,50 @@ import { TraitValueTypeUnion, TraitNameUnionOrString } from '../../../declaratio
 import AbstractTraitDataStorage from '../AbstractTraitDataStorage';
 import pathModule from 'path';
 import { isTraitData } from '../../../utils/typePredicates';
+import { iBaseTraitData } from '../../../declarations/interfaces/trait-interfaces';
+import path from 'path';
 
 export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
 	extends AbstractTraitDataStorage<N, V>
 	implements iTraitDataStorage<N, V> {
+	protected async assertTraitExistsOnDataStorage(traitData: iBaseTraitData<N, V>): Promise<void> {
+		// try getting the document#
+		// ? does this need error handling?
+		const doc = await this.#firestore.doc(this.#path).get();
+
+		if (!doc || !doc.exists) {
+			// if the document doesnt exist then try adding it
+			console.log(__filename, `Trait does not exist at path ${this.#path}, adding this now`);
+			try {
+				this.#firestore.doc(this.#path).set(traitData);
+			} catch (error) {
+				console.error(__filename, { error });
+				throw Error(`Trait with name ${this.name} did not exist and could not be added to data store`);
+			}
+		}
+	}
 	#characterSheet: iCharacterSheet;
 	#firestore: Firestore;
 	#path: string;
-	#unsubscribeToCollection: () => void; // todo add cleanup method which calls this
+	#unsubscribeToCollection: () => void = () => null; // todo add cleanup method which calls this
 
 	constructor(props: iFirestoreTraitDataStorageProps<N, V>) {
 		super(props);
-		const { characterSheet, firestore, path } = props;
+		const { characterSheet, firestore, path, defaultValueIfNotDefined } = props;
 		this.#characterSheet = characterSheet; // ? remove?
 		this.#firestore = firestore;
 		this.#path = path;
 
-		// add event liseners
-		const parentPath = pathModule.dirname(this.#path);
-		this.#unsubscribeToCollection = this.attachFirestoreEventListeners(parentPath);
+		// make sure trait exists, then set listeners on it
+		this.assertTraitExistsOnDataStorage({ name: this.name, value: defaultValueIfNotDefined })
+			.then(_ => {
+				// add event liseners
+				const parentPath = pathModule.dirname(this.#path);
+				this.#unsubscribeToCollection = this.attachFirestoreEventListeners(parentPath);
+			})
+			.catch(error => {
+				throw Error(`Could not assert that trait with name ${this.name} exists in collection at path ${this.#path}`);
+			});
 	}
 
 	/** Attaches change event listeners for this trait via its parent collection, and returns the unsubscribe function */

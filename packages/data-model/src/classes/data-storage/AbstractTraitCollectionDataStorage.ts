@@ -54,9 +54,9 @@ export default abstract class AbstractTraitCollectionDataStorage<
 		);
 	}
 
-	protected abstract afterAdd(name: N): void;
+	protected abstract addTraitToDataStorage(name: N): void;
 
-	protected abstract afterDelete(name: N): void;
+	protected abstract deleteTraitFromDataStorage(name: N): void;
 
 	toJson(): D[] {
 		return this.toArray().map(e => e.toJson());
@@ -95,7 +95,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
 			// NOTE traits will handle changes internally, no need to do anything here
 			trait.value = newValue;
 		} else {
-			// add new trait instance
+			// add new trait instance locally
 			this.map.set(
 				name,
 				this.instanceCreator({
@@ -106,9 +106,12 @@ export default abstract class AbstractTraitCollectionDataStorage<
 				})
 			);
 
+			// ? is this required? if colleciton adds data to storage this means creating trait data and connecting data to trait instances would be done by 2 classes async, so it might be done in the wrong order. Opted to have these both on the trait side
+			// apply change to data storage
+			// this.addTraitToDataStorage(name);
+
 			// log change
 			this.onAdd({ newValue, property: name });
-			this.afterAdd(name);
 		}
 
 		return this; // return this instance for chaining
@@ -126,9 +129,11 @@ export default abstract class AbstractTraitCollectionDataStorage<
 		const oldValue = this.map.get(name)!.value;
 
 		if (typeof oldValue !== 'undefined') {
-			// apply change
-			this.map.delete(name);
-			this.afterDelete(name); // ? rename to 'deleteFromDataStorage, this should be called only, the data storage should be responsible for actually deleting the item from the map? this might end up being done twice otherwise, just do a check on data store method before delete, this will be repeated for all so do it here once
+			// apply change locally
+			this.map.delete( name );
+			
+			// apply change to data storage
+			this.deleteTraitFromDataStorage(name);
 			// log change
 			this.onDelete({ oldValue, property: name });
 		} else {

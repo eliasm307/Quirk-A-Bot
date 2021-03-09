@@ -13,10 +13,10 @@ export default class LocalFileTraitCollectionDataStorage<
 	D extends iBaseTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
 > extends AbstractTraitCollectionDataStorage<N, V, D, T> {
-	protected afterAdd(name: N): void {
+	protected addTraitToDataStorage(name: N): void {
 		this.save();
 	}
-	protected afterDelete(name: N): void {
+	protected deleteTraitFromDataStorage(name: N): void {
 		this.save();
 	}
 	#characterSheet: iCharacterSheet;
