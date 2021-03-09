@@ -18,32 +18,27 @@ export default class FirestoreTraitCollectionDataStorage<
 	protected afterAdd(name: N): void {
 		// ? do nothing
 	}
-	/*
-	protected addTraitToDataStorage(name: N): void {
-		const traitData = this.map.get(name)?.toJson;
-
-		if (!traitData)
-			throw Error(
-				`Could not add trait with name ${name} to collection at path ${this.path} because there was an error getting the trait data`
-			);
-		this.#firestore.collection(this.path).add(traitData);
-	}
-	*/
 	protected deleteTraitFromDataStorage(name: N): void {
 		this.#firestore
 			.collection(this.path)
 			.where('name', '==', name)
 			.get()
 			.then(queryDocs => {
-				if (queryDocs.size !== 1)
+				if (queryDocs.size !== 1) {
 					throw Error(
 						`There should have been exactly 1 trait with name ${name} in collection at path ${this.path}, instead found ${queryDocs.size}`
 					);
+				}
 				queryDocs.forEach(doc => {
 					doc.ref.delete().catch(error => {
 						console.error(__filename, { error });
 						throw Error(`Could not delete trait with name ${name}`);
 					});
+				});
+			})
+			.catch(error => {
+				return setTimeout((_: any) => {
+					throw Error(error);
 				});
 			});
 	}
@@ -58,11 +53,11 @@ export default class FirestoreTraitCollectionDataStorage<
 		this.#firestore = firestore;
 
 		// todo init event listeners
-		this.#unsubscribeFromEventListeners = this.attachFirestoreEventListeners()
+		this.#unsubscribeFromEventListeners = this.attachFirestoreEventListeners();
 	}
 
 	protected attachFirestoreEventListeners(): () => void {
 		// todo
-		throw Error('Method not implemented')
+		throw Error('Method not implemented');
 	}
 }

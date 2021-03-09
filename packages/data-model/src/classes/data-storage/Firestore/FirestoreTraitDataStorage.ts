@@ -40,24 +40,46 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 		this.#path = path;
 
 		// make sure trait exists, then set listeners on it
-		this.assertTraitExistsOnDataStorage({ name: this.name, value: defaultValueIfNotDefined })
+		this.init();
+		/*this.assertTraitExistsOnDataStorage({ name: this.name, value: defaultValueIfNotDefined })
 			.then(_ => {
 				// add event liseners
 				const parentPath = pathModule.dirname(this.#path);
-				this.#unsubscribeFromEventListeners = this.attachFirestoreEventListeners(parentPath);
+				return this.attachFirestoreEventListeners(parentPath);
 			})
+			.then(unsubFunc => (this.#unsubscribeFromEventListeners = unsubFunc))
 			.catch(error => {
-				throw Error(`Could not assert that trait with name ${this.name} exists in collection at path ${this.#path}`);
-			});
+				return setTimeout(_ => {
+					throw Error();
+				});
+			});*/
+	}
+
+	private async init() {
+		try {
+			await this.assertTraitExistsOnDataStorage({ name: this.name, value: this.private.value });
+
+			// add event liseners
+			const parentPath = pathModule.dirname(this.#path);
+			this.#unsubscribeFromEventListeners = await this.attachFirestoreEventListeners(parentPath);
+		} catch (error) {
+			console.error(
+				__filename,
+				`Could not assert that trait with name ${this.name} exists in collection at path ${this.#path}`,
+				{ error }
+			);
+		}
 	}
 
 	/** Attaches change event listeners for this trait via its parent collection, and returns the unsubscribe function */
-	protected attachFirestoreEventListeners(parentCollectionPath: string): () => void {
+	private async attachFirestoreEventListeners(parentCollectionPath: string): Promise<() => void> {
 		// todo test event listener
+
+		let unsubscriber = () => {};
 
 		try {
 			// subscribe to collection level changes
-			return this.#firestore
+			unsubscriber = this.#firestore
 				.collection(parentCollectionPath)
 				.where('name', '==', this.name)
 				.onSnapshot(querySnapshot => {
@@ -90,11 +112,16 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 		} catch (error) {
 			console.error(__filename, { error });
 			try {
-				this.#unsubscribeFromEventListeners();
+				unsubscriber();
 			} finally {
-				throw Error(`Error setting change listener on trait named ${this.name} in collection ${parentCollectionPath}}`);
+				setTimeout((_: any) => {
+					throw Error(
+						`Error setting change listener on trait named ${this.name} in collection ${parentCollectionPath}}`
+					);
+				});
 			}
 		}
+		return unsubscriber;
 	}
 
 	/** Function to be called after the local value is changed, to signal that the data storage value should also be changed */
@@ -120,7 +147,9 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 			.then(doc => doc.update({ value: this.value }))
 			.catch(error => {
 				console.error(__filename, { error });
-				throw Error(`Error updating trait ${this.name} (${this.#path}) from ${oldValue} to ${newValue}`);
+				return setTimeout((_: any) => {
+					throw Error(`Error updating trait ${this.name} (${this.#path}) from ${oldValue} to ${newValue}`);
+				});
 			});
 	}
 }

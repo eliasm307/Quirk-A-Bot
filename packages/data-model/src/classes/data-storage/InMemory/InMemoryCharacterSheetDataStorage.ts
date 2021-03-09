@@ -4,8 +4,8 @@ import {
 	iBaseCharacterSheetDataStorageProps,
 	iCharacterSheetDataStorage,
 	iDataStorageFactory,
-	iHasId,
 } from './../../../declarations/interfaces/data-storage-interfaces';
+
 export default class InMemoryCharacterSheetDataStorage implements iCharacterSheetDataStorage {
 	protected id: string;
 	protected dataStorageFactory: iDataStorageFactory;
@@ -13,10 +13,10 @@ export default class InMemoryCharacterSheetDataStorage implements iCharacterShee
 	constructor({ id = 'DEFAULT', dataStorageFactory }: iBaseCharacterSheetDataStorageProps) {
 		this.id = id;
 		this.dataStorageFactory = dataStorageFactory;
+		this.characterSheetData = CharacterSheet.newDataObject({ id: this.id }); // load data to local variable
 	}
 	async assertDataExistsOnDataStorage(): Promise<void> {
-		// load to local variable
-		this.characterSheetData = CharacterSheet.newDataObject({ id: this.id });
+		// always uses new data so nothing to assert
 		return;
 	}
 	getData(): iCharacterSheetData {

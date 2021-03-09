@@ -15,6 +15,7 @@ import TraitFactory from './traits/TraitFactory';
 import StringTrait from './traits/StringTrait';
 import { isCharacterSheetData } from '../utils/typePredicates';
 import NumberTrait from './traits/NumberTrait';
+import { createPath } from '../utils/createPath';
 // import saveCharacterSheetToFile from '../utils/saveCharacterSheetToFile';
 
 // todo split this into smaller pieces
@@ -68,6 +69,10 @@ export default class CharacterSheet implements iCharacterSheet {
 	// PRIVATE CONSTRUCTOR
 	private constructor(props: iCharacterSheetProps) {
 		const { id, dataStorageFactory, parentPath } = props;
+
+		this.id = id;
+		this.path = createPath(parentPath, id);
+
 		const traitDataStorageInitialiser = dataStorageFactory.newTraitDataStorageInitialiser({
 			characterSheet: this,
 		});
@@ -82,8 +87,6 @@ export default class CharacterSheet implements iCharacterSheet {
 
 		if (!isCharacterSheetData(initialData))
 			throw Error(`${__filename} data is an object but it is not valid character sheet data, "${initialData}"`);
-
-		this.id = id;
 
 		// core number traits
 		this.bloodPotency = new NumberTrait<CoreNumberTraitName>({

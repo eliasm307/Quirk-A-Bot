@@ -34,7 +34,10 @@ export default class FirestoreCharacterSheetDataStorage implements iCharacterShe
 		if (doc.exists) {
 			const data = doc.data();
 			if (!isCharacterSheetData(data)) {
-				throw Error(`Data from document at path ${this.path} is not valid character sheet data`);
+				setTimeout((_: any) => {
+					throw Error(`Data from document at path ${this.path} is not valid character sheet data`);
+				});
+				return;
 			}
 
 			this.characterSheetData = data; // save data locally
@@ -46,7 +49,7 @@ export default class FirestoreCharacterSheetDataStorage implements iCharacterShe
 				this.characterSheetData = data; // save data locally
 			} catch (error) {
 				console.error(__filename, { error });
-				throw Error(`Could not initialise a new character sheet at path ${this.path}`);
+				Promise.reject(new Error(`Could not initialise a new character sheet at path ${this.path}`));
 			}
 		}
 	}
