@@ -222,13 +222,13 @@ export default class CharacterSheet implements iCharacterSheet {
 		];
 	}
 
-	getLogReport(): iLogReport[] {
+	getLogReports(): iLogReport[] {
 		// todo test
 		return this.getAllTraits().map(trait => trait.getLogReport());
 	}
 	getLogEvents(): iLogEvent[] {
 		// combine logs from reports and and sort oldest to newest
-		return this.getLogReport()
+		return this.getLogReports()
 			.reduce((events, report) => [...events, ...report.logEvents], [] as iLogEvent[])
 			.sort((a, b) => {
 				return Number(a.timeStamp - b.timeStamp);

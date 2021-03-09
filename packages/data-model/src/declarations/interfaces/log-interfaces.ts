@@ -37,7 +37,7 @@ export interface iLoggerSingle extends iBaseLogger {
 	getLogReport(): iLogReport;
 }
 export interface iLoggerCollection extends iBaseLogger {
-	getLogReport(): iLogReport[];
+	getLogReports(): iLogReport[];
 }
 
 export interface iLogReporter {
@@ -48,6 +48,7 @@ export interface iLogCollection {
 	log(event: iLogEvent): void;
 
 	getReport(): iLogReport;
+	getLogEvents(): iLogEvent[];
 }
 
 export interface iLogCollectionProps {

@@ -64,7 +64,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
 	toJson(): D[] {
 		return this.toArray().map(e => e.toJson());
 	}
-	getLogReport(): iLogReport[] {
+	getLogReports(): iLogReport[] {
 		throw new Error('Method not implemented.');
 	}
 	getLogEvents(): iLogEvent[] {

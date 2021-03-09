@@ -127,7 +127,7 @@ test(testName, async () => {
 
 	// check changes were logged
 	expect(cs.getLogEvents()).toBeTruthy();
-	expect(cs.getLogReport()).toBeTruthy();
+	expect(cs.getLogReports()).toBeTruthy();
 	expect(csLoaded.health.getLogReport().logEvents.length).toEqual(1);
 	expect(cs.getLogEvents().length).toEqual(3);
 	expect(cs.getLogEvents()[0]?.property).toEqual('Health');
@@ -155,7 +155,7 @@ test(testName, async () => {
 
 	// check changes were logged
 	expect(csLoaded.health.getLogReport().logEvents.length).toBeGreaterThanOrEqual(2);
-	expect(csLoaded.getLogReport()).toEqual(cs2.getLogReport());
+	expect(csLoaded.getLogReports()).toEqual(cs2.getLogReports());
 });
 
 testName = 'test existing file, autosave and custom setters for basic data types';
@@ -194,11 +194,11 @@ test(testName, async () => {
 
 	// some logs should exist
 	expect(cs.getLogEvents()).toBeTruthy();
-	expect(cs.getLogReport()).toBeTruthy();
+	expect(cs.getLogReports()).toBeTruthy();
 	expect(cs.getLogEvents().length).toBeGreaterThan(0);
 
 	// check changes were logged
-	expect(csLoaded.getLogReport()).toEqual(cs2.getLogReport());
+	expect(csLoaded.getLogReports()).toEqual(cs2.getLogReports());
 });
 
 // todo move these to trait collection tests

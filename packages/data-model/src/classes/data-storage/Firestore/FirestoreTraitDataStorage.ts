@@ -117,7 +117,7 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 								)}`
 							);
 
-						logFirestoreChange(change, console.warn);
+						// logFirestoreChange(change, console.warn);
 						if (change.type === 'modified') {
 							console.warn('Modified document: ', { data });
 							// apply private modification

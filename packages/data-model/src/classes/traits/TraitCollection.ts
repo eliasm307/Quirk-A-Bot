@@ -66,11 +66,11 @@ export default class TraitCollection<
 	getLogEvents(): iLogEvent[] {
 		//todo memoise
 		// combine logs from reports and and sort oldest to newest
-		return this.getLogReport()
+		return this.getLogReports()
 			.reduce((events, report) => [...events, ...report.logEvents], [] as iLogEvent[])
 			.sort((a, b) => Number(a.timeStamp - b.timeStamp));
 	}
-	getLogReport(): iLogReport[] {
+	getLogReports(): iLogReport[] {
 		return [this.logs.getReport(), ...this.toArray().map(e => e.getLogReport())];
 	}
 	toJson(): D[] {
