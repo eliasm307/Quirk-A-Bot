@@ -1,4 +1,4 @@
-import { iGeneralTrait } from './../../declarations/interfaces/trait-interfaces';
+import { iGeneralTrait } from '../../declarations/interfaces/trait-interfaces';
 import { LogOperationUnion } from '../../declarations/types';
 import TraitFactory from './TraitFactory';
 import InMemoryTraitDataStorageFactory from '../data-storage/InMemory/InMemoryDataStorageFactory';
@@ -6,7 +6,7 @@ import { iTraitCollectionFactoryMethodProps } from '../../declarations/interface
 
 let testName: string;
 
-const dataStorageFactory = new InMemoryTraitDataStorageFactory({});
+const dataStorageFactory = new InMemoryTraitDataStorageFactory();
 
 const rootCollectionPath = 'traitCollectionTests';
 

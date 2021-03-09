@@ -3,36 +3,48 @@ import NumberTrait from './NumberTrait';
 
 const dataStorageFactory = new InMemoryDataStorageFactory({});
 const traitDataStorageInitialiser = dataStorageFactory.newTraitDataStorageInitialiser();
-const parentPath = 'test';
+const parentPath = 'NumberTrait-InMemory-test';
 
-test('Test rounding on instantiation and modification', () => {
-	const trait = new NumberTrait<string>({
+// todo replace all jest "test" functions with "it" functions
+
+describe('Number trait with in memory data storage', () => {
+	const trait1 = new NumberTrait<string>({
 		max: 10,
-		name: 'test',
+		name: 'numberTrait1',
 		value: 5.2,
 		traitDataStorageInitialiser,
 		parentPath,
 	});
 	const trait2 = new NumberTrait<string>({
 		max: 10,
-		name: 'test',
+		name: 'numberTrait2',
 		value: 5.8,
 		traitDataStorageInitialiser,
 		parentPath,
 	});
+	it('rounds values on instantiation', () => {
+		expect(trait1.value).toEqual(5);
+		expect(trait2.value).toEqual(6);
+	});
 
-	// test rounding at initialisation
-	expect(trait.value).toEqual(5);
-	expect(trait2.value).toEqual(6);
+	it('rounds up values with a decimal portion equal to or greater than 0.5 on value modification', () => {
+		trait1.value = 0.5;
+		expect(trait1.value).toEqual(1);
+	});
 
-	// test round up on modification
-	trait.value = 0.5;
-	expect(trait.value).toEqual(1);
+	it('rounds down values with a decimal portion less than 0.5 on modification', () => {
+		trait1.value = 0.4;
+		expect(trait1.value).toEqual(0);
+	});
 
-	// test round down on modification
-	trait.value = 0.4;
-	expect(trait.value).toEqual(0);
+	it('does not accept any value modifications above or belows the defined limit', () => {
+		trait1.value = 5;
+		trait1.value = 11;
+		trait1.value = -1;
+		expect(trait1.value).toEqual(5);
+	});
 
-	// make sure trait logs are good
-	expect(trait.getLogEvents().length).toEqual(3);
+	it('logs modifications', () => {
+		expect(trait1.getLogEvents().length).toEqual(4);
+	});
 });
