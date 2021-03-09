@@ -17,12 +17,6 @@ import { isCharacterSheetData } from '../utils/typePredicates';
 import NumberTrait from './traits/NumberTrait';
 // import saveCharacterSheetToFile from '../utils/saveCharacterSheetToFile';
 
-// ! this shouldnt be here, should be in a file about persistence
-interface iLoadFromFileArgs {
-	filePath?: string;
-	fileName?: string;
-}
-
 // todo split this into smaller pieces
 
 // todo add a method to clean up when a character sheet is not in use anymore, ie detach all event listeners to data storage etc
@@ -62,7 +56,7 @@ export default class CharacterSheet implements iCharacterSheet {
 
 		// check if a character sheet with this id doesnt exist in the data storage, initialise a blank character sheet if not
 		const characterSheetDataStorage = dataStorageFactory.newCharacterSheetDataStorage({ id });
-		
+
 		await characterSheetDataStorage.assertDataExistsOnDataStorage(); // todo make this an internal class method named 'assert' or something
 
 		// return a new character sheet instance as requested

@@ -1,13 +1,11 @@
 import path from 'path';
-import { iCharacterSheet, iCharacterSheetData } from '../../../declarations/interfaces/character-sheet-interfaces';
+import { iCharacterSheetData } from '../../../declarations/interfaces/character-sheet-interfaces';
 import importDataFromFile from '../../../utils/importDataFromFile';
 import { isCharacterSheetData } from '../../../utils/typePredicates';
 import CharacterSheet from '../../CharacterSheet';
 import {
-	iBaseCharacterSheetDataStorageProps,
 	iCharacterSheetDataStorage,
 	iDataStorageFactory,
-	iHasId,
 	iLocalFileCharacterSheetDataStorageProps,
 } from './../../../declarations/interfaces/data-storage-interfaces';
 import fs from 'fs-extra';

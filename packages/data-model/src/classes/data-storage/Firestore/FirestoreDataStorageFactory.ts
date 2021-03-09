@@ -1,23 +1,21 @@
-import {
-	iCharacterSheetDataStorage,
-	iFirestoreDataStorageFactoryProps,
-	iHasCharacterSheet,
-	iHasId,
-	iTraitDataStorageInitialiserProps,
-} from '../../../declarations/interfaces/data-storage-interfaces';
-import { TraitValueTypeUnion } from '../../../declarations/types';
-import {
-	iBaseTraitCollectionDataStorageProps,
-	iBaseTraitDataStorageProps,
-	iDataStorageFactory,
-	iTraitCollectionDataStorage,
-	iTraitDataStorage,
-} from '../../../declarations/interfaces/data-storage-interfaces';
 import { iBaseTraitData, iBaseTrait } from '../../../declarations/interfaces/trait-interfaces';
 import { Firestore } from '../../../utils/firebase';
 import FirestoreTraitDataStorage from './FirestoreTraitDataStorage';
 import FirestoreTraitCollectionDataStorage from './FirestoreTraitCollectionDataStorage';
 import FirestoreCharacterSheetDataStorage from './FirestoreCharacterSheetDataStorage';
+import {
+	iDataStorageFactory,
+	iFirestoreDataStorageFactoryProps,
+	iHasId,
+	iCharacterSheetDataStorage,
+	iTraitDataStorageInitialiserProps,
+	iBaseTraitDataStorageProps,
+	iTraitDataStorage,
+	iHasCharacterSheet,
+	iBaseTraitCollectionDataStorageProps,
+	iTraitCollectionDataStorage,
+} from '../../../declarations/interfaces/data-storage-interfaces';
+import { TraitValueTypeUnion } from '../../../declarations/types';
 export default class FirestoreDataStorageFactory implements iDataStorageFactory {
 	#firestore: Firestore;
 
