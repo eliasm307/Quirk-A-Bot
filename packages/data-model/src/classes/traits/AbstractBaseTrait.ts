@@ -34,7 +34,11 @@ export default abstract class AbstractBaseTrait<
 		this.path = createPath(parentPath, name);
 
 		// initialise data store
-		this.#dataSorage = traitDataStorageInitialiser({ name, defaultValueIfNotDefined: value, path: this.path });
+		this.#dataSorage = traitDataStorageInitialiser({
+			name,
+			defaultValueIfNotDefined: this.preProcessValue(value),
+			path: this.path,
+		});
 
 		if (!toJson) throw Error(`${__filename} toJson function not defined`);
 		this.toJson = toJson;
@@ -42,7 +46,7 @@ export default abstract class AbstractBaseTrait<
 
 		// todo this shouldnt overwrite existing values in data storage
 		// set initial value if specified
-		if (value) this.value = value;
+		// if (value) this.value = value;
 		/*
 		this.#private = {
 			value: this.preProcessValue(value),

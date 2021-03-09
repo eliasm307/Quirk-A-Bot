@@ -32,6 +32,8 @@ describe('Number trait with firestore data storage', () => {
 		expect(doc.exists).toEqual(true);
 		expect(isTraitData(data)).toEqual(true);
 		expect(data).toEqual(trait1.toJson());
+
+		trait1.cleanUp();
 	});
 
 	it('writes changes to firestore', async () => {
@@ -57,6 +59,8 @@ describe('Number trait with firestore data storage', () => {
 		const data: any = doc.data();
 
 		expect(data.value).toEqual(1);
+
+		trait1.cleanUp();
 	});
 
 	test('uses any existing value in firestore over the instance value', async () => {
@@ -98,6 +102,9 @@ describe('Number trait with firestore data storage', () => {
 
 		expect(doc1Data).toEqual(doc2Data);
 		expect(doc2Data.value).toEqual(knownValue);
+
+		trait1.cleanUp();
+		trait2.cleanUp();
 	});
 	it('propagates changes to all trait instances', async () => {
 		expect.assertions(1);
@@ -115,7 +122,7 @@ describe('Number trait with firestore data storage', () => {
 			parentPath: testParentPath,
 		});
 
-		await new Promise(res => setTimeout(res, 1000)); // wait for syncronisation
+		await new Promise(res => setTimeout(res, 100)); // wait for syncronisation
 
 		const trait2 = new NumberTrait<string>({
 			max: 10,
@@ -125,23 +132,26 @@ describe('Number trait with firestore data storage', () => {
 			parentPath: testParentPath,
 		});
 
-		await new Promise(res => setTimeout(res, 1000)); // wait for syncronisation
+		await new Promise(res => setTimeout(res, 100)); // wait for syncronisation
 
 		// set initial values
 		trait1.value = initialValue;
 
-		await new Promise(res => setTimeout(res, 1000)); // wait for syncronisation
+		await new Promise(res => setTimeout(res, 100)); // wait for syncronisation
 
 		trait2.value = initialValue;
 
-		await new Promise(res => setTimeout(res, 1000)); // wait for syncronisation
+		await new Promise(res => setTimeout(res, 100)); // wait for syncronisation
 
 		// change one trait
 		trait1.value = changeValue;
 
-		await new Promise(res => setTimeout(res, 1000)); // wait for syncronisation
+		await new Promise(res => setTimeout(res, 100)); // wait for syncronisation
 
 		// check if other trait syncronised
 		expect(trait2.value).toEqual(changeValue);
+
+		trait1.cleanUp();
+		trait2.cleanUp();
 	});
 });

@@ -28,23 +28,23 @@ describe('Number trait with in memory data storage', () => {
 	});
 
 	it('rounds up values with a decimal portion equal to or greater than 0.5 on value modification', () => {
-		trait1.value = 0.5;
+		trait1.value = 0.5; // trait 1 modification 1
 		expect(trait1.value).toEqual(1);
 	});
 
 	it('rounds down values with a decimal portion less than 0.5 on modification', () => {
-		trait1.value = 0.4;
+		trait1.value = 0.4; // trait 1 modification 2
 		expect(trait1.value).toEqual(0);
 	});
 
 	it('does not accept any value modifications above or belows the defined limit', () => {
-		trait1.value = 5;
+		trait1.value = 5; // trait 1 modification 3
 		trait1.value = 11;
 		trait1.value = -1;
 		expect(trait1.value).toEqual(5);
 	});
 
 	it('logs modifications', () => {
-		expect(trait1.getLogEvents().length).toEqual(4);
+		expect(trait1.getLogEvents().length).toEqual(3);
 	});
 });

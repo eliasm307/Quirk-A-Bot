@@ -18,7 +18,7 @@ const newDataResolvedPath = path.resolve(resolvedBasePath, `${newDataId}.json`);
 const existingDataResolvedPath = path.resolve(resolvedBasePath, `${existingDataId}.json`);
 
 if (fs.pathExistsSync(newDataResolvedPath)) {
-	console.warn(__filename, `Deleting file "${newDataResolvedPath}" before testing`);
+	// console.warn(__filename, `Deleting file "${newDataResolvedPath}" before testing`);
 	fs.removeSync(newDataResolvedPath);
 }
 

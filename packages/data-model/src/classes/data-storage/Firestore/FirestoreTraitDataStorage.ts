@@ -17,13 +17,14 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 	protected async assertTraitExistsOnDataStorage(traitData: iBaseTraitData<N, V>): Promise<void> {
 		// try getting the document#
 		// ? does this need error handling?
-		const doc = await this.#firestore.doc(this.#path).get();
+		const doc = await this.#firestore.doc(this.path).get();
 
 		if (!doc || !doc.exists) {
 			// if the document doesnt exist then try adding it
-			console.log(__filename, `Trait does not exist at path ${this.#path}, adding this now`);
+			console.log(__filename, `Trait does not exist at path ${this.path}, adding this now`);
 			try {
-				this.#firestore.doc(this.#path).set(traitData);
+				await this.#firestore.doc(this.path).set(traitData);
+				console.log(__filename, `Trait added at path ${this.path}`, { path: this.path, traitData });
 			} catch (error) {
 				console.error(__filename, { error });
 				throw Error(`Trait with name ${this.name} did not exist and could not be added to data store`);
@@ -31,17 +32,25 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 		}
 	}
 	#firestore: Firestore;
-	#path: string;
+	path: string;
 	#unsubscribeFromEventListeners: () => void = () => null; // todo add cleanup method which calls this
 
 	constructor(props: iFirestoreTraitDataStorageProps<N, V>) {
 		super(props);
 		const { firestore, path, defaultValueIfNotDefined } = props;
 		this.#firestore = firestore;
-		this.#path = path;
+		this.path = path;
 
+		const timerName = `initialise trait "${this.path}"`;
+
+		console.time(timerName);
 		// make sure trait exists, then set listeners on it
-		this.init();
+		this.init()
+			.then(() => {
+				console.warn(`Successfully initialised trait with path ${this.path} and value ${this.private.value}`);
+			})
+			.catch(console.error)
+			.finally(() => console.timeEnd(timerName));
 		/*this.assertTraitExistsOnDataStorage({ name: this.name, value: defaultValueIfNotDefined })
 			.then(_ => {
 				// add event liseners
@@ -61,12 +70,12 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 			await this.assertTraitExistsOnDataStorage({ name: this.name, value: this.private.value });
 
 			// add event liseners
-			const parentPath = pathModule.dirname(this.#path);
+			const parentPath = pathModule.dirname(this.path);
 			this.#unsubscribeFromEventListeners = await this.attachFirestoreEventListeners(parentPath);
 		} catch (error) {
 			console.error(
 				__filename,
-				`Could not assert that trait with name ${this.name} exists in collection at path ${this.#path}`,
+				`Could not assert that trait with name ${this.name} exists in collection at path ${this.path}`,
 				{ error }
 			);
 		}
@@ -80,16 +89,20 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 
 		try {
 			// subscribe to collection level changes
-			unsubscriber = await this.#firestore
+			unsubscriber = this.#firestore
 				.collection(parentCollectionPath)
 				.where('name', '==', this.name)
 				.onSnapshot(querySnapshot => {
 					// confirm query only returns 1 result
 					if (querySnapshot.size !== 1) {
-						console.error(__filename, { traitName: this.name, traitPath: this.#path });
-						throw Error(
-							`There should be exactly 1 trait named "${this.name}" in collection "${parentCollectionPath}", however ${querySnapshot.size} where found`
+						console.error(
+							__filename,
+							`There should be exactly 1 trait named "${this.name}" in collection "${parentCollectionPath}", however ${querySnapshot.size} where found`,
+							{ traitName: this.name, traitPath: this.path, parentCollectionPath }
 						);
+						/*throw Error(
+							`There should be exactly 1 trait named "${this.name}" in collection "${parentCollectionPath}", however ${querySnapshot.size} where found`
+						);*/
 					}
 
 					querySnapshot.docChanges().forEach(change => {
@@ -131,27 +144,35 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 	}
 
 	private async handleChangeAsync(oldValue: V, newValue: V) {
-		const doc = await this.#firestore.doc(this.#path).get();
-
-		// check document exists
-		if (!doc.exists) {
-			try {
-				// if it doesnt exist, it might be a left over from an old delete, delete it again just incase
-				console.log(__filename, `Attempting to delete trait document ${this.#path}, it is shown as not existing`);
-				await doc.ref.delete();
-			} catch (error) {
-				console.error(__filename, { error });
-			}
-			return console.error(`Trait document does not exist at path ${this.#path}`);
-		}
-
-		// try updating value
 		try {
-			await doc.ref.update({ value: this.value });
+			const doc = await this.#firestore.doc(this.path).get();
+
+			// ? is this right? does doc.exists actually mean the document doesn exist?
+			// check document exists
+			if (!doc.exists) {
+				// if it doesnt exist, it might be a left over from an old delete, delete it again just incase
+				// console.log(__filename, `Attempting to delete trait document ${this.#path}, it is shown as not existing`);
+				// await doc.ref.delete();
+
+				return console.error(`Trait document does not exist at path ${this.path}`, {
+					traitPath: this.path,
+					docData: doc.data(),
+					docId: doc.id,
+					docExists: doc.exists,
+					docHasPendingWrites: doc.metadata.hasPendingWrites,
+				});
+			}
+
+			// try updating value
+			try {
+				return await doc.ref.update({ value: this.value });
+			} catch (error) {
+				console.error(__filename, `Error updating trait ${this.name} (${this.path}) from ${oldValue} to ${newValue}`, {
+					error,
+				});
+			}
 		} catch (error) {
-			console.error(__filename, `Error updating trait ${this.name} (${this.#path}) from ${oldValue} to ${newValue}`, {
-				error,
-			});
+			console.error(__filename, { error });
 		}
 	}
 	cleanUp(): boolean {
@@ -159,7 +180,7 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 			this.#unsubscribeFromEventListeners();
 			return true;
 		} catch (error) {
-			console.error(__filename, `Error cleaning up listeners for trait with path ${this.#path}`);
+			console.error(__filename, `Error cleaning up listeners for trait with path ${this.path}`);
 			return false;
 		}
 	}
