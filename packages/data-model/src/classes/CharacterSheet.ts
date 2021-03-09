@@ -1,8 +1,4 @@
-import {
-	iDataStorageFactory,
-	iHasId,
-	iCharacterSheetDataStorage,
-} from './../declarations/interfaces/data-storage-interfaces';
+import { iHasId } from './../declarations/interfaces/data-storage-interfaces';
 import { iCharacterSheet } from './../declarations/interfaces/character-sheet-interfaces';
 import { iLogReport } from './../declarations/interfaces/log-interfaces';
 import {
@@ -11,23 +7,8 @@ import {
 	iDisciplineTraitCollection,
 	iTouchStoneOrConvictionCollection,
 } from './../declarations/interfaces/trait-collection-interfaces';
-import {
-	CoreNumberTraitName,
-	CoreStringTraitName,
-	TraitValueTypeUnion,
-	TraitNameUnionOrString,
-	ClanName,
-} from './../declarations/types';
-import {
-	iBaseTrait,
-	iCoreStringTrait,
-	iCoreNumberTrait,
-	iBaseTraitData,
-	iGeneralTrait,
-} from './../declarations/interfaces/trait-interfaces';
-import { iTouchStoneOrConvictionData } from '../declarations/interfaces/trait-interfaces';
-import path from 'path';
-import { iAttributeData, iDisciplineData, iSkillData } from '../declarations/interfaces/trait-interfaces';
+import { CoreNumberTraitName, CoreStringTraitName, ClanName } from './../declarations/types';
+import { iCoreStringTrait, iCoreNumberTrait, iGeneralTrait } from './../declarations/interfaces/trait-interfaces';
 import { iCharacterSheetData, iCharacterSheetProps } from '../declarations/interfaces/character-sheet-interfaces';
 import { iLogEvent } from '../declarations/interfaces/log-interfaces';
 import TraitFactory from './traits/TraitFactory';
@@ -43,6 +24,8 @@ interface iLoadFromFileArgs {
 }
 
 // todo split this into smaller pieces
+
+// todo add a method to clean up when a character sheet is not in use anymore, ie detach all event listeners to data storage etc
 
 export default class CharacterSheet implements iCharacterSheet {
 	readonly id: string;

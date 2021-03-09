@@ -32,9 +32,9 @@ export default abstract class AbstractTraitDataStorage<N extends TraitNameUnionO
 		// update internal value
 		this.private.value = newValue;
 
-    // run any custom logic after internal value is changed
-		this.afterValueChange();
+		// run any custom logic after internal value is changed
+		this.afterValueChange(oldValue, newValue);
 	}
 
-	protected abstract afterValueChange(): void;
+	protected abstract afterValueChange(oldValue: V, newValue: V): void;
 }

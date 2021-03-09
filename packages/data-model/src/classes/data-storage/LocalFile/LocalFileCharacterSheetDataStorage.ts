@@ -39,18 +39,7 @@ export default class LocalFileCharacterSheetDataStorage implements iCharacterShe
 	initialise(): boolean {
 		return saveCharacterSheetToFile(CharacterSheet.newDataObject({ id: this.id }), this.resolvedFilePath);
 	}
-	/*
-	get instance(): iCharacterSheet {
-		// check if an instance exists
-		if (CharacterSheet.instances.has(this.resolvedFilePath)) {
-			// console.log(__filename, `Using existing instance for '${resolvedPath}'`);
-			return CharacterSheet.instances.get(this.resolvedFilePath) as CharacterSheet;
-		}
-		return new CharacterSheet({
-			characterSheetData: this.getData(),
-			dataStorageFactory: this.dataStorageFactory,
-		});
-	}*/
+
 	getData(): iCharacterSheetData {
 		// todo add option to create blank instance at the specified path if it doesnt exist?
 		const data = importDataFromFile(this.resolvedFilePath);
