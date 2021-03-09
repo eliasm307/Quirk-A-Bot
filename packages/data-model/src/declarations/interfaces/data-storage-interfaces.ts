@@ -52,9 +52,11 @@ export interface iFirestoreDataStorageFactoryProps extends iHasFirestore {}
 
 // todo implement these for instantiator props
 
-export interface iCharacterSheetDataStorageInstantiatorProps extends iHasId {}
-export interface iTraitDataStorageInitialiserProps extends iHasCharacterSheet {}
-export interface iTraitCollectionDataStorageInitialiserProps extends iHasCharacterSheet {}
+export interface iCharacterSheetDataStorageFactoryProps extends iHasId, iHasParentPath {}
+export interface iTraitDataStorageInitialiserFactoryProps extends iHasCharacterSheet {}
+export interface iTraitCollectionDataStorageInitialiserFactoryProps extends iHasCharacterSheet {}
+
+export interface iBaseCharacterSheetDataStorageFactoryMethodProps extends iHasId, iHasParentPath {}
 
 // -------------------------------------------------------
 // TRAIT DATA STORAGE PROPS
@@ -75,7 +77,6 @@ export interface iLocalFileTraitDataStorageProps<N extends TraitNameUnionOrStrin
 
 export interface iFirestoreTraitDataStorageProps<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
 	extends iBaseTraitDataStorageProps<N, V>,
-		iHasCharacterSheet,
 		iHasFirestore,
 		iHasPath {}
 
@@ -124,7 +125,7 @@ export interface iFirestoreTraitCollectionDataStorageProps<
 	characterSheet: iCharacterSheet;
 }
 
-export interface iBaseCharacterSheetDataStorageProps extends iHasId, iHasDataStorageFactory {}
+export interface iBaseCharacterSheetDataStorageProps extends iHasId, iHasParentPath, iHasDataStorageFactory {}
 
 export interface iLocalFileCharacterSheetDataStorageProps
 	extends iBaseCharacterSheetDataStorageProps,
@@ -169,16 +170,15 @@ export interface iCharacterSheetDataStorage {
 // DATA STORAGE FACTORY
 
 export interface iDataStorageFactory {
-	// ? do data storage objects need to use N V generics? user wont interact with these directly
-
+	// NOTE the factory props just define what will be available, the specific factories dont need to require any of the given props
 	newTraitDataStorageInitialiser(
-		props: iTraitDataStorageInitialiserProps
+		props: iTraitDataStorageInitialiserFactoryProps
 	): <N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(
 		props: iBaseTraitDataStorageProps<N, V>
 	) => iTraitDataStorage<N, V>;
 
 	newTraitCollectionDataStorageInitialiser(
-		props: iTraitCollectionDataStorageInitialiserProps
+		props: iTraitCollectionDataStorageInitialiserFactoryProps
 	): <
 		N extends TraitNameUnionOrString,
 		V extends TraitValueTypeUnion,
@@ -187,18 +187,8 @@ export interface iDataStorageFactory {
 	>(
 		props: iBaseTraitCollectionDataStorageProps<N, V, D, T>
 	) => iTraitCollectionDataStorage<N, V, D, T>;
-	/*
-	newTraitCollectionDataStorage<
-		N extends TraitNameUnionOrString,
-		V extends TraitValueTypeUnion,
-		D extends iTraitData<N, V>,
-		T extends iBaseTrait<N, V, D>
-	>(
-		props: iBaseTraitCollectionDataStorageProps<N, V, D, T>
-	): iTraitCollectionDataStorage<N, V, D, T>;
-	*/
 
-	newCharacterSheetDataStorage(props: iCharacterSheetDataStorageInstantiatorProps): iCharacterSheetDataStorage;
+	newCharacterSheetDataStorage(props: iCharacterSheetDataStorageFactoryProps): iCharacterSheetDataStorage;
 }
 
 // -------------------------------------------------------

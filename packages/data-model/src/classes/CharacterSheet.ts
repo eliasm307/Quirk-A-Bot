@@ -1,5 +1,5 @@
 import { iHasId } from './../declarations/interfaces/data-storage-interfaces';
-import { iCharacterSheet } from './../declarations/interfaces/character-sheet-interfaces';
+import { iCharacterSheet, iCharacterSheetLoaderProps } from './../declarations/interfaces/character-sheet-interfaces';
 import { iLogReport } from './../declarations/interfaces/log-interfaces';
 import {
 	iAttributeTraitCollection,
@@ -22,8 +22,8 @@ import NumberTrait from './traits/NumberTrait';
 // todo add a method to clean up when a character sheet is not in use anymore, ie detach all event listeners to data storage etc
 
 export default class CharacterSheet implements iCharacterSheet {
+	path: string;
 	readonly id: string;
-
 	//-------------------------------------
 	// private properties with custom setters and/or getters
 
@@ -55,9 +55,9 @@ export default class CharacterSheet implements iCharacterSheet {
 		if (preExistingInstance) return preExistingInstance;
 
 		// check if a character sheet with this id doesnt exist in the data storage, initialise a blank character sheet if not
-		const characterSheetDataStorage = dataStorageFactory.newCharacterSheetDataStorage({ id });
+		const characterSheetDataStorage = dataStorageFactory.newCharacterSheetDataStorage(props);
 
-		await characterSheetDataStorage.assertDataExistsOnDataStorage(); // todo make this an internal class method named 'assert' or something
+		await characterSheetDataStorage.assertDataExistsOnDataStorage();
 
 		// return a new character sheet instance as requested
 		// Note a character sheet instance only creates an object that is connected to a character sheet on the data source, it doesnt initialise a new character sheet on the data source
@@ -66,7 +66,8 @@ export default class CharacterSheet implements iCharacterSheet {
 
 	//-------------------------------------
 	// PRIVATE CONSTRUCTOR
-	private constructor({ id, dataStorageFactory }: iCharacterSheetProps) {
+	private constructor(props: iCharacterSheetProps) {
+		const { id, dataStorageFactory, parentPath } = props;
 		const traitDataStorageInitialiser = dataStorageFactory.newTraitDataStorageInitialiser({
 			characterSheet: this,
 		});
@@ -75,7 +76,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			characterSheet: this,
 		});
 
-		const characterSheetDataStorage = dataStorageFactory.newCharacterSheetDataStorage({ id });
+		const characterSheetDataStorage = dataStorageFactory.newCharacterSheetDataStorage(props);
 
 		const initialData = characterSheetDataStorage.getData();
 

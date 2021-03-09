@@ -35,7 +35,7 @@ export default class LocalFileCharacterSheetDataStorage implements iCharacterShe
 		await saveCharacterSheetToFile(CharacterSheet.newDataObject({ id: this.id }), this.resolvedFilePath);
 	}
 
-	private preProcessId(id: string) {
+	protected preProcessId(id: string) {
 		return id.replace(/\.json$/i, '.json');
 	}
 

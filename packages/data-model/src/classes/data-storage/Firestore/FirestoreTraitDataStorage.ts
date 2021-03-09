@@ -9,7 +9,6 @@ import AbstractTraitDataStorage from '../AbstractTraitDataStorage';
 import pathModule from 'path';
 import { isTraitData } from '../../../utils/typePredicates';
 import { iBaseTraitData } from '../../../declarations/interfaces/trait-interfaces';
-import path from 'path';
 
 export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
 	extends AbstractTraitDataStorage<N, V>
@@ -30,15 +29,13 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 			}
 		}
 	}
-	#characterSheet: iCharacterSheet;
 	#firestore: Firestore;
 	#path: string;
 	#unsubscribeFromEventListeners: () => void = () => null; // todo add cleanup method which calls this
 
 	constructor(props: iFirestoreTraitDataStorageProps<N, V>) {
 		super(props);
-		const { characterSheet, firestore, path, defaultValueIfNotDefined } = props;
-		this.#characterSheet = characterSheet; // ? remove?
+		const { firestore, path, defaultValueIfNotDefined } = props;
 		this.#firestore = firestore;
 		this.#path = path;
 

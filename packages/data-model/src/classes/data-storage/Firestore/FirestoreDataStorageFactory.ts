@@ -8,12 +8,13 @@ import {
 	iFirestoreDataStorageFactoryProps,
 	iHasId,
 	iCharacterSheetDataStorage,
-	iTraitDataStorageInitialiserProps,
+	iTraitDataStorageInitialiserFactoryProps,
 	iBaseTraitDataStorageProps,
 	iTraitDataStorage,
 	iHasCharacterSheet,
 	iBaseTraitCollectionDataStorageProps,
 	iTraitCollectionDataStorage,
+	iBaseCharacterSheetDataStorageFactoryMethodProps,
 } from '../../../declarations/interfaces/data-storage-interfaces';
 import { TraitValueTypeUnion } from '../../../declarations/types';
 export default class FirestoreDataStorageFactory implements iDataStorageFactory {
@@ -22,20 +23,18 @@ export default class FirestoreDataStorageFactory implements iDataStorageFactory 
 	constructor({ firestore }: iFirestoreDataStorageFactoryProps) {
 		this.#firestore = firestore;
 	}
-	newCharacterSheetDataStorage({ id }: iHasId): iCharacterSheetDataStorage {
+	newCharacterSheetDataStorage(props: iBaseCharacterSheetDataStorageFactoryMethodProps): iCharacterSheetDataStorage {
 		return new FirestoreCharacterSheetDataStorage({
-			id,
+			...props,
 			dataStorageFactory: this,
 			firestore: this.#firestore,
 		});
 	}
 
-	newTraitDataStorageInitialiser({
-		characterSheet,
-	}: iTraitDataStorageInitialiserProps): <N extends string, V extends TraitValueTypeUnion>(
+	newTraitDataStorageInitialiser( ): <N extends string, V extends TraitValueTypeUnion>(
 		props: iBaseTraitDataStorageProps<N, V>
 	) => iTraitDataStorage<N, V> {
-		return props => new FirestoreTraitDataStorage({ ...props, characterSheet, firestore: this.#firestore });
+		return props => new FirestoreTraitDataStorage({ ...props, firestore: this.#firestore });
 	}
 
 	newTraitCollectionDataStorageInitialiser({

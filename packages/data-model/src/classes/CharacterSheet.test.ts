@@ -5,6 +5,7 @@ import { iAttribute, iSkill, iTouchStoneOrConviction } from '../declarations/int
 import LocalFileDataStorageFactory from './data-storage/LocalFile/LocalFileDataStorageFactory';
 import InMemoryDataStorageFactory from './data-storage/InMemory/InMemoryDataStorageFactory';
 
+const parentPath = 'characterSheetTestCollection';
 // ids for test data
 const newDataId = `character-sheet-test-new`;
 const existingDataId = `character-sheet-test-existing`;
@@ -40,11 +41,16 @@ test(testName, () => {
 testName = 'save new blank character sheet and load the character sheet';
 test(testName, async () => {
 	// creates new sheet and does initial save
-	const cs: CharacterSheet = await CharacterSheet.load({ dataStorageFactory: localDataStorageFactory, id: newDataId });
+	const cs: CharacterSheet = await CharacterSheet.load({
+		dataStorageFactory: localDataStorageFactory,
+		id: newDataId,
+		parentPath,
+	});
 
 	const csLoaded: CharacterSheet = await CharacterSheet.load({
 		dataStorageFactory: localDataStorageFactory,
 		id: newDataId,
+		parentPath,
 	});
 
 	// console.log({ testName, resolvedPath });
@@ -62,9 +68,17 @@ test(testName, async () => {
 
 testName = 'test new file, autosave and custom setters for basic data types';
 test(testName, async () => {
-	const cs: CharacterSheet = await CharacterSheet.load({ dataStorageFactory: localDataStorageFactory, id: newDataId });
+	const cs: CharacterSheet = await CharacterSheet.load({
+		dataStorageFactory: localDataStorageFactory,
+		id: newDataId,
+		parentPath,
+	});
 
-	const cs2: CharacterSheet = await CharacterSheet.load({ dataStorageFactory: localDataStorageFactory, id: newDataId });
+	const cs2: CharacterSheet = await CharacterSheet.load({
+		dataStorageFactory: localDataStorageFactory,
+		id: newDataId,
+		parentPath,
+	});
 
 	const testHealthValue = 1;
 	const testBloodPotencyValue = 2;
@@ -78,6 +92,7 @@ test(testName, async () => {
 	const csLoaded: CharacterSheet = await CharacterSheet.load({
 		dataStorageFactory: localDataStorageFactory,
 		id: newDataId,
+		parentPath,
 	});
 
 	console.log({
@@ -146,10 +161,12 @@ test(testName, async () => {
 	const cs: CharacterSheet = await CharacterSheet.load({
 		dataStorageFactory: localDataStorageFactory,
 		id: existingDataId,
+		parentPath,
 	});
 	const cs2: CharacterSheet = await CharacterSheet.load({
 		dataStorageFactory: localDataStorageFactory,
 		id: existingDataId,
+		parentPath,
 	});
 
 	const randVal = (min: number, max: number) => Math.random() * max + min;
@@ -160,6 +177,7 @@ test(testName, async () => {
 	const csLoaded: CharacterSheet = await CharacterSheet.load({
 		dataStorageFactory: localDataStorageFactory,
 		id: existingDataId,
+		parentPath,
 	});
 	/*
 	console.log({
@@ -185,7 +203,11 @@ test(testName, async () => {
 testName = 'test basic trait methods';
 test(testName, async () => {
 	// console.log(`creating cs`);
-	const cs: CharacterSheet = await CharacterSheet.load({ dataStorageFactory: localDataStorageFactory, id: newDataId });
+	const cs: CharacterSheet = await CharacterSheet.load({
+		dataStorageFactory: localDataStorageFactory,
+		id: newDataId,
+		parentPath,
+	});
 
 	// console.log(`setting strength`);
 	cs.attributes.set('Strength', 5);

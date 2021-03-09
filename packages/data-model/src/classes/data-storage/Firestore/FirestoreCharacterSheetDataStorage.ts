@@ -14,16 +14,16 @@ export default class FirestoreCharacterSheetDataStorage implements iCharacterShe
 	protected dataStorageFactory: iDataStorageFactory;
 	protected firestore: Firestore;
 	protected path: string;
-	readonly #characterSheetCollectionName = 'CharacterSheets';
 	protected characterSheetData?: iCharacterSheetData;
 
 	constructor({
 		id = `default/${Math.random() * 9}`,
+		parentPath = 'characterSheets',
 		dataStorageFactory,
 		firestore,
 	}: iFirestoreCharacterSheetDataStorageProps) {
 		this.id = id;
-		this.path = createPath(this.#characterSheetCollectionName, id);
+		this.path = createPath(parentPath, id);
 		this.dataStorageFactory = dataStorageFactory;
 		this.firestore = firestore;
 	}
