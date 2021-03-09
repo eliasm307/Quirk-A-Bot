@@ -117,7 +117,7 @@ describe('firestore emulator', () => {
 		// detach observers
 		unsubscribeToCollection();
 		unsubscribeToDocument();
-		await console.log('observers detached');
+		console.log('observers detached');
 
 		// these should not create any events on observer
 		await firestoreEmulator.doc(`${localTestCollectionName}/${testDocumentName}`).set(testDocData);

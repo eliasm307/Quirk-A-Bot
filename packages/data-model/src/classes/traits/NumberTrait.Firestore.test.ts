@@ -24,7 +24,7 @@ describe('Number trait with firestore data storage', () => {
 			parentPath: testParentPath,
 		});
 
-		await new Promise(res => setTimeout(res, 1000)); // wait for syncronisation
+		await new Promise(res => setTimeout(res, 100)); // wait for syncronisation
 
 		const doc = await firestore.doc(trait1.path).get();
 		const data = doc.data();
@@ -53,7 +53,7 @@ describe('Number trait with firestore data storage', () => {
 		trait1.value = 0;
 		trait1.value = 1;
 
-		await new Promise(res => setTimeout(res, 1000)); // wait for syncronisation
+		await new Promise(res => setTimeout(res, 100)); // wait for syncronisation
 
 		const doc = await firestore.doc(trait1.path).get();
 		const data: any = doc.data();
@@ -75,7 +75,7 @@ describe('Number trait with firestore data storage', () => {
 			traitDataStorageInitialiser,
 			parentPath: testParentPath,
 		});
-		await new Promise(res => setTimeout(res, 1000)); // wait for syncronisation
+		await new Promise(res => setTimeout(res, 100)); // wait for syncronisation
 
 		const trait2 = new NumberTrait<string>({
 			max: 10,
@@ -85,14 +85,14 @@ describe('Number trait with firestore data storage', () => {
 			parentPath: testParentPath,
 		});
 
-		await new Promise(res => setTimeout(res, 1000)); // wait for syncronisation
+		await new Promise(res => setTimeout(res, 100)); // wait for syncronisation
 
 		const knownValue = 0;
 
 		// set trait to a known value
 		trait1.value = knownValue;
 
-		await new Promise(res => setTimeout(res, 1000)); // wait for syncronisation
+		await new Promise(res => setTimeout(res, 100)); // wait for syncronisation
 
 		const doc1 = await firestore.doc(trait1.path).get();
 		const doc2 = await firestore.doc(trait2.path).get();
@@ -151,6 +151,7 @@ describe('Number trait with firestore data storage', () => {
 		// check if other trait syncronised
 		expect(trait2.value).toEqual(changeValue);
 
+		// do any cleanup
 		trait1.cleanUp();
 		trait2.cleanUp();
 	});
