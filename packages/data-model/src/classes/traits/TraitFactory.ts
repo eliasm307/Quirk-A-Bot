@@ -26,13 +26,13 @@ import {
 	iDisciplineData,
 	iTouchStoneOrConvictionData,
 	iSkillData,
-} from './../../declarations/interfaces/trait-interfaces';
-import NumberTraitWithCategory from './NumberTraitWithCategory';
-import NumberTrait from './NumberTrait';
-import StringTrait from './StringTrait';
+} from './../../declarations/interfaces/trait-interfaces'; 
 import getAttributeCategory from '../../utils/getAttributeCategory';
 import TraitCollection from './TraitCollection';
 import { iAttributeTraitCollection } from '../../declarations/interfaces/trait-collection-interfaces'; 
+import NumberTrait from './NumberTrait';
+import NumberTraitWithCategory from './NumberTraitWithCategory';
+import StringTrait from './StringTrait';
 
 export default abstract class TraitFactory {
 	// methods use base trait props as all other details should be selected to match the required trait type

@@ -1,17 +1,17 @@
 import {
+	iBaseCharacterSheetDataStorageFactoryMethodProps,
 	iCharacterSheetDataStorage,
 	iHasId,
 	iInMemoryFileDataStorageFactoryProps,
 } from './../../../declarations/interfaces/data-storage-interfaces';
 import { TraitNameUnionOrString } from '../../../declarations/types';
-import { iCharacterSheet, iCharacterSheetData } from '../../../declarations/interfaces/character-sheet-interfaces';
 import { TraitValueTypeUnion } from '../../../declarations/types';
 import {
 	iBaseTraitCollectionDataStorageProps,
 	iBaseTraitDataStorageProps,
 	iDataStorageFactory,
 	iTraitCollectionDataStorage,
-	iTraitDataStorage,
+	iBaseTraitDataStorage,
 } from '../../../declarations/interfaces/data-storage-interfaces';
 import InMemoryTraitDataStorage from './InMemoryTraitDataStorage';
 import { iBaseTraitData, iBaseTrait } from '../../../declarations/interfaces/trait-interfaces';
@@ -19,12 +19,11 @@ import InMemoryTraitCollectionDataStorage from './InMemoryTraitCollectionDataSto
 import InMemoryCharacterSheetDataStorage from './InMemoryCharacterSheetDataStorage';
 
 export default class InMemoryDataStorageFactory implements iDataStorageFactory {
-	constructor({}: iInMemoryFileDataStorageFactoryProps) { 
+	constructor(props?: iInMemoryFileDataStorageFactoryProps) {}
+	newCharacterSheetDataStorage(props: iBaseCharacterSheetDataStorageFactoryMethodProps): iCharacterSheetDataStorage {
+		return new InMemoryCharacterSheetDataStorage({ ...props, dataStorageFactory: this });
 	}
-	newCharacterSheetDataStorage({ id }: iHasId): iCharacterSheetDataStorage {
-		return new InMemoryCharacterSheetDataStorage({ id, dataStorageFactory: this });
-	}
-/*
+	/*
 	newTraitCollectionDataStorage<
 		N extends string,
 		V extends TraitValueTypeUnion,
@@ -35,7 +34,7 @@ export default class InMemoryDataStorageFactory implements iDataStorageFactory {
 	}*/
 	newTraitDataStorageInitialiser(): <N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(
 		props: iBaseTraitDataStorageProps<N, V>
-	) => iTraitDataStorage<N, V> {
+	) => iBaseTraitDataStorage<N, V> {
 		return props => new InMemoryTraitDataStorage({ ...props });
 	}
 

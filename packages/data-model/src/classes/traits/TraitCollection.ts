@@ -1,21 +1,19 @@
 import { iAddLogEventProps, iDeleteLogEventProps } from './../../declarations/interfaces/log-interfaces';
 import { iTraitCollectionDataStorage } from './../../declarations/interfaces/data-storage-interfaces';
 import { TraitNameUnionOrString } from './../../declarations/types';
-import {
-	iBaseTrait,
-	iBaseTraitProps,
-	iTraitCollectionProps,
-	iBaseTraitData,
-} from '../../declarations/interfaces/trait-interfaces';
+import { iBaseTrait, iTraitCollectionProps, iBaseTraitData } from '../../declarations/interfaces/trait-interfaces';
 import { TraitTypeNameUnion, TraitValueTypeUnion } from '../../declarations/types';
 import LogCollection from '../log/LogCollection';
 import DeleteLogEvent from '../log/DeleteLogEvent';
 import AddLogEvent from '../log/AddLogEvent';
 import { iLogCollection, iLogEvent, iLogReport } from '../../declarations/interfaces/log-interfaces';
 import { iTraitCollection } from '../../declarations/interfaces/trait-collection-interfaces';
-import { iBaseTraitDataStorageProps, iTraitDataStorage } from '../../declarations/interfaces/data-storage-interfaces';
-import path from 'path';
+import {
+	iBaseTraitDataStorageProps,
+	iBaseTraitDataStorage,
+} from '../../declarations/interfaces/data-storage-interfaces';
 import { createPath } from '../../utils/createPath';
+import { hasCleanUp } from '../../utils/typePredicates';
 
 export default class TraitCollection<
 	N extends TraitNameUnionOrString,
@@ -25,7 +23,9 @@ export default class TraitCollection<
 > implements iTraitCollection<N, V, D, T> {
 	#traitDataStorageInitialiser: <N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(
 		props: iBaseTraitDataStorageProps<N, V>
-	) => iTraitDataStorage<N, V>;
+	) => iBaseTraitDataStorage<N, V>;
+
+	// ? should this be # or protected?
 	#dataStorage: iTraitCollectionDataStorage<N, V, D, T>;
 	name: string;
 	path: string;
@@ -59,6 +59,11 @@ export default class TraitCollection<
 			onDelete: (props: iDeleteLogEventProps<V>) => this.logs.log(new DeleteLogEvent(props)),
 		});
 	}
+	cleanUp(): boolean {
+		// if the data storage has a cleanup function then call it and return the result,
+		// otherwise return true if no cleanup required
+		return hasCleanUp(this.#dataStorage) ? this.#dataStorage.cleanUp() : true;
+	}
 
 	toArray(): T[] {
 		return this.#dataStorage.toArray();
@@ -66,11 +71,11 @@ export default class TraitCollection<
 	getLogEvents(): iLogEvent[] {
 		//todo memoise
 		// combine logs from reports and and sort oldest to newest
-		return this.getLogReport()
+		return this.getLogReports()
 			.reduce((events, report) => [...events, ...report.logEvents], [] as iLogEvent[])
 			.sort((a, b) => Number(a.timeStamp - b.timeStamp));
 	}
-	getLogReport(): iLogReport[] {
+	getLogReports(): iLogReport[] {
 		return [this.logs.getReport(), ...this.toArray().map(e => e.getLogReport())];
 	}
 	toJson(): D[] {

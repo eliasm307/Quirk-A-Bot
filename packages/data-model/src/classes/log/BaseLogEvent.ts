@@ -19,7 +19,7 @@ export default abstract class BaseLogEvent<T> implements iLogEvent {
 	constructor({ operation, description, property }: iProps) {
 		this.id = generateId();
 		this.operation = operation;
-		this.description = description;
+		this.description = description; // todo description function should be a property for the abstract, so it can be used here initially
 		this.property = property;
 
 		// generate time stamp and save date object

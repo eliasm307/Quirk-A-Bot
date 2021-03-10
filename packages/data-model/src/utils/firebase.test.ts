@@ -1,11 +1,10 @@
 import urlExistSync from 'url-exist-sync';
 import { firestoreEmulator, isFirestoreEmulatorRunning } from './firebase';
+import logFirestoreChange from './logFirestoreChange';
 
-const testDocData = { test: `test @ ${new Date().toLocaleString()}` };
-const testCollectionName = 'test';
+const testDocData = { testProperty: `testing @ ${new Date().toLocaleString()}` };
+const testCollectionName = 'testCollection';
 const testDocumentName = 'testDoc';
-
-// if ( !urlExistSync( 'http://localhost:4000/firestore' ) ) throw Error( 'Firestore emulator not running' );
 
 describe('firestore emulator', () => {
 	it('tests if firestore emulator is running', () => {
@@ -40,8 +39,6 @@ describe('firestore emulator', () => {
 		).resolves.toBeGreaterThanOrEqual(1);
 	});
 
-	it('can detect changes to firestore documents', () => {});
-
 	it('can delete items from firestore collections', async () => {
 		expect.assertions(1);
 		await expect(firestoreEmulator.doc(`${testCollectionName}/${testDocumentName}`).delete()).resolves.toBeFalsy();
@@ -52,43 +49,51 @@ describe('firestore emulator', () => {
 
 		const localTestCollectionName = `${testCollectionName}WithListener`;
 
+		// make sure there is no existing data
+		await firestoreEmulator.doc(`${localTestCollectionName}/${testDocumentName}`).delete();
+
 		// subscribe to document level changes
 		const unsubscribeToDocument = firestoreEmulator.doc(`${localTestCollectionName}/${testDocumentName}`).onSnapshot({
 			next: snapshot => {
 				const data: any = snapshot.data();
-				console.warn('doc change', { data });
+				// console.log('doc change', { data });
 				if (snapshot.exists) {
 					if (snapshot.metadata.hasPendingWrites) {
-						console.warn('Modified document: ', { data });
+						// console.log('Modified document: ', { data });
 						expect(data).toBeTruthy();
 					} else {
-						console.warn('snapshot has no pending writes', data);
+						// console.log('snapshot has no pending writes', data);
 					}
 				} else {
-					console.warn('snapshot does not exist, deleted?', data);
+					// console.log('snapshot does not exist, was this document deleted?', data);
 					expect(data).toBeFalsy();
 				}
 			},
 			error: console.error,
 		});
 
-		console.warn('document observer attached');
+		// console.log('document observer attached');
+
+		// todo delete existing documents before attaching listeners
 
 		// subscribe to collection level changes
 		const unsubscribeToCollection = firestoreEmulator.collection(localTestCollectionName).onSnapshot(querySnapshot => {
 			querySnapshot.docChanges().forEach(change => {
 				const data: any = change.doc.data();
-				console.warn('item change', change);
+
+				if(!change.doc.exists) throw Error(`Document at path ${localTestCollectionName}/${change.doc.id} is marked as doesnt exist`)
+
+				logFirestoreChange(change, console.log);
 				if (change.type === 'added') {
-					console.warn('New item: ', { data });
+					// console.log('New item: ', { data });
 					expect(data).toEqual(testDocData);
 				}
 				if (change.type === 'modified') {
-					console.warn('Modified document: ', { data });
+					// console.log('Modified document: ', { data });
 					expect(data.added).toBeTruthy();
 				}
 				if (change.type === 'removed') {
-					console.warn('Removed document: ', { data });
+					// console.log('Removed document: ', { data });
 					expect(
 						firestoreEmulator
 							.collection(localTestCollectionName)
@@ -99,24 +104,24 @@ describe('firestore emulator', () => {
 			});
 		});
 
-		console.warn('collection observer attached');
+		// console.log('collection observer attached');
 
 		// assertion 1 & 2 (collection and document events)
-		console.warn('creating document');
+		// console.log('creating document');
 		await firestoreEmulator.doc(`${localTestCollectionName}/${testDocumentName}`).set(testDocData);
 
 		// assertion 3 & 4 (collection and document events)
-		console.warn('updating document');
+		// console.log('updating document');
 		await firestoreEmulator.doc(`${localTestCollectionName}/${testDocumentName}`).update({ added: 'something' });
 
 		// assertion 5 & 6 (collection and document events)
-		console.warn('deleting document');
+		// console.log('deleting document');
 		await firestoreEmulator.doc(`${localTestCollectionName}/${testDocumentName}`).delete();
 
 		// detach observers
 		unsubscribeToCollection();
 		unsubscribeToDocument();
-		console.warn('observers detached');
+		// console.log('observers detached');
 
 		// these should not create any events on observer
 		await firestoreEmulator.doc(`${localTestCollectionName}/${testDocumentName}`).set(testDocData);

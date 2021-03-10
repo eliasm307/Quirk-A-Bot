@@ -59,3 +59,7 @@ export interface iHasPath {
 	/** Path from the root to reach this item */
 	path: string;
 }
+
+export interface iHasCleanUp {
+	cleanUp(): boolean;
+}

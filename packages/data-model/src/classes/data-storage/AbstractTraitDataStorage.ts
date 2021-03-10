@@ -1,24 +1,24 @@
 import { iBaseTraitData } from './../../declarations/interfaces/trait-interfaces';
 import { TraitNameUnionOrString } from './../../declarations/types';
 import { TraitValueTypeUnion } from '../../declarations/types';
-import { iBaseTraitDataStorageProps, iTraitDataStorage } from '../../declarations/interfaces/data-storage-interfaces';
+import { iBaseTraitDataStorageProps, iBaseTraitDataStorage } from '../../declarations/interfaces/data-storage-interfaces';
 
 interface iPrivateModifiableProperties<V extends TraitValueTypeUnion> {
 	value: V;
 }
 
 export default abstract class AbstractTraitDataStorage<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
-	implements iTraitDataStorage<N, V> {
+	implements iBaseTraitDataStorage<N, V> {
 	name: N;
-	protected private: iPrivateModifiableProperties<V>; 
+	protected private: iPrivateModifiableProperties<V>;
 
 	constructor(props: iBaseTraitDataStorageProps<N, V>) {
-		const { name, defaultValueIfNotDefined  } = props;
-		this.name = name; 
+		const { name, defaultValueIfNotDefined } = props;
+		this.name = name;
 		this.private = {
 			value: defaultValueIfNotDefined, // assign initial value
 		};
-	}
+	} 
 
 	get value(): V {
 		return this.private.value;

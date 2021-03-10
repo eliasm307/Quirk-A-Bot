@@ -1,4 +1,4 @@
-import { iTraitDataStorage } from './../../../declarations/interfaces/data-storage-interfaces';
+import { iBaseTraitDataStorage } from './../../../declarations/interfaces/data-storage-interfaces';
 import { throws } from 'node:assert';
 import { iInMemoryTraitDataStorageProps } from '../../../declarations/interfaces/data-storage-interfaces';
 import { TraitValueTypeUnion, TraitNameUnionOrString } from '../../../declarations/types';
@@ -9,7 +9,7 @@ import { iBaseTraitData } from '../../../declarations/interfaces/trait-interface
 
 export default class InMemoryTraitDataStorage<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
 	extends AbstractTraitDataStorage<N, V>
-	implements iTraitDataStorage<N, V> {
+	implements iBaseTraitDataStorage<N, V> {
 	protected assertTraitExistsOnDataStorage({}: iBaseTraitData<N, V>): void {
 		// todo implement this
 	}

@@ -5,6 +5,7 @@ import { iAttribute, iSkill, iTouchStoneOrConviction } from '../declarations/int
 import LocalFileDataStorageFactory from './data-storage/LocalFile/LocalFileDataStorageFactory';
 import InMemoryDataStorageFactory from './data-storage/InMemory/InMemoryDataStorageFactory';
 
+const parentPath = 'characterSheetTestCollection';
 // ids for test data
 const newDataId = `character-sheet-test-new`;
 const existingDataId = `character-sheet-test-existing`;
@@ -17,7 +18,7 @@ const newDataResolvedPath = path.resolve(resolvedBasePath, `${newDataId}.json`);
 const existingDataResolvedPath = path.resolve(resolvedBasePath, `${existingDataId}.json`);
 
 if (fs.pathExistsSync(newDataResolvedPath)) {
-	console.warn(__filename, `Deleting file "${newDataResolvedPath}" before testing`);
+	// console.warn(__filename, `Deleting file "${newDataResolvedPath}" before testing`);
 	fs.removeSync(newDataResolvedPath);
 }
 
@@ -40,11 +41,16 @@ test(testName, () => {
 testName = 'save new blank character sheet and load the character sheet';
 test(testName, async () => {
 	// creates new sheet and does initial save
-	const cs: CharacterSheet = await CharacterSheet.load({ dataStorageFactory: localDataStorageFactory, id: newDataId });
+	const cs: CharacterSheet = await CharacterSheet.load({
+		dataStorageFactory: localDataStorageFactory,
+		id: newDataId,
+		parentPath,
+	});
 
 	const csLoaded: CharacterSheet = await CharacterSheet.load({
 		dataStorageFactory: localDataStorageFactory,
 		id: newDataId,
+		parentPath,
 	});
 
 	// console.log({ testName, resolvedPath });
@@ -62,9 +68,17 @@ test(testName, async () => {
 
 testName = 'test new file, autosave and custom setters for basic data types';
 test(testName, async () => {
-	const cs: CharacterSheet = await CharacterSheet.load({ dataStorageFactory: localDataStorageFactory, id: newDataId });
+	const cs: CharacterSheet = await CharacterSheet.load({
+		dataStorageFactory: localDataStorageFactory,
+		id: newDataId,
+		parentPath,
+	});
 
-	const cs2: CharacterSheet = await CharacterSheet.load({ dataStorageFactory: localDataStorageFactory, id: newDataId });
+	const cs2: CharacterSheet = await CharacterSheet.load({
+		dataStorageFactory: localDataStorageFactory,
+		id: newDataId,
+		parentPath,
+	});
 
 	const testHealthValue = 1;
 	const testBloodPotencyValue = 2;
@@ -78,8 +92,9 @@ test(testName, async () => {
 	const csLoaded: CharacterSheet = await CharacterSheet.load({
 		dataStorageFactory: localDataStorageFactory,
 		id: newDataId,
+		parentPath,
 	});
-
+	/*
 	console.log({
 		testName,
 		healthLog1: csLoaded.health.getLogReport(),
@@ -87,7 +102,8 @@ test(testName, async () => {
 		health: csLoaded.health.toJson(),
 		logEvents: cs.getLogEvents(),
 		logReport: cs.getLogReport(),
-	});
+	} );
+	*/
 
 	// properties should be up to date on loaded instance
 	expect(csLoaded.health.value).toEqual(testHealthValue);
@@ -98,7 +114,7 @@ test(testName, async () => {
 	expect(cs2.health.value).toEqual(testHealthValue);
 	expect(cs2.bloodPotency.value).toEqual(testBloodPotencyValue);
 	expect(cs2.hunger.value).toEqual(testHungerValue);
-
+	/*
 	console.log({
 		testName,
 		logEvents: cs.getLogEvents(),
@@ -106,11 +122,12 @@ test(testName, async () => {
 		logEvent0TimeGetTime: cs.getLogEvents()[0]?.timeStamp,
 		logEvent1TimeGetTime: cs.getLogEvents()[1]?.timeStamp,
 		logEvent2TimeGetTime: cs.getLogEvents()[2]?.timeStamp,
-	});
+	} );
+	*/
 
 	// check changes were logged
 	expect(cs.getLogEvents()).toBeTruthy();
-	expect(cs.getLogReport()).toBeTruthy();
+	expect(cs.getLogReports()).toBeTruthy();
 	expect(csLoaded.health.getLogReport().logEvents.length).toEqual(1);
 	expect(cs.getLogEvents().length).toEqual(3);
 	expect(cs.getLogEvents()[0]?.property).toEqual('Health');
@@ -138,7 +155,7 @@ test(testName, async () => {
 
 	// check changes were logged
 	expect(csLoaded.health.getLogReport().logEvents.length).toBeGreaterThanOrEqual(2);
-	expect(csLoaded.getLogReport()).toEqual(cs2.getLogReport());
+	expect(csLoaded.getLogReports()).toEqual(cs2.getLogReports());
 });
 
 testName = 'test existing file, autosave and custom setters for basic data types';
@@ -146,10 +163,12 @@ test(testName, async () => {
 	const cs: CharacterSheet = await CharacterSheet.load({
 		dataStorageFactory: localDataStorageFactory,
 		id: existingDataId,
+		parentPath,
 	});
 	const cs2: CharacterSheet = await CharacterSheet.load({
 		dataStorageFactory: localDataStorageFactory,
 		id: existingDataId,
+		parentPath,
 	});
 
 	const randVal = (min: number, max: number) => Math.random() * max + min;
@@ -160,6 +179,7 @@ test(testName, async () => {
 	const csLoaded: CharacterSheet = await CharacterSheet.load({
 		dataStorageFactory: localDataStorageFactory,
 		id: existingDataId,
+		parentPath,
 	});
 	/*
 	console.log({
@@ -174,18 +194,22 @@ test(testName, async () => {
 
 	// some logs should exist
 	expect(cs.getLogEvents()).toBeTruthy();
-	expect(cs.getLogReport()).toBeTruthy();
+	expect(cs.getLogReports()).toBeTruthy();
 	expect(cs.getLogEvents().length).toBeGreaterThan(0);
 
 	// check changes were logged
-	expect(csLoaded.getLogReport()).toEqual(cs2.getLogReport());
+	expect(csLoaded.getLogReports()).toEqual(cs2.getLogReports());
 });
 
 // todo move these to trait collection tests
 testName = 'test basic trait methods';
 test(testName, async () => {
 	// console.log(`creating cs`);
-	const cs: CharacterSheet = await CharacterSheet.load({ dataStorageFactory: localDataStorageFactory, id: newDataId });
+	const cs: CharacterSheet = await CharacterSheet.load({
+		dataStorageFactory: localDataStorageFactory,
+		id: newDataId,
+		parentPath,
+	});
 
 	// console.log(`setting strength`);
 	cs.attributes.set('Strength', 5);

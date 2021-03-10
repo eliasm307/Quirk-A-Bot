@@ -18,13 +18,15 @@ import {
 	iCoreStringTraitData,
 } from './trait-interfaces';
 import { ClanName, CoreNumberTraitName, CoreStringTraitName } from '../types';
-import { iHasToJson } from './general-interfaces';
+import { iHasToJson, iHasParentPath } from './general-interfaces';
 import { iDataStorageFactory } from './data-storage-interfaces';
 
-export interface iCharacterSheetProps {
+export interface iCharacterSheetLoaderProps {
 	id: string;
 	dataStorageFactory: iDataStorageFactory;
 }
+
+export interface iCharacterSheetProps extends iCharacterSheetLoaderProps, iHasParentPath {}
 
 /** The basic shape of a charactersheet */
 export interface iBaseCharacterSheet {
@@ -61,7 +63,8 @@ export interface iCharacterSheetData extends iBaseCharacterSheet {
 }
 
 /** The shape of a character sheet object instance */
-export interface iCharacterSheet extends iBaseCharacterSheet, iHasToJson<iCharacterSheetData>, iLoggerCollection { 
+export interface iCharacterSheet extends iBaseCharacterSheet, iHasToJson<iCharacterSheetData>, iLoggerCollection {
+	path: string;
 	name: iCoreStringTrait<string>;
 	clan: iCoreStringTrait<ClanName>; // todo allow this to specify using ClanName type union
 	sire: iCoreStringTrait<string>;

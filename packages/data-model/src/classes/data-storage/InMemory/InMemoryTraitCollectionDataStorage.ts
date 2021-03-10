@@ -13,11 +13,12 @@ export default class InMemoryTraitCollectionDataStorage<
 	>
 	extends AbstractTraitCollectionDataStorage<N, V, D, T>
 	implements iTraitCollectionDataStorage<N, V, D, T> {
-	protected afterAdd( name: N ): void {
-		// do nothing
-	}
-	protected deleteTraitFromDataStorage( name: N ): void {
-		// do nothing
-	}
  
+	// todo these methods should be optional arguments for the base class, use strategy pattern
+	protected afterAdd(name: N): void {
+		// do nothing
+	}
+	protected deleteTraitFromDataStorage(name: N): void {
+		// do nothing
+	}
 }

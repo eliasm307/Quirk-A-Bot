@@ -5,7 +5,7 @@
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"scripts": {
-		"test": "rm -rf dist && yarn build && npx tsc && jest --logHeapUsage --detectOpenHandles",
+		"test": "rm -rf dist && yarn build && npx tsc && jest --colors --logHeapUsage  ",
 		"start": "yarn build && node .",
 		"dev": "yarn build && nodemon .",
 		"build": "yarn && npx tsc",

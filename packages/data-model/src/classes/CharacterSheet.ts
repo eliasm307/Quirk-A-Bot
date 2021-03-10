@@ -1,5 +1,5 @@
 import { iHasId } from './../declarations/interfaces/data-storage-interfaces';
-import { iCharacterSheet } from './../declarations/interfaces/character-sheet-interfaces';
+import { iCharacterSheet, iCharacterSheetLoaderProps } from './../declarations/interfaces/character-sheet-interfaces';
 import { iLogReport } from './../declarations/interfaces/log-interfaces';
 import {
 	iAttributeTraitCollection,
@@ -15,21 +15,16 @@ import TraitFactory from './traits/TraitFactory';
 import StringTrait from './traits/StringTrait';
 import { isCharacterSheetData } from '../utils/typePredicates';
 import NumberTrait from './traits/NumberTrait';
+import { createPath } from '../utils/createPath';
 // import saveCharacterSheetToFile from '../utils/saveCharacterSheetToFile';
-
-// ! this shouldnt be here, should be in a file about persistence
-interface iLoadFromFileArgs {
-	filePath?: string;
-	fileName?: string;
-}
 
 // todo split this into smaller pieces
 
 // todo add a method to clean up when a character sheet is not in use anymore, ie detach all event listeners to data storage etc
 
 export default class CharacterSheet implements iCharacterSheet {
+	path: string;
 	readonly id: string;
-
 	//-------------------------------------
 	// private properties with custom setters and/or getters
 
@@ -61,9 +56,9 @@ export default class CharacterSheet implements iCharacterSheet {
 		if (preExistingInstance) return preExistingInstance;
 
 		// check if a character sheet with this id doesnt exist in the data storage, initialise a blank character sheet if not
-		const characterSheetDataStorage = dataStorageFactory.newCharacterSheetDataStorage({ id });
-		
-		await characterSheetDataStorage.assertDataExistsOnDataStorage(); // todo make this an internal class method named 'assert' or something
+		const characterSheetDataStorage = dataStorageFactory.newCharacterSheetDataStorage(props);
+
+		await characterSheetDataStorage.assertDataExistsOnDataStorage();
 
 		// return a new character sheet instance as requested
 		// Note a character sheet instance only creates an object that is connected to a character sheet on the data source, it doesnt initialise a new character sheet on the data source
@@ -72,7 +67,12 @@ export default class CharacterSheet implements iCharacterSheet {
 
 	//-------------------------------------
 	// PRIVATE CONSTRUCTOR
-	private constructor({ id, dataStorageFactory }: iCharacterSheetProps) {
+	private constructor(props: iCharacterSheetProps) {
+		const { id, dataStorageFactory, parentPath } = props;
+
+		this.id = id;
+		this.path = createPath(parentPath, id);
+
 		const traitDataStorageInitialiser = dataStorageFactory.newTraitDataStorageInitialiser({
 			characterSheet: this,
 		});
@@ -81,14 +81,12 @@ export default class CharacterSheet implements iCharacterSheet {
 			characterSheet: this,
 		});
 
-		const characterSheetDataStorage = dataStorageFactory.newCharacterSheetDataStorage({ id });
+		const characterSheetDataStorage = dataStorageFactory.newCharacterSheetDataStorage(props);
 
 		const initialData = characterSheetDataStorage.getData();
 
 		if (!isCharacterSheetData(initialData))
-			throw Error(`${__filename} data is an object but it is not valid character sheet data, "${initialData}"`);
-
-		this.id = id;
+			throw Error(`${__filename} data is not valid character sheet data, "${initialData}"`);
 
 		// core number traits
 		this.bloodPotency = new NumberTrait<CoreNumberTraitName>({
@@ -152,6 +150,8 @@ export default class CharacterSheet implements iCharacterSheet {
 			traitDataStorageInitialiser,
 			parentPath: id,
 		});
+
+// ? what if the trait factory wasnt static and actually took in arguments on instantiation, this would reduce some of the props required when using each factory method and hide some of the ugliness
 
 		// create collections, with initial data where available
 		this.attributes = TraitFactory.newAttributeTraitCollection(
@@ -224,13 +224,13 @@ export default class CharacterSheet implements iCharacterSheet {
 		];
 	}
 
-	getLogReport(): iLogReport[] {
+	getLogReports(): iLogReport[] {
 		// todo test
 		return this.getAllTraits().map(trait => trait.getLogReport());
 	}
 	getLogEvents(): iLogEvent[] {
 		// combine logs from reports and and sort oldest to newest
-		return this.getLogReport()
+		return this.getLogReports()
 			.reduce((events, report) => [...events, ...report.logEvents], [] as iLogEvent[])
 			.sort((a, b) => {
 				return Number(a.timeStamp - b.timeStamp);
