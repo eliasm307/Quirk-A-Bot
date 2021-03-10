@@ -1,5 +1,5 @@
 import { TraitTypeNameUnion } from './../types';
-import { iDataStorageFactory } from './data-storage-interfaces';
+import { iCharacterSheetDataStorage, iDataStorageFactory } from './data-storage-interfaces';
 export interface iHasToJson<D> {
 	toJson: () => D;
 }
@@ -12,9 +12,7 @@ export interface iCanHaveSaveAction {
 	saveAction?: () => boolean;
 }
 
-export interface iHasDataStorageFactory {
-	dataStorageFactory: iDataStorageFactory;
-}
+
 
 export interface iHasSaveAction {
 	saveAction: () => boolean;

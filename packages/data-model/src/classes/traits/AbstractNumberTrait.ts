@@ -34,7 +34,8 @@ export default abstract class AbstractNumberTrait<N extends TraitNameUnionOrStri
 	}
 
 	/** Only allows setting numbers within the allowed range for this trait */
-	newValueIsValid(newVal: number): boolean {
+	newValueIsValid( newVal: number ): boolean {
+		// ? is this required?
 		// assert value is a number
 		if (typeof newVal !== 'number')
 			throw Error(`Value for trait ${this.name} should be a number, received a "${typeof newVal}`);

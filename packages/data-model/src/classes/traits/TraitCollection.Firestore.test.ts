@@ -1,7 +1,8 @@
+import { SKILL_COLLECTION_NAME, DISCIPLINE_COLLECTION_NAME } from './../../constants';
 import { iBaseTraitData } from './../../declarations/interfaces/trait-interfaces';
 import { firestoreEmulator } from './../../utils/firebase';
 import { iTraitCollectionFactoryMethodProps } from '../../declarations/interfaces/trait-collection-interfaces';
-import FirestoreTraitDataStorageFactory from '../data-storage/Firestore/FirestoreDataStorageFactory';
+import FirestoreDataStorageFactory from '../data-storage/Firestore/FirestoreDataStorageFactory';
 import TraitFactory from './TraitFactory';
 import { isTraitData } from '../../utils/typePredicates';
 import { AttributeName, DisciplineName, SkillName } from '../../declarations/types';
@@ -10,7 +11,7 @@ import { AttributeName, DisciplineName, SkillName } from '../../declarations/typ
 
 const firestore = firestoreEmulator;
 
-const dataStorageFactory = new FirestoreTraitDataStorageFactory({ firestore });
+const dataStorageFactory = new FirestoreDataStorageFactory({ firestore });
 
 const rootCollectionPath = 'traitCollectionTests';
 
@@ -148,7 +149,7 @@ describe('TraitColleciton with Firestore data storage', () => {
 		const props = createtraitCollectionFactoryMethodProps('testingCollectionFromExistingData');
 
 		// delete any existing data
-		await deleteExistingCollectionData(`${props.parentPath}/Skills`);
+		await deleteExistingCollectionData(`${props.parentPath}/${SKILL_COLLECTION_NAME}`);
 
 		const initialData: iBaseTraitData<SkillName, number>[] = [
 			{ name: 'Academics', value: 1 },
@@ -179,7 +180,7 @@ describe('TraitColleciton with Firestore data storage', () => {
 		const props = createtraitCollectionFactoryMethodProps('testingEventListeners');
 
 		// delete any existing data
-		await deleteExistingCollectionData(`${props.parentPath}/Disciplines`);
+		await deleteExistingCollectionData(`${props.parentPath}/${DISCIPLINE_COLLECTION_NAME}`);
 
 		await new Promise(res => setTimeout(res, 500)); // wait for syncronisation
 

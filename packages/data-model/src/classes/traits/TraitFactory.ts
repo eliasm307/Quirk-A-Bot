@@ -1,3 +1,4 @@
+import { ATTRIBUTE_COLLECTION_NAME, DISCIPLINE_COLLECTION_NAME, SKILL_COLLECTION_NAME, TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME } from './../../constants';
 import {
 	iDisciplineTraitCollection,
 	iSkillTraitCollection,
@@ -141,7 +142,7 @@ export default abstract class TraitFactory {
 		return new TraitCollection<AttributeName, number, iAttributeData, iAttribute>(
 			{
 				...props,
-				name: `Attributes`,
+				name: ATTRIBUTE_COLLECTION_NAME,
 				instanceCreator: TraitFactory.newAttributeTrait,
 			},
 			...initial
@@ -156,7 +157,7 @@ export default abstract class TraitFactory {
 		return new TraitCollection<SkillName, number, iSkillData, iSkill>(
 			{
 				...props,
-				name: `Skills`,
+				name: SKILL_COLLECTION_NAME,
 				instanceCreator: TraitFactory.newSkillTrait,
 			},
 			...initial
@@ -171,7 +172,7 @@ export default abstract class TraitFactory {
 		return new TraitCollection<DisciplineName, number, iDisciplineData, iDiscipline>(
 			{
 				...props,
-				name: `Disciplines`,
+				name: DISCIPLINE_COLLECTION_NAME,
 				instanceCreator: TraitFactory.newDisciplineTrait,
 			},
 			...initial
@@ -186,7 +187,7 @@ export default abstract class TraitFactory {
 		return new TraitCollection<string, string, iTouchStoneOrConvictionData, iTouchStoneOrConviction>(
 			{
 				...props,
-				name: `TouchstonesAndConvictions`,
+				name: TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME,
 				instanceCreator: TraitFactory.newTouchStoneOrConvictionTrait,
 			},
 			...initial

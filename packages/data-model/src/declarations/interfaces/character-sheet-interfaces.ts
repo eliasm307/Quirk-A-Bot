@@ -10,23 +10,28 @@ import {
 	iAttributeData,
 	iSkillData,
 	iDisciplineData,
-	iBaseTraitData,
 	iCoreNumberTrait,
 	iCoreStringTrait,
-	iNumberTraitData,
 	iCoreNumberTraitData,
 	iCoreStringTraitData,
 } from './trait-interfaces';
-import { ClanName, CoreNumberTraitName, CoreStringTraitName } from '../types';
+import { ClanName } from '../types';
 import { iHasToJson, iHasParentPath } from './general-interfaces';
-import { iDataStorageFactory } from './data-storage-interfaces';
+import { iHasCharacterSheetDataStorage, iHasDataStorageFactory, iHasId } from './data-storage-interfaces';
 
-export interface iCharacterSheetLoaderProps {
-	id: string;
-	dataStorageFactory: iDataStorageFactory;
+export interface iHasCharacterSheet {
+	characterSheet: iCharacterSheet;
+}
+export interface iHasCharacterSheetData {
+	characterSheetData: iCharacterSheetData;
 }
 
-export interface iCharacterSheetProps extends iCharacterSheetLoaderProps, iHasParentPath {}
+export interface iCharacterSheetLoaderProps extends iHasId, iHasDataStorageFactory, iHasParentPath {}
+
+export interface iCharacterSheetProps
+	extends iCharacterSheetLoaderProps,
+		iHasParentPath,
+		iHasCharacterSheetDataStorage {}
 
 /** The basic shape of a charactersheet */
 export interface iBaseCharacterSheet {

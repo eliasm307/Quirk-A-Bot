@@ -2,12 +2,12 @@ import { iBaseTraitData } from './../../declarations/interfaces/trait-interfaces
 import { iGeneralTrait } from '../../declarations/interfaces/trait-interfaces';
 import { AttributeName, LogOperationUnion } from '../../declarations/types';
 import TraitFactory from './TraitFactory';
-import InMemoryTraitDataStorageFactory from '../data-storage/InMemory/InMemoryDataStorageFactory';
+import InMemoryDataStorageFactory from '../data-storage/InMemory/InMemoryDataStorageFactory';
 import { iTraitCollectionFactoryMethodProps } from '../../declarations/interfaces/trait-collection-interfaces';
 
 let testName: string;
 
-const dataStorageFactory = new InMemoryTraitDataStorageFactory();
+const dataStorageFactory = new InMemoryDataStorageFactory();
 
 const rootCollectionPath = 'traitCollectionTests';
 

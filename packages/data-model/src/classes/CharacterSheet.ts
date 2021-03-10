@@ -46,10 +46,19 @@ export default class CharacterSheet implements iCharacterSheet {
 	readonly humanity: iCoreNumberTrait;
 	readonly bloodPotency: iCoreNumberTrait;
 
+	// todo move to standalone util
 	// SINGLETON CONSTRUCTOR
-	static async load(props: iCharacterSheetProps): Promise<CharacterSheet> {
-		// todo move to standalone util
+	static async load(props: iCharacterSheetLoaderProps): Promise<CharacterSheet> {
 		const { dataStorageFactory, id } = props;
+
+		const isValidId = (id: string): boolean => {
+			// id should only contain alpha numeric characters
+			return !/\W/.test(id);
+		};
+
+		if (!isValidId(id))
+			throw Error(`Id "${id}" is not a valid character sheet id. This should only contain alpha numeric characters.`);
+
 		const preExistingInstance = CharacterSheet.instances.get(id);
 
 		// if an instance has already been created with this id then use that instance
@@ -58,17 +67,23 @@ export default class CharacterSheet implements iCharacterSheet {
 		// check if a character sheet with this id doesnt exist in the data storage, initialise a blank character sheet if not
 		const characterSheetDataStorage = dataStorageFactory.newCharacterSheetDataStorage(props);
 
-		await characterSheetDataStorage.assertDataExistsOnDataStorage();
+		try {
+			// makes sure some data exists for the character sheet instance to link to
+			await characterSheetDataStorage.assertDataExistsOnDataStorage();
 
-		// return a new character sheet instance as requested
-		// Note a character sheet instance only creates an object that is connected to a character sheet on the data source, it doesnt initialise a new character sheet on the data source
-		return new CharacterSheet(props);
+			// return a new character sheet instance as requested
+			// Note a character sheet instance only creates an object that is connected to a character sheet on the data source, it doesnt initialise a new character sheet on the data source
+			return new CharacterSheet({ ...props, characterSheetDataStorage });
+		} catch (error) {
+			console.error(__filename, { error });
+			throw Error(`Error creating character sheet instance with id ${id}`);
+		}
 	}
 
 	//-------------------------------------
 	// PRIVATE CONSTRUCTOR
 	private constructor(props: iCharacterSheetProps) {
-		const { id, dataStorageFactory, parentPath } = props;
+		const { id, dataStorageFactory, parentPath, characterSheetDataStorage } = props;
 
 		this.id = id;
 		this.path = createPath(parentPath, id);
@@ -80,8 +95,6 @@ export default class CharacterSheet implements iCharacterSheet {
 		const traitCollectionDataStorageInitialiser = dataStorageFactory.newTraitCollectionDataStorageInitialiser({
 			characterSheet: this,
 		});
-
-		const characterSheetDataStorage = dataStorageFactory.newCharacterSheetDataStorage(props);
 
 		const initialData = characterSheetDataStorage.getData();
 
@@ -151,7 +164,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			parentPath: id,
 		});
 
-// ? what if the trait factory wasnt static and actually took in arguments on instantiation, this would reduce some of the props required when using each factory method and hide some of the ugliness
+		// ? what if the trait factory wasnt static and actually took in arguments on instantiation, this would reduce some of the props required when using each factory method and hide some of the ugliness
 
 		// create collections, with initial data where available
 		this.attributes = TraitFactory.newAttributeTraitCollection(

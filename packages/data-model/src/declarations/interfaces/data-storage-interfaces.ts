@@ -1,13 +1,12 @@
 import { Firestore } from './../../utils/firebase';
 import {
 	iBaseCollection,
-	iHasToJson,
-	iHasDataStorageFactory,
+	iHasToJson, 
 	iHasParentPath,
 	iHasPath,
 	iHasCleanUp,
 } from './general-interfaces';
-import { iCharacterSheet, iCharacterSheetData } from './character-sheet-interfaces';
+import { iCharacterSheet, iCharacterSheetData, iHasCharacterSheet } from './character-sheet-interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from './../types';
 import { iBaseTrait, iHasTraitInstanceCreator, iBaseTraitData } from './trait-interfaces';
 import { iLoggerCollection, iAddLogEventProps, iDeleteLogEventProps } from './log-interfaces';
@@ -17,12 +16,14 @@ import { iLoggerCollection, iAddLogEventProps, iDeleteLogEventProps } from './lo
 // -------------------------------------------------------
 // GENERAL
 
-export interface iHasCharacterSheet {
-	characterSheet: iCharacterSheet;
+export interface iHasDataStorageFactory {
+	dataStorageFactory: iDataStorageFactory;
 }
-export interface iHasCharacterSheetData {
-	characterSheetData: iCharacterSheetData;
+
+export interface iHasCharacterSheetDataStorage {
+	characterSheetDataStorage: iCharacterSheetDataStorage;
 }
+
 export interface iHasId {
 	id: string;
 }

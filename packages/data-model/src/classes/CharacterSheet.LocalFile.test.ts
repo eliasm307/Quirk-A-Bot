@@ -2,8 +2,9 @@ import fs from 'fs-extra';
 import path from 'path';
 import CharacterSheet from './CharacterSheet';
 import { iAttribute, iSkill, iTouchStoneOrConviction } from '../declarations/interfaces/trait-interfaces';
-import LocalFileDataStorageFactory from './data-storage/LocalFile/LocalFileDataStorageFactory';
-import InMemoryDataStorageFactory from './data-storage/InMemory/InMemoryDataStorageFactory';
+import LocalFileDataStorageFactory from './data-storage/LocalFile/LocalFileDataStorageFactory'; 
+
+// todo refactor this or do it as in memory tests
 
 const parentPath = 'characterSheetTestCollection';
 // ids for test data
@@ -15,7 +16,7 @@ const resolvedBasePath = path.resolve(__dirname, '../data/character-sheets/tempo
 
 // resolved paths
 const newDataResolvedPath = path.resolve(resolvedBasePath, `${newDataId}.json`);
-const existingDataResolvedPath = path.resolve(resolvedBasePath, `${existingDataId}.json`);
+// const existingDataResolvedPath = path.resolve(resolvedBasePath, `${existingDataId}.json`);
 
 if (fs.pathExistsSync(newDataResolvedPath)) {
 	// console.warn(__filename, `Deleting file "${newDataResolvedPath}" before testing`);
@@ -24,8 +25,7 @@ if (fs.pathExistsSync(newDataResolvedPath)) {
 
 // const filePathRandom = path.resolve(__dirname, `../data/character-sheets/temporary/${testUserId}.json`);
 
-const localDataStorageFactory = new LocalFileDataStorageFactory({ resolvedBasePath });
-const inMemoryDataStorageFactory = new InMemoryDataStorageFactory({});
+const dataStorageFactory = new LocalFileDataStorageFactory({ resolvedBasePath });
 
 let testName: string;
 /*
@@ -42,13 +42,13 @@ testName = 'save new blank character sheet and load the character sheet';
 test(testName, async () => {
 	// creates new sheet and does initial save
 	const cs: CharacterSheet = await CharacterSheet.load({
-		dataStorageFactory: localDataStorageFactory,
+		dataStorageFactory,
 		id: newDataId,
 		parentPath,
 	});
 
 	const csLoaded: CharacterSheet = await CharacterSheet.load({
-		dataStorageFactory: localDataStorageFactory,
+		dataStorageFactory,
 		id: newDataId,
 		parentPath,
 	});
@@ -69,13 +69,13 @@ test(testName, async () => {
 testName = 'test new file, autosave and custom setters for basic data types';
 test(testName, async () => {
 	const cs: CharacterSheet = await CharacterSheet.load({
-		dataStorageFactory: localDataStorageFactory,
+		dataStorageFactory,
 		id: newDataId,
 		parentPath,
 	});
 
 	const cs2: CharacterSheet = await CharacterSheet.load({
-		dataStorageFactory: localDataStorageFactory,
+		dataStorageFactory,
 		id: newDataId,
 		parentPath,
 	});
@@ -90,7 +90,7 @@ test(testName, async () => {
 	cs.hunger.value = testHungerValue;
 
 	const csLoaded: CharacterSheet = await CharacterSheet.load({
-		dataStorageFactory: localDataStorageFactory,
+		dataStorageFactory,
 		id: newDataId,
 		parentPath,
 	});
@@ -161,12 +161,12 @@ test(testName, async () => {
 testName = 'test existing file, autosave and custom setters for basic data types';
 test(testName, async () => {
 	const cs: CharacterSheet = await CharacterSheet.load({
-		dataStorageFactory: localDataStorageFactory,
+		dataStorageFactory,
 		id: existingDataId,
 		parentPath,
 	});
 	const cs2: CharacterSheet = await CharacterSheet.load({
-		dataStorageFactory: localDataStorageFactory,
+		dataStorageFactory,
 		id: existingDataId,
 		parentPath,
 	});
@@ -177,7 +177,7 @@ test(testName, async () => {
 	[cs.health, cs.bloodPotency, cs.hunger].forEach(trait => (trait.value = randVal(trait.min, trait.max)));
 
 	const csLoaded: CharacterSheet = await CharacterSheet.load({
-		dataStorageFactory: localDataStorageFactory,
+		dataStorageFactory,
 		id: existingDataId,
 		parentPath,
 	});
@@ -206,7 +206,7 @@ testName = 'test basic trait methods';
 test(testName, async () => {
 	// console.log(`creating cs`);
 	const cs: CharacterSheet = await CharacterSheet.load({
-		dataStorageFactory: localDataStorageFactory,
+		dataStorageFactory,
 		id: newDataId,
 		parentPath,
 	});
