@@ -130,21 +130,22 @@ describe('TraitCollection general functionality', () => {
 	});
 
 	it('can be instantiated with existing data', () => {
-		const tc = TraitFactory.newAttributeTraitCollection(traitCollectionFactoryMethodProps);
-
-		// no items expected
-		expect(tc.size).toEqual(0);
-
 		// create initial tc data
-		const tcData = tc.set('Charisma', 1).set('Composure', 2).set('Dexterity', 3).set('Stamina', 4).toJson();
+		const initialData: iBaseTraitData<AttributeName, number>[] = [
+			{ name: 'Charisma', value: 1 },
+			{ name: 'Composure', value: 2 },
+			{ name: 'Dexterity', value: 3 },
+			{ name: 'Stamina', value: 4 },
+		];
 
 		// separate instance of same character sheet, with inital data
-		const tc2 = TraitFactory.newAttributeTraitCollection(traitCollectionFactoryMethodProps, ...tcData);
+		const tc2 = TraitFactory.newAttributeTraitCollection(traitCollectionFactoryMethodProps, ...initialData);
 		expect(tc2.size).toEqual(4);
 		expect((tc2.get('Charisma') as iGeneralTrait).value).toEqual(1);
 		expect((tc2.get('Composure') as iGeneralTrait).value).toEqual(2);
 		expect((tc2.get('Dexterity') as iGeneralTrait).value).toEqual(3);
 		expect((tc2.get('Stamina') as iGeneralTrait).value).toEqual(4);
+		expect(tc2.toJson()).toEqual(initialData);
 	});
 });
 /*

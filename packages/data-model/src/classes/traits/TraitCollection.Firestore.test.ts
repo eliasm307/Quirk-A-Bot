@@ -4,7 +4,7 @@ import { iTraitCollectionFactoryMethodProps } from '../../declarations/interface
 import FirestoreTraitDataStorageFactory from '../data-storage/Firestore/FirestoreDataStorageFactory';
 import TraitFactory from './TraitFactory';
 import { isTraitData } from '../../utils/typePredicates';
-import { AttributeName } from '../../declarations/types';
+import { AttributeName, SkillName } from '../../declarations/types';
 
 // todo make these tests relevant
 
@@ -22,38 +22,41 @@ const traitCollectionFactoryMethodProps: iTraitCollectionFactoryMethodProps = {
 	parentPath: rootCollectionPath,
 };
 
-// todo populate tests
+const deleteExistingCollectionData = async (collectionPath: string) => {
+	// delete any existing data in the collection
+	let collectionSnapshot = await firestore.collection(collectionPath).get();
+	if (collectionSnapshot.size) {
+		try {
+			await Promise.all(
+				collectionSnapshot.docs.map(doc => {
+					const docId = doc.id;
+
+					doc.ref
+						.delete()
+						.then(() => console.log(`Deleted a trait from collection at path ${collectionPath} with id ${docId}`));
+				})
+			);
+		} catch (error) {
+			return Promise.reject(
+				console.error(
+					`Trait collection at path ${collectionPath} had some initial data, an error occured while deleting it`,
+					{
+						path: collectionPath,
+						existingFirestoreData: collectionSnapshot.docs.map(doc => doc.data()),
+						error,
+					}
+				)
+			);
+		}
+	}
+};
 
 describe('TraitColleciton with Firestore data storage adding, and deleting', () => {
 	// NOTE firestore doesnt hold empty collecitons, no need to test when empty
 	const tc = TraitFactory.newAttributeTraitCollection(traitCollectionFactoryMethodProps);
 
-	const deleteExistingData = async () => {
-		// delete any existing data in the collection
-		let collectionSnapshot = await firestore.collection(tc.path).get();
-		if (collectionSnapshot.size) {
-			try {
-				await Promise.all(
-					collectionSnapshot.docs.map(doc => {
-						const docId = doc.id;
-						doc.ref
-							.delete()
-							.then(() => console.log(`Deleted a trait from collection at path ${tc.path} with id ${docId}`));
-					})
-				);
-			} catch (error) {
-				return Promise.reject(
-					console.error(
-						`Trait collection at path ${tc.path} had some initial data, an error occured while deleting it`,
-						{ path: tc.path, existingFirestoreData: collectionSnapshot.docs.map(doc => doc.data()), error }
-					)
-				);
-			}
-		}
-	};
-
 	// run tests after deleting any existing data
-	deleteExistingData()
+	deleteExistingCollectionData(tc.path)
 		.then(() => {
 			it('adds traits to firestore collection', async () => {
 				expect.hasAssertions();
@@ -113,6 +116,14 @@ describe('TraitColleciton with Firestore data storage adding, and deleting', () 
 
 describe('TraitColleciton with Firestore data storage', () => {
 	it('can initialise a firestore colleciton from initial trait data', () => {
+		const initialData: iBaseTraitData<SkillName, number>[] = [
+			{ name: 'Academics', value: 1 },
+			{ name: 'Animal Ken', value: 2 },
+			{ name: 'Athletics', value: 3 },
+		];
+
+		// note uses different collection than other tests for different path
+		const tc = TraitFactory.newSkillTraitCollection(traitCollectionFactoryMethodProps, ...initialData);
 		expect.hasAssertions();
 	});
 
