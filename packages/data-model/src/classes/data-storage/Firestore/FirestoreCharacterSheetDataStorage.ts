@@ -8,6 +8,7 @@ import {
 	iFirestoreCharacterSheetDataStorageProps,
 } from '../../../declarations/interfaces/data-storage-interfaces';
 import { createPath } from '../../../utils/createPath';
+import writeCharacterSheetDataToFirestore from '../../../utils/writeCharacterSheetDataToFirestore';
 
 export default class FirestoreCharacterSheetDataStorage implements iCharacterSheetDataStorage {
 	protected id: string;
@@ -45,8 +46,10 @@ export default class FirestoreCharacterSheetDataStorage implements iCharacterShe
 			// if it doesnt exist initialise it as a blank character sheet if not
 			try {
 				const data = CharacterSheet.newDataObject({ id: this.id });
-				await this.firestore.doc(this.path).set(data);
 				this.characterSheetData = data; // save data locally
+
+				// await this.firestore.doc(this.path).set(data); // ! this didnt write sub-collections but instead put them in as arrays in the same collection
+				await writeCharacterSheetDataToFirestore(this.firestore, this.path, data);
 			} catch (error) {
 				console.error(__filename, { error });
 				Promise.reject(new Error(`Could not initialise a new character sheet at path ${this.path}`));

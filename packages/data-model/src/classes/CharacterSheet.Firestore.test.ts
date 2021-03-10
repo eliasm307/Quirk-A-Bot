@@ -1,3 +1,10 @@
+import {
+	ATTRIBUTE_CATEGORIES,
+	ATTRIBUTE_COLLECTION_NAME,
+	DISCIPLINE_COLLECTION_NAME,
+	SKILL_COLLECTION_NAME,
+	TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME,
+} from './../constants';
 import { iCharacterSheetData } from './../declarations/interfaces/character-sheet-interfaces';
 import { createPath } from '../utils/createPath';
 import { firestoreEmulator } from '../utils/firebase';
@@ -82,17 +89,24 @@ describe('Character sheet using Firestore', () => {
 		await new Promise(res => setTimeout(res, 100)); // wait for syncronisation
 
 		// initialise cs
-    const cs = await CharacterSheet.load( { dataStorageFactory, id: csId, parentPath } );
-    
-    const attributesCollection;
-    const disciplinesCollection;
-    const skillsCollection;
-    const touchstonesAndConvictionsCollection;
+		const cs = await CharacterSheet.load({ dataStorageFactory, id: csId, parentPath });
 
-    expect( cs.toJson() ).toEqual( initialData );
-    
+		const attributesCollection = await firestore.collection(`${docPath}/${ATTRIBUTE_COLLECTION_NAME}`).get();
+		const disciplinesCollection = await firestore.collection(`${docPath}/${DISCIPLINE_COLLECTION_NAME}`).get();
+		const skillsCollection = await firestore.collection(`${docPath}/${SKILL_COLLECTION_NAME}`).get();
+		const touchstonesAndConvictionsCollection = await firestore
+			.collection(`${docPath}/${TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME}`)
+			.get();
 
+		const attributesData = attributesCollection.docs.map(doc => doc.data());
+		const disciplinesData = disciplinesCollection.docs.map(doc => doc.data());
+		const skillsData = skillsCollection.docs.map(doc => doc.data());
+		const touchstonesAndConvictionsData = touchstonesAndConvictionsCollection.docs.map(doc => doc.data());
 
-
+		expect(cs.toJson()).toEqual(initialData);
+		expect(attributesData).toEqual(initialData.attributes);
+		expect(disciplinesData).toEqual(initialData.disciplines);
+		expect(skillsData).toEqual(initialData.skills);
+		expect(touchstonesAndConvictionsData).toEqual(initialData.touchstonesAndConvictions);
 	});
 });
