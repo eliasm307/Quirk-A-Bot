@@ -20,10 +20,10 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 
 		if (!doc || !doc.exists) {
 			// if the document doesnt exist then try adding it
-			console.log(__filename, `Trait does not exist at path ${this.path}, adding this now`);
+			// console.log(__filename, `Trait does not exist at path ${this.path}, adding this now`);
 			try {
 				await this.#firestore.doc(this.path).set(traitData);
-				console.log(__filename, `Trait added at path ${this.path}`, { path: this.path, traitData });
+				// console.log(__filename, `Trait added at path ${this.path}`, { path: this.path, traitData });
 			} catch (error) {
 				console.error(__filename, { error });
 				throw Error(`Trait with name ${this.name} did not exist and could not be added to data store`);
@@ -105,16 +105,16 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 				.where('name', '==', this.name)
 				.onSnapshot(querySnapshot => {
 					// confirm query only returns 1 result
-					if (querySnapshot.size !== 1) {
+					/*if (querySnapshot.size !== 1) {
 						console.error(
 							__filename,
 							`There should be exactly 1 trait named "${this.name}" in collection "${parentCollectionPath}", however ${querySnapshot.size} where found`,
 							{ traitName: this.name, traitPath: this.path, parentCollectionPath }
-						);
+						);*/
 						/*throw Error(
 							`There should be exactly 1 trait named "${this.name}" in collection "${parentCollectionPath}", however ${querySnapshot.size} where found`
 						);*/
-					}
+				//	}
 
 					querySnapshot.docChanges().forEach(change => {
 						const data: any = change.doc.data();
@@ -130,7 +130,7 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 
 						// logFirestoreChange(change, console.warn);
 						if (change.type === 'modified') {
-							console.warn('Modified document: ', { data });
+							// console.warn('Modified document: ', { data });
 							// apply private modification
 							this.private.value = data.value as V;
 						}

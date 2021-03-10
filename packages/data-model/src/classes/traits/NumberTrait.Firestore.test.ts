@@ -50,6 +50,8 @@ describe('Number trait with firestore data storage', () => {
 			parentPath: testParentPath,
 		});
 
+		await new Promise( res => setTimeout( res, 100 ) ); // wait for syncronisation
+		
 		trait1.value = 0;
 		trait1.value = 1;
 

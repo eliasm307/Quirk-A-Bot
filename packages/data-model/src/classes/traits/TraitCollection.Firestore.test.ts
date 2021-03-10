@@ -4,23 +4,21 @@ import { iTraitCollectionFactoryMethodProps } from '../../declarations/interface
 import FirestoreTraitDataStorageFactory from '../data-storage/Firestore/FirestoreDataStorageFactory';
 import TraitFactory from './TraitFactory';
 import { isTraitData } from '../../utils/typePredicates';
-import { AttributeName, SkillName } from '../../declarations/types';
+import { AttributeName, DisciplineName, SkillName } from '../../declarations/types';
 
 // todo make these tests relevant
 
 const firestore = firestoreEmulator;
 
-let testName: string;
-
 const dataStorageFactory = new FirestoreTraitDataStorageFactory({ firestore });
 
-const rootCollectionPath = 'traitCollectionTests/collections';
+const rootCollectionPath = 'traitCollectionTests';
 
-const traitCollectionFactoryMethodProps: iTraitCollectionFactoryMethodProps = {
+const createtraitCollectionFactoryMethodProps = (groupName: string): iTraitCollectionFactoryMethodProps => ({
 	traitCollectionDataStorageInitialiser: dataStorageFactory.newTraitCollectionDataStorageInitialiser(),
 	traitDataStorageInitialiser: dataStorageFactory.newTraitDataStorageInitialiser(),
-	parentPath: rootCollectionPath,
-};
+	parentPath: `${rootCollectionPath}/${groupName}`,
+});
 
 const deleteExistingCollectionData = async (collectionPath: string) => {
 	// delete any existing data in the collection
@@ -31,9 +29,8 @@ const deleteExistingCollectionData = async (collectionPath: string) => {
 				collectionSnapshot.docs.map(doc => {
 					const docId = doc.id;
 
-					doc.ref
-						.delete()
-						.then(() => console.log(`Deleted a trait from collection at path ${collectionPath} with id ${docId}`));
+					doc.ref.delete();
+					// .then(() => console.log(`Deleted a trait from collection at path ${collectionPath} with id ${docId}`));
 				})
 			);
 		} catch (error) {
@@ -52,70 +49,107 @@ const deleteExistingCollectionData = async (collectionPath: string) => {
 };
 
 describe('TraitColleciton with Firestore data storage adding, and deleting', () => {
-	// NOTE firestore doesnt hold empty collecitons, no need to test when empty
-	const tc = TraitFactory.newAttributeTraitCollection(traitCollectionFactoryMethodProps);
+	it('adds traits to firestore collection', async () => {
+		expect.hasAssertions();
 
-	// run tests after deleting any existing data
-	deleteExistingCollectionData(tc.path)
-		.then(() => {
-			it('adds traits to firestore collection', async () => {
-				expect.hasAssertions();
+		const props = createtraitCollectionFactoryMethodProps('testingCollectionFromBlankAdding');
 
-				// test adding traits
-				tc.set('Charisma', 1).set('Composure', 2).set('Resolve', 3);
-				const tcDataExpected: iBaseTraitData<AttributeName, number>[] = [
-					{ name: 'Charisma', value: 1 },
-					{ name: 'Composure', value: 2 },
-					{ name: 'Resolve', value: 3 },
-				];
+		// NOTE firestore doesnt hold empty collecitons, no need to test when empty
+		const tc = TraitFactory.newAttributeTraitCollection(props);
 
-				await new Promise(res => setTimeout(res, 1000)); // wait for syncronisation
+		// run tests after deleting any existing data
+		await deleteExistingCollectionData(tc.path);
 
-				// get snapshot data
-				let collectionSnapshot = await firestore.collection(tc.path).get();
-				let collectionDocumentData = collectionSnapshot.docs.map(doc => doc.data());
+		// test adding traits
+		tc.set('Charisma', 1).set('Composure', 2).set('Resolve', 3);
+		const tcDataExpected: iBaseTraitData<AttributeName, number>[] = [
+			{ name: 'Charisma', value: 1 },
+			{ name: 'Composure', value: 2 },
+			{ name: 'Resolve', value: 3 },
+		];
 
-				expect(collectionSnapshot.size).toEqual(3);
-				expect(collectionDocumentData.length).toEqual(3);
-				expect(collectionDocumentData.every(isTraitData)).toBe(true);
-				expect(collectionDocumentData).toEqual(tcDataExpected);
-			});
-			it('deletes traits from firestore collection', async () => {
-				// test deleting some items
-				tc.delete('Charisma').delete('Composure');
-				await new Promise(res => setTimeout(res, 1000)); // wait for syncronisation
+		await new Promise(res => setTimeout(res, 1000)); // wait for syncronisation
 
-				// get snapshot data
-				let collectionSnapshot = await firestore.collection(tc.path).get();
-				let collectionDocumentData = collectionSnapshot.docs.map(doc => doc.data());
+		// get snapshot data
+		let collectionSnapshot = await firestore.collection(tc.path).get();
+		let collectionDocumentData = collectionSnapshot.docs.map(doc => doc.data());
 
-				expect(collectionSnapshot.size).toEqual(1);
-				expect(collectionDocumentData.length).toEqual(1);
-				expect(collectionDocumentData).toEqual([{ name: 'Resolve', value: 3 }]);
+		expect(collectionSnapshot.size).toEqual(3);
+		expect(collectionDocumentData.length).toEqual(3);
+		expect(collectionDocumentData.every(isTraitData)).toBe(true);
+		expect(collectionDocumentData).toEqual(tcDataExpected);
 
-				// delete the rest of the items
-				tc.delete('Resolve');
-				await new Promise(res => setTimeout(res, 1000)); // wait for syncronisation
+		tc.cleanUp();
+	});
+	it('deletes traits from firestore collection', async () => {
+		expect.hasAssertions();
 
-				// get snapshot data
-				collectionSnapshot = await firestore.collection(tc.path).get();
-				collectionDocumentData = collectionSnapshot.docs.map(doc => doc.data());
+		const props = createtraitCollectionFactoryMethodProps('testingCollectionFromBlankDeleting');
 
-				expect(collectionSnapshot.size).toEqual(0);
-				expect(collectionDocumentData.length).toEqual(0);
-				expect(collectionDocumentData).toEqual([]);
-			});
+		// NOTE firestore doesnt hold empty collecitons, no need to test when empty
+		const tc = TraitFactory.newAttributeTraitCollection(props);
 
-			it('cleans up', () => {
-				// test cleanup
-				expect(tc.cleanUp()).toEqual(true);
-			});
-		})
-		.catch(console.error);
+		// run tests after deleting any existing data
+		await deleteExistingCollectionData(tc.path);
+
+		await new Promise(res => setTimeout(res, 400)); // wait for syncronisation
+
+		// add some traits
+		tc.set('Charisma', 1).set('Composure', 2).set('Resolve', 3);
+
+		await new Promise(res => setTimeout(res, 400)); // wait for syncronisation
+
+		// test deleting some items
+		tc.delete('Charisma').delete('Composure');
+
+		await new Promise(res => setTimeout(res, 400)); // wait for syncronisation
+
+		// get snapshot data
+		let collectionSnapshot = await firestore.collection(tc.path).get();
+		let collectionDocumentData = collectionSnapshot.docs.map(doc => doc.data());
+
+		expect(collectionSnapshot.size).toEqual(1);
+		expect(collectionDocumentData.length).toEqual(1);
+		expect(collectionDocumentData).toEqual([{ name: 'Resolve', value: 3 }]);
+
+		// delete the rest of the items
+		tc.delete('Resolve');
+		await new Promise(res => setTimeout(res, 400)); // wait for syncronisation
+
+		// get snapshot data
+		collectionSnapshot = await firestore.collection(tc.path).get();
+		collectionDocumentData = collectionSnapshot.docs.map(doc => doc.data());
+
+		expect(collectionSnapshot.size).toEqual(0);
+		expect(collectionDocumentData.length).toEqual(0);
+		expect(collectionDocumentData).toEqual([]);
+
+		tc.cleanUp();
+	});
+
+	it('cleans up', () => {
+		expect.hasAssertions();
+
+		const props = createtraitCollectionFactoryMethodProps('testingCollectionFromBlankCleanup');
+
+		// NOTE firestore doesnt hold empty collecitons, no need to test when empty
+		const tc = TraitFactory.newAttributeTraitCollection(props);
+
+		// test cleanup
+		expect(tc.cleanUp()).toEqual(true);
+	});
 });
 
 describe('TraitColleciton with Firestore data storage', () => {
-	it('can initialise a firestore colleciton from initial trait data', () => {
+	it('can initialise a firestore colleciton from initial trait data', async () => {
+		expect.hasAssertions();
+
+		// name this test group path
+		const props = createtraitCollectionFactoryMethodProps('testingCollectionFromExistingData');
+
+		// delete any existing data
+		await deleteExistingCollectionData(`${props.parentPath}/Skills`);
+
 		const initialData: iBaseTraitData<SkillName, number>[] = [
 			{ name: 'Academics', value: 1 },
 			{ name: 'Animal Ken', value: 2 },
@@ -123,11 +157,62 @@ describe('TraitColleciton with Firestore data storage', () => {
 		];
 
 		// note uses different collection than other tests for different path
-		const tc = TraitFactory.newSkillTraitCollection(traitCollectionFactoryMethodProps, ...initialData);
-		expect.hasAssertions();
+		const tc = TraitFactory.newSkillTraitCollection(props, ...initialData);
+
+		await new Promise(res => setTimeout(res, 1000)); // wait for syncronisation
+
+		// get snapshot data
+		let collectionSnapshot = await firestore.collection(tc.path).get();
+		let collectionDocumentData = collectionSnapshot.docs.map(doc => doc.data());
+
+		expect(collectionSnapshot.size).toEqual(3);
+		expect(collectionDocumentData.length).toEqual(3);
+		expect(collectionDocumentData).toEqual(initialData);
+
+		tc.cleanUp();
 	});
 
 	it('listens to firestore and propagates changes to all trait collection instances', async () => {
 		expect.hasAssertions();
+
+		// name this test group path
+		const props = createtraitCollectionFactoryMethodProps('testingEventListeners');
+
+		// delete any existing data
+		await deleteExistingCollectionData(`${props.parentPath}/Disciplines`);
+
+		await new Promise(res => setTimeout(res, 500)); // wait for syncronisation
+
+		// note uses different collection than other tests for different path
+		const tc1 = TraitFactory.newDisciplineTraitCollection(props);
+		const tc2 = TraitFactory.newDisciplineTraitCollection(props);
+
+		await new Promise(res => setTimeout(res, 500)); // wait for syncronisation
+
+		// expect empty collections
+		expect(tc1.size).toBe(0);
+		expect(tc1.size == tc2.size).toBeTruthy();
+
+		// make changes to collection 1
+		tc1.set('Animalism', 1).set('Blood Sorcery', 2).set('Celerity', 3);
+		await new Promise(res => setTimeout(res, 500)); // wait for syncronisation
+
+		tc1.set('Celerity', 5);
+
+		const resultingData: iBaseTraitData<DisciplineName, number>[] = [
+			{ name: 'Animalism', value: 1 },
+			{ name: 'Blood Sorcery', value: 2 },
+			{ name: 'Celerity', value: 5 },
+		];
+
+		await new Promise(res => setTimeout(res, 500)); // wait for syncronisation
+
+		// expect collection 2 to have the changes
+		expect(tc2.size).toEqual(3);
+		expect(tc2.toJson()).toEqual(tc1.toJson());
+		expect(tc2.toJson()).toEqual(resultingData);
+
+		tc1.cleanUp();
+		tc2.cleanUp();
 	});
 });

@@ -2,11 +2,9 @@ import urlExistSync from 'url-exist-sync';
 import { firestoreEmulator, isFirestoreEmulatorRunning } from './firebase';
 import logFirestoreChange from './logFirestoreChange';
 
-const testDocData = { test: `test @ ${new Date().toLocaleString()}` };
-const testCollectionName = 'test';
+const testDocData = { testProperty: `testing @ ${new Date().toLocaleString()}` };
+const testCollectionName = 'testCollection';
 const testDocumentName = 'testDoc';
-
-// if ( !urlExistSync( 'http://localhost:4000/firestore' ) ) throw Error( 'Firestore emulator not running' );
 
 describe('firestore emulator', () => {
 	it('tests if firestore emulator is running', () => {
@@ -41,8 +39,6 @@ describe('firestore emulator', () => {
 		).resolves.toBeGreaterThanOrEqual(1);
 	});
 
-	it('can detect changes to firestore documents', () => {});
-
 	it('can delete items from firestore collections', async () => {
 		expect.assertions(1);
 		await expect(firestoreEmulator.doc(`${testCollectionName}/${testDocumentName}`).delete()).resolves.toBeFalsy();
@@ -52,6 +48,9 @@ describe('firestore emulator', () => {
 		expect.assertions(6);
 
 		const localTestCollectionName = `${testCollectionName}WithListener`;
+
+		// make sure there is no existing data
+		await firestoreEmulator.doc(`${localTestCollectionName}/${testDocumentName}`).delete();
 
 		// subscribe to document level changes
 		const unsubscribeToDocument = firestoreEmulator.doc(`${localTestCollectionName}/${testDocumentName}`).onSnapshot({
@@ -75,12 +74,15 @@ describe('firestore emulator', () => {
 
 		// console.log('document observer attached');
 
-// todo delete existing documents before attaching listeners
+		// todo delete existing documents before attaching listeners
 
 		// subscribe to collection level changes
 		const unsubscribeToCollection = firestoreEmulator.collection(localTestCollectionName).onSnapshot(querySnapshot => {
 			querySnapshot.docChanges().forEach(change => {
 				const data: any = change.doc.data();
+
+				if(!change.doc.exists) throw Error(`Document at path ${localTestCollectionName}/${change.doc.id} is marked as doesnt exist`)
+
 				logFirestoreChange(change, console.log);
 				if (change.type === 'added') {
 					// console.log('New item: ', { data });
