@@ -84,6 +84,19 @@ export default abstract class AbstractTraitCollectionDataStorage<
 		return this.map.size;
 	}
 
+	protected createTraitInstance( name: N, defaultValue: V ) {
+		// return existing instance or new instance 
+		return (
+			this.map.get(name) ||
+			this.instanceCreator({
+				name,
+				value: defaultValue,
+				parentPath: this.path,
+				traitDataStorageInitialiser: this.traitDataStorageInitialiser,
+			})
+		);
+	}
+
 	set(name: N, newValue: V): iTraitCollectionDataStorage<N, V, D, T> {
 		// if trait already exists then just update it
 		if (this.map.has(name)) {
@@ -99,15 +112,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
 			trait.value = newValue;
 		} else {
 			// add new trait instance locally, instantiating new trait will assert that it exists
-			this.map.set(
-				name,
-				this.instanceCreator({
-					name,
-					value: newValue,
-					parentPath: this.path,
-					traitDataStorageInitialiser: this.traitDataStorageInitialiser,
-				})
-			);
+			this.map.set(name, this.createTraitInstance(name, newValue));
 
 			// log change
 			this.onAdd({ newValue, property: name });
@@ -130,7 +135,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
 
 		const oldValue = this.map.get(name)!.value;
 
-		if ( typeof oldValue !== 'undefined' ) {
+		if (typeof oldValue !== 'undefined') {
 			// ? do this as an abstract beforeDelete method, so specific classes can do what they want? Whats the difference?
 			// do any cleanup on the trait before deleting
 			const deatTraitWalking = this.map.get(name);

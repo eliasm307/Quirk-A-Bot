@@ -43,13 +43,13 @@ export default class FirestoreTraitCollectionDataStorage<
 				});
 			});
 	}
- 
+
 	#firestore: Firestore;
 	#unsubscribeFromEventListeners: () => void = () => {};
 
 	constructor(props: iFirestoreTraitCollectionDataStorageProps<N, V, D, T>) {
 		super(props);
-		const {  firestore,  } = props; 
+		const { firestore } = props;
 		this.#firestore = firestore;
 
 		this.initAsync();
@@ -109,15 +109,15 @@ export default class FirestoreTraitCollectionDataStorage<
 
 					const { name, value } = data as iBaseTraitData<N, V>;
 
-					// handle collection changes
+					// handle collection changes internally
 					switch (change.type) {
 						case 'added':
 							// add to internal collection
-							this.set(name, value);
+							if (!this.map.has(name)) this.map.set(name, this.createTraitInstance(name, value));
 							break;
 						case 'removed':
 							// remove from internal collection
-							this.delete(name);
+							this.map.delete(name);
 							break;
 					}
 				});

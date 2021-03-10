@@ -1,5 +1,6 @@
+import { iBaseTraitData } from './../../declarations/interfaces/trait-interfaces';
 import { iGeneralTrait } from '../../declarations/interfaces/trait-interfaces';
-import { LogOperationUnion } from '../../declarations/types';
+import { AttributeName, LogOperationUnion } from '../../declarations/types';
 import TraitFactory from './TraitFactory';
 import InMemoryTraitDataStorageFactory from '../data-storage/InMemory/InMemoryDataStorageFactory';
 import { iTraitCollectionFactoryMethodProps } from '../../declarations/interfaces/trait-collection-interfaces';
@@ -18,6 +19,10 @@ const traitCollectionFactoryMethodProps: iTraitCollectionFactoryMethodProps = {
 
 describe('TraitCollection CRUD functionality', () => {
 	const tc = TraitFactory.newAttributeTraitCollection(traitCollectionFactoryMethodProps);
+
+	it('creates a path', () => {
+		expect(tc.path).toEqual(`${rootCollectionPath}/Attributes`);
+	});
 
 	it('has initial size of 0', () => {
 		expect(tc.size).toEqual(0);
@@ -113,14 +118,15 @@ describe('TraitCollection general functionality', () => {
 
 		// create initial tc data
 		const tcData = tc.set('Charisma', 1).set('Composure', 2).set('Dexterity', 3).set('Stamina', 4).toJson();
+		const tCDataExpected: iBaseTraitData<AttributeName, number>[] = [
+			{ name: 'Charisma', value: 1 },
+			{ name: 'Composure', value: 2 },
+			{ name: 'Dexterity', value: 3 },
+			{ name: 'Stamina', value: 4 },
+		];
 		expect(Array.isArray(tcData)).toEqual(true);
 		expect(tcData.length).toEqual(4);
-		expect(tcData[0].name).toEqual('Charisma');
-		expect(tcData[2].name).toEqual('Dexterity');
-		expect(tcData[3].name).toEqual('Stamina');
-
-		expect(tcData[2].value).toEqual(3);
-		expect(tcData[3].value).toEqual(4);
+		expect(tcData).toEqual(tCDataExpected);
 	});
 
 	it('can be instantiated with existing data', () => {
