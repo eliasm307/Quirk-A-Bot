@@ -31,15 +31,13 @@ export default class FirestoreDataStorageFactory implements iDataStorageFactory 
 		});
 	}
 
-	newTraitDataStorageInitialiser( ): <N extends string, V extends TraitValueTypeUnion>(
+	newTraitDataStorageInitialiser(): <N extends string, V extends TraitValueTypeUnion>(
 		props: iBaseTraitDataStorageProps<N, V>
 	) => iBaseTraitDataStorage<N, V> {
 		return props => new FirestoreTraitDataStorage({ ...props, firestore: this.#firestore });
 	}
 
-	newTraitCollectionDataStorageInitialiser({
-		characterSheet,
-	}: iHasCharacterSheet): <
+	newTraitCollectionDataStorageInitialiser(): <
 		N extends string,
 		V extends TraitValueTypeUnion,
 		D extends iBaseTraitData<N, V>,
@@ -47,6 +45,6 @@ export default class FirestoreDataStorageFactory implements iDataStorageFactory 
 	>(
 		props: iBaseTraitCollectionDataStorageProps<N, V, D, T>
 	) => iTraitCollectionDataStorage<N, V, D, T> {
-		return props => new FirestoreTraitCollectionDataStorage({ ...props, characterSheet, firestore: this.#firestore });
+		return props => new FirestoreTraitCollectionDataStorage({ ...props, firestore: this.#firestore });
 	}
 }

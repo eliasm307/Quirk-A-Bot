@@ -49,7 +49,7 @@ export default class FirestoreTraitCollectionDataStorage<
 
 	constructor(props: iFirestoreTraitCollectionDataStorageProps<N, V, D, T>) {
 		super(props);
-		const {  firestore } = props; 
+		const {  firestore,  } = props; 
 		this.#firestore = firestore;
 
 		this.initAsync();

@@ -7,13 +7,14 @@ import LogCollection from '../log/LogCollection';
 import UpdateLogEvent from '../log/UpdateLogEvent';
 import { iBaseTraitDataStorage } from '../../declarations/interfaces/data-storage-interfaces';
 import { createPath } from '../../utils/createPath';
+import { hasCleanUp } from '../../utils/typePredicates';
 
 export default abstract class AbstractBaseTrait<
 	N extends TraitNameUnionOrString,
 	V extends TraitValueTypeUnion,
 	D extends iBaseTraitData<N, V>
 > implements iBaseTrait<N, V, D> {
-	protected dataSorage: iBaseTraitDataStorage<N, V>;
+	protected dataStorage: iBaseTraitDataStorage<N, V>;
 	protected logs: iLogCollection;
 	toJson: () => D;
 	readonly path: string;
@@ -26,7 +27,7 @@ export default abstract class AbstractBaseTrait<
 		this.path = createPath(parentPath, name);
 
 		// initialise data store
-		this.dataSorage = traitDataStorageInitialiser({
+		this.dataStorage = traitDataStorageInitialiser({
 			name,
 			defaultValueIfNotDefined: this.preProcessValue(value),
 			path: this.path,
@@ -40,7 +41,9 @@ export default abstract class AbstractBaseTrait<
 		this.logs = new LogCollection({ sourceType: 'Trait', sourceName: this.name });
 	}
 	cleanUp(): boolean {
-		return this.dataSorage.cleanUp();
+		// if the data storage has a cleanup function then call it and return the result,
+		// otherwise return true if no cleanup required
+		return hasCleanUp(this.dataStorage) ? this.dataStorage.cleanUp() : true;
 	}
 
 	public set value(newValRaw: V) {
@@ -50,7 +53,7 @@ export default abstract class AbstractBaseTrait<
 		if (!this.newValueIsValid(newValue)) return;
 
 		// get current value as old value
-		const oldValue: V = this.dataSorage.value;
+		const oldValue: V = this.dataStorage.value;
 
 		// if old value is the same as new value do nothing
 		if (oldValue === newValue) {
@@ -59,7 +62,7 @@ export default abstract class AbstractBaseTrait<
 		}
 
 		// implement property change on data storage
-		this.dataSorage.value = newValue;
+		this.dataStorage.value = newValue;
 
 		if (!this.logs) {
 			console.error(__filename, `this.#logs is not defined`);
@@ -69,7 +72,7 @@ export default abstract class AbstractBaseTrait<
 		this.logs.log(new UpdateLogEvent({ newValue, oldValue, property: this.name }));
 	}
 	public get value() {
-		return this.dataSorage.value;
+		return this.dataStorage.value;
 	}
 
 	getLogEvents(): iLogEvent[] {

@@ -1,19 +1,19 @@
 import { iAddLogEventProps, iDeleteLogEventProps } from './../../declarations/interfaces/log-interfaces';
 import { iTraitCollectionDataStorage } from './../../declarations/interfaces/data-storage-interfaces';
 import { TraitNameUnionOrString } from './../../declarations/types';
-import {
-	iBaseTrait,
-	iTraitCollectionProps,
-	iBaseTraitData,
-} from '../../declarations/interfaces/trait-interfaces';
+import { iBaseTrait, iTraitCollectionProps, iBaseTraitData } from '../../declarations/interfaces/trait-interfaces';
 import { TraitTypeNameUnion, TraitValueTypeUnion } from '../../declarations/types';
 import LogCollection from '../log/LogCollection';
 import DeleteLogEvent from '../log/DeleteLogEvent';
 import AddLogEvent from '../log/AddLogEvent';
 import { iLogCollection, iLogEvent, iLogReport } from '../../declarations/interfaces/log-interfaces';
 import { iTraitCollection } from '../../declarations/interfaces/trait-collection-interfaces';
-import { iBaseTraitDataStorageProps, iBaseTraitDataStorage } from '../../declarations/interfaces/data-storage-interfaces';
+import {
+	iBaseTraitDataStorageProps,
+	iBaseTraitDataStorage,
+} from '../../declarations/interfaces/data-storage-interfaces';
 import { createPath } from '../../utils/createPath';
+import { hasCleanUp } from '../../utils/typePredicates';
 
 export default class TraitCollection<
 	N extends TraitNameUnionOrString,
@@ -60,7 +60,9 @@ export default class TraitCollection<
 		});
 	}
 	cleanUp(): boolean {
-		return this.#dataStorage.cleanUp();
+		// if the data storage has a cleanup function then call it and return the result,
+		// otherwise return true if no cleanup required
+		return hasCleanUp(this.#dataStorage) ? this.#dataStorage.cleanUp() : true;
 	}
 
 	toArray(): T[] {

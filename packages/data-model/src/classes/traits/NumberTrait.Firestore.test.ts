@@ -37,7 +37,7 @@ describe('Number trait with firestore data storage', () => {
 	});
 
 	it('writes changes to firestore', async () => {
-		expect.assertions(1);
+		expect.assertions(1); 
 
 		const trait1Name = 'trait1';
 		const testParentPath = testSuiteParentPath + '-trait-writes';

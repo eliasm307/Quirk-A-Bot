@@ -1,14 +1,14 @@
-import { iGeneralTrait } from '../../declarations/interfaces/trait-interfaces';
-import { LogOperationUnion } from '../../declarations/types';
-import TraitFactory from './TraitFactory';
-import InMemoryTraitDataStorageFactory from '../data-storage/InMemory/InMemoryDataStorageFactory';
+import { firestoreEmulator } from './../../utils/firebase';
 import { iTraitCollectionFactoryMethodProps } from '../../declarations/interfaces/trait-collection-interfaces';
+import FirestoreTraitDataStorageFactory from '../data-storage/Firestore/FirestoreDataStorageFactory';
 
 // todo make these tests relevant
 
+const firestore = firestoreEmulator;
+
 let testName: string;
 
-const dataStorageFactory = new InMemoryTraitDataStorageFactory();
+const dataStorageFactory = new FirestoreTraitDataStorageFactory({ firestore });
 
 const rootCollectionPath = 'traitCollectionTests';
 
@@ -18,15 +18,20 @@ const traitCollectionFactoryMethodProps: iTraitCollectionFactoryMethodProps = {
 	parentPath: rootCollectionPath,
 };
 
-describe( 'TraitColleciton with Firestore data storage', () => {
-	it('can initialise an empty firestore colleciton', () => {});
+// todo populate tests
+describe('TraitColleciton with Firestore data storage', () => {
+	it('can initialise an empty firestore colleciton', () => {
+		expect.hasAssertions();
+	});
 	it('can initialise a firestore colleciton from initial trait data', () => {
-	 
-	} );
+		expect.hasAssertions();
+	});
 
-	it('can add and remove traits to firestore collection', () => {});
-	
+	it('can add and remove traits to firestore collection', () => {
+		expect.hasAssertions();
+	});
 
-	it( 'listens to firestore and propagates changes to all trait collection instances', async () => { })
-
+	it('listens to firestore and propagates changes to all trait collection instances', async () => {
+		expect.hasAssertions();
+	});
 });

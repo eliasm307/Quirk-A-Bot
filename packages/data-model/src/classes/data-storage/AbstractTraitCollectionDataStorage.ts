@@ -20,8 +20,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
 > implements iTraitCollectionDataStorage<N, V, D, T> {
 	path: string;
 	name: string;
-	protected onAdd: (props: iAddLogEventProps<V>) => void;
-	protected onDelete: (props: iDeleteLogEventProps<V>) => void;
+
 	protected map: Map<N, T>;
 
 	// #logs: iLogCollection;
@@ -40,7 +39,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
 		parentPath,
 	}: iBaseTraitCollectionDataStorageProps<N, V, D, T>) {
 		this.onAdd = onAdd;
-		this.onDelete = onDelete;
+		this.afterDelete = onDelete;
 		this.path = createPath(parentPath, name);
 		this.name = name;
 		this.instanceCreator = instanceCreator;
@@ -57,6 +56,8 @@ export default abstract class AbstractTraitCollectionDataStorage<
 
 	// ? is this required? if colleciton adds data to storage this means creating trait data and connecting data to trait instances would be done by 2 classes async, so it might be done in the wrong order. Opted to have these both on the trait side
 	protected abstract afterAdd(name: N): void;
+	protected onAdd: (props: iAddLogEventProps<V>) => void;
+	protected afterDelete: (props: iDeleteLogEventProps<V>) => void;
 
 	protected abstract deleteTraitFromDataStorage(name: N): void;
 
@@ -129,14 +130,19 @@ export default abstract class AbstractTraitCollectionDataStorage<
 
 		const oldValue = this.map.get(name)!.value;
 
-		if (typeof oldValue !== 'undefined') {
+		if ( typeof oldValue !== 'undefined' ) {
+			// ? do this as an abstract beforeDelete method, so specific classes can do what they want? Whats the difference?
+			// do any cleanup on the trait before deleting
+			const deatTraitWalking = this.map.get(name);
+			if (deatTraitWalking) deatTraitWalking.cleanUp();
+
 			// apply change locally
 			this.map.delete(name);
 
 			// apply change to data storage
 			this.deleteTraitFromDataStorage(name);
 			// log change
-			this.onDelete({ oldValue, property: name });
+			this.afterDelete({ oldValue, property: name });
 		} else {
 			console.error(__filename, `old value was "${oldValue}" when deleting property "${name}"`);
 		}
