@@ -4,7 +4,7 @@ import {
 	iBaseTraitCollectionDataStorageProps,
 	iBaseTraitDataStorageProps,
 	iTraitCollectionDataStorage,
-	iTraitDataStorage,
+	iBaseTraitDataStorage,
 } from './../../declarations/interfaces/data-storage-interfaces';
 import { TraitNameUnionOrString } from './../../declarations/types';
 import { TraitValueTypeUnion } from '../../declarations/types';
@@ -28,7 +28,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
 	instanceCreator: (props: iBaseTraitProps<N, V, D>) => T;
 	traitDataStorageInitialiser: <N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(
 		props: iBaseTraitDataStorageProps<N, V>
-	) => iTraitDataStorage<N, V>;
+	) => iBaseTraitDataStorage<N, V>;
 
 	constructor({
 		instanceCreator,

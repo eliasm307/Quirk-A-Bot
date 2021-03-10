@@ -11,7 +11,7 @@ import {
 	iBaseTraitDataStorageProps,
 	iDataStorageFactory,
 	iTraitCollectionDataStorage,
-	iTraitDataStorage,
+	iBaseTraitDataStorage,
 } from '../../../declarations/interfaces/data-storage-interfaces';
 import InMemoryTraitDataStorage from './InMemoryTraitDataStorage';
 import { iBaseTraitData, iBaseTrait } from '../../../declarations/interfaces/trait-interfaces';
@@ -34,7 +34,7 @@ export default class InMemoryDataStorageFactory implements iDataStorageFactory {
 	}*/
 	newTraitDataStorageInitialiser(): <N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(
 		props: iBaseTraitDataStorageProps<N, V>
-	) => iTraitDataStorage<N, V> {
+	) => iBaseTraitDataStorage<N, V> {
 		return props => new InMemoryTraitDataStorage({ ...props });
 	}
 

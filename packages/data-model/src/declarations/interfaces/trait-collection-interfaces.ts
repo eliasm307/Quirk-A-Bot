@@ -1,6 +1,6 @@
 import { AttributeName, SkillName, DisciplineName } from './../types';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../types';
-import { iBaseCollection, iHasToJson, iHasPath, iHasParentPath } from './general-interfaces';
+import { iBaseCollection, iHasToJson, iHasPath, iHasParentPath, iHasCleanUp } from './general-interfaces';
 import { iLoggerCollection } from './log-interfaces';
 import {
 	iAttribute,
@@ -44,7 +44,8 @@ export interface iTraitCollection<
 > extends iBaseCollection<N, V, T, iTraitCollection<N, V, D, T>>,
 		iHasToJson<D[]>,
 		iLoggerCollection,
-		iHasPath {
+		iHasPath,
+		iHasCleanUp {
 	name: string;
 }
 

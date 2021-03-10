@@ -106,7 +106,7 @@ describe('Number trait with firestore data storage', () => {
 		trait1.cleanUp();
 		trait2.cleanUp();
 	});
-	it('propagates changes to all trait instances', async () => {
+	it('listens to firestore and propagates changes to all trait instances', async () => {
 		expect.assertions(1);
 
 		const trait1Name = 'trait1';

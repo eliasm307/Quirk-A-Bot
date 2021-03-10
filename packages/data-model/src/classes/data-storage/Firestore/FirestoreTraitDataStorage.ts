@@ -1,19 +1,18 @@
 import { Firestore } from './../../../utils/firebase';
-import { iCharacterSheet } from '../../../declarations/interfaces/character-sheet-interfaces';
 import {
 	iFirestoreTraitDataStorageProps,
-	iTraitDataStorage,
+	iBaseTraitDataStorage,
 } from '../../../declarations/interfaces/data-storage-interfaces';
 import { TraitValueTypeUnion, TraitNameUnionOrString } from '../../../declarations/types';
 import AbstractTraitDataStorage from '../AbstractTraitDataStorage';
 import pathModule from 'path';
 import { isTraitData } from '../../../utils/typePredicates';
 import { iBaseTraitData } from '../../../declarations/interfaces/trait-interfaces';
-import logFirestoreChange from '../../../utils/logFirestoreChange';
+import { iHasCleanUp } from '../../../declarations/interfaces/general-interfaces';
 
 export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
 	extends AbstractTraitDataStorage<N, V>
-	implements iTraitDataStorage<N, V> {
+	implements iBaseTraitDataStorage<N, V>, iHasCleanUp {
 	protected async assertTraitExistsOnDataStorage(traitData: iBaseTraitData<N, V>): Promise<void> {
 		// try getting the document#
 		// ? does this need error handling?
@@ -45,7 +44,7 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 
 		console.time(timerName);
 		// make sure trait exists, then set listeners on it
-		this.init()
+		this.initAsync()
 			.then(() => {
 				// console.warn(`Successfully initialised trait with path ${this.path} and value ${this.private.value}`);
 			})
@@ -65,13 +64,9 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 			});*/
 	}
 
-	private async init() {
+	private async initAsync() {
 		try {
 			await this.assertTraitExistsOnDataStorage({ name: this.name, value: this.private.value });
-
-			// add event liseners
-			const parentPath = pathModule.dirname(this.path);
-			this.#unsubscribeFromEventListeners = await this.attachFirestoreEventListeners(parentPath);
 		} catch (error) {
 			console.error(
 				__filename,
@@ -79,11 +74,26 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 				{ error }
 			);
 		}
+		const parentPath = pathModule.dirname(this.path);
+
+		try {
+			// add event liseners
+			this.#unsubscribeFromEventListeners = await this.attachFirestoreEventListeners(parentPath);
+		} catch (error) {
+			this.#unsubscribeFromEventListeners();
+			console.error(__filename, `Could not add event listeners to trait with name ${this.name} at path ${this.path}`, {
+				error,
+				parentPath,
+				path: this.path,
+			});
+		}
 	}
 
 	/** Attaches change event listeners for this trait via its parent collection, and returns the unsubscribe function */
 	private async attachFirestoreEventListeners(parentCollectionPath: string): Promise<() => void> {
 		// todo test event listener
+
+		// todo this should be done by a FirestoreDocumentEventListener Class
 
 		let unsubscriber = () => {};
 

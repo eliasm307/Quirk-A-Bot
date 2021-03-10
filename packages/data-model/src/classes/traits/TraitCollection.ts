@@ -3,7 +3,6 @@ import { iTraitCollectionDataStorage } from './../../declarations/interfaces/dat
 import { TraitNameUnionOrString } from './../../declarations/types';
 import {
 	iBaseTrait,
-	iBaseTraitProps,
 	iTraitCollectionProps,
 	iBaseTraitData,
 } from '../../declarations/interfaces/trait-interfaces';
@@ -13,8 +12,7 @@ import DeleteLogEvent from '../log/DeleteLogEvent';
 import AddLogEvent from '../log/AddLogEvent';
 import { iLogCollection, iLogEvent, iLogReport } from '../../declarations/interfaces/log-interfaces';
 import { iTraitCollection } from '../../declarations/interfaces/trait-collection-interfaces';
-import { iBaseTraitDataStorageProps, iTraitDataStorage } from '../../declarations/interfaces/data-storage-interfaces';
-import path from 'path';
+import { iBaseTraitDataStorageProps, iBaseTraitDataStorage } from '../../declarations/interfaces/data-storage-interfaces';
 import { createPath } from '../../utils/createPath';
 
 export default class TraitCollection<
@@ -25,7 +23,9 @@ export default class TraitCollection<
 > implements iTraitCollection<N, V, D, T> {
 	#traitDataStorageInitialiser: <N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(
 		props: iBaseTraitDataStorageProps<N, V>
-	) => iTraitDataStorage<N, V>;
+	) => iBaseTraitDataStorage<N, V>;
+
+	// ? should this be # or protected?
 	#dataStorage: iTraitCollectionDataStorage<N, V, D, T>;
 	name: string;
 	path: string;
@@ -58,6 +58,9 @@ export default class TraitCollection<
 			onAdd: (props: iAddLogEventProps<V>) => this.logs.log(new AddLogEvent(props)),
 			onDelete: (props: iDeleteLogEventProps<V>) => this.logs.log(new DeleteLogEvent(props)),
 		});
+	}
+	cleanUp(): boolean {
+		return this.#dataStorage.cleanUp();
 	}
 
 	toArray(): T[] {

@@ -5,7 +5,7 @@ import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../declarations/
 import { iBaseTraitProps, iBaseTraitData } from '../../declarations/interfaces/trait-interfaces';
 import LogCollection from '../log/LogCollection';
 import UpdateLogEvent from '../log/UpdateLogEvent';
-import { iTraitDataStorage } from '../../declarations/interfaces/data-storage-interfaces';
+import { iBaseTraitDataStorage } from '../../declarations/interfaces/data-storage-interfaces';
 import { createPath } from '../../utils/createPath';
 
 export default abstract class AbstractBaseTrait<
@@ -13,7 +13,7 @@ export default abstract class AbstractBaseTrait<
 	V extends TraitValueTypeUnion,
 	D extends iBaseTraitData<N, V>
 > implements iBaseTrait<N, V, D> {
-	protected dataSorage: iTraitDataStorage<N, V>;
+	protected dataSorage: iBaseTraitDataStorage<N, V>;
 	protected logs: iLogCollection;
 	toJson: () => D;
 	readonly path: string;

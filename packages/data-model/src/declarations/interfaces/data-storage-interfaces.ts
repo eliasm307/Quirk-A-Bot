@@ -1,15 +1,18 @@
 import { Firestore } from './../../utils/firebase';
-import { iBaseCollection, iHasToJson, iHasDataStorageFactory, iHasParentPath, iHasPath, iHasCleanUp } from './general-interfaces';
-import { iCharacterSheet, iCharacterSheetData, iBaseCharacterSheet } from './character-sheet-interfaces';
-import { TraitNameUnionOrString, TraitValueTypeUnion } from './../types';
 import {
-	iBaseTrait,
-	iGeneralTraitData,
-	iHasTraitInstanceCreator,
-	iBaseTraitData,
-	iBaseTraitShape,
-} from './trait-interfaces';
-import { iLoggerCollection, iAddLogEvent, iAddLogEventProps, iDeleteLogEventProps } from './log-interfaces';
+	iBaseCollection,
+	iHasToJson,
+	iHasDataStorageFactory,
+	iHasParentPath,
+	iHasPath,
+	iHasCleanUp,
+} from './general-interfaces';
+import { iCharacterSheet, iCharacterSheetData } from './character-sheet-interfaces';
+import { TraitNameUnionOrString, TraitValueTypeUnion } from './../types';
+import { iBaseTrait, iHasTraitInstanceCreator, iBaseTraitData } from './trait-interfaces';
+import { iLoggerCollection, iAddLogEventProps, iDeleteLogEventProps } from './log-interfaces';
+
+// todo split this up
 
 // -------------------------------------------------------
 // GENERAL
@@ -111,19 +114,7 @@ export interface iFirestoreTraitCollectionDataStorageProps<
 	D extends iBaseTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
 > extends iBaseTraitCollectionDataStorageProps<N, V, D, T>,
-		iHasFirestore {
-	characterSheet: iCharacterSheet;
-}
-
-export interface iFirestoreTraitCollectionDataStorageProps<
-	N extends TraitNameUnionOrString,
-	V extends TraitValueTypeUnion,
-	D extends iBaseTraitData<N, V>,
-	T extends iBaseTrait<N, V, D>
-> extends iBaseTraitCollectionDataStorageProps<N, V, D, T>,
-		iHasFirestore {
-	characterSheet: iCharacterSheet;
-}
+		iHasFirestore {}
 
 export interface iBaseCharacterSheetDataStorageProps extends iHasId, iHasParentPath, iHasDataStorageFactory {}
 
@@ -136,8 +127,8 @@ export interface iFirestoreCharacterSheetDataStorageProps extends iBaseCharacter
 // -------------------------------------------------------
 // DATA STORAGE OBJECTS
 
-export interface iTraitDataStorage<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
-	extends iBaseTraitData<N, V>, iHasCleanUp {}
+export interface iBaseTraitDataStorage<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
+	extends iBaseTraitData<N, V>  {}
 
 export interface iTraitCollectionDataStorage<
 	N extends TraitNameUnionOrString,
@@ -175,7 +166,7 @@ export interface iDataStorageFactory {
 		props: iTraitDataStorageInitialiserFactoryProps
 	): <N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(
 		props: iBaseTraitDataStorageProps<N, V>
-	) => iTraitDataStorage<N, V>;
+	) => iBaseTraitDataStorage<N, V>;
 
 	newTraitCollectionDataStorageInitialiser(
 		props: iTraitCollectionDataStorageInitialiserFactoryProps
@@ -197,7 +188,7 @@ export interface iDataStorageFactory {
 export interface iHasTraitDataStorageInitialiser {
 	traitDataStorageInitialiser<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(
 		props: iBaseTraitDataStorageProps<N, V>
-	): iTraitDataStorage<N, V>;
+	): iBaseTraitDataStorage<N, V>;
 }
 
 export interface iHasTraitCollectionDataStorageInitialiser {

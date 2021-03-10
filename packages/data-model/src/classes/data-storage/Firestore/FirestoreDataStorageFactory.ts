@@ -10,7 +10,7 @@ import {
 	iCharacterSheetDataStorage,
 	iTraitDataStorageInitialiserFactoryProps,
 	iBaseTraitDataStorageProps,
-	iTraitDataStorage,
+	iBaseTraitDataStorage,
 	iHasCharacterSheet,
 	iBaseTraitCollectionDataStorageProps,
 	iTraitCollectionDataStorage,
@@ -33,7 +33,7 @@ export default class FirestoreDataStorageFactory implements iDataStorageFactory 
 
 	newTraitDataStorageInitialiser( ): <N extends string, V extends TraitValueTypeUnion>(
 		props: iBaseTraitDataStorageProps<N, V>
-	) => iTraitDataStorage<N, V> {
+	) => iBaseTraitDataStorage<N, V> {
 		return props => new FirestoreTraitDataStorage({ ...props, firestore: this.#firestore });
 	}
 
