@@ -22,7 +22,7 @@ export default class StringTrait<N extends TraitNameUnionOrString, V extends str
 	}
 
 	/** Only allows setting non-empty strings */
-	newValueIsValid(newVal: string): boolean {
+	protected newValueIsValid(newVal: string): boolean {
 		// assert value is a number
 		if (typeof newVal !== 'string') {
 			throw Error(`Value for trait ${this.name} should be a string, received a "${typeof newVal}`);
@@ -36,7 +36,7 @@ export default class StringTrait<N extends TraitNameUnionOrString, V extends str
 
 		return true;
 	}
-	preProcessValue(newValueRaw: V): V {
+	protected preProcessValue(newValueRaw: V): V {
 		// no pre processing for string values
 		return newValueRaw;
 	}

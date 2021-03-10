@@ -21,6 +21,7 @@ export default abstract class AbstractBaseTrait<
 	readonly name: N;
 
 	protected abstract newValueIsValid(newVal: V): boolean;
+	protected abstract preProcessValue(newValueRaw: V): V;
 
 	constructor({ name, value, toJson, traitDataStorageInitialiser, parentPath }: iBaseTraitProps<N, V, D>) {
 		this.name = name;
@@ -64,10 +65,6 @@ export default abstract class AbstractBaseTrait<
 		// implement property change on data storage
 		this.dataStorage.value = newValue;
 
-		if (!this.logs) {
-			console.error(__filename, `this.#logs is not defined`);
-		}
-
 		// log change
 		this.logs.log(new UpdateLogEvent({ newValue, oldValue, property: this.name }));
 	}
@@ -82,6 +79,4 @@ export default abstract class AbstractBaseTrait<
 	getLogReport(): iLogReport {
 		return this.logs.getReport();
 	}
-
-	protected abstract preProcessValue(newValueRaw: V): V;
 }

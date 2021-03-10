@@ -86,7 +86,7 @@ export default class CharacterSheet implements iCharacterSheet {
 		const initialData = characterSheetDataStorage.getData();
 
 		if (!isCharacterSheetData(initialData))
-			throw Error(`${__filename} data is an object but it is not valid character sheet data, "${initialData}"`);
+			throw Error(`${__filename} data is not valid character sheet data, "${initialData}"`);
 
 		// core number traits
 		this.bloodPotency = new NumberTrait<CoreNumberTraitName>({
@@ -150,6 +150,8 @@ export default class CharacterSheet implements iCharacterSheet {
 			traitDataStorageInitialiser,
 			parentPath: id,
 		});
+
+// ? what if the trait factory wasnt static and actually took in arguments on instantiation, this would reduce some of the props required when using each factory method and hide some of the ugliness
 
 		// create collections, with initial data where available
 		this.attributes = TraitFactory.newAttributeTraitCollection(
