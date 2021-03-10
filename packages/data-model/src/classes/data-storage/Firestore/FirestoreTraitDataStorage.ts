@@ -41,13 +41,13 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 		this.#firestore = firestore;
 		this.path = path;
 
-		const timerName = `initialise trait "${this.path}"`;
+		const timerName = `Time to initialise trait "${this.path}"`;
 
 		console.time(timerName);
 		// make sure trait exists, then set listeners on it
 		this.init()
 			.then(() => {
-				console.warn(`Successfully initialised trait with path ${this.path} and value ${this.private.value}`);
+				// console.warn(`Successfully initialised trait with path ${this.path} and value ${this.private.value}`);
 			})
 			.catch(console.error)
 			.finally(() => console.timeEnd(timerName));

@@ -75,6 +75,8 @@ describe('firestore emulator', () => {
 
 		// console.log('document observer attached');
 
+// todo delete existing documents before attaching listeners
+
 		// subscribe to collection level changes
 		const unsubscribeToCollection = firestoreEmulator.collection(localTestCollectionName).onSnapshot(querySnapshot => {
 			querySnapshot.docChanges().forEach(change => {

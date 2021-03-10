@@ -54,7 +54,6 @@ export default abstract class AbstractTraitCollectionDataStorage<
 				: []
 		);
 	}
- 
 
 	// ? is this required? if colleciton adds data to storage this means creating trait data and connecting data to trait instances would be done by 2 classes async, so it might be done in the wrong order. Opted to have these both on the trait side
 	protected abstract afterAdd(name: N): void;
@@ -121,7 +120,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
 
 	delete(name: N): iTraitCollectionDataStorage<N, V, D, T> {
 		if (!this.map.has(name)) {
-			console.warn(
+			console.log(
 				__filename,
 				`Cannot delete property "${name}" from "${this.name}" trait collection as it doesnt exist in the collection`
 			);

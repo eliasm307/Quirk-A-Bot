@@ -41,13 +41,13 @@ export default abstract class AbstractNumberTrait<N extends TraitNameUnionOrStri
 
 		// make sure number is within allowable range before change
 		if (newVal < this.min) {
-			console.error(
+			console.log(
 				`Cannot set trait ${this.name} to ${newVal}, this is below the minimum allowed value of ${this.min}`
 			);
 			return false;
 		}
 		if (newVal > this.max) {
-			console.error(
+			console.log(
 				`Cannot set trait ${this.name} to ${newVal}, this is above the maximum allowed value of ${this.max}`
 			);
 			return false;
