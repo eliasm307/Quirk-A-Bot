@@ -3,6 +3,7 @@ import { iGeneralTraitCollection } from './../declarations/interfaces/trait-coll
 import { ATTRIBUTE_NAMES, SKILL_NAMES, DISCIPLINE_NAMES } from '../constants';
 import { iCharacterSheetData } from '../declarations/interfaces/character-sheet-interfaces';
 import { AttributeName, SkillName, DisciplineName } from '../declarations/types';
+import { iHasCleanUp } from '../declarations/interfaces/general-interfaces';
 
 export function isAttributeName(name: string): name is AttributeName {
 	const allowedKeys: string[] = [...ATTRIBUTE_NAMES];
@@ -136,4 +137,8 @@ export function isBaseTrait(data: any): data is iGeneralTrait {
 	if (typeof data !== 'object') return false;
 	// todo improve this to account for types
 	return !!data.name && !!data.value && !!data.getLogEvents && !!data.getLogReport && !!data.toJson;
+}
+
+export function hasCleanUp(o: any): o is iHasCleanUp {
+	return (o as iHasCleanUp).cleanUp !== undefined;
 }
