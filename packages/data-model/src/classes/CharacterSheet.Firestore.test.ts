@@ -12,6 +12,7 @@ import { isCharacterSheetData } from '../utils/typePredicates';
 import readCharacterSheetDataFromFirestore from '../utils/readCharacterSheetDataFromFirestore';
 import CharacterSheet from './CharacterSheet';
 import FirestoreDataStorageFactory from './data-storage/Firestore/FirestoreDataStorageFactory';
+import writeCharacterSheetDataToFirestore from '../utils/writeCharacterSheetDataToFirestore';
 
 const parentPath = 'characterSheetTestCollection';
 const firestore = firestoreEmulator;
@@ -44,8 +45,8 @@ describe('Character sheet using Firestore', () => {
 
 		// make sure document exists
 		let doc = await firestore.doc(docPath).get();
-    const docData = await readCharacterSheetDataFromFirestore( firestore, docPath );
-    
+		const docData = await readCharacterSheetDataFromFirestore(firestore, docPath);
+
 		expect(doc.exists).toEqual(true);
 		expect(isCharacterSheetData(docData)).toEqual(true);
 		expect(docData).toEqual(CharacterSheet.newDataObject({ id: csId }));
@@ -87,8 +88,9 @@ describe('Character sheet using Firestore', () => {
 			],
 		};
 
-		await firestore.doc(docPath).set(initialData);
-		await new Promise(res => setTimeout(res, 100)); // wait for syncronisation
+		// await firestore.doc(docPath).set(initialData);
+		await writeCharacterSheetDataToFirestore(firestore, docPath, initialData);
+		await new Promise(res => setTimeout(res, 500)); // wait for syncronisation
 
 		// initialise cs
 		const cs = await CharacterSheet.load({ dataStorageFactory, id: csId, parentPath });

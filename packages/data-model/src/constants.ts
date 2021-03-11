@@ -78,3 +78,4 @@ export const ATTRIBUTE_COLLECTION_NAME = `Attributes`;
 export const SKILL_COLLECTION_NAME = `Skills`;
 export const DISCIPLINE_COLLECTION_NAME = `Disciplines`;
 export const TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME = `TouchstonesAndConvictions`;
+export const STRING_TRAIT_DEFAULT_VALUE = ''

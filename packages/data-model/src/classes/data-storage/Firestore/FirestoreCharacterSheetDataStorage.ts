@@ -9,6 +9,7 @@ import {
 } from '../../../declarations/interfaces/data-storage-interfaces';
 import { createPath } from '../../../utils/createPath';
 import writeCharacterSheetDataToFirestore from '../../../utils/writeCharacterSheetDataToFirestore';
+import readCharacterSheetDataFromFirestore from '../../../utils/readCharacterSheetDataFromFirestore';
 
 export default class FirestoreCharacterSheetDataStorage implements iCharacterSheetDataStorage {
 	protected id: string;
@@ -30,20 +31,29 @@ export default class FirestoreCharacterSheetDataStorage implements iCharacterShe
 	}
 	async assertDataExistsOnDataStorage(): Promise<void> {
 		// check character sheet exists
-		const doc = await this.firestore.doc(this.path).get();
+		const docPromise = this.firestore.doc(this.path).get();
+		const docDataPromise = readCharacterSheetDataFromFirestore(this.firestore, this.path);
 
-		if (doc.exists) {
-			const data = doc.data();
-			if (!isCharacterSheetData(data)) {
-				setTimeout((_: any) => {
-					throw Error(`Data from document at path ${this.path} is not valid character sheet data`);
-				});
-				return;
+		try {
+			const [doc, docData] = await Promise.all([docPromise, docDataPromise]);
+
+			// ? is this required, this is done in readCharacterSheetDataFromFirestore
+			/*
+			if (doc.exists) {
+				if (!isCharacterSheetData(docData)) {
+					setTimeout((_: any) => {
+						throw Error(`Data from document at path ${this.path} is not valid character sheet data`);
+					});
+					return;
+				}
 			}
-
-			this.characterSheetData = data; // save data locally
-		} else {
-			// if it doesnt exist initialise it as a blank character sheet if not
+			*/
+			// ? should this check if document exists?
+			if (!doc.exists) throw Error(`Document at path ${this.path} does not exist, initialising it now`);
+			this.characterSheetData = docData; // save data locally
+		} catch (error) {
+			console.warn(`Could not read character sheet data from path ${this.path}, initialising a new character sheet...`);
+			// if it doesnt exist or data is bad, initialise it as a blank character sheet if not
 			try {
 				const data = CharacterSheet.newDataObject({ id: this.id });
 				this.characterSheetData = data; // save data locally
@@ -52,7 +62,7 @@ export default class FirestoreCharacterSheetDataStorage implements iCharacterShe
 				await writeCharacterSheetDataToFirestore(this.firestore, this.path, data);
 			} catch (error) {
 				console.error(__filename, { error });
-				Promise.reject(new Error(`Could not initialise a new character sheet at path ${this.path}`));
+				throw Error(`Could not initialise a new character sheet at path ${this.path}`);
 			}
 		}
 	}

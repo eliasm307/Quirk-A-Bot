@@ -16,6 +16,7 @@ import StringTrait from './traits/StringTrait';
 import { isCharacterSheetData } from '../utils/typePredicates';
 import NumberTrait from './traits/NumberTrait';
 import { createPath } from '../utils/createPath';
+import { STRING_TRAIT_DEFAULT_VALUE } from '../constants';
 // import saveCharacterSheetToFile from '../utils/saveCharacterSheetToFile';
 
 // todo split this into smaller pieces
@@ -53,11 +54,15 @@ export default class CharacterSheet implements iCharacterSheet {
 
 		const isValidId = (id: string): boolean => {
 			// id should only contain alpha numeric characters
-			return !/\W/.test(id);
+			return !/\W\-/.test(id);
 		};
 
-		if (!isValidId(id))
-			throw Error(`Id "${id}" is not a valid character sheet id. This should only contain alpha numeric characters.`);
+		if (!isValidId(id)) {
+			throw Error(
+				`Id "${id}" is not a valid character sheet id. This should only contain alpha numeric characters, underscores, or dashes.`
+			);
+			// return;
+		}
 
 		const preExistingInstance = CharacterSheet.instances.get(id);
 
@@ -86,7 +91,7 @@ export default class CharacterSheet implements iCharacterSheet {
 		const { id, dataStorageFactory, parentPath, characterSheetDataStorage } = props;
 
 		this.id = id;
-		this.path = createPath( parentPath, id ); 
+		this.path = createPath(parentPath, id);
 
 		const traitDataStorageInitialiser = dataStorageFactory.newTraitDataStorageInitialiser({
 			characterSheet: this,
@@ -101,7 +106,6 @@ export default class CharacterSheet implements iCharacterSheet {
 		if (!isCharacterSheetData(initialData))
 			throw Error(`${__filename} data is not valid character sheet data, "${initialData}"`);
 
-		
 		// ? trait factory could be instantiable so details like the data storage initialisers and parent path could be passed once and not need to be repeated all over
 		// core number traits
 		this.bloodPotency = new NumberTrait<CoreNumberTraitName>({
@@ -147,21 +151,21 @@ export default class CharacterSheet implements iCharacterSheet {
 		// core string traits
 		this.name = new StringTrait<CoreStringTraitName, string>({
 			name: 'Name',
-			value: initialData.name.value || 'TBC',
+			value: initialData.name.value || STRING_TRAIT_DEFAULT_VALUE,
 			traitDataStorageInitialiser,
 			parentPath: this.path,
 		});
 
 		this.sire = new StringTrait<CoreStringTraitName, string>({
 			name: 'Sire',
-			value: initialData.sire.value || 'TBC',
+			value: initialData.sire.value || STRING_TRAIT_DEFAULT_VALUE,
 			traitDataStorageInitialiser,
 			parentPath: this.path,
 		});
 
 		this.clan = new StringTrait<CoreStringTraitName, ClanName>({
 			name: 'Clan',
-			value: initialData.clan.value || 'TBC',
+			value: initialData.clan.value || STRING_TRAIT_DEFAULT_VALUE,
 			traitDataStorageInitialiser,
 			parentPath: this.path,
 		});
@@ -239,6 +243,7 @@ export default class CharacterSheet implements iCharacterSheet {
 		];
 	}
 
+	// todo character sheet shouldnt handle logs, this should be done similar to traits, expose a refernce to the internal logger then attach these methods to it
 	getLogReports(): iLogReport[] {
 		// todo test
 		return this.getAllTraits().map(trait => trait.getLogReport());
@@ -262,9 +267,9 @@ export default class CharacterSheet implements iCharacterSheet {
 			humanity: { name: 'Humanity', value: 0 },
 			hunger: { name: 'Hunger', value: 0 },
 			willpower: { name: 'Willpower', value: 0 },
-			name: { name: 'Name', value: '' },
-			sire: { name: 'Sire', value: '' },
-			clan: { name: 'Clan', value: '' },
+			name: { name: 'Name', value: STRING_TRAIT_DEFAULT_VALUE },
+			sire: { name: 'Sire', value: STRING_TRAIT_DEFAULT_VALUE },
+			clan: { name: 'Clan', value: STRING_TRAIT_DEFAULT_VALUE },
 			attributes: [],
 			disciplines: [],
 			skills: [],

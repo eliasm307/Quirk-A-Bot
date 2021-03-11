@@ -1,6 +1,4 @@
-import { CoreStringTraitName, CoreTraitName } from './../declarations/types';
-import { CORE_NUMBER_TRAITS, CORE_STRING_TRAITS } from './../constants';
-import { iBaseTraitData, iGeneralTraitData } from './../declarations/interfaces/trait-interfaces';
+import { CoreTraitName } from './../declarations/types';
 import {
 	CORE_TRAIT_COLLECTION_NAME,
 	ATTRIBUTE_COLLECTION_NAME,
@@ -19,6 +17,8 @@ export default async function readCharacterSheetDataFromFirestore(
 	firestore: Firestore,
 	path: string
 ): Promise<iCharacterSheetData> {
+	const timerName = `Time to read character sheet data at path ${path}`;
+	console.time(timerName);
 	// read core data
 	const coreDataPromise = firestore.doc(path).get();
 
@@ -72,6 +72,8 @@ export default async function readCharacterSheetDataFromFirestore(
 		const propertyName = coreTraitDisplayNameToPropertyName(trait.name);
 		data[propertyName] = trait;
 	});
+
+	console.timeEnd(timerName);
 
 	// confirm data is in the right format
 	if (!isCharacterSheetData(data)) {
