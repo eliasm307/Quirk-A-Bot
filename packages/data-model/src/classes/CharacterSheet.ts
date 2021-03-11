@@ -1,6 +1,6 @@
 import { iHasId } from './../declarations/interfaces/data-storage-interfaces';
 import { iCharacterSheet, iCharacterSheetLoaderProps } from './../declarations/interfaces/character-sheet-interfaces';
-import { iLogReport } from './../declarations/interfaces/log-interfaces';
+import { iBaseLogReport, iCharacterSheetLogCollection } from './../declarations/interfaces/log-interfaces';
 import {
 	iAttributeTraitCollection,
 	iSkillTraitCollection,
@@ -25,6 +25,7 @@ import { STRING_TRAIT_DEFAULT_VALUE } from '../constants';
 
 export default class CharacterSheet implements iCharacterSheet {
 	path: string;
+	log: iCharacterSheetLogCollection;
 	readonly id: string;
 	//-------------------------------------
 	// private properties with custom setters and/or getters
@@ -52,6 +53,7 @@ export default class CharacterSheet implements iCharacterSheet {
 	static async load(props: iCharacterSheetLoaderProps): Promise<CharacterSheet> {
 		const { dataStorageFactory, id } = props;
 
+		// ? should data storage decide what is a valid id?
 		const isValidId = (id: string): boolean => {
 			// id should only contain alpha numeric characters
 			return !/\W\-/.test(id);
@@ -86,12 +88,13 @@ export default class CharacterSheet implements iCharacterSheet {
 	}
 
 	//-------------------------------------
-	// PRIVATE CONSTRUCTOR
+	// PRIVATE CONSTRUCTOR FOR SINGLETONS
 	private constructor(props: iCharacterSheetProps) {
 		const { id, dataStorageFactory, parentPath, characterSheetDataStorage } = props;
 
 		this.id = id;
-		this.path = createPath(parentPath, id);
+		this.path = createPath( parentPath, id );
+		this.log = characterSheetDataStorage.log
 
 		const traitDataStorageInitialiser = dataStorageFactory.newTraitDataStorageInitialiser({
 			characterSheet: this,
@@ -244,9 +247,9 @@ export default class CharacterSheet implements iCharacterSheet {
 	}
 
 	// todo character sheet shouldnt handle logs, this should be done similar to traits, expose a refernce to the internal logger then attach these methods to it
-	getLogReports(): iLogReport[] {
+	getLogReports(): iBaseLogReport[] {
 		// todo test
-		return this.getAllTraits().map(trait => trait.getLogReport());
+		return this.getAllTraits().map(trait => trait.log.getLogReport());
 	}
 	getLogEvents(): iLogEvent[] {
 		// combine logs from reports and and sort oldest to newest

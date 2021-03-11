@@ -9,8 +9,8 @@ import {
 	CoreNumberTraitName,
 	AttributeCategory,
 } from '../types';
-import { iCanHaveParentPath, iCanHaveToJson, iHasCleanUp, iHasParentPath, iHasPath, iHasToJson } from './general-interfaces';
-import { iLoggerSingle } from './log-interfaces';
+import { iCanHaveToJson, iHasCleanUp, iHasParentPath, iHasPath, iHasToJson } from './general-interfaces';
+import { iHasLogReporter, iTraitLogReporter } from './log-interfaces';
 import { iTraitCollectionDataStorageInitialiserBundle } from './trait-collection-interfaces';
 
 export interface iHasCategorySelector<N extends string, C extends string> {
@@ -97,9 +97,11 @@ export interface iBaseTraitData<N extends TraitNameUnionOrString, V extends Trai
 	value: V;
 }
 export interface iGeneralTraitData extends iBaseTraitData<TraitNameUnionOrString, TraitValueTypeUnion> {}
+
 export interface iNumberTraitData<N extends TraitNameUnionOrString>
 	extends iBaseTraitData<N, number>,
 		iHasNumberValue {}
+
 export interface iStringTraitData<N extends TraitNameUnionOrString, V extends string>
 	extends iBaseTraitData<N, V>,
 		iHasStringValue<V> {}
@@ -119,15 +121,17 @@ export interface iCoreNumberTraitData extends iNumberTraitData<CoreNumberTraitNa
 // GENERIC TRAIT OBJECTS TYPES
 
 /** Base interface for Trait Objects */
-export interface iBaseTrait<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion, D extends iBaseTraitData<N, V>>
-	extends iBaseTraitData<N, V>,
+export interface iBaseTrait<
+	N extends TraitNameUnionOrString,
+	V extends TraitValueTypeUnion,
+	D extends iBaseTraitData<N, V>
+> extends iBaseTraitData<N, V>,
 		iHasToJson<D>,
-		iLoggerSingle,
+		iHasLogReporter<iTraitLogReporter>,
 		iHasPath,
 		iHasCleanUp {
 	// todo add explain method to give a summary what this trait is for
 	// todo add explainValue method to describe the current value of the attribute, ie add description getter to describe the meaning of a value
-
 }
 
 export interface iGeneralTrait extends iBaseTrait<TraitNameUnionOrString, TraitValueTypeUnion, iGeneralTraitData> {}

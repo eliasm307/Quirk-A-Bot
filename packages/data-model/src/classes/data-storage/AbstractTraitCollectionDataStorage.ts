@@ -8,7 +8,7 @@ import {
 } from './../../declarations/interfaces/data-storage-interfaces';
 import { TraitNameUnionOrString } from './../../declarations/types';
 import { TraitValueTypeUnion } from '../../declarations/types';
-import { iLogReport, iLogEvent } from '../../declarations/interfaces/log-interfaces';
+import { iBaseLogReport, iLogEvent } from '../../declarations/interfaces/log-interfaces';
 import path from 'path';
 import { createPath } from '../../utils/createPath';
 
@@ -64,7 +64,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
 	toJson(): D[] {
 		return this.toArray().map(e => e.toJson());
 	}
-	getLogReports(): iLogReport[] {
+	getLogReports(): iBaseLogReport[] {
 		throw new Error('Method not implemented.');
 	}
 	getLogEvents(): iLogEvent[] {

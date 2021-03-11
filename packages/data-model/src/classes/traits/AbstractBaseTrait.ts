@@ -1,12 +1,16 @@
-import { iLogCollection, iLogReport } from './../../declarations/interfaces/log-interfaces';
+import {
+	iBaseLogger,
+	iBaseLogReport,
+	iTraitLogCollection,
+	iTraitLogReporter,
+} from './../../declarations/interfaces/log-interfaces';
 import { iLogEvent } from '../../declarations/interfaces/log-interfaces';
 import { iBaseTrait } from '../../declarations/interfaces/trait-interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../declarations/types';
 import { iBaseTraitProps, iBaseTraitData } from '../../declarations/interfaces/trait-interfaces';
-import LogCollection from '../log/LogCollection';
+import LogCollection from '../log/AbstractLogger';
 import UpdateLogEvent from '../log/UpdateLogEvent';
 import { iBaseTraitDataStorage } from '../../declarations/interfaces/data-storage-interfaces';
-import { createPath } from '../../utils/createPath';
 import { hasCleanUp } from '../../utils/typePredicates';
 
 export default abstract class AbstractBaseTrait<
@@ -14,9 +18,9 @@ export default abstract class AbstractBaseTrait<
 	V extends TraitValueTypeUnion,
 	D extends iBaseTraitData<N, V>
 > implements iBaseTrait<N, V, D> {
-	protected dataStorage: iBaseTraitDataStorage<N, V>;
-	protected logs: iLogCollection;
-	toJson: () => D;
+	protected dataStorage: iBaseTraitDataStorage<N, V>; 
+	readonly log: iTraitLogReporter;
+	readonly toJson: () => D;
 	readonly path: string;
 	readonly name: N;
 
@@ -33,6 +37,8 @@ export default abstract class AbstractBaseTrait<
 			parentPath,
 		});
 
+		this.log = this.dataStorage.log;
+
 		// the data storage is responsible for providing a suitable path
 		this.path = this.dataStorage.path;
 
@@ -40,9 +46,9 @@ export default abstract class AbstractBaseTrait<
 		if (!toJson) throw Error(`${__filename} toJson function not defined`);
 		this.toJson = toJson;
 
-		// initialise log collection
-		this.logs = new LogCollection({ sourceType: 'Trait', sourceName: this.name });
+		
 	}
+
 	cleanUp(): boolean {
 		// if the data storage has a cleanup function then call it and return the result,
 		// otherwise return true if no cleanup required
@@ -67,18 +73,21 @@ export default abstract class AbstractBaseTrait<
 		// implement property change on data storage
 		this.dataStorage.value = newValue;
 
+		// todo do on data storage
 		// log change
-		this.logs.log(new UpdateLogEvent({ newValue, oldValue, property: this.name }));
+		// this.logs.log(new UpdateLogEvent({ newValue, oldValue, property: this.name }));
 	}
 	public get value() {
 		return this.dataStorage.value;
 	}
 
+	/*
 	getLogEvents(): iLogEvent[] {
 		return this.getLogReport().logEvents;
 	}
 
-	getLogReport(): iLogReport {
-		return this.logs.getReport();
+	getLogReport(): iBaseLogReport {
+		return this.log.getReport();
 	}
+	*/
 }

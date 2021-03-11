@@ -1,4 +1,3 @@
-import { iLoggerCollection } from './log-interfaces';
 import {
 	iAttributeTraitCollection,
 	iDisciplineTraitCollection,
@@ -18,6 +17,7 @@ import {
 import { ClanName } from '../types';
 import { iHasToJson, iHasParentPath } from './general-interfaces';
 import { iHasCharacterSheetDataStorage, iHasDataStorageFactory, iHasId } from './data-storage-interfaces';
+import { iCharacterSheetLogCollection, iHasLogReporter } from './log-interfaces';
 
 export interface iHasCharacterSheet {
 	characterSheet: iCharacterSheet;
@@ -68,7 +68,10 @@ export interface iCharacterSheetData extends iBaseCharacterSheet {
 }
 
 /** The shape of a character sheet object instance */
-export interface iCharacterSheet extends iBaseCharacterSheet, iHasToJson<iCharacterSheetData>, iLoggerCollection {
+export interface iCharacterSheet
+	extends iBaseCharacterSheet,
+		iHasToJson<iCharacterSheetData>,
+		iHasLogReporter<iCharacterSheetLogCollection> {
 	path: string;
 	name: iCoreStringTrait<string>; // ? should this be just a string?
 	clan: iCoreStringTrait<ClanName>; // todo allow this to specify using ClanName type union

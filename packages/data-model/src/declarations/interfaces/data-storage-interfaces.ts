@@ -3,7 +3,14 @@ import { iBaseCollection, iHasToJson, iHasParentPath, iHasPath, iHasCleanUp } fr
 import { iCharacterSheet, iCharacterSheetData, iHasCharacterSheet } from './character-sheet-interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from './../types';
 import { iBaseTrait, iHasTraitInstanceCreator, iBaseTraitData } from './trait-interfaces';
-import { iLoggerCollection, iAddLogEventProps, iDeleteLogEventProps } from './log-interfaces';
+import {
+	iAddLogEventProps,
+	iDeleteLogEventProps,
+	iHasLogReporter,
+	iTraitCollectionLogCollection,
+	iCharacterSheetLogCollection,
+	iTraitLogCollection,
+} from './log-interfaces';
 
 // todo split this up
 
@@ -124,7 +131,8 @@ export interface iFirestoreCharacterSheetDataStorageProps extends iBaseCharacter
 
 export interface iBaseTraitDataStorage<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
 	extends iBaseTraitData<N, V>,
-		iHasPath {}
+		iHasPath,
+		iHasLogReporter<iTraitLogCollection> {}
 
 export interface iTraitCollectionDataStorage<
 	N extends TraitNameUnionOrString,
@@ -133,13 +141,13 @@ export interface iTraitCollectionDataStorage<
 	T extends iBaseTrait<N, V, D>
 > extends iBaseCollection<N, V, T, iTraitCollectionDataStorage<N, V, D, T>>,
 		iHasToJson<D[]>,
-		iLoggerCollection,
+		iHasLogReporter<iTraitCollectionLogCollection>,
 		iHasPath {
 	name: string;
 }
 
 /** Represents character sheet data in a data store */
-export interface iCharacterSheetDataStorage {
+export interface iCharacterSheetDataStorage extends iHasPath, iHasLogReporter<iCharacterSheetLogCollection> {
 	/** Returns the character sheet data from the data storage */
 	getData(): iCharacterSheetData;
 

@@ -3,10 +3,10 @@ import { iTraitCollectionDataStorage } from './../../declarations/interfaces/dat
 import { TraitNameUnionOrString } from './../../declarations/types';
 import { iBaseTrait, iTraitCollectionProps, iBaseTraitData } from '../../declarations/interfaces/trait-interfaces';
 import { TraitTypeNameUnion, TraitValueTypeUnion } from '../../declarations/types';
-import LogCollection from '../log/LogCollection';
+import LogCollection from '../log/AbstractLogger';
 import DeleteLogEvent from '../log/DeleteLogEvent';
 import AddLogEvent from '../log/AddLogEvent';
-import { iLogCollection, iLogEvent, iLogReport } from '../../declarations/interfaces/log-interfaces';
+import { iBaseLogger, iLogEvent, iBaseLogReport } from '../../declarations/interfaces/log-interfaces';
 import { iTraitCollection } from '../../declarations/interfaces/trait-collection-interfaces';
 import {
 	iBaseTraitDataStorageProps,
@@ -31,7 +31,7 @@ export default class TraitCollection<
 	path: string;
 
 	/** Collection of logs for trait collection, ie add and remove events only (update events are held in traits) */
-	protected logs: iLogCollection;
+	protected logs: iBaseLogger;
 	#typeName: TraitTypeNameUnion | string = 'Trait Collection';
 
 	constructor(
@@ -75,7 +75,7 @@ export default class TraitCollection<
 			.reduce((events, report) => [...events, ...report.logEvents], [] as iLogEvent[])
 			.sort((a, b) => Number(a.timeStamp - b.timeStamp));
 	}
-	getLogReports(): iLogReport[] {
+	getLogReports(): iBaseLogReport[] {
 		return [this.logs.getReport(), ...this.toArray().map(e => e.getLogReport())];
 	}
 	toJson(): D[] {
