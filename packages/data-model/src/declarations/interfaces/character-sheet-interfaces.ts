@@ -1,23 +1,17 @@
+import { ClanName } from '../types';
 import {
-	iAttributeTraitCollection,
-	iDisciplineTraitCollection,
-	iSkillTraitCollection,
-	iTouchStoneOrConvictionCollection,
+  iHasCharacterSheetDataStorage, iHasDataStorageFactory, iHasId
+} from './data-storage-interfaces';
+import { iHasParentPath, iHasToJson } from './general-interfaces';
+import { iHasCharacterSheetLogReporter } from './log-interfaces';
+import {
+  iAttributeTraitCollection, iDisciplineTraitCollection, iSkillTraitCollection,
+  iTouchStoneOrConvictionCollection
 } from './trait-collection-interfaces';
 import {
-	iTouchStoneOrConvictionData,
-	iAttributeData,
-	iSkillData,
-	iDisciplineData,
-	iCoreNumberTrait,
-	iCoreStringTrait,
-	iCoreNumberTraitData,
-	iCoreStringTraitData,
+  iAttributeData, iCoreNumberTrait, iCoreNumberTraitData, iCoreStringTrait, iCoreStringTraitData,
+  iDisciplineData, iSkillData, iTouchStoneOrConvictionData
 } from './trait-interfaces';
-import { ClanName } from '../types';
-import { iHasToJson, iHasParentPath } from './general-interfaces';
-import { iHasCharacterSheetDataStorage, iHasDataStorageFactory, iHasId } from './data-storage-interfaces';
-import { iCharacterSheetLogger, iHasLogReporter } from './log-interfaces';
 
 export interface iHasCharacterSheet {
 	characterSheet: iCharacterSheet;
@@ -36,53 +30,59 @@ export interface iCharacterSheetProps
 /** The basic shape of a charactersheet */
 export interface iBaseCharacterSheet {
 	readonly id: string;
+
+	attributes: any;
+	bloodPotency: any;
+	clan: any;
+	disciplines: any;
+	health: any;
+	humanity: any;
+	hunger: any;
 	// todo add user aliases (ie known discord names to be added by bot)
 	name: any;
-	clan: any;
 	sire: any;
-	health: any;
-	willpower: any;
-	hunger: any;
-	humanity: any;
-	bloodPotency: any;
 	skills: any;
-	attributes: any;
-	disciplines: any;
 	touchstonesAndConvictions: any;
+	willpower: any;
 }
 
 /** The shape of character sheet as plain JSON data */
 export interface iCharacterSheetData extends iBaseCharacterSheet {
-	name: iCoreStringTraitData<string>; // ? should this be just a string?
-	clan: iCoreStringTraitData<ClanName>;
-	sire: iCoreStringTraitData<string>; // ? should this be just a string?
-	health: iCoreNumberTraitData;
-	willpower: iCoreNumberTraitData;
-	hunger: iCoreNumberTraitData;
-	humanity: iCoreNumberTraitData;
-	bloodPotency: iCoreNumberTraitData;
 	attributes: iAttributeData[];
-	skills: iSkillData[];
+	bloodPotency: iCoreNumberTraitData;
+	// ? should this be just a string?
+	clan: iCoreStringTraitData<ClanName>;
 	disciplines: iDisciplineData[];
+	// ? should this be just a string?
+	health: iCoreNumberTraitData;
+	humanity: iCoreNumberTraitData;
+	hunger: iCoreNumberTraitData;
+	name: iCoreStringTraitData<string>;
+	sire: iCoreStringTraitData<string>;
+	skills: iSkillData[];
 	touchstonesAndConvictions: iTouchStoneOrConvictionData[];
+	willpower: iCoreNumberTraitData;
 }
 
 /** The shape of a character sheet object instance */
 export interface iCharacterSheet
 	extends iBaseCharacterSheet,
 		iHasToJson<iCharacterSheetData>,
-		iHasLogReporter<iCharacterSheetLogger> {
-	path: string;
-	name: iCoreStringTrait<string>; // ? should this be just a string?
-	clan: iCoreStringTrait<ClanName>; // todo allow this to specify using ClanName type union
-	sire: iCoreStringTrait<string>; // ? should this be just a string?
-	health: iCoreNumberTrait;
-	willpower: iCoreNumberTrait;
-	hunger: iCoreNumberTrait;
-	humanity: iCoreNumberTrait;
-	bloodPotency: iCoreNumberTrait;
-	skills: iSkillTraitCollection;
+		iHasCharacterSheetLogReporter {
 	attributes: iAttributeTraitCollection;
+	bloodPotency: iCoreNumberTrait;
+	// ? should this be just a string?
+	clan: iCoreStringTrait<ClanName>;
 	disciplines: iDisciplineTraitCollection;
+	// ? should this be just a string?
+	health: iCoreNumberTrait;
+	humanity: iCoreNumberTrait;
+	hunger: iCoreNumberTrait;
+	name: iCoreStringTrait<string>;
+	path: string;
+	// todo allow this to specify using ClanName type union
+	sire: iCoreStringTrait<string>;
+	skills: iSkillTraitCollection;
 	touchstonesAndConvictions: iTouchStoneOrConvictionCollection;
+	willpower: iCoreNumberTrait;
 }

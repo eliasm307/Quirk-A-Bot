@@ -1,24 +1,22 @@
-import { Firestore } from './../../../utils/firebase';
 import { iCharacterSheetData } from '../../../declarations/interfaces/character-sheet-interfaces';
-import { isCharacterSheetData } from '../../../utils/typePredicates';
-import CharacterSheet from '../../CharacterSheet';
 import {
-	iCharacterSheetDataStorage,
-	iDataStorageFactory,
-	iFirestoreCharacterSheetDataStorageProps,
+  iCharacterSheetDataStorage, iDataStorageFactory, iFirestoreCharacterSheetDataStorageProps
 } from '../../../declarations/interfaces/data-storage-interfaces';
 import { createPath } from '../../../utils/createPath';
-import writeCharacterSheetDataToFirestore from '../../../utils/writeCharacterSheetDataToFirestore';
+import { Firestore } from '../../../utils/firebase';
 import readCharacterSheetDataFromFirestore from '../../../utils/readCharacterSheetDataFromFirestore';
+import writeCharacterSheetDataToFirestore from '../../../utils/writeCharacterSheetDataToFirestore';
+import CharacterSheet from '../../CharacterSheet';
 
 export default class FirestoreCharacterSheetDataStorage implements iCharacterSheetDataStorage {
-	protected id: string;
-	protected dataStorageFactory: iDataStorageFactory;
-	protected firestore: Firestore;
-	protected path: string;
-	protected characterSheetData?: iCharacterSheetData;
+  protected characterSheetData?: iCharacterSheetData;
+  protected dataStorageFactory: iDataStorageFactory;
+  protected firestore: Firestore;
+  protected id: string;
 
-	constructor({
+  path: string;
+
+  constructor({
 		id = `default/${Math.random() * 9}`,
 		parentPath = 'characterSheets',
 		dataStorageFactory,
@@ -29,7 +27,8 @@ export default class FirestoreCharacterSheetDataStorage implements iCharacterShe
 		this.dataStorageFactory = dataStorageFactory;
 		this.firestore = firestore;
 	}
-	async assertDataExistsOnDataStorage(): Promise<void> {
+
+  async assertDataExistsOnDataStorage(): Promise<void> {
 		// check character sheet exists
 		const docPromise = this.firestore.doc(this.path).get();
 		const docDataPromise = readCharacterSheetDataFromFirestore(this.firestore, this.path);
@@ -67,7 +66,7 @@ export default class FirestoreCharacterSheetDataStorage implements iCharacterShe
 		}
 	}
 
-	getData(): iCharacterSheetData {
+  getData(): iCharacterSheetData {
 		if (!this.characterSheetData)
 			throw Error('You need to call the method "assertDataExistsOnDataStorage" before getting the data');
 

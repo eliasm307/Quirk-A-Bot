@@ -11,17 +11,17 @@ export default abstract class AbstractBaseTrait<
 	V extends TraitValueTypeUnion,
 	D extends iBaseTraitData<N, V>
 > implements iBaseTrait<N, V, D> {
-  protected dataStorage: iBaseTraitDataStorage<N, V>;
+	protected dataStorage: iBaseTraitDataStorage<N, V>;
 
-  readonly log: iTraitLogReporter;
-  readonly name: N;
-  readonly path: string;
-  readonly toJson: () => D;
+	readonly log: iTraitLogReporter;
+	readonly name: N;
+	readonly path: string;
+	readonly toJson: () => D;
 
-  protected abstract newValueIsValid(newVal: V): boolean;
-  protected abstract preProcessValue(newValueRaw: V): V;
+	protected abstract newValueIsValid(newVal: V): boolean;
+	protected abstract preProcessValue(newValueRaw: V): V;
 
-  constructor({ name, value, toJson, traitDataStorageInitialiser, parentPath }: iBaseTraitProps<N, V, D>) {
+	constructor({ name, value, toJson, traitDataStorageInitialiser, parentPath, logger }: iBaseTraitProps<N, V, D>) {
 		this.name = name;
 
 		// initialise data store
@@ -29,6 +29,7 @@ export default abstract class AbstractBaseTrait<
 			name,
 			defaultValueIfNotDefined: this.preProcessValue(value),
 			parentPath,
+			logger,
 		});
 
 		this.log = this.dataStorage.log;
@@ -41,11 +42,11 @@ export default abstract class AbstractBaseTrait<
 		this.toJson = toJson;
 	}
 
-  public get value() {
+	public get value() {
 		return this.dataStorage.value;
 	}
 
-  public set value(newValRaw: V) {
+	public set value(newValRaw: V) {
 		const newValue = this.preProcessValue(newValRaw);
 
 		// justification should be done in newValueIsValid function
@@ -62,25 +63,11 @@ export default abstract class AbstractBaseTrait<
 
 		// implement property change on data storage
 		this.dataStorage.value = newValue;
-
-		// todo do on data storage
-		// log change
-		// this.logs.log(new UpdateLogEvent({ newValue, oldValue, property: this.name }));
 	}
 
-  cleanUp(): boolean {
+	cleanUp(): boolean {
 		// if the data storage has a cleanup function then call it and return the result,
 		// otherwise return true if no cleanup required
 		return hasCleanUp(this.dataStorage) ? this.dataStorage.cleanUp() : true;
 	}
-
-/*
-	getLogEvents(): iLogEvent[] {
-		return this.getLogReport().logEvents;
-	}
-
-	getLogReport(): iBaseLogReport {
-		return this.log.getReport();
-	}
-	*/
 }

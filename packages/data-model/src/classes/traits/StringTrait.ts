@@ -1,6 +1,4 @@
-import {
-  iBaseStringTrait, iStringTraitData, iStringTraitProps
-} from '../../declarations/interfaces/trait-interfaces';
+import { iBaseStringTrait, iStringTraitData, iStringTraitProps } from '../../declarations/interfaces/trait-interfaces';
 import { TraitNameUnionOrString } from '../../declarations/types';
 import AbstractBaseTrait from './AbstractBaseTrait';
 
@@ -8,21 +6,18 @@ import AbstractBaseTrait from './AbstractBaseTrait';
 export default class StringTrait<N extends TraitNameUnionOrString, V extends string>
 	extends AbstractBaseTrait<N, V, iStringTraitData<N, V>>
 	implements iBaseStringTrait<N, V> {
-  constructor({ name, value, traitDataStorageInitialiser, parentPath }: iStringTraitProps<N, V>) {
+	constructor(props: iStringTraitProps<N, V>) {
 		super({
-			name,
-			value,
-			parentPath,
+			...props,
 			toJson: () => ({
 				name: this.name,
 				value: this.value,
 			}),
-			traitDataStorageInitialiser,
 		});
 	}
 
-  /** Only allows setting non-empty strings */
-  protected newValueIsValid(newVal: string): boolean {
+	/** Only allows setting non-empty strings */
+	protected newValueIsValid(newVal: string): boolean {
 		// assert value is a number
 		if (typeof newVal !== 'string') {
 			throw Error(`Value for trait ${this.name} should be a string, received a "${typeof newVal}`);
@@ -37,7 +32,7 @@ export default class StringTrait<N extends TraitNameUnionOrString, V extends str
 		return true;
 	}
 
-  protected preProcessValue(newValueRaw: V): V {
+	protected preProcessValue(newValueRaw: V): V {
 		// no pre processing for string values
 		return newValueRaw;
 	}

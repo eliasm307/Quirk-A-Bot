@@ -1,17 +1,21 @@
+import { AttributeName, DisciplineName, SkillName, TraitNameUnionOrString, TraitValueTypeUnion } from '../types';
+import { iHasTraitCollectionDataStorageInitialiser, iHasTraitDataStorageInitialiser } from './data-storage-interfaces';
+import { iBaseCollection, iHasCleanUp, iHasParentPath, iHasPath, iHasToJson } from './general-interfaces';
+import { iHasTraitCollectionLogReporter, iTraitCollectionLogger } from './log-interfaces';
 import {
-  AttributeName, DisciplineName, SkillName, TraitNameUnionOrString, TraitValueTypeUnion
-} from '../types';
-import {
-  iHasTraitCollectionDataStorageInitialiser, iHasTraitDataStorageInitialiser
-} from './data-storage-interfaces';
-import {
-  iBaseCollection, iHasCleanUp, iHasParentPath, iHasPath, iHasToJson
-} from './general-interfaces';
-import { iHasTraitCollectionLogReporter } from './log-interfaces';
-import {
-  iAttribute, iAttributeData, iBaseTrait, iBaseTraitData, iCanHaveTraitCollectionLogger,
-  iDiscipline, iDisciplineData, iGeneralTrait, iGeneralTraitData, iSkill, iSkillData,
-  iTouchStoneOrConviction, iTouchStoneOrConvictionData
+	iAttribute,
+	iAttributeData,
+	iBaseTrait,
+	iBaseTraitData,
+	iCanHaveLoggerCreator,
+	iDiscipline,
+	iDisciplineData,
+	iGeneralTrait,
+	iGeneralTraitData,
+	iSkill,
+	iSkillData,
+	iTouchStoneOrConviction,
+	iTouchStoneOrConvictionData,
 } from './trait-interfaces';
 
 // -------------------------------------------------------
@@ -27,7 +31,7 @@ export interface iTraitCollectionDataStorageInitialiserBundle
 export interface iTraitCollectionFactoryMethodProps
 	extends iTraitCollectionDataStorageInitialiserBundle,
 		iHasParentPath,
-		iCanHaveTraitCollectionLogger {}
+		iCanHaveLoggerCreator<iTraitCollectionLogger> {}
 
 // -------------------------------------------------------
 // BASE TRAIT COLLECTION TYPES
@@ -43,7 +47,7 @@ export interface iTraitCollection<
 		iHasTraitCollectionLogReporter,
 		iHasPath,
 		iHasCleanUp {
-  name: string;
+	name: string;
 }
 
 // -------------------------------------------------------
