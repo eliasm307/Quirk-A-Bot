@@ -9,9 +9,9 @@ import {
 } from './general-interfaces';
 import { iHasTraitCollectionLogReporter } from './log-interfaces';
 import {
-  iAttribute, iAttributeData, iBaseTrait, iBaseTraitData, iDiscipline, iDisciplineData,
-  iGeneralTrait, iGeneralTraitData, iSkill, iSkillData, iTouchStoneOrConviction,
-  iTouchStoneOrConvictionData
+  iAttribute, iAttributeData, iBaseTrait, iBaseTraitData, iCanHaveTraitCollectionLogger,
+  iDiscipline, iDisciplineData, iGeneralTrait, iGeneralTraitData, iSkill, iSkillData,
+  iTouchStoneOrConviction, iTouchStoneOrConvictionData
 } from './trait-interfaces';
 
 // -------------------------------------------------------
@@ -26,7 +26,8 @@ export interface iTraitCollectionDataStorageInitialiserBundle
 
 export interface iTraitCollectionFactoryMethodProps
 	extends iTraitCollectionDataStorageInitialiserBundle,
-		iHasParentPath {}
+		iHasParentPath,
+		iCanHaveTraitCollectionLogger {}
 
 // -------------------------------------------------------
 // BASE TRAIT COLLECTION TYPES

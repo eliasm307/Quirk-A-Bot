@@ -68,6 +68,10 @@ export interface iNumberTraitWithCategoryProps<N extends TraitNameUnionOrString,
   categorySelector: (name: N) => C;
 }
 
+// todo relocate
+export interface iCanHaveTraitCollectionLogger {
+  logger: iTraitCollectionLogger | null;
+}
 export interface iTraitCollectionProps<
 	N extends TraitNameUnionOrString,
 	V extends TraitValueTypeUnion,
@@ -75,8 +79,8 @@ export interface iTraitCollectionProps<
 	T extends iBaseTrait<N, V, D>
 > extends iHasTraitInstanceCreator<N, V, D, T>,
 		iTraitCollectionDataStorageInitialiserBundle,
-		iHasParentPath {
-  logger: iTraitCollectionLogger | null;
+		iHasParentPath,
+		iCanHaveTraitCollectionLogger {
   name: string;
 }
 // -------------------------------------------------------
