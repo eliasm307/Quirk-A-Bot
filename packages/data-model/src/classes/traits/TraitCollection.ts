@@ -31,7 +31,7 @@ export default class TraitCollection<
 	path: string;
 
 	/** Collection of logs for trait collection, ie add and remove events only (update events are held in traits) */
-	protected logs: iBaseLogger;
+	protected log: iBaseLogger;
 	#typeName: TraitTypeNameUnion | string = 'Trait Collection';
 
 	constructor(
@@ -47,7 +47,7 @@ export default class TraitCollection<
 		this.name = name;
 		this.path = createPath(parentPath, name); // ? should data storage be responsible for assigning path? maybe rename this to "dataStorageId"
 		this.#traitDataStorageInitialiser = traitDataStorageInitialiser; // todo, reuse this function instead of making a new one each time
-		this.logs = new LogCollection({ sourceName: name, sourceType: 'Trait Collection' });
+		this.log = new LogCollection({ sourceName: name, sourceType: 'Trait Collection' });
 
 		this.#dataStorage = traitCollectionDataStorageInitialiser({
 			instanceCreator,
@@ -55,8 +55,8 @@ export default class TraitCollection<
 			parentPath,
 			traitDataStorageInitialiser: this.#traitDataStorageInitialiser,
 			initialData,
-			onAdd: (props: iAddLogEventProps<V>) => this.logs.log(new AddLogEvent(props)),
-			onDelete: (props: iDeleteLogEventProps<V>) => this.logs.log(new DeleteLogEvent(props)),
+			onAdd: (props: iAddLogEventProps<V>) => this.log.log(new AddLogEvent(props)),
+			onDelete: (props: iDeleteLogEventProps<V>) => this.log.log(new DeleteLogEvent(props)),
 		});
 	}
 	cleanUp(): boolean {
@@ -76,7 +76,7 @@ export default class TraitCollection<
 			.sort((a, b) => Number(a.timeStamp - b.timeStamp));
 	}
 	getLogReports(): iBaseLogReport[] {
-		return [this.logs.getReport(), ...this.toArray().map(e => e.getLogReport())];
+		return [this.log.getReport(), ...this.toArray().map(e => e.getLogReport())];
 	}
 	toJson(): D[] {
 		return this.toArray().map(e => e.toJson());

@@ -1,5 +1,5 @@
 import { LogOperationUnion, LogSourceTypeNameUnion } from './../types';
-import { iHasNewValue, iHasOldValue } from './general-interfaces';
+import { iHasNewValue, iHasOldValue, iHasToString } from './general-interfaces';
 
 // -------------------------------------------------------
 // GENERAL
@@ -59,8 +59,12 @@ export interface iBaseLoggerProps {
 export interface iLogEvent extends iBaseLogEventProps {
 	id: string;
 	operation: LogOperationUnion;
-	describe(): string;
-	timeStamp: bigint; // nanosecond timestamp
+	describe(): string; // ? is this required?
+
+	/** Timestamp to the nanosecond */
+	timeStamp: bigint;
+
+	/** Date the log event occured */
 	date: Date;
 }
 
@@ -107,6 +111,7 @@ export interface iLoggerCollection extends iBaseLogger {
 /** Handles new logs and emitting logs internally */
 export interface iBaseLogger<L extends iBaseLogReport> extends iCanLog, iHasLogEvents, iHasLogReport<L> {
 	sourceType: LogSourceTypeNameUnion;
+	reporter: iBaseLogReporter<L>;
 }
 
 // LOGGERS
@@ -121,11 +126,12 @@ export interface iCharacterSheetLogger
 
 // -------------------------------------------------------
 // LOG REPORTERS
+export interface iBaseLogReporterProps<L extends iBaseLogReport> extends iHasToString {
+	logger: iBaseLogger<L>;
+}
 
 /** Provides a read-only interface to a logger ie a logger proxy, which is provided to clients */
-export interface iBaseLogReporter<L extends iBaseLogReport> extends iHasLogEvents, iHasLogReport<L> {
-	toString(): string;
-}
+export interface iBaseLogReporter<L extends iBaseLogReport> extends iHasLogEvents, iHasLogReport<L>, iHasToString {}
 export interface iTraitLogReporter extends iBaseLogReporter<iTraitLogReport> {}
 export interface iTraitCollectionLogReporter extends iBaseLogReporter<iTraitCollectionLogReport> {}
 export interface iCharacterSheetLogReporter extends iBaseLogReporter<iCharacterSheetLogReport> {}

@@ -14,7 +14,9 @@ export interface iCanHaveSaveAction {
 	saveAction?: () => boolean;
 }
 
-
+export interface iHasToString {
+	toString(): string;
+} 
 
 export interface iHasSaveAction {
 	saveAction: () => boolean;
