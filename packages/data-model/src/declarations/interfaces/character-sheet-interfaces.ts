@@ -10,21 +10,28 @@ import {
 	iAttributeData,
 	iSkillData,
 	iDisciplineData,
-	iTraitData,
 	iCoreNumberTrait,
 	iCoreStringTrait,
-	iNumberTraitData,
 	iCoreNumberTraitData,
 	iCoreStringTraitData,
 } from './trait-interfaces';
-import { ClanName, CoreNumberTraitName, CoreStringTraitName } from '../types';
-import { iToJson } from './general-interfaces';
-import { iDataStorageFactory } from './data-storage-interfaces';
+import { ClanName } from '../types';
+import { iHasToJson, iHasParentPath } from './general-interfaces';
+import { iHasCharacterSheetDataStorage, iHasDataStorageFactory, iHasId } from './data-storage-interfaces';
 
-export interface iCharacterSheetProps {
-	id: string;
-	dataStorageFactory: iDataStorageFactory;
+export interface iHasCharacterSheet {
+	characterSheet: iCharacterSheet;
 }
+export interface iHasCharacterSheetData {
+	characterSheetData: iCharacterSheetData;
+}
+
+export interface iCharacterSheetLoaderProps extends iHasId, iHasDataStorageFactory, iHasParentPath {}
+
+export interface iCharacterSheetProps
+	extends iCharacterSheetLoaderProps,
+		iHasParentPath,
+		iHasCharacterSheetDataStorage {}
 
 /** The basic shape of a charactersheet */
 export interface iBaseCharacterSheet {
@@ -46,9 +53,9 @@ export interface iBaseCharacterSheet {
 
 /** The shape of character sheet as plain JSON data */
 export interface iCharacterSheetData extends iBaseCharacterSheet {
-	name: iCoreStringTraitData<string>;
+	name: iCoreStringTraitData<string>; // ? should this be just a string?
 	clan: iCoreStringTraitData<ClanName>;
-	sire: iCoreStringTraitData<string>;
+	sire: iCoreStringTraitData<string>; // ? should this be just a string?
 	health: iCoreNumberTraitData;
 	willpower: iCoreNumberTraitData;
 	hunger: iCoreNumberTraitData;
@@ -61,10 +68,11 @@ export interface iCharacterSheetData extends iBaseCharacterSheet {
 }
 
 /** The shape of a character sheet object instance */
-export interface iCharacterSheet extends iBaseCharacterSheet, iToJson<iCharacterSheetData>, iLoggerCollection { 
-	name: iCoreStringTrait<string>;
+export interface iCharacterSheet extends iBaseCharacterSheet, iHasToJson<iCharacterSheetData>, iLoggerCollection {
+	path: string;
+	name: iCoreStringTrait<string>; // ? should this be just a string?
 	clan: iCoreStringTrait<ClanName>; // todo allow this to specify using ClanName type union
-	sire: iCoreStringTrait<string>;
+	sire: iCoreStringTrait<string>; // ? should this be just a string?
 	health: iCoreNumberTrait;
 	willpower: iCoreNumberTrait;
 	hunger: iCoreNumberTrait;

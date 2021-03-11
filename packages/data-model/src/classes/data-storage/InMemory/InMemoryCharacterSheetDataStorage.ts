@@ -4,32 +4,22 @@ import {
 	iBaseCharacterSheetDataStorageProps,
 	iCharacterSheetDataStorage,
 	iDataStorageFactory,
-	iHasId,
 } from './../../../declarations/interfaces/data-storage-interfaces';
+
 export default class InMemoryCharacterSheetDataStorage implements iCharacterSheetDataStorage {
 	protected id: string;
 	protected dataStorageFactory: iDataStorageFactory;
+	protected characterSheetData: iCharacterSheetData;
 	constructor({ id = 'DEFAULT', dataStorageFactory }: iBaseCharacterSheetDataStorageProps) {
 		this.id = id;
 		this.dataStorageFactory = dataStorageFactory;
+		this.characterSheetData = CharacterSheet.newDataObject({ id: this.id }); // load data to local variable
 	}
-	exists(   ): boolean {
-		// for in memory, assume any character sheet already exists as this will be always initialised from scratch
-		return true
+	async assertDataExistsOnDataStorage(): Promise<void> {
+		// always uses new data so nothing to assert
+		return;
 	}
-	initialise(  ): boolean {
-		throw new Error( 'Method not implemented because it is not required.' );
-	}
-	/*
-	get instance(): iCharacterSheet {
-		return CharacterSheet.instances.has(this.id)
-			? CharacterSheet.instances.get(this.id)!
-			: new CharacterSheet({
-					characterSheetData: this.getData(),
-					dataStorageFactory: this.dataStorageFactory,
-			  });
-	}*/
 	getData(): iCharacterSheetData {
-		return CharacterSheet.newDataObject({ id: this.id });
+		return this.characterSheetData;
 	}
 }

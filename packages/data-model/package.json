@@ -5,16 +5,19 @@
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"scripts": {
-		"test": "rm -rf dist && yarn build && npx tsc && jest --logHeapUsage",
+		"test": "rm -rf dist && yarn build && npx tsc && jest --colors --logHeapUsage  ",
 		"start": "yarn build && node .",
 		"dev": "yarn build && nodemon .",
-		"build": "yarn && npx tsc"
+		"build": "yarn && npx tsc",
+		"firebase:start-emulators": "firebase emulators:start"
 	},
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
 		"@types/node": "^14.14.22",
-		"fs-extra": "^9.1.0"
+		"firebase": "^8.2.10",
+		"fs-extra": "^9.1.0",
+		"url-exist-sync": "^1.0.2"
 	},
 	"devDependencies": {
 		"@types/fs-extra": "^9.0.6",

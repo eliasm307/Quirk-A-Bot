@@ -1,27 +1,36 @@
-import { AttributeName, SkillName, DisciplineName, CoreStringTraitName, CoreNumberTraitName } from './../types';
+import { AttributeName, SkillName, DisciplineName } from './../types';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../types';
-import { iBaseCollection, iToJson } from './general-interfaces';
-import { iLoggerSingle, iLoggerCollection } from './log-interfaces';
+import { iBaseCollection, iHasToJson, iHasPath, iHasParentPath, iHasCleanUp } from './general-interfaces';
+import { iLoggerCollection } from './log-interfaces';
 import {
 	iAttribute,
 	iBaseTrait,
 	iSkill,
-	iTraitData,
+	iBaseTraitData,
 	iDiscipline,
 	iTouchStoneOrConviction,
 	iAttributeData,
 	iDisciplineData,
 	iSkillData,
 	iTouchStoneOrConvictionData,
-	iBaseStringTrait,
-	iStringTraitData,
-	iCoreStringTraitData,
-	iCoreStringTrait,
-	iCoreNumberTrait,
-	iCoreNumberTraitData,
 	iGeneralTraitData,
 	iGeneralTrait,
 } from './trait-interfaces';
+import { iHasTraitCollectionDataStorageInitialiser, iHasTraitDataStorageInitialiser } from './data-storage-interfaces';
+
+// -------------------------------------------------------
+// GENERAL
+
+export interface iTraitCollectionDataStorageInitialiserBundle
+	extends iHasTraitCollectionDataStorageInitialiser,
+		iHasTraitDataStorageInitialiser {}
+
+// -------------------------------------------------------
+// FACTORY METHOD PROPS
+
+export interface iTraitCollectionFactoryMethodProps
+	extends iTraitCollectionDataStorageInitialiserBundle,
+		iHasParentPath {}
 
 // -------------------------------------------------------
 // BASE TRAIT COLLECTION TYPES
@@ -30,11 +39,13 @@ import {
 export interface iTraitCollection<
 	N extends TraitNameUnionOrString,
 	V extends TraitValueTypeUnion,
-	D extends iTraitData<N, V>,
+	D extends iBaseTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
-	> extends iBaseCollection<N, V, T>,
-	iToJson<D[]>,
-	iLoggerCollection {
+> extends iBaseCollection<N, V, T, iTraitCollection<N, V, D, T>>,
+		iHasToJson<D[]>,
+		iLoggerCollection,
+		iHasPath,
+		iHasCleanUp {
 	name: string;
 }
 

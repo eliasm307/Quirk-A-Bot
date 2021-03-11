@@ -8,6 +8,7 @@ export type SkillName = typeof SKILL_NAMES[number];
 export type DisciplineName = typeof DISCIPLINE_NAMES[number];
 export type CoreNumberTraitName = typeof CORE_NUMBER_TRAITS[number];
 export type CoreStringTraitName = typeof CORE_STRING_TRAITS[number];
+export type CoreTraitName = CoreNumberTraitName | CoreStringTraitName;
 export type TraitValueTypeUnion = number | string;
 export type TraitNameUnion = AttributeName | SkillName | DisciplineName | CoreStringTraitName | CoreNumberTraitName;
 export type TraitNameUnionOrString = TraitNameUnion | string;

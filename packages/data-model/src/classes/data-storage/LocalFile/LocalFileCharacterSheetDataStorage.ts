@@ -1,13 +1,11 @@
 import path from 'path';
-import { iCharacterSheet, iCharacterSheetData } from '../../../declarations/interfaces/character-sheet-interfaces';
+import { iCharacterSheetData } from '../../../declarations/interfaces/character-sheet-interfaces';
 import importDataFromFile from '../../../utils/importDataFromFile';
 import { isCharacterSheetData } from '../../../utils/typePredicates';
 import CharacterSheet from '../../CharacterSheet';
 import {
-	iBaseCharacterSheetDataStorageProps,
 	iCharacterSheetDataStorage,
 	iDataStorageFactory,
-	iHasId,
 	iLocalFileCharacterSheetDataStorageProps,
 } from './../../../declarations/interfaces/data-storage-interfaces';
 import fs from 'fs-extra';
@@ -26,31 +24,21 @@ export default class LocalFileCharacterSheetDataStorage implements iCharacterShe
 		this.id = id;
 		this.dataStorageFactory = dataStorageFactory;
 		this.resolvedBasePath = resolvedBasePath;
-		this.resolvedFilePath = path.resolve(resolvedBasePath, `${this.preProcessId(id)}.json`); 
+		this.resolvedFilePath = path.resolve(resolvedBasePath, `${this.preProcessId(id)}.json`);
+	}
+	async assertDataExistsOnDataStorage(): Promise<void> {
+		const exists = await fs.pathExistsSync(this.resolvedFilePath); // check file path exists
+
+		if (exists) return;
+
+		// if it doesnt exist initialise it as a blank character sheet
+		await saveCharacterSheetToFile(CharacterSheet.newDataObject({ id: this.id }), this.resolvedFilePath);
 	}
 
-	private preProcessId(id: string) {
+	protected preProcessId(id: string) {
 		return id.replace(/\.json$/i, '.json');
 	}
 
-	exists(): boolean {
-		return fs.pathExistsSync(this.resolvedFilePath); // check file path exists
-	}
-	initialise(): boolean {
-		return saveCharacterSheetToFile(CharacterSheet.newDataObject({ id: this.id }), this.resolvedFilePath);
-	}
-	/*
-	get instance(): iCharacterSheet {
-		// check if an instance exists
-		if (CharacterSheet.instances.has(this.resolvedFilePath)) {
-			// console.log(__filename, `Using existing instance for '${resolvedPath}'`);
-			return CharacterSheet.instances.get(this.resolvedFilePath) as CharacterSheet;
-		}
-		return new CharacterSheet({
-			characterSheetData: this.getData(),
-			dataStorageFactory: this.dataStorageFactory,
-		});
-	}*/
 	getData(): iCharacterSheetData {
 		// todo add option to create blank instance at the specified path if it doesnt exist?
 		const data = importDataFromFile(this.resolvedFilePath);

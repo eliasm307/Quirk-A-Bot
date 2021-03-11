@@ -13,39 +13,47 @@ export default abstract class AbstractNumberTrait<N extends TraitNameUnionOrStri
 	min: number;
 	max: number;
 
-	// todo move toJson file to external utility?
-	constructor({ max, name, min = 0, value = min, toJson, traitDataStorageInitialiser }: iBaseNumberTraitProps<N, D>) {
+	constructor({
+		max,
+		name,
+		min = 0,
+		value = min,
+		toJson,
+		traitDataStorageInitialiser,
+		parentPath,
+	}: iBaseNumberTraitProps<N, D>) {
 		super({
 			name,
 			value,
 			toJson,
 			traitDataStorageInitialiser,
+			parentPath,
 		});
 		this.min = min;
 		this.max = max;
 	}
 
 	/** Only allows setting numbers within the allowed range for this trait */
-	newValueIsValid(newVal: number): boolean {
+	newValueIsValid( newVal: number ): boolean {
+		// ? is this required?
 		// assert value is a number
 		if (typeof newVal !== 'number')
 			throw Error(`Value for trait ${this.name} should be a number, received a "${typeof newVal}`);
 
 		// make sure number is within allowable range before change
 		if (newVal < this.min) {
-			console.error(
+			console.log(
 				`Cannot set trait ${this.name} to ${newVal}, this is below the minimum allowed value of ${this.min}`
 			);
 			return false;
 		}
 		if (newVal > this.max) {
-			console.error(
+			console.log(
 				`Cannot set trait ${this.name} to ${newVal}, this is above the maximum allowed value of ${this.max}`
 			);
 			return false;
 		}
 
-		// todo round the value to an integer
 		return true;
 	}
 

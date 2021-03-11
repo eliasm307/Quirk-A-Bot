@@ -1,9 +1,5 @@
-import {
-	iDataStorageFactory,
-	iHasId,
-	iCharacterSheetDataStorage,
-} from './../declarations/interfaces/data-storage-interfaces';
-import { iCharacterSheet } from './../declarations/interfaces/character-sheet-interfaces';
+import { iHasId } from './../declarations/interfaces/data-storage-interfaces';
+import { iCharacterSheet, iCharacterSheetLoaderProps } from './../declarations/interfaces/character-sheet-interfaces';
 import { iLogReport } from './../declarations/interfaces/log-interfaces';
 import {
 	iAttributeTraitCollection,
@@ -11,51 +7,30 @@ import {
 	iDisciplineTraitCollection,
 	iTouchStoneOrConvictionCollection,
 } from './../declarations/interfaces/trait-collection-interfaces';
-import {
-	CoreNumberTraitName,
-	CoreStringTraitName,
-	TraitValueTypeUnion,
-	TraitNameUnionOrString,
-	ClanName,
-} from './../declarations/types';
-import {
-	iBaseTrait,
-	iCoreStringTrait,
-	iCoreNumberTrait,
-	iTraitData,
-} from './../declarations/interfaces/trait-interfaces';
-import { iTouchStoneOrConvictionData } from '../declarations/interfaces/trait-interfaces';
-import path from 'path';
-import { iAttributeData, iDisciplineData, iSkillData } from '../declarations/interfaces/trait-interfaces';
+import { CoreNumberTraitName, CoreStringTraitName, ClanName } from './../declarations/types';
+import { iCoreStringTrait, iCoreNumberTrait, iGeneralTrait } from './../declarations/interfaces/trait-interfaces';
 import { iCharacterSheetData, iCharacterSheetProps } from '../declarations/interfaces/character-sheet-interfaces';
 import { iLogEvent } from '../declarations/interfaces/log-interfaces';
 import TraitFactory from './traits/TraitFactory';
 import StringTrait from './traits/StringTrait';
 import { isCharacterSheetData } from '../utils/typePredicates';
 import NumberTrait from './traits/NumberTrait';
+import { createPath } from '../utils/createPath';
+import { STRING_TRAIT_DEFAULT_VALUE } from '../constants';
 // import saveCharacterSheetToFile from '../utils/saveCharacterSheetToFile';
-
-// ! this shouldnt be here, should be in a file about persistence
-interface iLoadFromFileArgs {
-	filePath?: string;
-	fileName?: string;
-}
 
 // todo split this into smaller pieces
 
-export default class CharacterSheet implements iCharacterSheet {
-	readonly id: string;
+// todo add a method to clean up when a character sheet is not in use anymore, ie detach all event listeners to data storage etc
 
+export default class CharacterSheet implements iCharacterSheet {
+	path: string;
+	readonly id: string;
 	//-------------------------------------
 	// private properties with custom setters and/or getters
 
 	/** Existing instances of this class */
 	protected static instances: Map<string, CharacterSheet> = new Map<string, CharacterSheet>();
-
-	// #private: iModifiablePrimitiveProperties;
-	// #logEvents: iLogCollection = new LogCollection();
-	// #savePath: string; // specified in constructor
-	#dataStorageFactory: iDataStorageFactory;
 
 	//-------------------------------------
 	// NON BASIC PRIMITIVE VARIABLES
@@ -72,33 +47,51 @@ export default class CharacterSheet implements iCharacterSheet {
 	readonly humanity: iCoreNumberTrait;
 	readonly bloodPotency: iCoreNumberTrait;
 
+	// todo move to standalone util
 	// SINGLETON CONSTRUCTOR
-	static load(props: iCharacterSheetProps): CharacterSheet {
+	static async load(props: iCharacterSheetLoaderProps): Promise<CharacterSheet> {
 		const { dataStorageFactory, id } = props;
+
+		const isValidId = (id: string): boolean => {
+			// id should only contain alpha numeric characters
+			return !/\W\-/.test(id);
+		};
+
+		if (!isValidId(id)) {
+			throw Error(
+				`Id "${id}" is not a valid character sheet id. This should only contain alpha numeric characters, underscores, or dashes.`
+			);
+			// return;
+		}
+
 		const preExistingInstance = CharacterSheet.instances.get(id);
 
 		// if an instance has already been created with this id then use that instance
 		if (preExistingInstance) return preExistingInstance;
 
 		// check if a character sheet with this id doesnt exist in the data storage, initialise a blank character sheet if not
-		const characterSheetDataStorage = dataStorageFactory.newCharacterSheetDataStorage({ id });
-		if (!characterSheetDataStorage.exists()) characterSheetDataStorage.initialise(); // todo make this an internal class method named 'assert' or something
+		const characterSheetDataStorage = dataStorageFactory.newCharacterSheetDataStorage(props);
 
-		// return a new character sheet instance as requested
-		// Note a character sheet instance only creates an object that is connected to a character sheet on the data source, it doesnt initialise a new character sheet on the data source
-		return new CharacterSheet(props);
+		try {
+			// makes sure some data exists for the character sheet instance to link to
+			await characterSheetDataStorage.assertDataExistsOnDataStorage();
+
+			// return a new character sheet instance as requested
+			// Note a character sheet instance only creates an object that is connected to a character sheet on the data source, it doesnt initialise a new character sheet on the data source
+			return new CharacterSheet({ ...props, characterSheetDataStorage });
+		} catch (error) {
+			console.error(__filename, { error });
+			throw Error(`Error creating character sheet instance with id ${id}`);
+		}
 	}
 
 	//-------------------------------------
-	// CONSTRUCTOR
-	private constructor({ id, dataStorageFactory }: iCharacterSheetProps) {
-		this.#dataStorageFactory = dataStorageFactory;
+	// PRIVATE CONSTRUCTOR
+	private constructor(props: iCharacterSheetProps) {
+		const { id, dataStorageFactory, parentPath, characterSheetDataStorage } = props;
 
-		const characterSheetDataStorage = dataStorageFactory.newCharacterSheetDataStorage({ id });
-
-		const initialData = characterSheetDataStorage.getData();
-		if (!isCharacterSheetData(initialData))
-			throw Error(`${__filename} data is an object but it is not valid character sheet data, "${initialData}"`);
+		this.id = id;
+		this.path = createPath(parentPath, id);
 
 		const traitDataStorageInitialiser = dataStorageFactory.newTraitDataStorageInitialiser({
 			characterSheet: this,
@@ -108,41 +101,19 @@ export default class CharacterSheet implements iCharacterSheet {
 			characterSheet: this,
 		});
 
-		// todo instantiate factory here and pass id in which is used to instantiate a CharacterSheetDataStorage object which then provides the character sheet data to initialise everything else
-		/*
-		let initialAttributes: iAttributeData[] = [];
-		let initialDisciplines: iDisciplineData[] = [];
-		let initialSkills: iSkillData[] = [];
-		let initialTouchstonesAndConvictions: iTouchStoneOrConvictionData[] = [];
+		const initialData = characterSheetDataStorage.getData();
 
-		// initialise with default values
-		let initialValues: iCharacterSheetData | null = null;
- */
+		if (!isCharacterSheetData(initialData))
+			throw Error(`${__filename} data is not valid character sheet data, "${initialData}"`);
 
-		/*
-		{
-			const { attributes, disciplines, skills, touchstonesAndConvictions } = initialData;
-
-			// initialise using input details
-			this.discordUserId = initialData.discordUserId;
-			initialValues = initialData;
-			initialAttributes = [...attributes];
-			initialDisciplines = [...disciplines];
-			initialSkills = [...skills];
-			initialTouchstonesAndConvictions = [...touchstonesAndConvictions];
-		} else {
-			// console.error(__filename, { sheet });
-			throw Error(`${__filename} data is an object but it is not valid character sheet data, "${initialData}"`);
-		}*/
-
-		this.id = id;
-
+		// ? trait factory could be instantiable so details like the data storage initialisers and parent path could be passed once and not need to be repeated all over
 		// core number traits
 		this.bloodPotency = new NumberTrait<CoreNumberTraitName>({
 			max: 10,
 			name: 'Blood Potency',
 			value: initialData.bloodPotency.value || 0,
 			traitDataStorageInitialiser,
+			parentPath: this.path,
 		});
 
 		this.hunger = new NumberTrait<CoreNumberTraitName>({
@@ -150,6 +121,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			name: 'Hunger',
 			value: initialData.hunger.value || 0,
 			traitDataStorageInitialiser,
+			parentPath: this.path,
 		});
 
 		this.humanity = new NumberTrait<CoreNumberTraitName>({
@@ -157,6 +129,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			name: 'Humanity',
 			value: initialData.humanity.value || 0,
 			traitDataStorageInitialiser,
+			parentPath: this.path,
 		});
 
 		this.health = new NumberTrait<CoreNumberTraitName>({
@@ -164,6 +137,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			name: 'Health',
 			value: initialData.health.value || 0,
 			traitDataStorageInitialiser,
+			parentPath: this.path,
 		});
 
 		this.willpower = new NumberTrait<CoreNumberTraitName>({
@@ -171,109 +145,58 @@ export default class CharacterSheet implements iCharacterSheet {
 			name: 'Willpower',
 			value: initialData.willpower.value || 0,
 			traitDataStorageInitialiser,
+			parentPath: this.path,
 		});
 
 		// core string traits
 		this.name = new StringTrait<CoreStringTraitName, string>({
 			name: 'Name',
-			value: initialData.name.value || 'TBC',
+			value: initialData.name.value || STRING_TRAIT_DEFAULT_VALUE,
 			traitDataStorageInitialiser,
+			parentPath: this.path,
 		});
 
 		this.sire = new StringTrait<CoreStringTraitName, string>({
 			name: 'Sire',
-			value: initialData.sire.value || 'TBC',
+			value: initialData.sire.value || STRING_TRAIT_DEFAULT_VALUE,
 			traitDataStorageInitialiser,
+			parentPath: this.path,
 		});
 
 		this.clan = new StringTrait<CoreStringTraitName, ClanName>({
 			name: 'Clan',
-			value: initialData.clan.value || 'TBC',
+			value: initialData.clan.value || STRING_TRAIT_DEFAULT_VALUE,
 			traitDataStorageInitialiser,
+			parentPath: this.path,
 		});
+
+		// ? what if the trait factory wasnt static and actually took in arguments on instantiation, this would reduce some of the props required when using each factory method and hide some of the ugliness
 
 		// create collections, with initial data where available
 		this.attributes = TraitFactory.newAttributeTraitCollection(
-			{ traitCollectionDataStorageInitialiser, traitDataStorageInitialiser },
+			{ traitCollectionDataStorageInitialiser, traitDataStorageInitialiser, parentPath: this.path },
 			...initialData.attributes
 		);
 
 		this.skills = TraitFactory.newSkillTraitCollection(
-			{ traitCollectionDataStorageInitialiser, traitDataStorageInitialiser },
+			{ traitCollectionDataStorageInitialiser, traitDataStorageInitialiser, parentPath: this.path },
 			...initialData.skills
 		);
 
 		this.disciplines = TraitFactory.newDisciplineTraitCollection(
-			{ traitCollectionDataStorageInitialiser, traitDataStorageInitialiser },
+			{ traitCollectionDataStorageInitialiser, traitDataStorageInitialiser, parentPath: this.path },
 			...initialData.disciplines
 		);
 
 		this.touchstonesAndConvictions = TraitFactory.newTouchstonesAndConvictionTraitCollection(
-			{ traitCollectionDataStorageInitialiser, traitDataStorageInitialiser },
+			{ traitCollectionDataStorageInitialiser, traitDataStorageInitialiser, parentPath: this.path },
 			...initialData.touchstonesAndConvictions
 		);
-
-		// todo this shouldnt be here, should be in a data storage object
-		// try using resolved custom path, otherwise create path in general location using the user id
-		/*
-		this.#savePath =
-			(customSavePath ? path.resolve(customSavePath) : '') ||
-			path.resolve( __dirname, `../data/character-sheets/${ this.discordUserId }.json` );
-		*/
 
 		// ? should this be in a data storage object
 		// record this instance
 		CharacterSheet.instances.set(id, this);
-		// CharacterSheet.instances.set(this.#savePath, this);
-
-		// ? is this required?
-		// if only user id was provided, assume this is a new sheet then do initial save so a persistent file exists
-		// if (typeof sheet === 'number') saveCharacterSheetToFile(this.toJson(), this.#savePath);
 	}
-
-	// todo loading and saving should be done by a persistence management class
-	/**
-	 * Static method to create an instance from an existing character sheet JSON file
-	 */
-	/*
-	public static loadFromFile({ filePath, fileName }: iLoadFromFileArgs): CharacterSheet {
-		if (!filePath && !fileName)
-			throw Error(`${__filename}: filePath and fileName are not defined, cannot load from file`);
-
-		// try using the input filePath resolved, otherwise create path using filename in general location
-		const resolvedPath =
-			(filePath ? path.resolve(filePath) : '') ||
-			path.resolve(__dirname, `../data/character-sheets/${fileName}${/\.json$/i.test(fileName || '') ? `` : `.json`}`);
-
-		// check if an instance exists
-		if (CharacterSheet.instances.has(resolvedPath)) {
-			// console.log(__filename, `Using existing instance for '${resolvedPath}'`);
-			return CharacterSheet.instances.get(resolvedPath) as CharacterSheet;
-		}
-		// console.log(__filename, `No existing instance for '${resolvedPath}', loading new instance`);
-
-		// todo add option to create blank instance at the specified path if it doesnt exist?
-		const data = importDataFromFile(resolvedPath);
-
-		if (!data) throw Error(`Error importing data from ${resolvedPath}`);
-
-		console.log(`Data imported from ${resolvedPath}`, { data });
-
-		if (!isCharacterSheetData(data))
-			throw Error(`Data loaded from path "${resolvedPath}" is not valid character sheet data`);
-
-		// ? is this ok when it specifies local data storage explicitly? this should be implemented in data storage
-		const instance = new CharacterSheet({
-			characterSheetData: data,
-			customSavePath: resolvedPath, dataStorageFactory
-		});
-
-		// save instance reference
-		CharacterSheet.instances.set(resolvedPath, instance);
-
-		// load the character sheet and set the current location as the save path
-		return instance;
-	}*/
 
 	public toJson(): iCharacterSheetData {
 		const data: iCharacterSheetData = {
@@ -301,17 +224,8 @@ export default class CharacterSheet implements iCharacterSheet {
 		return data;
 	}
 
-	// todo delete this and use a csDataStorage object
-	/*
-	private saveToFile( data: iCharacterSheetData, savePath: string ): boolean {
-		// this.#savePath
-		return exportDataToFile(data, savePath);
-	}*/
-	private getAllTraits(): iBaseTrait<
-		TraitNameUnionOrString,
-		TraitValueTypeUnion,
-		iTraitData<TraitNameUnionOrString, TraitValueTypeUnion>
-	>[] {
+	// ? should this be public?
+	private getAllTraits(): iGeneralTrait[] {
 		// todo make this automatic and dynamic
 		return [
 			...this.attributes.toArray(),
@@ -329,30 +243,33 @@ export default class CharacterSheet implements iCharacterSheet {
 		];
 	}
 
-	getLogReport(): iLogReport[] {
+	// todo character sheet shouldnt handle logs, this should be done similar to traits, expose a refernce to the internal logger then attach these methods to it
+	getLogReports(): iLogReport[] {
 		// todo test
 		return this.getAllTraits().map(trait => trait.getLogReport());
 	}
 	getLogEvents(): iLogEvent[] {
 		// combine logs from reports and and sort oldest to newest
-		return this.getLogReport()
+		return this.getLogReports()
 			.reduce((events, report) => [...events, ...report.logEvents], [] as iLogEvent[])
 			.sort((a, b) => {
 				return Number(a.timeStamp - b.timeStamp);
 			});
 	}
 
+	/** Returns a new iCharacterSheetData object with default values */
 	static newDataObject({ id }: iHasId): iCharacterSheetData {
+		// todo move to standalone util
 		return {
-			id: id,
+			id,
 			bloodPotency: { name: 'Blood Potency', value: 0 },
 			health: { name: 'Health', value: 0 },
 			humanity: { name: 'Humanity', value: 0 },
 			hunger: { name: 'Hunger', value: 0 },
 			willpower: { name: 'Willpower', value: 0 },
-			name: { name: 'Name', value: '' },
-			sire: { name: 'Sire', value: '' },
-			clan: { name: 'Clan', value: '' },
+			name: { name: 'Name', value: STRING_TRAIT_DEFAULT_VALUE },
+			sire: { name: 'Sire', value: STRING_TRAIT_DEFAULT_VALUE },
+			clan: { name: 'Clan', value: STRING_TRAIT_DEFAULT_VALUE },
 			attributes: [],
 			disciplines: [],
 			skills: [],
