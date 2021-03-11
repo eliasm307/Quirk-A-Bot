@@ -1,4 +1,5 @@
 import { LogSourceTypeNameUnion } from '../../declarations/types';
+import traitCollectionLoggerToString from '../../utils/traitCollectionLoggerToString';
 import {
 	iTraitCollectionLogReporter,
 	iTraitCollectionLogReport,
@@ -6,16 +7,28 @@ import {
 	iTraitCollectionLogger,
 	iChildLoggerCreatorProps,
 	iTraitLogReport,
+	iBaseLogReporter,
+	iBaseLoggerProps,
 } from './../../declarations/interfaces/log-interfaces';
 import AbstractLogger from './AbstractLogger';
+import LogReporter from './LogReporter';
 import TraitLogger from './TraitLogger';
 export default class TraitCollecitonLogger
 	extends AbstractLogger<iTraitCollectionLogReport>
 	implements iTraitCollectionLogger {
+	readonly reporter: iBaseLogReporter<iTraitCollectionLogReport>;
+	sourceType: LogSourceTypeNameUnion = 'Trait Collection';
+
+	constructor(props: iBaseLoggerProps) {
+		super(props);
+		const toString = () => traitCollectionLoggerToString(this);
+		this.reporter = new LogReporter({ logger: this, toString });
+	}
+
 	createChildTraitLogger(props: iChildLoggerCreatorProps): iTraitLogger {
 		return new TraitLogger({ ...props, parentLogHandler: this.log });
 	}
-	sourceType: LogSourceTypeNameUnion = 'Trait Collection';
+
 	protected childTraitLoggers = new Map<string, iTraitLogger>();
 
 	protected getChildTraitReports(): iTraitLogReport[] {

@@ -3,21 +3,26 @@ import {
 	iBaseLogReport,
 	iBaseLoggerProps,
 	iBaseLogReporter,
+	iChildLoggerCreatorProps,
+	iTraitLogger,
+	iTraitCollectionLogger,
 } from '../../declarations/interfaces/log-interfaces';
 import { iLogEvent } from '../../declarations/interfaces/log-interfaces';
 import {} from '../../declarations/interfaces/trait-interfaces';
 import { LogSourceTypeNameUnion } from '../../declarations/types';
+import TraitCollecitonLogger from './TraitCollectionLogger';
+import TraitLogger from './TraitLogger';
 
 export default abstract class AbstractLogger<L extends iBaseLogReport> implements iBaseLogger<L> {
 	protected sourceName: string;
 	protected parentLogHandler: ((event: iLogEvent) => void) | null;
 	abstract readonly sourceType: LogSourceTypeNameUnion;
 	readonly events: iLogEvent[] = [];
-	abstract get reporter(): iBaseLogReporter<L>;
+	abstract readonly reporter: iBaseLogReporter<L>;
 	abstract get report(): L;
 	constructor({ sourceName, parentLogHandler }: iBaseLoggerProps) {
 		this.sourceName = sourceName;
-		this.parentLogHandler = parentLogHandler; 
+		this.parentLogHandler = parentLogHandler;
 	}
 
 	getLogEvents(): iLogEvent[] {
@@ -29,5 +34,9 @@ export default abstract class AbstractLogger<L extends iBaseLogReport> implement
 
 		// emit log to parent, if handler provided
 		if (this.parentLogHandler) this.parentLogHandler(event);
+	}
+
+	protected createChildTraitCollectionLogger(props: iChildLoggerCreatorProps): iTraitCollectionLogger {
+		return new TraitCollecitonLogger({ ...props, parentLogHandler: this.log });
 	}
 }

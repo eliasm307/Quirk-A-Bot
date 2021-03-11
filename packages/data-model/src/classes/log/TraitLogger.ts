@@ -1,4 +1,5 @@
 import { LogSourceTypeNameUnion } from '../../declarations/types';
+import traitLoggerToString from '../../utils/traitLoggerToString';
 import {
 	iTraitLogReport,
 	iTraitLogger,
@@ -15,10 +16,11 @@ export default class TraitLogger extends AbstractLogger<iTraitLogReport> impleme
 	readonly reporter: iBaseLogReporter<iTraitLogReport>;
 
 	constructor(props: iBaseLoggerProps) {
-    super( props );
-    this.reporter = new LogReporter({logger: this, toString: })
+		super(props);
+		const toString = () => traitLoggerToString(this);
+		this.reporter = new LogReporter({ logger: this, toString });
 	}
- 
+
 	get report(): iTraitLogReport {
 		return {
 			events: [...this.events],

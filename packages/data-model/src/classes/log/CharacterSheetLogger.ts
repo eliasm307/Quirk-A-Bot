@@ -1,6 +1,9 @@
 import { LogSourceTypeNameUnion } from '../../declarations/types';
+import characterSheetLoggerToString from '../../utils/characterSheetLoggerToString';
 import {
+	iBaseLoggerProps,
 	iBaseLogReport,
+	iBaseLogReporter,
 	iCharacterSheetLogger,
 	iCharacterSheetLogReport,
 	iChildLoggerCreatorProps,
@@ -10,23 +13,25 @@ import {
 	iTraitLogReport,
 } from './../../declarations/interfaces/log-interfaces';
 import AbstractLogger from './AbstractLogger';
+import LogReporter from './LogReporter';
 import TraitCollecitonLogger from './TraitCollectionLogger';
 import TraitLogger from './TraitLogger';
 
 export default class CharacterSheetLogger
 	extends AbstractLogger<iCharacterSheetLogReport>
 	implements iCharacterSheetLogger {
+	readonly reporter: iBaseLogReporter<iCharacterSheetLogReport>;
 	sourceType: LogSourceTypeNameUnion = 'Character Sheet';
 	protected childTraitLoggers = new Map<string, iTraitLogger>();
-
 	protected childTraitCollectionLoggers = new Map<string, iTraitCollectionLogger>();
 
-	createChildTraitLogger(props: iChildLoggerCreatorProps): iTraitLogger {
-		return new TraitLogger({ ...props, parentLogHandler: this.log });
+	constructor(props: iBaseLoggerProps) {
+		super(props);
+		const toString = () => characterSheetLoggerToString(this);
+		this.reporter = new LogReporter({ logger: this, toString });
 	}
-	createChildTraitCollectionLogger(props: iChildLoggerCreatorProps): iTraitCollectionLogger {
-		return new TraitCollecitonLogger({ ...props, parentLogHandler: this.log });
-	}
+
+
 	protected getChildTraitReports(): iTraitLogReport[] {
 		return Array.from(this.childTraitLoggers.values()).map(logger => logger.report);
 	}
