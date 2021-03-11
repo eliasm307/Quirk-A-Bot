@@ -1,7 +1,7 @@
 import { LogSourceTypeNameUnion } from '../../declarations/types';
+import createChildTraitLogger from '../../utils/createChildTraitLogger';
 import traitCollectionLoggerToString from '../../utils/traitCollectionLoggerToString';
 import {
-	iTraitCollectionLogReporter,
 	iTraitCollectionLogReport,
 	iTraitLogger,
 	iTraitCollectionLogger,
@@ -12,7 +12,7 @@ import {
 } from './../../declarations/interfaces/log-interfaces';
 import AbstractLogger from './AbstractLogger';
 import LogReporter from './LogReporter';
-import TraitLogger from './TraitLogger';
+
 export default class TraitCollecitonLogger
 	extends AbstractLogger<iTraitCollectionLogReport>
 	implements iTraitCollectionLogger {
@@ -22,13 +22,12 @@ export default class TraitCollecitonLogger
 	constructor(props: iBaseLoggerProps) {
 		super(props);
 		const toString = () => traitCollectionLoggerToString(this);
-		this.reporter = new LogReporter({ logger: this, toString });
+		this.reporter = new LogReporter({ logger: this, describe: toString });
 	}
 
-	createChildTraitLogger(props: iChildLoggerCreatorProps): iTraitLogger {
-		return new TraitLogger({ ...props, parentLogHandler: this.log });
+	createChildTraitLogger({ sourceName }: iChildLoggerCreatorProps): iTraitLogger {
+		return createChildTraitLogger(sourceName, this.childTraitLoggers, this.log);
 	}
-
 	protected childTraitLoggers = new Map<string, iTraitLogger>();
 
 	protected getChildTraitReports(): iTraitLogReport[] {

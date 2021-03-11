@@ -1,5 +1,7 @@
 import { LogSourceTypeNameUnion } from '../../declarations/types';
 import characterSheetLoggerToString from '../../utils/characterSheetLoggerToString';
+import createChildTraitCollectionLogger from '../../utils/createChildTraitCollectionLogger';
+import createChildTraitLogger from '../../utils/createChildTraitLogger';
 import {
 	iBaseLoggerProps,
 	iBaseLogReport,
@@ -28,9 +30,14 @@ export default class CharacterSheetLogger
 	constructor(props: iBaseLoggerProps) {
 		super(props);
 		const toString = () => characterSheetLoggerToString(this);
-		this.reporter = new LogReporter({ logger: this, toString });
+		this.reporter = new LogReporter({ logger: this, describe: toString });
 	}
-
+	createChildTraitCollectionLogger({ sourceName }: iChildLoggerCreatorProps): iTraitCollectionLogger {
+		return createChildTraitCollectionLogger(sourceName, this.childTraitCollectionLoggers, this.log);
+	}
+	createChildTraitLogger({ sourceName }: iChildLoggerCreatorProps): iTraitLogger {
+		return createChildTraitLogger(sourceName, this.childTraitLoggers, this.log);
+	}
 
 	protected getChildTraitReports(): iTraitLogReport[] {
 		return Array.from(this.childTraitLoggers.values()).map(logger => logger.report);

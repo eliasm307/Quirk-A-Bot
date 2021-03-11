@@ -2,7 +2,6 @@ import { iHasOldValue, iHasNewValue } from '../../declarations/interfaces/genera
 import { iBaseLogEventProps, iLogEvent, iUpdateLogEventProps } from '../../declarations/interfaces/log-interfaces';
 import BaseLogEvent from './BaseLogEvent';
 
-
 export default class UpdateLogEvent<T> extends BaseLogEvent<T> implements iLogEvent, iHasOldValue<T>, iHasNewValue<T> {
 	oldValue: T;
 	newValue: T;

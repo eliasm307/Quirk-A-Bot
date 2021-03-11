@@ -7,11 +7,13 @@ import {
 } from './../../declarations/interfaces/log-interfaces';
 export default class LogReporter<L extends iBaseLogReport> implements iBaseLogReporter<L> {
 	#logger: iBaseLogger<L>;
-	constructor({ logger, toString }: iBaseLogReporterProps<L>) {
+	describe: () => string;
+
+	constructor({ logger, describe: toString }: iBaseLogReporterProps<L>) {
 		this.#logger = logger;
-		this.toString = toString;
+		this.describe = toString;
 	}
-	toString: () => string;
+
 	get events(): iLogEvent[] {
 		return [...this.#logger.events];
 	}

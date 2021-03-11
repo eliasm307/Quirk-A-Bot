@@ -14,8 +14,8 @@ export interface iCanHaveSaveAction {
 	saveAction?: () => boolean;
 }
 
-export interface iHasToString {
-	toString(): string;
+export interface iCanDescribe {
+	describe(): string;
 } 
 
 export interface iHasSaveAction {

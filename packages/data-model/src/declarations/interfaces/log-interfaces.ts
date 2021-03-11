@@ -1,5 +1,5 @@
 import { LogOperationUnion, LogSourceTypeNameUnion } from './../types';
-import { iHasNewValue, iHasOldValue, iHasToString } from './general-interfaces';
+import { iHasNewValue, iHasOldValue, iCanDescribe } from './general-interfaces';
 
 // -------------------------------------------------------
 // GENERAL
@@ -126,12 +126,12 @@ export interface iCharacterSheetLogger
 
 // -------------------------------------------------------
 // LOG REPORTERS
-export interface iBaseLogReporterProps<L extends iBaseLogReport> extends iHasToString {
+export interface iBaseLogReporterProps<L extends iBaseLogReport> extends iCanDescribe {
 	logger: iBaseLogger<L>;
 }
 
 /** Provides a read-only interface to a logger ie a logger proxy, which is provided to clients */
-export interface iBaseLogReporter<L extends iBaseLogReport> extends iHasLogEvents, iHasLogReport<L>, iHasToString {}
+export interface iBaseLogReporter<L extends iBaseLogReport> extends iHasLogEvents, iHasLogReport<L>, iCanDescribe {}
 export interface iTraitLogReporter extends iBaseLogReporter<iTraitLogReport> {}
 export interface iTraitCollectionLogReporter extends iBaseLogReporter<iTraitCollectionLogReport> {}
 export interface iCharacterSheetLogReporter extends iBaseLogReporter<iCharacterSheetLogReport> {}

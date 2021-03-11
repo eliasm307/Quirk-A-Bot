@@ -36,7 +36,5 @@ export default abstract class AbstractLogger<L extends iBaseLogReport> implement
 		if (this.parentLogHandler) this.parentLogHandler(event);
 	}
 
-	protected createChildTraitCollectionLogger(props: iChildLoggerCreatorProps): iTraitCollectionLogger {
-		return new TraitCollecitonLogger({ ...props, parentLogHandler: this.log });
-	}
+	 
 }

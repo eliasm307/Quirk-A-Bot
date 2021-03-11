@@ -18,7 +18,7 @@ export default class TraitLogger extends AbstractLogger<iTraitLogReport> impleme
 	constructor(props: iBaseLoggerProps) {
 		super(props);
 		const toString = () => traitLoggerToString(this);
-		this.reporter = new LogReporter({ logger: this, toString });
+		this.reporter = new LogReporter({ logger: this, describe: toString });
 	}
 
 	get report(): iTraitLogReport {

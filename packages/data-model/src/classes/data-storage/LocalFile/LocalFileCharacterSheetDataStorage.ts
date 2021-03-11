@@ -1,22 +1,22 @@
+import fs from 'fs-extra';
 import path from 'path';
+
 import { iCharacterSheetData } from '../../../declarations/interfaces/character-sheet-interfaces';
+import {
+  iCharacterSheetDataStorage, iDataStorageFactory, iLocalFileCharacterSheetDataStorageProps
+} from '../../../declarations/interfaces/data-storage-interfaces';
 import importDataFromFile from '../../../utils/importDataFromFile';
+import saveCharacterSheetToFile from '../../../utils/saveCharacterSheetToFile';
 import { isCharacterSheetData } from '../../../utils/typePredicates';
 import CharacterSheet from '../../CharacterSheet';
-import {
-	iCharacterSheetDataStorage,
-	iDataStorageFactory,
-	iLocalFileCharacterSheetDataStorageProps,
-} from './../../../declarations/interfaces/data-storage-interfaces';
-import fs from 'fs-extra';
-import saveCharacterSheetToFile from '../../../utils/saveCharacterSheetToFile';
 
 export default class LocalFileCharacterSheetDataStorage implements iCharacterSheetDataStorage {
-	protected id: string;
-	protected resolvedFilePath: string;
-	protected dataStorageFactory: iDataStorageFactory;
-	protected resolvedBasePath: string;
-	constructor({
+  protected dataStorageFactory: iDataStorageFactory;
+  protected id: string;
+  protected resolvedBasePath: string;
+  protected resolvedFilePath: string;
+
+  constructor({
 		id = `default/${Math.random() * 9}`,
 		dataStorageFactory,
 		resolvedBasePath,
@@ -26,7 +26,8 @@ export default class LocalFileCharacterSheetDataStorage implements iCharacterShe
 		this.resolvedBasePath = resolvedBasePath;
 		this.resolvedFilePath = path.resolve(resolvedBasePath, `${this.preProcessId(id)}.json`);
 	}
-	async assertDataExistsOnDataStorage(): Promise<void> {
+
+  async assertDataExistsOnDataStorage(): Promise<void> {
 		const exists = await fs.pathExistsSync(this.resolvedFilePath); // check file path exists
 
 		if (exists) return;
@@ -35,11 +36,7 @@ export default class LocalFileCharacterSheetDataStorage implements iCharacterShe
 		await saveCharacterSheetToFile(CharacterSheet.newDataObject({ id: this.id }), this.resolvedFilePath);
 	}
 
-	protected preProcessId(id: string) {
-		return id.replace(/\.json$/i, '.json');
-	}
-
-	getData(): iCharacterSheetData {
+  getData(): iCharacterSheetData {
 		// todo add option to create blank instance at the specified path if it doesnt exist?
 		const data = importDataFromFile(this.resolvedFilePath);
 
@@ -51,5 +48,9 @@ export default class LocalFileCharacterSheetDataStorage implements iCharacterShe
 			throw Error(`Data loaded from path "${this.resolvedFilePath}" is not valid character sheet data`);
 
 		return data;
+	}
+
+  protected preProcessId(id: string) {
+		return id.replace(/\.json$/i, '.json');
 	}
 }

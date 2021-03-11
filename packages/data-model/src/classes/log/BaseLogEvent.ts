@@ -1,5 +1,5 @@
-import { LogOperationUnion } from '../../declarations/types';
 import { iBaseLogEventProps, iLogEvent } from '../../declarations/interfaces/log-interfaces';
+import { LogOperationUnion } from '../../declarations/types';
 import generateId from '../../utils/generateId';
 import { getDateWithNanoSecondTimeStamp } from '../../utils/getNanoSecondTime';
 
@@ -9,12 +9,12 @@ interface iProps extends iBaseLogEventProps {
 }
 
 export default abstract class BaseLogEvent<T> implements iLogEvent {
-	id: string;
-	operation: LogOperationUnion;
+	public date: Date;
 	description?: string;
-	property: string;
-	timeStamp: bigint;
-	date: Date;
+	public id: string;
+	public operation: LogOperationUnion;
+	public property: string;
+	public timeStamp: bigint;
 
 	constructor({ operation, description, property }: iProps) {
 		this.id = generateId();
@@ -27,5 +27,6 @@ export default abstract class BaseLogEvent<T> implements iLogEvent {
 		this.date = date;
 		this.timeStamp = nanoSecondTimeStamp;
 	}
-	abstract describe(): string;
+
+	public abstract describe(): string;
 }
