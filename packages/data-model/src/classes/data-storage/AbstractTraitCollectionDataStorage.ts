@@ -59,8 +59,10 @@ export default abstract class AbstractTraitCollectionDataStorage<
 		// create path // ? should this be done by the concrete implementations?
 		this.path = createPath(parentPath, name);
 
-		// use logger if provided, otherwise create a new one
-		this.logger = logger || new TraitCollecitonLogger({ sourceName: name, parentLogHandler: null });
+		// use logger if provided, otherwise create a local one
+		this.logger = logger
+			? logger({ sourceName: name })
+			: new TraitCollecitonLogger({ sourceName: name, parentLogHandler: null });
 
 		// expose logger reporter
 		this.log = this.logger.reporter;

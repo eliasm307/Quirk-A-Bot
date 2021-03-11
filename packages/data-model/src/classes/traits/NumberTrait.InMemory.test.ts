@@ -14,6 +14,7 @@ describe('Number trait with in memory data storage', () => {
 		value: 5.2,
 		traitDataStorageInitialiser,
 		parentPath,
+		logger: null,
 	});
 	const trait2 = new NumberTrait<string>({
 		max: 10,
@@ -21,6 +22,7 @@ describe('Number trait with in memory data storage', () => {
 		value: 5.8,
 		traitDataStorageInitialiser,
 		parentPath,
+		logger: null,
 	});
 	it('rounds values on instantiation', () => {
 		expect(trait1.value).toEqual(5);
@@ -45,6 +47,6 @@ describe('Number trait with in memory data storage', () => {
 	});
 
 	it('logs modifications', () => {
-		expect(trait1.getLogEvents().length).toEqual(3);
+		expect(trait1.log.events.length).toEqual(3);
 	});
 });

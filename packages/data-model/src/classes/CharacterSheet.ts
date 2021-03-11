@@ -243,7 +243,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			return new CharacterSheet({ ...props, characterSheetDataStorage });
 		} catch (error) {
 			console.error(__filename, { error });
-			throw Error(`Error creating character sheet instance with id ${id}`);
+			throw Error(`Error creating character sheet instance with id "${id}", \nMessage: ${error}`);
 		}
 	}
 

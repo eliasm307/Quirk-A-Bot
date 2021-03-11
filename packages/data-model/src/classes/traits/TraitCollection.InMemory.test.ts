@@ -15,6 +15,7 @@ const traitCollectionFactoryMethodProps: iTraitCollectionFactoryMethodProps = {
 	traitCollectionDataStorageInitialiser: dataStorageFactory.newTraitCollectionDataStorageInitialiser(),
 	traitDataStorageInitialiser: dataStorageFactory.newTraitDataStorageInitialiser(),
 	parentPath: rootCollectionPath,
+	logger: null,
 };
 
 describe('TraitCollection CRUD functionality', () => {
@@ -75,7 +76,7 @@ describe('TraitCollection logging functionality', () => {
 
 	it('can produce log reports for all traits', () => {
 		expect(tc.size).toEqual(4);
-		expect(tc.getLogReports().length).toEqual(4);
+		expect(tc.log.report.traitLogReports.length).toEqual(4);
 	});
 
 	// delete an existing item
@@ -84,7 +85,7 @@ describe('TraitCollection logging functionality', () => {
 	// delete non-existing items, should not generate log items
 	tc.delete('Wits').delete('Composure').delete('Dexterity');
 
-	const log = tc.getLogEvents();
+	const log = tc.log.events;
 
 	it('can count log items', () => {
 		expect(log.length).toEqual(5); // ! when wits is deleted, this also deletes its logs,

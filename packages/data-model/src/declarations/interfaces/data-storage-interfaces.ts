@@ -45,7 +45,7 @@ export interface iHasFirestore {
 // Note the props should be for initialising the data storage
 
 export interface iBaseDataStorageFactoryProps {
-	logger: iCharacterSheetLogger | null;
+	// logger: iCharacterSheetLogger | null;
 }
 
 export interface iInMemoryFileDataStorageFactoryProps extends iBaseDataStorageFactoryProps {}
