@@ -14,4 +14,4 @@ export type TraitNameUnion = AttributeName | SkillName | DisciplineName | CoreSt
 export type TraitNameUnionOrString = TraitNameUnion | string;
 export type TraitTypeNameUnion = typeof TRAIT_TYPES[number];
 export type LogOperationUnion = 'ADD' | 'UPDATE' | 'DELETE';
-export type LogSourceTypeNameUnion = 'Trait' | 'Trait Collection';
+export type LogSourceTypeNameUnion = 'Trait' | 'Trait Collection' | 'Character Sheet';
