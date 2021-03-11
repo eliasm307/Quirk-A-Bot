@@ -1,23 +1,25 @@
-import { iBaseTraitData } from './../../declarations/interfaces/trait-interfaces';
-import { TraitNameUnionOrString } from './../../declarations/types';
-import { TraitValueTypeUnion } from '../../declarations/types';
 import {
-	iBaseTraitDataStorageProps,
-	iBaseTraitDataStorage,
+  iBaseTraitDataStorage, iBaseTraitDataStorageProps
 } from '../../declarations/interfaces/data-storage-interfaces';
-import { iTraitLogger } from '../../declarations/interfaces/log-interfaces';
+import { iTraitLogReporter } from '../../declarations/interfaces/log-interfaces';
+import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../declarations/types';
 
 interface iPrivateModifiableProperties<V extends TraitValueTypeUnion> {
-	value: V;
+  value: V;
 }
 
 export default abstract class AbstractTraitDataStorage<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
 	implements iBaseTraitDataStorage<N, V> {
-	name: N;
-	log: iTraitLogger;
-	protected private: iPrivateModifiableProperties<V>;
+  protected private: iPrivateModifiableProperties<V>;
 
-	constructor(props: iBaseTraitDataStorageProps<N, V>) {
+  log: iTraitLogReporter;
+  name: N;
+  // the specific data storage defines this
+  abstract path: string;
+
+  protected abstract afterValueChange(oldValue: V, newValue: V): void;
+
+  constructor(props: iBaseTraitDataStorageProps<N, V>) {
 		const { name, defaultValueIfNotDefined } = props;
 		this.name = name;
 		this.private = {
@@ -28,14 +30,11 @@ export default abstract class AbstractTraitDataStorage<N extends TraitNameUnionO
 	 this.log = new TraitLogger({ sourceType: 'Trait', sourceName: this.name });
 	}
 
-	// the specific data storage defines this
-	abstract path: string;
-
-	get value(): V {
+  get value(): V {
 		return this.private.value;
 	}
 
-	set value(newValue: V) {
+  set value(newValue: V) {
 		// get current value as old value
 		const oldValue = this.private.value;
 
@@ -48,6 +47,4 @@ export default abstract class AbstractTraitDataStorage<N extends TraitNameUnionO
 		// run any custom logic after internal value is changed
 		this.afterValueChange(oldValue, newValue);
 	}
-
-	protected abstract afterValueChange(oldValue: V, newValue: V): void;
 }

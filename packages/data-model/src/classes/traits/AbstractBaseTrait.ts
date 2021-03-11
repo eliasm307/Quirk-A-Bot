@@ -1,16 +1,9 @@
-import {
-	iBaseLogger,
-	iBaseLogReport,
-	iTraitLogger,
-	iTraitLogReporter,
-} from './../../declarations/interfaces/log-interfaces';
-import { iLogEvent } from '../../declarations/interfaces/log-interfaces';
-import { iBaseTrait } from '../../declarations/interfaces/trait-interfaces';
-import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../declarations/types';
-import { iBaseTraitProps, iBaseTraitData } from '../../declarations/interfaces/trait-interfaces';
-import LogCollection from '../log/AbstractLogger';
-import UpdateLogEvent from '../log/UpdateLogEvent';
 import { iBaseTraitDataStorage } from '../../declarations/interfaces/data-storage-interfaces';
+import { iTraitLogReporter } from '../../declarations/interfaces/log-interfaces';
+import {
+  iBaseTrait, iBaseTraitData, iBaseTraitProps
+} from '../../declarations/interfaces/trait-interfaces';
+import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../declarations/types';
 import { hasCleanUp } from '../../utils/typePredicates';
 
 export default abstract class AbstractBaseTrait<
@@ -18,16 +11,17 @@ export default abstract class AbstractBaseTrait<
 	V extends TraitValueTypeUnion,
 	D extends iBaseTraitData<N, V>
 > implements iBaseTrait<N, V, D> {
-	protected dataStorage: iBaseTraitDataStorage<N, V>; 
-	readonly log: iTraitLogReporter;
-	readonly toJson: () => D;
-	readonly path: string;
-	readonly name: N;
+  protected dataStorage: iBaseTraitDataStorage<N, V>;
 
-	protected abstract newValueIsValid(newVal: V): boolean;
-	protected abstract preProcessValue(newValueRaw: V): V;
+  readonly log: iTraitLogReporter;
+  readonly name: N;
+  readonly path: string;
+  readonly toJson: () => D;
 
-	constructor({ name, value, toJson, traitDataStorageInitialiser, parentPath }: iBaseTraitProps<N, V, D>) {
+  protected abstract newValueIsValid(newVal: V): boolean;
+  protected abstract preProcessValue(newValueRaw: V): V;
+
+  constructor({ name, value, toJson, traitDataStorageInitialiser, parentPath }: iBaseTraitProps<N, V, D>) {
 		this.name = name;
 
 		// initialise data store
@@ -45,17 +39,13 @@ export default abstract class AbstractBaseTrait<
 		// make sure toJson is provided
 		if (!toJson) throw Error(`${__filename} toJson function not defined`);
 		this.toJson = toJson;
-
-		
 	}
 
-	cleanUp(): boolean {
-		// if the data storage has a cleanup function then call it and return the result,
-		// otherwise return true if no cleanup required
-		return hasCleanUp(this.dataStorage) ? this.dataStorage.cleanUp() : true;
+  public get value() {
+		return this.dataStorage.value;
 	}
 
-	public set value(newValRaw: V) {
+  public set value(newValRaw: V) {
 		const newValue = this.preProcessValue(newValRaw);
 
 		// justification should be done in newValueIsValid function
@@ -77,11 +67,14 @@ export default abstract class AbstractBaseTrait<
 		// log change
 		// this.logs.log(new UpdateLogEvent({ newValue, oldValue, property: this.name }));
 	}
-	public get value() {
-		return this.dataStorage.value;
+
+  cleanUp(): boolean {
+		// if the data storage has a cleanup function then call it and return the result,
+		// otherwise return true if no cleanup required
+		return hasCleanUp(this.dataStorage) ? this.dataStorage.cleanUp() : true;
 	}
 
-	/*
+/*
 	getLogEvents(): iLogEvent[] {
 		return this.getLogReport().logEvents;
 	}

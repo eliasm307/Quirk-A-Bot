@@ -1,16 +1,14 @@
-import { Firestore } from './../../utils/firebase';
-import { iBaseCollection, iHasToJson, iHasParentPath, iHasPath, iHasCleanUp } from './general-interfaces';
-import { iCharacterSheet, iCharacterSheetData, iHasCharacterSheet } from './character-sheet-interfaces';
-import { TraitNameUnionOrString, TraitValueTypeUnion } from './../types';
-import { iBaseTrait, iHasTraitInstanceCreator, iBaseTraitData } from './trait-interfaces';
+import { Firestore } from '../../utils/firebase';
+import { TraitNameUnionOrString, TraitValueTypeUnion } from '../types';
 import {
-	iAddLogEventProps,
-	iDeleteLogEventProps,
-	iHasLogReporter,
-	iTraitCollectionLogger,
-	iCharacterSheetLogger,
-	iTraitLogger,
+  iCharacterSheet, iCharacterSheetData, iHasCharacterSheet
+} from './character-sheet-interfaces';
+import { iBaseCollection, iHasParentPath, iHasPath, iHasToJson } from './general-interfaces';
+import {
+  iAddLogEventProps, iDeleteLogEventProps, iHasCharacterSheetLogReporter,
+  iHasTraitCollectionLogReporter, iHasTraitLogReporter
 } from './log-interfaces';
+import { iBaseTrait, iBaseTraitData, iHasTraitInstanceCreator } from './trait-interfaces';
 
 // todo split this up
 
@@ -18,25 +16,25 @@ import {
 // GENERAL
 
 export interface iHasDataStorageFactory {
-	dataStorageFactory: iDataStorageFactory;
+  dataStorageFactory: iDataStorageFactory;
 }
 
 export interface iHasCharacterSheetDataStorage {
-	characterSheetDataStorage: iCharacterSheetDataStorage;
+  characterSheetDataStorage: iCharacterSheetDataStorage;
 }
 
 export interface iHasId {
-	id: string;
+  id: string;
 }
 export interface iCanHaveId {
-	id?: string;
+  id?: string;
 }
 export interface iHasResolvedBasePath {
-	resolvedBasePath: string;
+  resolvedBasePath: string;
 }
 
 export interface iHasFirestore {
-	firestore: Firestore;
+  firestore: Firestore;
 }
 
 // -------------------------------------------------------
@@ -68,8 +66,8 @@ export interface iBaseCharacterSheetDataStorageFactoryMethodProps extends iHasId
 
 export interface iBaseTraitDataStorageProps<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
 	extends iHasParentPath {
-	name: N;
-	defaultValueIfNotDefined: V;
+  defaultValueIfNotDefined: V;
+  name: N;
 }
 
 export interface iInMemoryTraitDataStorageProps<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
@@ -95,10 +93,10 @@ export interface iBaseTraitCollectionDataStorageProps<
 > extends iHasTraitInstanceCreator<N, V, D, T>,
 		iHasTraitDataStorageInitialiser,
 		iHasParentPath {
-	initialData?: D[];
-	name: string;
-	onAdd: (props: iAddLogEventProps<V>) => void;
-	onDelete: (props: iDeleteLogEventProps<V>) => void;
+  initialData?: D[];
+  name: string;
+  onAdd: (props: iAddLogEventProps<V>) => void;
+  onDelete: (props: iDeleteLogEventProps<V>) => void;
 }
 
 export interface iLocalFileTraitCollectionDataStorageProps<
@@ -108,7 +106,7 @@ export interface iLocalFileTraitCollectionDataStorageProps<
 	T extends iBaseTrait<N, V, D>
 > extends iBaseTraitCollectionDataStorageProps<N, V, D, T>,
 		iHasResolvedBasePath {
-	characterSheet: iCharacterSheet;
+  characterSheet: iCharacterSheet;
 }
 export interface iFirestoreTraitCollectionDataStorageProps<
 	N extends TraitNameUnionOrString,
@@ -132,7 +130,7 @@ export interface iFirestoreCharacterSheetDataStorageProps extends iBaseCharacter
 export interface iBaseTraitDataStorage<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
 	extends iBaseTraitData<N, V>,
 		iHasPath,
-		iHasLogReporter<iTraitLogger> {}
+		iHasTraitLogReporter {}
 
 export interface iTraitCollectionDataStorage<
 	N extends TraitNameUnionOrString,
@@ -141,20 +139,19 @@ export interface iTraitCollectionDataStorage<
 	T extends iBaseTrait<N, V, D>
 > extends iBaseCollection<N, V, T, iTraitCollectionDataStorage<N, V, D, T>>,
 		iHasToJson<D[]>,
-		iHasLogReporter<iTraitCollectionLogger>,
+		iHasTraitCollectionLogReporter,
 		iHasPath {
-	name: string;
+  name: string;
 }
 
 /** Represents character sheet data in a data store */
-export interface iCharacterSheetDataStorage extends iHasPath, iHasLogReporter<iCharacterSheetLogger> {
-	/** Returns the character sheet data from the data storage */
-	getData(): iCharacterSheetData;
+export interface iCharacterSheetDataStorage extends iHasPath, iHasCharacterSheetLogReporter {
+  /** Makes sure that a character sheet with the given id actually exists in the given data storage, otherwise it creates it with default values */
+  assertDataExistsOnDataStorage(): Promise<void>;
+  /** Returns the character sheet data from the data storage */
+  getData(): iCharacterSheetData;
 
-	/** Makes sure that a character sheet with the given id actually exists in the given data storage, otherwise it creates it with default values */
-	assertDataExistsOnDataStorage(): Promise<void>;
-
-	/** Tests if a character sheet with the given id actually exists in the given data storage */
+/** Tests if a character sheet with the given id actually exists in the given data storage */
 	// exists(): Promise<boolean>;
 
 	/** Creates new character sheet data for the given id, with default values */
@@ -165,14 +162,8 @@ export interface iCharacterSheetDataStorage extends iHasPath, iHasLogReporter<iC
 // DATA STORAGE FACTORY
 
 export interface iDataStorageFactory {
-	// NOTE the factory props just define what will be available, the specific factories dont need to require any of the given props
-	newTraitDataStorageInitialiser(
-		props: iTraitDataStorageInitialiserFactoryProps
-	): <N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(
-		props: iBaseTraitDataStorageProps<N, V>
-	) => iBaseTraitDataStorage<N, V>;
-
-	newTraitCollectionDataStorageInitialiser(
+  newCharacterSheetDataStorage(props: iCharacterSheetDataStorageFactoryProps): iCharacterSheetDataStorage;
+  newTraitCollectionDataStorageInitialiser(
 		props: iTraitCollectionDataStorageInitialiserFactoryProps
 	): <
 		N extends TraitNameUnionOrString,
@@ -182,21 +173,25 @@ export interface iDataStorageFactory {
 	>(
 		props: iBaseTraitCollectionDataStorageProps<N, V, D, T>
 	) => iTraitCollectionDataStorage<N, V, D, T>;
-
-	newCharacterSheetDataStorage(props: iCharacterSheetDataStorageFactoryProps): iCharacterSheetDataStorage;
+  // NOTE the factory props just define what will be available, the specific factories dont need to require any of the given props
+  newTraitDataStorageInitialiser(
+		props: iTraitDataStorageInitialiserFactoryProps
+	): <N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(
+		props: iBaseTraitDataStorageProps<N, V>
+	) => iBaseTraitDataStorage<N, V>;
 }
 
 // -------------------------------------------------------
 // INITIALISERS
 
 export interface iHasTraitDataStorageInitialiser {
-	traitDataStorageInitialiser<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(
+  traitDataStorageInitialiser<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(
 		props: iBaseTraitDataStorageProps<N, V>
 	): iBaseTraitDataStorage<N, V>;
 }
 
 export interface iHasTraitCollectionDataStorageInitialiser {
-	traitCollectionDataStorageInitialiser<
+  traitCollectionDataStorageInitialiser<
 		N extends TraitNameUnionOrString,
 		V extends TraitValueTypeUnion,
 		D extends iBaseTraitData<N, V>,

@@ -1,22 +1,18 @@
-import { AttributeName, SkillName, DisciplineName } from './../types';
-import { TraitNameUnionOrString, TraitValueTypeUnion } from '../types';
-import { iBaseCollection, iHasToJson, iHasPath, iHasParentPath, iHasCleanUp } from './general-interfaces';
-import { iHasLogReporter, iTraitCollectionLogger } from './log-interfaces';
 import {
-	iAttribute,
-	iBaseTrait,
-	iSkill,
-	iBaseTraitData,
-	iDiscipline,
-	iTouchStoneOrConviction,
-	iAttributeData,
-	iDisciplineData,
-	iSkillData,
-	iTouchStoneOrConvictionData,
-	iGeneralTraitData,
-	iGeneralTrait,
+  AttributeName, DisciplineName, SkillName, TraitNameUnionOrString, TraitValueTypeUnion
+} from '../types';
+import {
+  iHasTraitCollectionDataStorageInitialiser, iHasTraitDataStorageInitialiser
+} from './data-storage-interfaces';
+import {
+  iBaseCollection, iHasCleanUp, iHasParentPath, iHasPath, iHasToJson
+} from './general-interfaces';
+import { iHasTraitCollectionLogReporter } from './log-interfaces';
+import {
+  iAttribute, iAttributeData, iBaseTrait, iBaseTraitData, iDiscipline, iDisciplineData,
+  iGeneralTrait, iGeneralTraitData, iSkill, iSkillData, iTouchStoneOrConviction,
+  iTouchStoneOrConvictionData
 } from './trait-interfaces';
-import { iHasTraitCollectionDataStorageInitialiser, iHasTraitDataStorageInitialiser } from './data-storage-interfaces';
 
 // -------------------------------------------------------
 // GENERAL
@@ -43,10 +39,10 @@ export interface iTraitCollection<
 	T extends iBaseTrait<N, V, D>
 > extends iBaseCollection<N, V, T, iTraitCollection<N, V, D, T>>,
 		iHasToJson<D[]>,
-		iHasLogReporter<iTraitCollectionLogger>,
+		iHasTraitCollectionLogReporter,
 		iHasPath,
 		iHasCleanUp {
-	name: string;
+  name: string;
 }
 
 // -------------------------------------------------------

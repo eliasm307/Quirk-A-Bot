@@ -1,5 +1,5 @@
-import { LogOperationUnion, LogSourceTypeNameUnion } from './../types';
-import { iHasNewValue, iHasOldValue, iCanDescribe } from './general-interfaces';
+import { LogOperationUnion, LogSourceTypeNameUnion } from '../types';
+import { iCanDescribe, iHasNewValue, iHasOldValue } from './general-interfaces';
 
 // -------------------------------------------------------
 // GENERAL
@@ -47,25 +47,25 @@ export interface iUpdateLogEventProps<V> extends iBaseLogEventProps, iHasOldValu
 
 /** Base props to instantiate a logger  */
 export interface iBaseLoggerProps {
-	sourceName: string;
-
 	/** A function to emit logs to a parent logger, allows parent logs to be naturally sorted in order of creation time */
 	parentLogHandler: ((event: iLogEvent) => void) | null;
+	sourceName: string;
 }
 
 // -------------------------------------------------------
 // LOG EVENTS
 
 export interface iLogEvent extends iBaseLogEventProps {
+	/** Date the log event occured */
+	date: Date;
 	id: string;
 	operation: LogOperationUnion;
-	describe(): string; // ? is this required?
+	// ? is this required?
 
 	/** Timestamp to the nanosecond */
 	timeStamp: bigint;
 
-	/** Date the log event occured */
-	date: Date;
+	describe(): string;
 }
 
 // -------------------------------------------------------
@@ -110,8 +110,9 @@ export interface iLoggerCollection extends iBaseLogger {
 
 /** Handles new logs and emitting logs internally */
 export interface iBaseLogger<L extends iBaseLogReport> extends iCanLog, iHasLogEvents, iHasLogReport<L> {
-	sourceType: LogSourceTypeNameUnion;
+	/** An instance of a log reporter for this logger */
 	reporter: iBaseLogReporter<L>;
+	sourceType: LogSourceTypeNameUnion;
 }
 
 // LOGGERS

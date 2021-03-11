@@ -1,23 +1,14 @@
+import {
+  iBaseLoggerProps, iBaseLogReporter, iCharacterSheetLogger, iCharacterSheetLogReport,
+  iChildLoggerCreatorProps, iTraitCollectionLogger, iTraitCollectionLogReport, iTraitLogger,
+  iTraitLogReport
+} from '../../declarations/interfaces/log-interfaces';
 import { LogSourceTypeNameUnion } from '../../declarations/types';
 import characterSheetLoggerToString from '../../utils/characterSheetLoggerToString';
 import createChildTraitCollectionLogger from '../../utils/createChildTraitCollectionLogger';
 import createChildTraitLogger from '../../utils/createChildTraitLogger';
-import {
-	iBaseLoggerProps,
-	iBaseLogReport,
-	iBaseLogReporter,
-	iCharacterSheetLogger,
-	iCharacterSheetLogReport,
-	iChildLoggerCreatorProps,
-	iTraitCollectionLogger,
-	iTraitCollectionLogReport,
-	iTraitLogger,
-	iTraitLogReport,
-} from './../../declarations/interfaces/log-interfaces';
 import AbstractLogger from './AbstractLogger';
 import LogReporter from './LogReporter';
-import TraitCollecitonLogger from './TraitCollectionLogger';
-import TraitLogger from './TraitLogger';
 
 export default class CharacterSheetLogger
 	extends AbstractLogger<iCharacterSheetLogReport>

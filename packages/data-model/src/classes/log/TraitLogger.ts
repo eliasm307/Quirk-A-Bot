@@ -1,12 +1,8 @@
+import {
+  iBaseLoggerProps, iBaseLogReporter, iTraitLogger, iTraitLogReport
+} from '../../declarations/interfaces/log-interfaces';
 import { LogSourceTypeNameUnion } from '../../declarations/types';
 import traitLoggerToString from '../../utils/traitLoggerToString';
-import {
-	iTraitLogReport,
-	iTraitLogger,
-	iLogEvent,
-	iBaseLogReporter,
-	iBaseLoggerProps,
-} from './../../declarations/interfaces/log-interfaces';
 import AbstractLogger from './AbstractLogger';
 import LogReporter from './LogReporter';
 

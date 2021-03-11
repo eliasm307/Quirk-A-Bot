@@ -1,15 +1,10 @@
+import {
+  iBaseLoggerProps, iBaseLogReporter, iChildLoggerCreatorProps, iTraitCollectionLogger,
+  iTraitCollectionLogReport, iTraitLogger, iTraitLogReport
+} from '../../declarations/interfaces/log-interfaces';
 import { LogSourceTypeNameUnion } from '../../declarations/types';
 import createChildTraitLogger from '../../utils/createChildTraitLogger';
 import traitCollectionLoggerToString from '../../utils/traitCollectionLoggerToString';
-import {
-	iTraitCollectionLogReport,
-	iTraitLogger,
-	iTraitCollectionLogger,
-	iChildLoggerCreatorProps,
-	iTraitLogReport,
-	iBaseLogReporter,
-	iBaseLoggerProps,
-} from './../../declarations/interfaces/log-interfaces';
 import AbstractLogger from './AbstractLogger';
 import LogReporter from './LogReporter';
 
