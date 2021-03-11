@@ -53,9 +53,9 @@ export interface iBaseCharacterSheet {
 
 /** The shape of character sheet as plain JSON data */
 export interface iCharacterSheetData extends iBaseCharacterSheet {
-	name: iCoreStringTraitData<string>;
+	name: iCoreStringTraitData<string>; // ? should this be just a string?
 	clan: iCoreStringTraitData<ClanName>;
-	sire: iCoreStringTraitData<string>;
+	sire: iCoreStringTraitData<string>; // ? should this be just a string?
 	health: iCoreNumberTraitData;
 	willpower: iCoreNumberTraitData;
 	hunger: iCoreNumberTraitData;
@@ -70,9 +70,9 @@ export interface iCharacterSheetData extends iBaseCharacterSheet {
 /** The shape of a character sheet object instance */
 export interface iCharacterSheet extends iBaseCharacterSheet, iHasToJson<iCharacterSheetData>, iLoggerCollection {
 	path: string;
-	name: iCoreStringTrait<string>;
+	name: iCoreStringTrait<string>; // ? should this be just a string?
 	clan: iCoreStringTrait<ClanName>; // todo allow this to specify using ClanName type union
-	sire: iCoreStringTrait<string>;
+	sire: iCoreStringTrait<string>; // ? should this be just a string?
 	health: iCoreNumberTrait;
 	willpower: iCoreNumberTrait;
 	hunger: iCoreNumberTrait;

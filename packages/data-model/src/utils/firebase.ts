@@ -67,7 +67,7 @@ _firestoreEmulator.useEmulator('localhost', 8080);
 export const firestoreEmulator = _firestoreEmulator;
 
 export function isFirestoreEmulatorRunning() {
-	return urlExistSync('http://localhost:4000/firestore');
+	return urlExistSync('http://localhost:4000/firestore/');
 }
 
 // ? is a deep recursive delete util required?

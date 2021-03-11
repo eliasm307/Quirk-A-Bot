@@ -25,14 +25,16 @@ export default abstract class AbstractBaseTrait<
 
 	constructor({ name, value, toJson, traitDataStorageInitialiser, parentPath }: iBaseTraitProps<N, V, D>) {
 		this.name = name;
-		this.path = createPath(parentPath, name);
 
 		// initialise data store
 		this.dataStorage = traitDataStorageInitialiser({
 			name,
 			defaultValueIfNotDefined: this.preProcessValue(value),
-			path: this.path,
+			parentPath,
 		});
+
+		// the data storage is responsible for providing a suitable path
+		this.path = this.dataStorage.path;
 
 		// make sure toJson is provided
 		if (!toJson) throw Error(`${__filename} toJson function not defined`);

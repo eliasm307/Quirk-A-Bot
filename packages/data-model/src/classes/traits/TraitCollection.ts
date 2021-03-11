@@ -45,7 +45,7 @@ export default class TraitCollection<
 		...initialData: D[]
 	) {
 		this.name = name;
-		this.path = createPath(parentPath, name);
+		this.path = createPath(parentPath, name); // ? should data storage be responsible for assigning path? maybe rename this to "dataStorageId"
 		this.#traitDataStorageInitialiser = traitDataStorageInitialiser; // todo, reuse this function instead of making a new one each time
 		this.logs = new LogCollection({ sourceName: name, sourceType: 'Trait Collection' });
 

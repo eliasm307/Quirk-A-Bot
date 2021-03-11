@@ -33,7 +33,7 @@ export default class FirestoreDataStorageFactory implements iDataStorageFactory 
 	newTraitDataStorageInitialiser(): <N extends string, V extends TraitValueTypeUnion>(
 		props: iBaseTraitDataStorageProps<N, V>
 	) => iBaseTraitDataStorage<N, V> {
-		return props => new FirestoreTraitDataStorage({ ...props, firestore: this.#firestore });
+		return props => new FirestoreTraitDataStorage({ ...props, firestore: this.#firestore,  });
 	}
 
 	newTraitCollectionDataStorageInitialiser(): <

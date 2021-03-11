@@ -86,7 +86,7 @@ export default class CharacterSheet implements iCharacterSheet {
 		const { id, dataStorageFactory, parentPath, characterSheetDataStorage } = props;
 
 		this.id = id;
-		this.path = createPath(parentPath, id);
+		this.path = createPath( parentPath, id ); 
 
 		const traitDataStorageInitialiser = dataStorageFactory.newTraitDataStorageInitialiser({
 			characterSheet: this,
@@ -101,13 +101,15 @@ export default class CharacterSheet implements iCharacterSheet {
 		if (!isCharacterSheetData(initialData))
 			throw Error(`${__filename} data is not valid character sheet data, "${initialData}"`);
 
+		
+		// ? trait factory could be instantiable so details like the data storage initialisers and parent path could be passed once and not need to be repeated all over
 		// core number traits
 		this.bloodPotency = new NumberTrait<CoreNumberTraitName>({
 			max: 10,
 			name: 'Blood Potency',
 			value: initialData.bloodPotency.value || 0,
 			traitDataStorageInitialiser,
-			parentPath: id,
+			parentPath: this.path,
 		});
 
 		this.hunger = new NumberTrait<CoreNumberTraitName>({
@@ -115,7 +117,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			name: 'Hunger',
 			value: initialData.hunger.value || 0,
 			traitDataStorageInitialiser,
-			parentPath: id,
+			parentPath: this.path,
 		});
 
 		this.humanity = new NumberTrait<CoreNumberTraitName>({
@@ -123,7 +125,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			name: 'Humanity',
 			value: initialData.humanity.value || 0,
 			traitDataStorageInitialiser,
-			parentPath: id,
+			parentPath: this.path,
 		});
 
 		this.health = new NumberTrait<CoreNumberTraitName>({
@@ -131,7 +133,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			name: 'Health',
 			value: initialData.health.value || 0,
 			traitDataStorageInitialiser,
-			parentPath: id,
+			parentPath: this.path,
 		});
 
 		this.willpower = new NumberTrait<CoreNumberTraitName>({
@@ -139,7 +141,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			name: 'Willpower',
 			value: initialData.willpower.value || 0,
 			traitDataStorageInitialiser,
-			parentPath: id,
+			parentPath: this.path,
 		});
 
 		// core string traits
@@ -147,43 +149,43 @@ export default class CharacterSheet implements iCharacterSheet {
 			name: 'Name',
 			value: initialData.name.value || 'TBC',
 			traitDataStorageInitialiser,
-			parentPath: id,
+			parentPath: this.path,
 		});
 
 		this.sire = new StringTrait<CoreStringTraitName, string>({
 			name: 'Sire',
 			value: initialData.sire.value || 'TBC',
 			traitDataStorageInitialiser,
-			parentPath: id,
+			parentPath: this.path,
 		});
 
 		this.clan = new StringTrait<CoreStringTraitName, ClanName>({
 			name: 'Clan',
 			value: initialData.clan.value || 'TBC',
 			traitDataStorageInitialiser,
-			parentPath: id,
+			parentPath: this.path,
 		});
 
 		// ? what if the trait factory wasnt static and actually took in arguments on instantiation, this would reduce some of the props required when using each factory method and hide some of the ugliness
 
 		// create collections, with initial data where available
 		this.attributes = TraitFactory.newAttributeTraitCollection(
-			{ traitCollectionDataStorageInitialiser, traitDataStorageInitialiser, parentPath: id },
+			{ traitCollectionDataStorageInitialiser, traitDataStorageInitialiser, parentPath: this.path },
 			...initialData.attributes
 		);
 
 		this.skills = TraitFactory.newSkillTraitCollection(
-			{ traitCollectionDataStorageInitialiser, traitDataStorageInitialiser, parentPath: id },
+			{ traitCollectionDataStorageInitialiser, traitDataStorageInitialiser, parentPath: this.path },
 			...initialData.skills
 		);
 
 		this.disciplines = TraitFactory.newDisciplineTraitCollection(
-			{ traitCollectionDataStorageInitialiser, traitDataStorageInitialiser, parentPath: id },
+			{ traitCollectionDataStorageInitialiser, traitDataStorageInitialiser, parentPath: this.path },
 			...initialData.disciplines
 		);
 
 		this.touchstonesAndConvictions = TraitFactory.newTouchstonesAndConvictionTraitCollection(
-			{ traitCollectionDataStorageInitialiser, traitDataStorageInitialiser, parentPath: id },
+			{ traitCollectionDataStorageInitialiser, traitDataStorageInitialiser, parentPath: this.path },
 			...initialData.touchstonesAndConvictions
 		);
 

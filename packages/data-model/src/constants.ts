@@ -73,8 +73,8 @@ export const CORE_STRING_TRAITS = ['Name', 'Clan', 'Sire'] as const;
 export const TRAIT_TYPES = ['Attribute', 'Skill', 'Discipline', 'Touchstone or Conviction', 'Core'] as const;
 
 // values
+export const CORE_TRAIT_COLLECTION_NAME = `CoreTraits`;
 export const ATTRIBUTE_COLLECTION_NAME = `Attributes`;
 export const SKILL_COLLECTION_NAME = `Skills`;
 export const DISCIPLINE_COLLECTION_NAME = `Disciplines`;
-
 export const TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME = `TouchstonesAndConvictions`;

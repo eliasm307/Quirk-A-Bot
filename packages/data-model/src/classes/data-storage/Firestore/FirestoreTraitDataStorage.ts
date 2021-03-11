@@ -1,3 +1,4 @@
+import { CORE_TRAIT_COLLECTION_NAME } from './../../../constants';
 import { Firestore } from './../../../utils/firebase';
 import {
 	iFirestoreTraitDataStorageProps,
@@ -9,6 +10,7 @@ import pathModule from 'path';
 import { isTraitData } from '../../../utils/typePredicates';
 import { iBaseTraitData } from '../../../declarations/interfaces/trait-interfaces';
 import { iHasCleanUp } from '../../../declarations/interfaces/general-interfaces';
+import { createPath } from '../../../utils/createPath';
 
 export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
 	extends AbstractTraitDataStorage<N, V>
@@ -34,11 +36,23 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 	path: string;
 	#unsubscribeFromEventListeners: () => void = () => null; // todo add cleanup method which calls this
 
+	protected createTraitPath(parentPath: string, name: string): string {
+		const segments = parentPath.split('/');
+
+		if (segments.length % 2) {
+			// if parent is a collection (even path segments) then return as normal
+			return createPath(parentPath, name);
+		}
+
+		// if parent is a document (odd path segments) then put this in a core collection, to satisfy firestore requirements
+		return createPath(`${parentPath}/${CORE_TRAIT_COLLECTION_NAME}`, name);
+	}
+
 	constructor(props: iFirestoreTraitDataStorageProps<N, V>) {
 		super(props);
-		const { firestore, path, defaultValueIfNotDefined } = props;
+		const { firestore, parentPath, defaultValueIfNotDefined, name } = props;
 		this.#firestore = firestore;
-		this.path = path;
+		this.path = this.createTraitPath(parentPath, name);
 
 		const timerName = `Time to initialise trait "${this.path}"`;
 
@@ -49,7 +63,7 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 				// console.warn(`Successfully initialised trait with path ${this.path} and value ${this.private.value}`);
 			})
 			.catch(console.error)
-			.finally( () => console.timeEnd( timerName ) );
+			.finally(() => console.timeEnd(timerName));
 		// todo tidy up
 		/*this.assertTraitExistsOnDataStorage({ name: this.name, value: defaultValueIfNotDefined })
 			.then(_ => {
@@ -111,10 +125,10 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 							`There should be exactly 1 trait named "${this.name}" in collection "${parentCollectionPath}", however ${querySnapshot.size} where found`,
 							{ traitName: this.name, traitPath: this.path, parentCollectionPath }
 						);*/
-						/*throw Error(
+					/*throw Error(
 							`There should be exactly 1 trait named "${this.name}" in collection "${parentCollectionPath}", however ${querySnapshot.size} where found`
 						);*/
-				//	}
+					//	}
 
 					querySnapshot.docChanges().forEach(change => {
 						const data: any = change.doc.data();

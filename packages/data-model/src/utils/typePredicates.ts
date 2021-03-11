@@ -98,21 +98,14 @@ export function isCharacterSheetData(data: any): data is iCharacterSheetData {
 }
 
 export function isTraitData(data: any): data is iGeneralTraitData {
-	const nameExists = typeof data.name === 'string';
-	const valueExists = typeof data.value === 'string' || typeof data.value === 'number';
+	if (typeof data !== 'object') return false;
 
-	if (typeof data === 'object' && nameExists && valueExists) {
-		return true;
-	}
-	/*
-	console.warn(`isTraitData, not trait data`, {
-		data,
-		typeofData: typeof data,
-		nameExists,
-		valueExists,
-	});
-	*/
-	return false;
+	const { name, value } = data as iGeneralTraitData;
+
+	const nameExists = typeof name === 'string';
+	const valueExists = typeof value === 'string' || typeof value === 'number';
+
+	return nameExists && valueExists;
 }
 
 export function isTraitCollection(data: any): data is iGeneralTraitCollection {

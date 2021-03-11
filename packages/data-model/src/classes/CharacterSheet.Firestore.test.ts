@@ -9,6 +9,7 @@ import { iCharacterSheetData } from './../declarations/interfaces/character-shee
 import { createPath } from '../utils/createPath';
 import { firestoreEmulator } from '../utils/firebase';
 import { isCharacterSheetData } from '../utils/typePredicates';
+import readCharacterSheetDataFromFirestore from '../utils/readCharacterSheetDataFromFirestore';
 import CharacterSheet from './CharacterSheet';
 import FirestoreDataStorageFactory from './data-storage/Firestore/FirestoreDataStorageFactory';
 
@@ -42,11 +43,12 @@ describe('Character sheet using Firestore', () => {
 		await new Promise(res => setTimeout(res, 100)); // wait for syncronisation
 
 		// make sure document exists
-		let doc = await firestore.doc(createPath(parentPath, csId)).get();
-		const docData = doc.data();
+		let doc = await firestore.doc(docPath).get();
+    const docData = await readCharacterSheetDataFromFirestore( firestore, docPath );
+    
 		expect(doc.exists).toEqual(true);
 		expect(isCharacterSheetData(docData)).toEqual(true);
-		expect(doc.data()).toEqual(CharacterSheet.newDataObject({ id: csId }));
+		expect(docData).toEqual(CharacterSheet.newDataObject({ id: csId }));
 	});
 
 	it('loads an existing charactersheet from firestore', async () => {

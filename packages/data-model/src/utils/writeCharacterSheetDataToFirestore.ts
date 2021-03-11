@@ -1,4 +1,5 @@
-import path from 'node:path';
+import { CORE_TRAIT_COLLECTION_NAME } from './../constants';
+import path from 'path';
 import {
 	ATTRIBUTE_COLLECTION_NAME,
 	DISCIPLINE_COLLECTION_NAME,
@@ -8,6 +9,8 @@ import {
 import { iCharacterSheetData } from '../declarations/interfaces/character-sheet-interfaces';
 import { iGeneralTraitData } from '../declarations/interfaces/trait-interfaces';
 import { Firestore, FirestoreBatch } from './firebase';
+
+// todo test
 
 export default async function writeCharacterSheetDataToFirestore(
 	firestore: Firestore,
@@ -35,15 +38,9 @@ export default async function writeCharacterSheetDataToFirestore(
 
 	const coreData = {
 		id,
-		clan,
-		health,
-		humanity,
-		hunger,
-		name,
-		sire,
-		willpower,
-		bloodPotency,
 	};
+
+	const coreTraits: iGeneralTraitData[] = [clan, health, humanity, hunger, name, sire, willpower, bloodPotency];
 
 	try {
 		const csDoc = firestore.doc(path);
@@ -55,10 +52,11 @@ export default async function writeCharacterSheetDataToFirestore(
 		batch.set(csDoc, coreData);
 
 		// write trait collection data as firestore collections
-		addTraitCollectionAsBatch(firestore, attributes, ATTRIBUTE_COLLECTION_NAME, batch);
-		addTraitCollectionAsBatch(firestore, disciplines, DISCIPLINE_COLLECTION_NAME, batch);
-		addTraitCollectionAsBatch(firestore, skills, SKILL_COLLECTION_NAME, batch);
-		addTraitCollectionAsBatch(firestore, touchstonesAndConvictions, TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME, batch);
+		writeTraitCollectionAsBatch(firestore, coreTraits, CORE_TRAIT_COLLECTION_NAME, batch);
+		writeTraitCollectionAsBatch(firestore, attributes, ATTRIBUTE_COLLECTION_NAME, batch);
+		writeTraitCollectionAsBatch(firestore, disciplines, DISCIPLINE_COLLECTION_NAME, batch);
+		writeTraitCollectionAsBatch(firestore, skills, SKILL_COLLECTION_NAME, batch);
+		writeTraitCollectionAsBatch(firestore, touchstonesAndConvictions, TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME, batch);
 
 		// commit batch
 		await batch.commit();
@@ -67,7 +65,7 @@ export default async function writeCharacterSheetDataToFirestore(
 	}
 }
 
-function addTraitCollectionAsBatch(
+function writeTraitCollectionAsBatch(
 	firestore: Firestore,
 	traitDataArray: iGeneralTraitData[],
 	traitCollectionName: string,
