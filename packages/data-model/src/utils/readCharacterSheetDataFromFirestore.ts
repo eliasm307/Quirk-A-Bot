@@ -19,8 +19,10 @@ export default async function readCharacterSheetDataFromFirestore(
 ): Promise<iCharacterSheetData> {
 	const timerName = `Time to read character sheet data at path ${path}`;
 	console.time(timerName);
-	// read core data
-	const coreDataPromise = firestore.doc(path).get();
+
+	// read core data first and confirm document exists
+	const coreDataDocument = await firestore.doc(path).get();
+	if (!coreDataDocument.exists) throw Error(`Cannot read document at path ${path} because it doesnt exist`);
 
 	// read trait collection data as firestore collections
 	const coreTraitsPromise = readTraitCollectionPromise(firestore, path, CORE_TRAIT_COLLECTION_NAME);
@@ -35,14 +37,12 @@ export default async function readCharacterSheetDataFromFirestore(
 
 	// fullfill promises as a batch
 	const [
-		coreDataDocument,
 		coreTraitsCollection,
 		attributesCollection,
 		disciplinesCollection,
 		skillsCollection,
 		touchstonesAndConvictionsCollection,
 	] = await Promise.all([
-		coreDataPromise,
 		coreTraitsPromise,
 		attributesPromise,
 		disciplinesPromise,

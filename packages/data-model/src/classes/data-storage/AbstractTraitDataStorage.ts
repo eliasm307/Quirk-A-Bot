@@ -1,7 +1,10 @@
 import { iBaseTraitData } from './../../declarations/interfaces/trait-interfaces';
 import { TraitNameUnionOrString } from './../../declarations/types';
 import { TraitValueTypeUnion } from '../../declarations/types';
-import { iBaseTraitDataStorageProps, iBaseTraitDataStorage } from '../../declarations/interfaces/data-storage-interfaces';
+import {
+	iBaseTraitDataStorageProps,
+	iBaseTraitDataStorage,
+} from '../../declarations/interfaces/data-storage-interfaces';
 
 interface iPrivateModifiableProperties<V extends TraitValueTypeUnion> {
 	value: V;
@@ -18,7 +21,10 @@ export default abstract class AbstractTraitDataStorage<N extends TraitNameUnionO
 		this.private = {
 			value: defaultValueIfNotDefined, // assign initial value
 		};
-	} 
+	}
+
+	// the data storage defines this
+	abstract path: string;
 
 	get value(): V {
 		return this.private.value;

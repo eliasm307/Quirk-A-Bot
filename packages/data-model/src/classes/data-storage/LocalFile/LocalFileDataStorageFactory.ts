@@ -1,8 +1,6 @@
 import {
 	iCharacterSheetDataStorage,
-	iLocalFileDataStorageFactoryProps,
-	iHasCharacterSheet,
-	iHasId,
+	iLocalFileDataStorageFactoryProps,  
 	iBaseCharacterSheetDataStorageFactoryMethodProps,
 } from './../../../declarations/interfaces/data-storage-interfaces';
 import { TraitValueTypeUnion } from '../../../declarations/types';
@@ -17,6 +15,7 @@ import LocalFileTraitDataStorage from './LocalFileTraitDataStorage';
 import { iBaseTraitData, iBaseTrait } from '../../../declarations/interfaces/trait-interfaces';
 import LocalFileTraitCollectionDataStorage from './LocalFileTraitCollectionDataStorage';
 import LocalFileCharacterSheetDataStorage from './LocalFileCharacterSheetDataStorage';
+import { iHasCharacterSheet } from '../../../declarations/interfaces/character-sheet-interfaces';
 export default class LocalFileDataStorageFactory implements iDataStorageFactory {
 	#resolvedBasePath: string;
 

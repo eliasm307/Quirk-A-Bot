@@ -52,6 +52,8 @@ describe('firestore emulator', () => {
 		// make sure there is no existing data
 		await firestoreEmulator.doc(`${localTestCollectionName}/${testDocumentName}`).delete();
 
+		await new Promise(res => setTimeout(res, 500)); // wait for syncronisation
+
 		// subscribe to document level changes
 		const unsubscribeToDocument = firestoreEmulator.doc(`${localTestCollectionName}/${testDocumentName}`).onSnapshot({
 			next: snapshot => {
@@ -81,7 +83,8 @@ describe('firestore emulator', () => {
 			querySnapshot.docChanges().forEach(change => {
 				const data: any = change.doc.data();
 
-				if(!change.doc.exists) throw Error(`Document at path ${localTestCollectionName}/${change.doc.id} is marked as doesnt exist`)
+				if (!change.doc.exists)
+					throw Error(`Document at path ${localTestCollectionName}/${change.doc.id} is marked as doesnt exist`);
 
 				logFirestoreChange(change, console.log);
 				if (change.type === 'added') {
