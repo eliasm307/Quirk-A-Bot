@@ -16,7 +16,7 @@ export interface iCanLog {
 }
 
 export interface iCanCreateChildTraitLogger {
-	/** Creates a trait logger that reports any logs to the parent */
+	/** Creates a trait logger that reports any logs to the parent and the parent keeps the logger even if the trait is deleted */
 	createChildTraitLogger(props: iChildLoggerCreatorProps): iTraitLogger;
 }
 
@@ -49,7 +49,7 @@ export interface iUpdateLogEventProps<V> extends iBaseLogEventProps, iHasOldValu
 export interface iBaseLoggerProps {
 	sourceName: string;
 
-	/** A function to emit logs to a parent logger */
+	/** A function to emit logs to a parent logger, allows parent logs to be naturally sorted in order of creation time */
 	parentLogHandler: ((event: iLogEvent) => void) | null;
 }
 

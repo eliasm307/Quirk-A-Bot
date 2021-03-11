@@ -4,9 +4,12 @@ import AbstractLogger from './AbstractLogger';
 
 export default class TraitLogger extends AbstractLogger<iTraitLogReport> implements iTraitLogger {
 	sourceType: LogSourceTypeNameUnion = 'Trait';
- 
 
 	get report(): iTraitLogReport {
-		throw Error('Method not implemented');
+		return {
+			events: [...this.events],
+			sourceName: this.sourceName,
+			sourceType: this.sourceType,
+		};
 	}
 }
