@@ -72,7 +72,7 @@ export default class TraitCollection<
 		//todo memoise
 		// combine logs from reports and and sort oldest to newest
 		return this.getLogReports()
-			.reduce((events, report) => [...events, ...report.logEvents], [] as iLogEvent[])
+			.reduce((events, report) => [...events, ...report.events], [] as iLogEvent[])
 			.sort((a, b) => Number(a.timeStamp - b.timeStamp));
 	}
 	getLogReports(): iBaseLogReport[] {

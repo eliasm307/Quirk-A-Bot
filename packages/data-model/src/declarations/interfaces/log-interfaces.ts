@@ -1,9 +1,39 @@
-import { iLogEvent } from './log-interfaces';
 import { LogOperationUnion, LogSourceTypeNameUnion } from './../types';
 import { iHasNewValue, iHasOldValue } from './general-interfaces';
 
-// todo group these
+// -------------------------------------------------------
+// GENERAL
 
+export interface iHasLogReport<L extends iBaseLogReport> {
+	readonly report: L;
+}
+export interface iHasLogEvents {
+	readonly events: iLogEvent[];
+}
+
+export interface iCanLog {
+	log(event: iLogEvent): void;
+}
+
+export interface iCanCreateChildTraitLogger {
+	/** Creates a trait logger that reports any logs to the parent */
+	createChildTraitLogger(props: iChildLoggerCreatorProps): iTraitLogger;
+}
+
+export interface iCanCreateChildTraitCollectionLogger {
+	/** Creates a trait collection logger that reports any logs to the parent */
+	createChildTraitCollectionLogger(props: iChildLoggerCreatorProps): iTraitCollectionLogger;
+}
+
+// -------------------------------------------------------
+// PROPS
+
+/** Props used by a parent to create a child logger */
+export interface iChildLoggerCreatorProps {
+	sourceName: string;
+}
+
+// LOG EVENT PROPS
 export interface iBaseLogEventProps {
 	description?: string;
 	property: string;
@@ -13,6 +43,19 @@ export interface iAddLogEventProps<V> extends iBaseLogEventProps, iHasNewValue<V
 export interface iDeleteLogEventProps<V> extends iBaseLogEventProps, iHasOldValue<V> {}
 export interface iUpdateLogEventProps<V> extends iBaseLogEventProps, iHasOldValue<V>, iHasNewValue<V> {}
 
+// LOGGER PROPS
+
+/** Base props to instantiate a logger  */
+export interface iBaseLoggerProps {
+	sourceName: string;
+
+	/** A function to emit logs to a parent logger */
+	parentLogHandler: ((event: iLogEvent) => void) | null;
+}
+
+// -------------------------------------------------------
+// LOG EVENTS
+
 export interface iLogEvent extends iBaseLogEventProps {
 	id: string;
 	operation: LogOperationUnion;
@@ -21,10 +64,8 @@ export interface iLogEvent extends iBaseLogEventProps {
 	date: Date;
 }
 
-// todo relocate
-export interface iHasLogEvents {
-	readonly logEvents: iLogEvent[];
-}
+// -------------------------------------------------------
+// LOG REPORTS
 
 export interface iBaseLogReport extends iHasLogEvents {
 	sourceName: string;
@@ -58,24 +99,10 @@ export interface iLoggerCollection extends iBaseLogger {
 }
 */
 
-export interface iHasLogReporter<L extends iBaseLogReporter<iBaseLogReport>> {
-	log: L;
-}
+// -------------------------------------------------------
+// LOGGERS
 
-// todo relocate
-export interface iHasLogReport<L extends iBaseLogReport> {
-	readonly report: L;
-}
-
-/** Provides a read-only interface to a logger ie a logger proxy, which is provided to clients */
-export interface iBaseLogReporter<L extends iBaseLogReport> extends iHasLogEvents, iHasLogReport<L> {
-	toString(): string;
-}
-
-// todo relocate
-export interface iCanLog {
-	log(event: iLogEvent): void;
-}
+// ? should source name and type be part of the actual log details?
 
 /** Handles new logs and emitting logs internally */
 export interface iBaseLogger<L extends iBaseLogReport> extends iCanLog, iHasLogEvents, iHasLogReport<L> {
@@ -83,30 +110,31 @@ export interface iBaseLogger<L extends iBaseLogReport> extends iCanLog, iHasLogE
 }
 
 // LOGGERS
-export interface iTraitLogCollection extends iBaseLogger<iTraitLogReport> {}
-export interface iTraitCollectionLogCollection extends iBaseLogger<iTraitCollectionLogReport> {}
-export interface iCharacterSheetLogCollection extends iBaseLogger<iCharacterSheetLogReport> {}
+export interface iTraitLogger extends iBaseLogger<iTraitLogReport> {}
 
+export interface iTraitCollectionLogger extends iBaseLogger<iTraitCollectionLogReport>, iCanCreateChildTraitLogger {}
+
+export interface iCharacterSheetLogger
+	extends iBaseLogger<iCharacterSheetLogReport>,
+		iCanCreateChildTraitLogger,
+		iCanCreateChildTraitCollectionLogger {}
+
+// -------------------------------------------------------
 // LOG REPORTERS
+
+/** Provides a read-only interface to a logger ie a logger proxy, which is provided to clients */
+export interface iBaseLogReporter<L extends iBaseLogReport> extends iHasLogEvents, iHasLogReport<L> {
+	toString(): string;
+}
 export interface iTraitLogReporter extends iBaseLogReporter<iTraitLogReport> {}
 export interface iTraitCollectionLogReporter extends iBaseLogReporter<iTraitCollectionLogReport> {}
 export interface iCharacterSheetLogReporter extends iBaseLogReporter<iCharacterSheetLogReport> {}
 
+// -------------------------------------------------------
 // HAS LOG REPORTER
-export interface iHasTraitLogReporter {
-	log: iTraitLogReporter;
+export interface iHasLogReporter<L extends iBaseLogReporter<iBaseLogReport>> {
+	log: L;
 }
-export interface iHasTraitCollectionLogReporter {
-	log: iTraitCollectionLogReporter;
-}
-export interface iHasCharacterSheetLogReporter {
-	log: iCharacterSheetLogReporter;
-}
-
-// ? should source name and type be part of the actual log details?
-export interface iLoggerProps {
-	sourceName: string;
-
-	/** A function to emit logs to a parent logger */
-	parentLogHandler: ((event: iLogEvent) => void) | null;
-}
+export interface iHasTraitLogReporter extends iHasLogReporter<iTraitLogReporter> {}
+export interface iHasTraitCollectionLogReporter extends iHasLogReporter<iTraitCollectionLogReporter> {}
+export interface iHasCharacterSheetLogReporter extends iHasLogReporter<iCharacterSheetLogReporter> {}

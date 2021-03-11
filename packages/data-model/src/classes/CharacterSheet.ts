@@ -1,6 +1,6 @@
 import { iHasId } from './../declarations/interfaces/data-storage-interfaces';
 import { iCharacterSheet, iCharacterSheetLoaderProps } from './../declarations/interfaces/character-sheet-interfaces';
-import { iBaseLogReport, iCharacterSheetLogCollection } from './../declarations/interfaces/log-interfaces';
+import { iBaseLogReport, iCharacterSheetLogger } from './../declarations/interfaces/log-interfaces';
 import {
 	iAttributeTraitCollection,
 	iSkillTraitCollection,
@@ -25,7 +25,7 @@ import { STRING_TRAIT_DEFAULT_VALUE } from '../constants';
 
 export default class CharacterSheet implements iCharacterSheet {
 	path: string;
-	log: iCharacterSheetLogCollection;
+	log: iCharacterSheetLogger;
 	readonly id: string;
 	//-------------------------------------
 	// private properties with custom setters and/or getters
@@ -254,7 +254,7 @@ export default class CharacterSheet implements iCharacterSheet {
 	getLogEvents(): iLogEvent[] {
 		// combine logs from reports and and sort oldest to newest
 		return this.getLogReports()
-			.reduce((events, report) => [...events, ...report.logEvents], [] as iLogEvent[])
+			.reduce((events, report) => [...events, ...report.events], [] as iLogEvent[])
 			.sort((a, b) => {
 				return Number(a.timeStamp - b.timeStamp);
 			});

@@ -5,7 +5,7 @@ import {
 	iBaseTraitDataStorageProps,
 	iBaseTraitDataStorage,
 } from '../../declarations/interfaces/data-storage-interfaces';
-import { iTraitLogCollection } from '../../declarations/interfaces/log-interfaces';
+import { iTraitLogger } from '../../declarations/interfaces/log-interfaces';
 
 interface iPrivateModifiableProperties<V extends TraitValueTypeUnion> {
 	value: V;
@@ -14,7 +14,7 @@ interface iPrivateModifiableProperties<V extends TraitValueTypeUnion> {
 export default abstract class AbstractTraitDataStorage<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
 	implements iBaseTraitDataStorage<N, V> {
 	name: N;
-	log: iTraitLogCollection;
+	log: iTraitLogger;
 	protected private: iPrivateModifiableProperties<V>;
 
 	constructor(props: iBaseTraitDataStorageProps<N, V>) {

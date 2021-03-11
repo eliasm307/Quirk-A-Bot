@@ -7,9 +7,9 @@ import {
 	iAddLogEventProps,
 	iDeleteLogEventProps,
 	iHasLogReporter,
-	iTraitCollectionLogCollection,
-	iCharacterSheetLogCollection,
-	iTraitLogCollection,
+	iTraitCollectionLogger,
+	iCharacterSheetLogger,
+	iTraitLogger,
 } from './log-interfaces';
 
 // todo split this up
@@ -132,7 +132,7 @@ export interface iFirestoreCharacterSheetDataStorageProps extends iBaseCharacter
 export interface iBaseTraitDataStorage<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
 	extends iBaseTraitData<N, V>,
 		iHasPath,
-		iHasLogReporter<iTraitLogCollection> {}
+		iHasLogReporter<iTraitLogger> {}
 
 export interface iTraitCollectionDataStorage<
 	N extends TraitNameUnionOrString,
@@ -141,13 +141,13 @@ export interface iTraitCollectionDataStorage<
 	T extends iBaseTrait<N, V, D>
 > extends iBaseCollection<N, V, T, iTraitCollectionDataStorage<N, V, D, T>>,
 		iHasToJson<D[]>,
-		iHasLogReporter<iTraitCollectionLogCollection>,
+		iHasLogReporter<iTraitCollectionLogger>,
 		iHasPath {
 	name: string;
 }
 
 /** Represents character sheet data in a data store */
-export interface iCharacterSheetDataStorage extends iHasPath, iHasLogReporter<iCharacterSheetLogCollection> {
+export interface iCharacterSheetDataStorage extends iHasPath, iHasLogReporter<iCharacterSheetLogger> {
 	/** Returns the character sheet data from the data storage */
 	getData(): iCharacterSheetData;
 

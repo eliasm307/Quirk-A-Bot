@@ -1,7 +1,7 @@
 import {
 	iBaseLogger,
 	iBaseLogReport,
-	iTraitLogCollection,
+	iTraitLogger,
 	iTraitLogReporter,
 } from './../../declarations/interfaces/log-interfaces';
 import { iLogEvent } from '../../declarations/interfaces/log-interfaces';
