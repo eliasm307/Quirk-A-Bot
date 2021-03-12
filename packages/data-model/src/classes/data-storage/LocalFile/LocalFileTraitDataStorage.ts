@@ -3,9 +3,8 @@ import path from 'path';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
 import { iCharacterSheet } from '../../characterSheet/interfaces/character-sheet-interfaces';
 import AbstractTraitDataStorage from '../AbstractTraitDataStorage';
-import {
-  iBaseTraitDataStorage, iLocalFileTraitDataStorageProps
-} from '../interfaces/data-storage-interfaces';
+import { iBaseTraitDataStorage } from '../interfaces/data-storage-interfaces';
+import { iLocalFileTraitDataStorageProps } from '../interfaces/props/trait-data-storage';
 import { createPath } from '../utils/createPath';
 import saveCharacterSheetToFile from './utils/saveCharacterSheetToFile';
 

@@ -95,12 +95,15 @@ describe('firestore emulator', () => {
 				}
 				if (change.type === 'removed') {
 					// console.log('Removed document: ', { data });
-					expect(
-						firestoreEmulator
-							.collection(localTestCollectionName)
-							.get()
-							.then(col => expect(col.size).toEqual(0))
-					);
+					// pause for syncronisation then check deletion
+					new Promise(res => setTimeout(res, 200)).then(() => {
+						expect(
+							firestoreEmulator
+								.collection(localTestCollectionName)
+								.get()
+								.then(col => expect(col.size).toEqual(0))
+						);
+					});
 				}
 			});
 		});
@@ -111,13 +114,19 @@ describe('firestore emulator', () => {
 		// console.log('creating document');
 		await firestoreEmulator.doc(`${localTestCollectionName}/${testDocumentName}`).set(testDocData);
 
+		await new Promise(res => setTimeout(res, 200)); // pause for syncronisation
+
 		// assertion 3 & 4 (collection and document events)
 		// console.log('updating document');
 		await firestoreEmulator.doc(`${localTestCollectionName}/${testDocumentName}`).update({ added: 'something' });
 
+		await new Promise(res => setTimeout(res, 200)); // pause for syncronisation
+
 		// assertion 5 & 6 (collection and document events)
 		// console.log('deleting document');
 		await firestoreEmulator.doc(`${localTestCollectionName}/${testDocumentName}`).delete();
+
+		await new Promise(res => setTimeout(res, 200)); // pause for syncronisation
 
 		// detach observers
 		unsubscribeToCollection();

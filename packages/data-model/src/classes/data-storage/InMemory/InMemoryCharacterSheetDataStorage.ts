@@ -2,8 +2,11 @@
 import CharacterSheet from '../../characterSheet/CharacterSheet';
 import { iCharacterSheetData } from '../../characterSheet/interfaces/character-sheet-interfaces';
 import {
-  iBaseCharacterSheetDataStorageProps, iCharacterSheetDataStorage, iDataStorageFactory
+  iCharacterSheetDataStorage, iDataStorageFactory
 } from '../interfaces/data-storage-interfaces';
+import {
+  iBaseCharacterSheetDataStorageProps
+} from '../interfaces/props/trait-collection-data-storage';
 import { createPath } from '../utils/createPath';
 
 export default class InMemoryCharacterSheetDataStorage implements iCharacterSheetDataStorage {

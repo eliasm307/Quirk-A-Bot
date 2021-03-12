@@ -1,10 +1,17 @@
 import { TraitValueTypeUnion } from '../../../declarations/types';
 import { iBaseTrait, iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
 import {
-  iBaseCharacterSheetDataStorageFactoryMethodProps, iBaseTraitCollectionDataStorageProps,
-  iBaseTraitDataStorage, iBaseTraitDataStorageProps, iCharacterSheetDataStorage,
-  iDataStorageFactory, iFirestoreDataStorageFactoryProps, iTraitCollectionDataStorage
+  iBaseTraitDataStorage, iCharacterSheetDataStorage, iDataStorageFactory,
+  iTraitCollectionDataStorage
 } from '../interfaces/data-storage-interfaces';
+import {
+  iBaseCharacterSheetDataStorageFactoryMethodProps
+} from '../interfaces/props/data-storage-creator';
+import { iFirestoreDataStorageFactoryProps } from '../interfaces/props/data-storage-factory';
+import {
+  iBaseTraitCollectionDataStorageProps
+} from '../interfaces/props/trait-collection-data-storage';
+import { iBaseTraitDataStorageProps } from '../interfaces/props/trait-data-storage';
 import FirestoreCharacterSheetDataStorage from './FirestoreCharacterSheetDataStorage';
 import FirestoreTraitCollectionDataStorage from './FirestoreTraitCollectionDataStorage';
 import FirestoreTraitDataStorage from './FirestoreTraitDataStorage';

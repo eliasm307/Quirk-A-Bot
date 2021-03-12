@@ -5,8 +5,11 @@ import { isCharacterSheetData } from '../../../utils/typePredicates';
 import CharacterSheet from '../../characterSheet/CharacterSheet';
 import { iCharacterSheetData } from '../../characterSheet/interfaces/character-sheet-interfaces';
 import {
-  iCharacterSheetDataStorage, iDataStorageFactory, iLocalFileCharacterSheetDataStorageProps
+  iCharacterSheetDataStorage, iDataStorageFactory
 } from '../interfaces/data-storage-interfaces';
+import {
+  iLocalFileCharacterSheetDataStorageProps
+} from '../interfaces/props/trait-collection-data-storage';
 import importDataFromFile from './utils/importDataFromFile';
 import saveCharacterSheetToFile from './utils/saveCharacterSheetToFile';
 

@@ -4,7 +4,9 @@ import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declaratio
 import { iCharacterSheet } from '../../characterSheet/interfaces/character-sheet-interfaces';
 import { iBaseTrait, iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
 import AbstractTraitCollectionDataStorage from '../AbstractTraitCollectionDataStorage';
-import { iLocalFileTraitCollectionDataStorageProps } from '../interfaces/data-storage-interfaces';
+import {
+  iLocalFileTraitCollectionDataStorageProps
+} from '../interfaces/props/trait-collection-data-storage';
 import saveCharacterSheetToFile from './utils/saveCharacterSheetToFile';
 
 export default class LocalFileTraitCollectionDataStorage<

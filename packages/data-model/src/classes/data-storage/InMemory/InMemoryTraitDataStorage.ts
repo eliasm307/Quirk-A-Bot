@@ -1,9 +1,8 @@
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
 import { iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
 import AbstractTraitDataStorage from '../AbstractTraitDataStorage';
-import {
-  iBaseTraitDataStorage, iBaseTraitDataStorageProps
-} from '../interfaces/data-storage-interfaces';
+import { iBaseTraitDataStorage } from '../interfaces/data-storage-interfaces';
+import { iBaseTraitDataStorageProps } from '../interfaces/props/trait-data-storage';
 import { createPath } from '../utils/createPath';
 
 // ? does this need to be a separate interface

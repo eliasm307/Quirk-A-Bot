@@ -8,9 +8,12 @@ import {
 import TraitCollecitonLogger from '../log/TraitCollectionLogger';
 import { iBaseTrait, iBaseTraitData, iBaseTraitProps } from '../traits/interfaces/trait-interfaces';
 import {
-  iBaseTraitCollectionDataStorageProps, iBaseTraitDataStorage, iBaseTraitDataStorageProps,
-  iTraitCollectionDataStorage
+  iBaseTraitDataStorage, iTraitCollectionDataStorage
 } from './interfaces/data-storage-interfaces';
+import {
+  iBaseTraitCollectionDataStorageProps
+} from './interfaces/props/trait-collection-data-storage';
+import { iBaseTraitDataStorageProps } from './interfaces/props/trait-data-storage';
 import { createPath } from './utils/createPath';
 
 export default abstract class AbstractTraitCollectionDataStorage<

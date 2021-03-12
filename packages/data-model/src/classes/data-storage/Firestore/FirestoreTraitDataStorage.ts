@@ -5,9 +5,8 @@ import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declaratio
 import { isTraitData } from '../../../utils/typePredicates';
 import { iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
 import AbstractTraitDataStorage from '../AbstractTraitDataStorage';
-import {
-  iBaseTraitDataStorage, iFirestoreTraitDataStorageProps
-} from '../interfaces/data-storage-interfaces';
+import { iBaseTraitDataStorage } from '../interfaces/data-storage-interfaces';
+import { iFirestoreTraitDataStorageProps } from '../interfaces/props/trait-data-storage';
 import { createPath } from '../utils/createPath';
 import { Firestore } from './utils/firebase';
 
@@ -94,7 +93,8 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 			unsubscriber = this.#firestore
 				.collection(parentCollectionPath)
 				.where('name', '==', this.name)
-				.onSnapshot(querySnapshot => {
+        .onSnapshot( querySnapshot => {
+          // ? delete
 					// confirm query only returns 1 result
 					/*if (querySnapshot.size !== 1) {
 						console.error(

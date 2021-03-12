@@ -2,9 +2,8 @@ import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../declarations/
 import { iTraitLogger, iTraitLogReporter } from '../log/interfaces/log-interfaces';
 import TraitLogger from '../log/TraitLogger';
 import UpdateLogEvent from '../log/UpdateLogEvent';
-import {
-  iBaseTraitDataStorage, iBaseTraitDataStorageProps
-} from './interfaces/data-storage-interfaces';
+import { iBaseTraitDataStorage } from './interfaces/data-storage-interfaces';
+import { iBaseTraitDataStorageProps } from './interfaces/props/trait-data-storage';
 
 interface iPrivateModifiableProperties<V extends TraitValueTypeUnion> {
 	value: V;
