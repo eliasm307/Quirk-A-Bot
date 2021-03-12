@@ -1,8 +1,7 @@
 // import saveCharacterSheetToFile from '../utils/saveCharacterSheetToFile';
 
 import { STRING_TRAIT_DEFAULT_VALUE } from '../../constants';
-import { ClanName, CoreNumberTraitName, CoreStringTraitName } from '../../declarations/types';
-import { isCharacterSheetData } from '../../utils/typePredicates';
+import { ClanName } from '../../declarations/types';
 import { iHasId } from '../data-storage/interfaces/data-storage-interfaces';
 import CharacterSheetLogger from '../log/CharacterSheetLogger';
 import {
@@ -10,13 +9,11 @@ import {
 } from '../log/interfaces/log-interfaces';
 import {
   iAttributeTraitCollection, iDisciplineTraitCollection, iSkillTraitCollection,
-  iTouchStoneOrConvictionCollection
+  iTouchStoneOrConvictionCollection, iTraitCollectionFactoryMethodProps
 } from '../traits/interfaces/trait-collection-interfaces';
 import {
   iCoreNumberTrait, iCoreStringTrait, iGeneralTrait
 } from '../traits/interfaces/trait-interfaces';
-import NumberTrait from '../traits/NumberTrait';
-import StringTrait from '../traits/StringTrait';
 import TraitFactory from '../traits/TraitFactory';
 import {
   iCharacterSheet, iCharacterSheetData, iCharacterSheetLoaderProps, iCharacterSheetProps
@@ -62,6 +59,9 @@ export default class CharacterSheet implements iCharacterSheet {
 		this.id = id;
 		this.path = characterSheetDataStorage.path; // note data storage decides path
 
+		// get initial data from data storage
+		const initialData = characterSheetDataStorage.getData();
+
 		// initialise new top level character sheet logger
 		this.logger = new CharacterSheetLogger({ sourceName: this.path, parentLogHandler: null });
 
@@ -77,135 +77,98 @@ export default class CharacterSheet implements iCharacterSheet {
 			characterSheet: this,
 		});
 
-		// get initial data from data storage
-		const initialData = characterSheetDataStorage.getData();
-
-		if (!isCharacterSheetData(initialData))
-			throw Error(`${__filename} data is not valid character sheet data, "${initialData}"`);
-
 		// create core trait logger initialiser function
 		const traitLoggerCreator = (props: iChildLoggerCreatorProps) => this.logger.createChildTraitLogger(props);
 
 		const traitCollectionLoggerCreator = (props: iChildLoggerCreatorProps) =>
 			this.logger.createChildTraitCollectionLogger(props);
 
-		// ? trait factory could be instantiable so details like the data storage initialisers and parent path could be passed once and not need to be repeated all over
+		// create partial trait factory method props
+		const partialTraitFactoryProps = {
+			traitDataStorageInitialiser,
+			parentPath: this.path,
+			logger: traitLoggerCreator,
+		};
+
+		// create traitCollection factory method props
+		const traitCollectionFactoryProps: iTraitCollectionFactoryMethodProps = {
+			traitCollectionDataStorageInitialiser,
+			traitDataStorageInitialiser,
+			parentPath: this.path,
+			logger: traitCollectionLoggerCreator,
+		};
+
 		// core number traits
-		this.bloodPotency = new NumberTrait<CoreNumberTraitName>({
+		this.bloodPotency = TraitFactory.newCoreNumberTrait({
+			...partialTraitFactoryProps,
 			max: 10,
 			name: 'Blood Potency',
 			value: initialData.bloodPotency.value || 0,
-			traitDataStorageInitialiser,
-			parentPath: this.path,
-			logger: traitLoggerCreator,
 		});
 
-		this.hunger = new NumberTrait<CoreNumberTraitName>({
+		this.hunger = TraitFactory.newCoreNumberTrait({
+			...partialTraitFactoryProps,
 			max: 5,
 			name: 'Hunger',
 			value: initialData.hunger.value || 0,
-			traitDataStorageInitialiser,
-			parentPath: this.path,
-			logger: traitLoggerCreator,
 		});
 
-		this.humanity = new NumberTrait<CoreNumberTraitName>({
+		this.humanity = TraitFactory.newCoreNumberTrait({
+			...partialTraitFactoryProps,
 			max: 10,
 			name: 'Humanity',
 			value: initialData.humanity.value || 0,
-			traitDataStorageInitialiser,
-			parentPath: this.path,
-			logger: traitLoggerCreator,
 		});
 
-		this.health = new NumberTrait<CoreNumberTraitName>({
+		this.health = TraitFactory.newCoreNumberTrait({
+			...partialTraitFactoryProps,
 			max: 10,
 			name: 'Health',
 			value: initialData.health.value || 0,
-			traitDataStorageInitialiser,
-			parentPath: this.path,
-			logger: traitLoggerCreator,
 		});
 
-		this.willpower = new NumberTrait<CoreNumberTraitName>({
+		this.willpower = TraitFactory.newCoreNumberTrait({
+			...partialTraitFactoryProps,
 			max: 10,
 			name: 'Willpower',
 			value: initialData.willpower.value || 0,
-			traitDataStorageInitialiser,
-			parentPath: this.path,
-			logger: traitLoggerCreator,
 		});
 
 		// core string traits
-		this.name = new StringTrait<CoreStringTraitName, string>({
+		this.name = TraitFactory.newCoreStringTrait<string>({
+			...partialTraitFactoryProps,
 			name: 'Name',
 			value: initialData.name.value || STRING_TRAIT_DEFAULT_VALUE,
-			traitDataStorageInitialiser,
-			parentPath: this.path,
-			logger: traitLoggerCreator,
 		});
 
-		this.sire = new StringTrait<CoreStringTraitName, string>({
+		this.sire = TraitFactory.newCoreStringTrait<string>({
+			...partialTraitFactoryProps,
 			name: 'Sire',
 			value: initialData.sire.value || STRING_TRAIT_DEFAULT_VALUE,
-			traitDataStorageInitialiser,
-			parentPath: this.path,
-			logger: traitLoggerCreator,
 		});
 
-		this.clan = new StringTrait<CoreStringTraitName, ClanName>({
+		this.clan = TraitFactory.newCoreStringTrait<ClanName>({
+			...partialTraitFactoryProps,
 			name: 'Clan',
 			value: initialData.clan.value || STRING_TRAIT_DEFAULT_VALUE,
-			traitDataStorageInitialiser,
-			parentPath: this.path,
-			logger: traitLoggerCreator,
 		});
 
-		// ? what if the trait factory wasnt static and actually took in arguments on instantiation, this would reduce some of the props required when using each factory method and hide some of the ugliness
-
 		// create collections, with initial data where available
-		this.attributes = TraitFactory.newAttributeTraitCollection(
-			{
-				traitCollectionDataStorageInitialiser,
-				traitDataStorageInitialiser,
-				parentPath: this.path,
-				logger: traitCollectionLoggerCreator,
-			},
-			...initialData.attributes
-		);
+		this.attributes = TraitFactory.newAttributeTraitCollection(traitCollectionFactoryProps, ...initialData.attributes);
 
-		this.skills = TraitFactory.newSkillTraitCollection(
-			{
-				traitCollectionDataStorageInitialiser,
-				traitDataStorageInitialiser,
-				parentPath: this.path,
-				logger: traitCollectionLoggerCreator,
-			},
-			...initialData.skills
-		);
+		this.skills = TraitFactory.newSkillTraitCollection(traitCollectionFactoryProps, ...initialData.skills);
 
 		this.disciplines = TraitFactory.newDisciplineTraitCollection(
-			{
-				traitCollectionDataStorageInitialiser,
-				traitDataStorageInitialiser,
-				parentPath: this.path,
-				logger: traitCollectionLoggerCreator,
-			},
+			traitCollectionFactoryProps,
 			...initialData.disciplines
 		);
 
 		this.touchstonesAndConvictions = TraitFactory.newTouchstonesAndConvictionTraitCollection(
-			{
-				traitCollectionDataStorageInitialiser,
-				traitDataStorageInitialiser,
-				parentPath: this.path,
-				logger: traitCollectionLoggerCreator,
-			},
+			traitCollectionFactoryProps,
 			...initialData.touchstonesAndConvictions
 		);
 
-		// ? should this be in a data storage object
-		// record this instance
+		// record this instance using id and path as keys
 		CharacterSheet.instances.set(this.id, this);
 		CharacterSheet.instances.set(this.path, this);
 	}
