@@ -63,7 +63,8 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 				// console.warn(`Successfully initialised trait with path ${this.path} and value ${this.private.value}`);
 			})
 			.catch(console.error)
-			.finally(() => console.timeEnd(timerName));
+			.finally( () => console.timeEnd( timerName ) );
+		
 		// todo tidy up
 		/*this.assertTraitExistsOnDataStorage({ name: this.name, value: defaultValueIfNotDefined })
 			.then(_ => {

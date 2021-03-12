@@ -1,16 +1,25 @@
-import { iHasTraitDataStorageInitialiser } from './data-storage-interfaces';
 import {
+	AttributeCategory,
+	AttributeName,
+	CoreNumberTraitName,
+	CoreStringTraitName,
+	DisciplineName,
+	SkillName,
 	TraitNameUnionOrString,
 	TraitValueTypeUnion,
-	AttributeName,
-	SkillName,
-	DisciplineName,
-	CoreStringTraitName,
-	CoreNumberTraitName,
-	AttributeCategory,
 } from '../types';
-import { iCanHaveParentPath, iCanHaveToJson, iHasCleanUp, iHasParentPath, iHasPath, iHasToJson } from './general-interfaces';
-import { iLoggerSingle } from './log-interfaces';
+import { iHasTraitDataStorageInitialiser } from './data-storage-interfaces';
+import { iCanHaveToJson, iHasCleanUp, iHasParentPath, iHasPath, iHasToJson } from './general-interfaces';
+import {
+	iBaseLogger,
+	iBaseLogReport,
+	iCharacterSheetLogger,
+	iChildLoggerCreatorProps,
+	iHasLogReporter,
+	iTraitCollectionLogger,
+	iTraitLogger,
+	iTraitLogReporter,
+} from './log-interfaces';
 import { iTraitCollectionDataStorageInitialiserBundle } from './trait-collection-interfaces';
 
 export interface iHasCategorySelector<N extends string, C extends string> {
@@ -29,8 +38,8 @@ export interface iHasNumberValue {
 	value: number;
 }
 export interface iHasNumberLimits {
-	min: number;
 	max: number;
+	min: number;
 }
 export interface iHasTraitInstanceCreator<
 	N extends TraitNameUnionOrString,
@@ -38,7 +47,9 @@ export interface iHasTraitInstanceCreator<
 	D extends iBaseTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
 > {
-	instanceCreator: (props: iBaseTraitProps<N, V, D>) => T; // todo this should only require name and value, everything else should be pre configured
+	instanceCreator: (props: iBaseTraitProps<N, V, D>) => T;
+
+	// todo this should only require name and value, everything else should be pre configured
 }
 // -------------------------------------------------------
 // TRAIT PROPS
@@ -49,7 +60,8 @@ export interface iBaseTraitProps<
 	D extends iBaseTraitData<N, V>
 > extends iHasTraitDataStorageInitialiser,
 		iHasParentPath,
-		iCanHaveToJson<D> {
+		iCanHaveToJson<D>,
+		iCanHaveLoggerCreator<iTraitLogger> {
 	name: N;
 	value: V;
 }
@@ -58,8 +70,8 @@ export interface iStringTraitProps<N extends TraitNameUnionOrString, V extends s
 
 export interface iBaseNumberTraitProps<N extends TraitNameUnionOrString, D extends iNumberTraitData<N>>
 	extends iBaseTraitProps<N, number, D> {
-	min?: number;
 	max: number;
+	min?: number;
 }
 
 export interface iNumberTraitProps<N extends TraitNameUnionOrString>
@@ -70,6 +82,22 @@ export interface iNumberTraitWithCategoryProps<N extends TraitNameUnionOrString,
 	categorySelector: (name: N) => C;
 }
 
+// todo relocate
+export interface iCanHaveLoggerCreator<L extends iBaseLogger<iBaseLogReport>> {
+	logger: ((props: iChildLoggerCreatorProps) => L) | null;
+}
+
+/*
+// todo relocate
+export interface iCanHaveTraitCollectionLogger {
+	logger: iTraitCollectionLogger | null;
+}
+// todo relocate
+export interface iCanHaveCharacterSheetLogger {
+	logger: iCharacterSheetLogger | null;
+}
+*/
+
 export interface iTraitCollectionProps<
 	N extends TraitNameUnionOrString,
 	V extends TraitValueTypeUnion,
@@ -77,7 +105,8 @@ export interface iTraitCollectionProps<
 	T extends iBaseTrait<N, V, D>
 > extends iHasTraitInstanceCreator<N, V, D, T>,
 		iTraitCollectionDataStorageInitialiserBundle,
-		iHasParentPath {
+		iHasParentPath,
+		iCanHaveLoggerCreator<iTraitCollectionLogger> {
 	name: string;
 }
 // -------------------------------------------------------
@@ -97,9 +126,11 @@ export interface iBaseTraitData<N extends TraitNameUnionOrString, V extends Trai
 	value: V;
 }
 export interface iGeneralTraitData extends iBaseTraitData<TraitNameUnionOrString, TraitValueTypeUnion> {}
+
 export interface iNumberTraitData<N extends TraitNameUnionOrString>
 	extends iBaseTraitData<N, number>,
 		iHasNumberValue {}
+
 export interface iStringTraitData<N extends TraitNameUnionOrString, V extends string>
 	extends iBaseTraitData<N, V>,
 		iHasStringValue<V> {}
@@ -119,15 +150,17 @@ export interface iCoreNumberTraitData extends iNumberTraitData<CoreNumberTraitNa
 // GENERIC TRAIT OBJECTS TYPES
 
 /** Base interface for Trait Objects */
-export interface iBaseTrait<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion, D extends iBaseTraitData<N, V>>
-	extends iBaseTraitData<N, V>,
+export interface iBaseTrait<
+	N extends TraitNameUnionOrString,
+	V extends TraitValueTypeUnion,
+	D extends iBaseTraitData<N, V>
+> extends iBaseTraitData<N, V>,
 		iHasToJson<D>,
-		iLoggerSingle,
+		iHasLogReporter<iTraitLogReporter>,
 		iHasPath,
 		iHasCleanUp {
 	// todo add explain method to give a summary what this trait is for
 	// todo add explainValue method to describe the current value of the attribute, ie add description getter to describe the meaning of a value
-
 }
 
 export interface iGeneralTrait extends iBaseTrait<TraitNameUnionOrString, TraitValueTypeUnion, iGeneralTraitData> {}

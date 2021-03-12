@@ -1,18 +1,12 @@
-import { iAddLogEventProps, iDeleteLogEventProps } from './../../declarations/interfaces/log-interfaces';
-import { iTraitCollectionDataStorage } from './../../declarations/interfaces/data-storage-interfaces';
-import { TraitNameUnionOrString } from './../../declarations/types';
-import { iBaseTrait, iTraitCollectionProps, iBaseTraitData } from '../../declarations/interfaces/trait-interfaces';
-import { TraitTypeNameUnion, TraitValueTypeUnion } from '../../declarations/types';
-import LogCollection from '../log/LogCollection';
-import DeleteLogEvent from '../log/DeleteLogEvent';
-import AddLogEvent from '../log/AddLogEvent';
-import { iLogCollection, iLogEvent, iLogReport } from '../../declarations/interfaces/log-interfaces';
-import { iTraitCollection } from '../../declarations/interfaces/trait-collection-interfaces';
 import {
-	iBaseTraitDataStorageProps,
-	iBaseTraitDataStorage,
+	iTraitCollectionDataStorage,
 } from '../../declarations/interfaces/data-storage-interfaces';
-import { createPath } from '../../utils/createPath';
+import {
+	iTraitCollectionLogReporter,
+} from '../../declarations/interfaces/log-interfaces';
+import { iTraitCollection } from '../../declarations/interfaces/trait-collection-interfaces';
+import { iBaseTrait, iBaseTraitData, iTraitCollectionProps } from '../../declarations/interfaces/trait-interfaces';
+import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../declarations/types';
 import { hasCleanUp } from '../../utils/typePredicates';
 
 export default class TraitCollection<
@@ -21,18 +15,17 @@ export default class TraitCollection<
 	D extends iBaseTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
 > implements iTraitCollection<N, V, D, T> {
-	#traitDataStorageInitialiser: <N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(
-		props: iBaseTraitDataStorageProps<N, V>
-	) => iBaseTraitDataStorage<N, V>;
-
 	// ? should this be # or protected?
 	#dataStorage: iTraitCollectionDataStorage<N, V, D, T>;
+	/*
+	#traitDataStorageInitialiser: <N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(
+		props: iBaseTraitDataStorageProps<N, V>
+	) => iBaseTraitDataStorage<N, V>;*/
+	// #typeName: TraitTypeNameUnion | string = 'Trait Collection';// ? is this required
+	/** Read only log reporter */
+	log: iTraitCollectionLogReporter;
 	name: string;
 	path: string;
-
-	/** Collection of logs for trait collection, ie add and remove events only (update events are held in traits) */
-	protected logs: iLogCollection;
-	#typeName: TraitTypeNameUnion | string = 'Trait Collection';
 
 	constructor(
 		{
@@ -41,59 +34,74 @@ export default class TraitCollection<
 			traitDataStorageInitialiser,
 			traitCollectionDataStorageInitialiser,
 			parentPath,
+			logger,
 		}: iTraitCollectionProps<N, V, D, T>,
 		...initialData: D[]
 	) {
 		this.name = name;
-		this.path = createPath(parentPath, name); // ? should data storage be responsible for assigning path? maybe rename this to "dataStorageId"
-		this.#traitDataStorageInitialiser = traitDataStorageInitialiser; // todo, reuse this function instead of making a new one each time
-		this.logs = new LogCollection({ sourceName: name, sourceType: 'Trait Collection' });
+
+		// todo delete
+		// this.#traitDataStorageInitialiser = traitDataStorageInitialiser;
+
+		// use provided logger creator otherwise create new local logger
+		/*this.logger = logger
+			? logger({ sourceName: name })
+			: new TraitCollectionLogger({ sourceName: name, parentLogHandler: null });*/
 
 		this.#dataStorage = traitCollectionDataStorageInitialiser({
 			instanceCreator,
 			name,
 			parentPath,
-			traitDataStorageInitialiser: this.#traitDataStorageInitialiser,
+			traitDataStorageInitialiser,
 			initialData,
-			onAdd: (props: iAddLogEventProps<V>) => this.logs.log(new AddLogEvent(props)),
-			onDelete: (props: iDeleteLogEventProps<V>) => this.logs.log(new DeleteLogEvent(props)),
+			// onAdd: (props: iAddLogEventProps<V>) => this.logger.log(new AddLogEvent(props)), // todo delete?
+			// onDelete: (props: iDeleteLogEventProps<V>) => this.logger.log(new DeleteLogEvent(props)),
+			logger,
 		});
+		// expose logger reporter
+		this.log = this.#dataStorage.log;
+
+		this.path = this.#dataStorage.path; // data storage defines path to use
 	}
+
+	get size(): number {
+		return this.#dataStorage.size;
+	}
+
 	cleanUp(): boolean {
 		// if the data storage has a cleanup function then call it and return the result,
 		// otherwise return true if no cleanup required
 		return hasCleanUp(this.#dataStorage) ? this.#dataStorage.cleanUp() : true;
 	}
 
-	toArray(): T[] {
-		return this.#dataStorage.toArray();
-	}
-	getLogEvents(): iLogEvent[] {
-		//todo memoise
-		// combine logs from reports and and sort oldest to newest
-		return this.getLogReports()
-			.reduce((events, report) => [...events, ...report.logEvents], [] as iLogEvent[])
-			.sort((a, b) => Number(a.timeStamp - b.timeStamp));
-	}
-	getLogReports(): iLogReport[] {
-		return [this.logs.getReport(), ...this.toArray().map(e => e.getLogReport())];
-	}
-	toJson(): D[] {
-		return this.toArray().map(e => e.toJson());
-	}
-	get size(): number {
-		return this.#dataStorage.size;
-	}
-	get(name: N): T | void {
-		return this.#dataStorage.get(name);
-	}
 	delete(name: N): iTraitCollection<N, V, D, T> {
 		this.#dataStorage.delete(name);
 		return this;
 	}
+
+	get(name: N): T | void {
+		return this.#dataStorage.get(name);
+	}
+
 	has(name: N): boolean {
 		return this.#dataStorage.has(name);
 	}
+
+	// todo delete
+	/*
+  getLogEvents(): iLogEvent[] {
+		//todo memoise
+		// combine logs from reports and and sort oldest to newest
+		return this.getLogReports()
+			.reduce((events, report) => [...events, ...report.events], [] as iLogEvent[])
+			.sort((a, b) => Number(a.timeStamp - b.timeStamp));
+	}
+
+  getLogReports(): iBaseLogReport[] {
+		return [this.log.getReport(), ...this.toArray().map(e => e.getLogReport())];
+  }
+
+*/
 
 	/**
 	 * Update trait value if it exists, otherwise add a new one
@@ -103,5 +111,13 @@ export default class TraitCollection<
 	set(name: N, newValue: V): iTraitCollection<N, V, D, T> {
 		this.#dataStorage.set(name, newValue);
 		return this;
+	}
+
+	toArray(): T[] {
+		return this.#dataStorage.toArray();
+	}
+
+	toJson(): D[] {
+		return this.toArray().map(e => e.toJson());
 	}
 }

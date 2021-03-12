@@ -1,20 +1,15 @@
-import { iHasNewValue } from '../../declarations/interfaces/general-interfaces';
-import { iBaseLogEventProps, iAddLogEvent, iAddLogEventProps } from '../../declarations/interfaces/log-interfaces';
-import CharacterSheet from '../CharacterSheet';
+import { iAddLogEvent, iAddLogEventProps } from '../../declarations/interfaces/log-interfaces';
 import BaseLogEvent from './BaseLogEvent';
 
-
-
 export default class AddLogEvent<T> extends BaseLogEvent<T> implements iAddLogEvent<T> {
-	newValue: T;
+	public newValue: T;
+
 	constructor({ description, newValue, property }: iAddLogEventProps<T>) {
 		super({ operation: 'ADD', property, description });
 		this.newValue = newValue;
 	}
-	describe(): string {
-		return `${this.property} added with inital value of ${this.newValue}`;
-	
-	}
 
-	
+	public describe(): string {
+		return `${this.property} added with inital value of ${this.newValue}`;
+	}
 }

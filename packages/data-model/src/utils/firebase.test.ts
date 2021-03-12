@@ -86,7 +86,7 @@ describe('firestore emulator', () => {
 				if (!change.doc.exists)
 					throw Error(`Document at path ${localTestCollectionName}/${change.doc.id} is marked as doesnt exist`);
 
-				logFirestoreChange(change, console.log);
+				// logFirestoreChange(change, console.log);
 				if (change.type === 'added') {
 					// console.log('New item: ', { data });
 					expect(data).toEqual(testDocData);

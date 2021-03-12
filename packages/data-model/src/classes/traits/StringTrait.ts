@@ -1,23 +1,18 @@
-import { iCharacterSheet } from './../../declarations/interfaces/character-sheet-interfaces';
-import { iStringTraitData } from './../../declarations/interfaces/trait-interfaces';
-import { iBaseStringTrait, iStringTraitProps } from '../../declarations/interfaces/trait-interfaces';
-import { TraitNameUnion, TraitNameUnionOrString } from '../../declarations/types';
+import { iBaseStringTrait, iStringTraitData, iStringTraitProps } from '../../declarations/interfaces/trait-interfaces';
+import { TraitNameUnionOrString } from '../../declarations/types';
 import AbstractBaseTrait from './AbstractBaseTrait';
 
 /** class with behaviour for traits that have string values */
 export default class StringTrait<N extends TraitNameUnionOrString, V extends string>
 	extends AbstractBaseTrait<N, V, iStringTraitData<N, V>>
 	implements iBaseStringTrait<N, V> {
-	constructor({ name, value, traitDataStorageInitialiser, parentPath }: iStringTraitProps<N, V>) {
+	constructor(props: iStringTraitProps<N, V>) {
 		super({
-			name,
-			value,
-			parentPath,
+			...props,
 			toJson: () => ({
 				name: this.name,
 				value: this.value,
 			}),
-			traitDataStorageInitialiser,
 		});
 	}
 
@@ -36,6 +31,7 @@ export default class StringTrait<N extends TraitNameUnionOrString, V extends str
 
 		return true;
 	}
+
 	protected preProcessValue(newValueRaw: V): V {
 		// no pre processing for string values
 		return newValueRaw;

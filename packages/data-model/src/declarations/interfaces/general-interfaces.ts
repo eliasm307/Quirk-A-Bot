@@ -1,7 +1,9 @@
 import { TraitTypeNameUnion } from './../types';
 import { iCharacterSheetDataStorage, iDataStorageFactory } from './data-storage-interfaces';
+
+// ? rename to "iHasGetData"
 export interface iHasToJson<D> {
-	toJson: () => D;
+	readonly toJson: () => D;
 }
 
 export interface iCanHaveToJson<D> {
@@ -12,11 +14,15 @@ export interface iCanHaveSaveAction {
 	saveAction?: () => boolean;
 }
 
-
+export interface iCanDescribe {
+	describe(): string;
+} 
 
 export interface iHasSaveAction {
 	saveAction: () => boolean;
 }
+
+// todo move to log interfaces
 export interface iHasOldValue<V> {
 	oldValue: V;
 }

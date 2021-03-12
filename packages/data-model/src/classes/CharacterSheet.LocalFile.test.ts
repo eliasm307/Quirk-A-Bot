@@ -2,7 +2,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import CharacterSheet from './CharacterSheet';
 import { iAttribute, iSkill, iTouchStoneOrConviction } from '../declarations/interfaces/trait-interfaces';
-import LocalFileDataStorageFactory from './data-storage/LocalFile/LocalFileDataStorageFactory'; 
+import LocalFileDataStorageFactory from './data-storage/LocalFile/LocalFileDataStorageFactory';
 
 // todo refactor this or do it as in memory tests
 
@@ -125,22 +125,24 @@ test(testName, async () => {
 	} );
 	*/
 
+	// todo move these to logger tests
 	// check changes were logged
-	expect(cs.getLogEvents()).toBeTruthy();
-	expect(cs.getLogReports()).toBeTruthy();
-	expect(csLoaded.health.getLogReport().logEvents.length).toEqual(1);
-	expect(cs.getLogEvents().length).toEqual(3);
-	expect(cs.getLogEvents()[0]?.property).toEqual('Health');
-	expect(cs.getLogEvents()[1]?.property).toEqual('Blood Potency');
-	expect(cs.getLogEvents()[2]?.property).toEqual('Hunger');
+	expect(cs.log.events).toBeTruthy();
+	expect(cs.log.report).toBeTruthy();
+	expect(csLoaded.health.log.report.events.length).toEqual(1);
+	expect(csLoaded.health.log.events.length).toEqual(1);
+	expect(cs.log.events.length).toEqual(3);
+	expect(cs.log.events[0]?.property).toEqual('Health');
+	expect(cs.log.events[1]?.property).toEqual('Blood Potency');
+	expect(cs.log.events[2]?.property).toEqual('Hunger');
 
 	// Changing values to same values should not generate more log items
 	cs.health.value = testHealthValue;
 	cs.bloodPotency.value = testBloodPotencyValue;
 	cs.hunger.value = testHungerValue;
 
-	expect(csLoaded.health.getLogReport().logEvents.length).toEqual(1);
-	expect(cs.getLogEvents().length).toEqual(3);
+	expect(csLoaded.health.log.events.length).toEqual(1);
+	expect(cs.log.events.length).toEqual(3);
 
 	// add more log items
 	csLoaded.health.value += 3;
@@ -154,8 +156,8 @@ test(testName, async () => {
 	});*/
 
 	// check changes were logged
-	expect(csLoaded.health.getLogReport().logEvents.length).toBeGreaterThanOrEqual(2);
-	expect(csLoaded.getLogReports()).toEqual(cs2.getLogReports());
+	expect(csLoaded.health.log.events.length).toBeGreaterThanOrEqual(2);
+	expect(csLoaded.log.report).toEqual(cs2.log.report);
 });
 
 testName = 'test existing file, autosave and custom setters for basic data types';
@@ -193,12 +195,12 @@ test(testName, async () => {
 	*/
 
 	// some logs should exist
-	expect(cs.getLogEvents()).toBeTruthy();
-	expect(cs.getLogReports()).toBeTruthy();
-	expect(cs.getLogEvents().length).toBeGreaterThan(0);
+	expect(cs.log.events).toBeTruthy();
+	expect(cs.log.report).toBeTruthy();
+	expect(cs.log.events.length).toBeGreaterThan(0);
 
 	// check changes were logged
-	expect(csLoaded.getLogReports()).toEqual(cs2.getLogReports());
+	expect(csLoaded.log.report).toEqual(cs2.log.report);
 });
 
 // todo move these to trait collection tests

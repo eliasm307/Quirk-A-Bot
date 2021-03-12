@@ -1,10 +1,10 @@
-import { iBaseTraitData } from './../../declarations/interfaces/trait-interfaces';
-import { TraitNameUnionOrString } from './../../declarations/types';
-import { TraitValueTypeUnion } from '../../declarations/types';
 import {
-	iBaseTraitDataStorageProps,
-	iBaseTraitDataStorage,
+  iBaseTraitDataStorage, iBaseTraitDataStorageProps
 } from '../../declarations/interfaces/data-storage-interfaces';
+import { iTraitLogger, iTraitLogReporter } from '../../declarations/interfaces/log-interfaces';
+import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../declarations/types';
+import TraitLogger from '../log/TraitLogger';
+import UpdateLogEvent from '../log/UpdateLogEvent';
 
 interface iPrivateModifiableProperties<V extends TraitValueTypeUnion> {
 	value: V;
@@ -12,19 +12,29 @@ interface iPrivateModifiableProperties<V extends TraitValueTypeUnion> {
 
 export default abstract class AbstractTraitDataStorage<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
 	implements iBaseTraitDataStorage<N, V> {
-	name: N;
+	protected logger: iTraitLogger;
 	protected private: iPrivateModifiableProperties<V>;
 
+	log: iTraitLogReporter;
+	name: N;
+	// the specific data storage defines this
+	abstract path: string;
+
+	protected abstract afterValueChange(oldValue: V, newValue: V): void;
+
 	constructor(props: iBaseTraitDataStorageProps<N, V>) {
-		const { name, defaultValueIfNotDefined } = props;
+		const { name, defaultValueIfNotDefined, parentPath, logger } = props;
 		this.name = name;
 		this.private = {
 			value: defaultValueIfNotDefined, // assign initial value
 		};
-	}
 
-	// the data storage defines this
-	abstract path: string;
+		// initialise logging, use logger if provided or create a new one
+		this.logger = logger ? logger({ sourceName: name }) : new TraitLogger({ sourceName: name, parentLogHandler: null });
+
+		// expose logger reporter
+		this.log = this.logger.reporter;
+	}
 
 	get value(): V {
 		return this.private.value;
@@ -40,9 +50,10 @@ export default abstract class AbstractTraitDataStorage<N extends TraitNameUnionO
 		// update internal value
 		this.private.value = newValue;
 
+		// log change
+		this.logger.log(new UpdateLogEvent({ property: this.name, oldValue, newValue }));
+
 		// run any custom logic after internal value is changed
 		this.afterValueChange(oldValue, newValue);
 	}
-
-	protected abstract afterValueChange(oldValue: V, newValue: V): void;
 }

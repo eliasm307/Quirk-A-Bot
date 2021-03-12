@@ -1,22 +1,22 @@
-import { AttributeName, SkillName, DisciplineName } from './../types';
-import { TraitNameUnionOrString, TraitValueTypeUnion } from '../types';
-import { iBaseCollection, iHasToJson, iHasPath, iHasParentPath, iHasCleanUp } from './general-interfaces';
-import { iLoggerCollection } from './log-interfaces';
+import { AttributeName, DisciplineName, SkillName, TraitNameUnionOrString, TraitValueTypeUnion } from '../types';
+import { iHasTraitCollectionDataStorageInitialiser, iHasTraitDataStorageInitialiser } from './data-storage-interfaces';
+import { iBaseCollection, iHasCleanUp, iHasParentPath, iHasPath, iHasToJson } from './general-interfaces';
+import { iHasTraitCollectionLogReporter, iTraitCollectionLogger } from './log-interfaces';
 import {
 	iAttribute,
-	iBaseTrait,
-	iSkill,
-	iBaseTraitData,
-	iDiscipline,
-	iTouchStoneOrConviction,
 	iAttributeData,
+	iBaseTrait,
+	iBaseTraitData,
+	iCanHaveLoggerCreator,
+	iDiscipline,
 	iDisciplineData,
-	iSkillData,
-	iTouchStoneOrConvictionData,
-	iGeneralTraitData,
 	iGeneralTrait,
+	iGeneralTraitData,
+	iSkill,
+	iSkillData,
+	iTouchStoneOrConviction,
+	iTouchStoneOrConvictionData,
 } from './trait-interfaces';
-import { iHasTraitCollectionDataStorageInitialiser, iHasTraitDataStorageInitialiser } from './data-storage-interfaces';
 
 // -------------------------------------------------------
 // GENERAL
@@ -30,7 +30,8 @@ export interface iTraitCollectionDataStorageInitialiserBundle
 
 export interface iTraitCollectionFactoryMethodProps
 	extends iTraitCollectionDataStorageInitialiserBundle,
-		iHasParentPath {}
+		iHasParentPath,
+		iCanHaveLoggerCreator<iTraitCollectionLogger> {}
 
 // -------------------------------------------------------
 // BASE TRAIT COLLECTION TYPES
@@ -43,7 +44,7 @@ export interface iTraitCollection<
 	T extends iBaseTrait<N, V, D>
 > extends iBaseCollection<N, V, T, iTraitCollection<N, V, D, T>>,
 		iHasToJson<D[]>,
-		iLoggerCollection,
+		iHasTraitCollectionLogReporter,
 		iHasPath,
 		iHasCleanUp {
 	name: string;

@@ -1,144 +1,37 @@
-import { ATTRIBUTE_COLLECTION_NAME, DISCIPLINE_COLLECTION_NAME, SKILL_COLLECTION_NAME, TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME } from './../../constants';
 import {
-	iDisciplineTraitCollection,
-	iSkillTraitCollection,
-	iTouchStoneOrConvictionCollection,
-	iTraitCollectionFactoryMethodProps,
-} from './../../declarations/interfaces/trait-collection-interfaces';
+  ATTRIBUTE_COLLECTION_NAME, DISCIPLINE_COLLECTION_NAME, SKILL_COLLECTION_NAME,
+  STRING_TRAIT_DEFAULT_VALUE, TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME
+} from '../../constants';
 import {
-	AttributeName,
-	AttributeCategory,
-	DisciplineName,
-	SkillName,
-	TraitNameUnionOrString,
-	CoreNumberTraitName,
-	CoreStringTraitName,
-} from './../../declarations/types';
+  iAttributeTraitCollection, iDisciplineTraitCollection, iSkillTraitCollection,
+  iTouchStoneOrConvictionCollection, iTraitCollectionFactoryMethodProps
+} from '../../declarations/interfaces/trait-collection-interfaces';
 import {
-	iNumberTraitWithCategoryProps,
-	iAttribute,
-	iDiscipline,
-	iAttributeData,
-	iNumberTraitProps,
-	iSkill,
-	iStringTraitProps,
-	iTouchStoneOrConviction,
-	iBaseTraitProps,
-	iDisciplineData,
-	iTouchStoneOrConvictionData,
-	iSkillData,
-} from './../../declarations/interfaces/trait-interfaces'; 
+  iAttribute, iAttributeData, iBaseTraitProps, iDiscipline, iDisciplineData, iNumberTraitProps,
+  iSkill, iSkillData, iStringTraitProps, iTouchStoneOrConviction, iTouchStoneOrConvictionData
+} from '../../declarations/interfaces/trait-interfaces';
+import {
+  AttributeName, CoreNumberTraitName, CoreStringTraitName, DisciplineName, SkillName,
+  TraitNameUnionOrString
+} from '../../declarations/types';
 import getAttributeCategory from '../../utils/getAttributeCategory';
-import TraitCollection from './TraitCollection';
-import { iAttributeTraitCollection } from '../../declarations/interfaces/trait-collection-interfaces'; 
 import NumberTrait from './NumberTrait';
 import NumberTraitWithCategory from './NumberTraitWithCategory';
 import StringTrait from './StringTrait';
+import TraitCollection from './TraitCollection';
 
 export default abstract class TraitFactory {
-	// methods use base trait props as all other details should be selected to match the required trait type
-	static newStringTrait<V extends string>(props: iStringTraitProps<TraitNameUnionOrString, V>) {
-		return new StringTrait(props);
-	}
-	static newNumberTrait({
-		name,
-		value = 0,
-		parentPath,
-		traitDataStorageInitialiser,
-		max,
-		min = 0,
-	}: iNumberTraitProps<TraitNameUnionOrString>) {
-		return new NumberTrait({ name, value, parentPath, traitDataStorageInitialiser, max, min });
-	}
-	static newCoreStringTrait<V extends string>(props: iStringTraitProps<CoreStringTraitName, V>) {
-		return new StringTrait(props);
-	}
-	static newCoreNumberTrait({
-		name,
-		value = 0,
-		traitDataStorageInitialiser,
-		max,
-		min = 0,
-		parentPath,
-	}: iNumberTraitProps<CoreNumberTraitName>) {
-		return new NumberTrait({ name, value, parentPath, traitDataStorageInitialiser, max, min });
-	}
 	static newAttributeTrait({
-		name,
 		value = 0,
-		parentPath,
-		traitDataStorageInitialiser,
+		...restProps
 	}: iBaseTraitProps<AttributeName, number, iAttributeData>): iAttribute {
-		const props: iNumberTraitWithCategoryProps<AttributeName, AttributeCategory> = {
-			categorySelector: getAttributeCategory,
-			min: 1,
-			max: 5,
-			name,
-			value,
-			traitDataStorageInitialiser,
-			parentPath,
-		};
-
-		return new NumberTraitWithCategory(props);
-	}
-
-	static newDisciplineTrait({
-		name,
-		value = 0,
-		parentPath,
-		traitDataStorageInitialiser,
-	}: iBaseTraitProps<DisciplineName, number, iDisciplineData>): iDiscipline {
-		const props: iNumberTraitProps<DisciplineName> = {
-			min: 1,
-			max: 5,
-			name,
-			value,
-			parentPath,
-			traitDataStorageInitialiser,
-		};
-
-		return new NumberTrait(props);
-	}
-
-	static newSkillTrait({
-		name,
-		value = 0,
-		parentPath,
-		traitDataStorageInitialiser,
-	}: iBaseTraitProps<SkillName, number, iSkillData>): iSkill {
-		const props: iNumberTraitProps<SkillName> = {
-			min: 0,
-			max: 5,
-			name,
-			value,
-			parentPath,
-			traitDataStorageInitialiser,
-		};
-
-		return new NumberTrait(props);
-	}
-
-	static newTouchStoneOrConvictionTrait({
-		name,
-		value,
-		traitDataStorageInitialiser,
-		parentPath,
-	}: iBaseTraitProps<string, string, iTouchStoneOrConvictionData>): iTouchStoneOrConviction {
-		const props: iStringTraitProps<string, string> = {
-			name,
-			value,
-			parentPath,
-			traitDataStorageInitialiser,
-		};
-
-		return new StringTrait(props);
+		return new NumberTraitWithCategory({ categorySelector: getAttributeCategory, ...restProps, value, min: 1, max: 5 });
 	}
 
 	static newAttributeTraitCollection(
 		props: iTraitCollectionFactoryMethodProps,
 		...initial: iAttributeData[]
 	): iAttributeTraitCollection {
-		const {} = props || {};
 		return new TraitCollection<AttributeName, number, iAttributeData, iAttribute>(
 			{
 				...props,
@@ -147,6 +40,44 @@ export default abstract class TraitFactory {
 			},
 			...initial
 		);
+	}
+
+	static newCoreNumberTrait({ value = 0, min = 0, ...restProps }: iNumberTraitProps<CoreNumberTraitName>) {
+		return new NumberTrait({ ...restProps, value, min });
+	}
+
+	static newCoreStringTrait<V extends string>(props: iStringTraitProps<CoreStringTraitName, V>) {
+		return new StringTrait(props);
+	}
+
+	static newDisciplineTrait({
+		value = 0,
+		...restProps
+	}: iBaseTraitProps<DisciplineName, number, iDisciplineData>): iDiscipline {
+		return new NumberTrait({ ...restProps, value, min: 1, max: 5 });
+	}
+
+	static newDisciplineTraitCollection(
+		props: iTraitCollectionFactoryMethodProps,
+		...initial: iDisciplineData[]
+	): iDisciplineTraitCollection {
+		const {} = props || {};
+		return new TraitCollection<DisciplineName, number, iDisciplineData, iDiscipline>(
+			{
+				...props,
+				name: DISCIPLINE_COLLECTION_NAME,
+				instanceCreator: TraitFactory.newDisciplineTrait,
+			},
+			...initial
+		);
+	}
+
+	static newNumberTrait({ value = 0, min = 0, ...restProps }: iNumberTraitProps<TraitNameUnionOrString>) {
+		return new NumberTrait({ ...restProps, value, min });
+	}
+
+	static newSkillTrait({ value = 0, ...restProps }: iBaseTraitProps<SkillName, number, iSkillData>): iSkill {
+		return new NumberTrait({ ...restProps, min: 0, max: 5, value });
 	}
 
 	static newSkillTraitCollection(
@@ -164,19 +95,16 @@ export default abstract class TraitFactory {
 		);
 	}
 
-	static newDisciplineTraitCollection(
-		props: iTraitCollectionFactoryMethodProps,
-		...initial: iDisciplineData[]
-	): iDisciplineTraitCollection {
-		const {} = props || {};
-		return new TraitCollection<DisciplineName, number, iDisciplineData, iDiscipline>(
-			{
-				...props,
-				name: DISCIPLINE_COLLECTION_NAME,
-				instanceCreator: TraitFactory.newDisciplineTrait,
-			},
-			...initial
-		);
+	// methods use base trait props as all other details should be selected to match the required trait type
+	static newStringTrait<V extends string>(props: iStringTraitProps<TraitNameUnionOrString, V>) {
+		return new StringTrait(props);
+	}
+
+	static newTouchStoneOrConvictionTrait({
+		value = STRING_TRAIT_DEFAULT_VALUE,
+		...restProps
+	}: iBaseTraitProps<string, string, iTouchStoneOrConvictionData>): iTouchStoneOrConviction {
+		return new StringTrait({ ...restProps, value });
 	}
 
 	static newTouchstonesAndConvictionTraitCollection(
