@@ -68,7 +68,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
 		// expose logger reporter
 		this.log = this.logger.reporter;
 
-		const traitLoggerCreator = (props: iChildLoggerCreatorProps) => this.logger.createChildTraitLogger(props); // ? if the closure is in the class will that work?
+		const traitLoggerCreator = (props: iChildLoggerCreatorProps) => this.logger.createChildTraitLogger(props);
 
 		// add intial data, if any
 		this.map = new Map<N, T>(

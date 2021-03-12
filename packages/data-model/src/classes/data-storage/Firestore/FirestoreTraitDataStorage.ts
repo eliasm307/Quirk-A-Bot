@@ -35,20 +35,6 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 			})
 			.catch(console.error)
 			.finally(() => console.timeEnd(timerName));
-
-		// todo tidy up
-		/*this.assertTraitExistsOnDataStorage({ name: this.name, value: defaultValueIfNotDefined })
-			.then(_ => {
-				// add event liseners
-				const parentPath = pathModule.dirname(this.#path);
-				return this.attachFirestoreEventListeners(parentPath);
-			})
-			.then(unsubFunc => (this.#unsubscribeFromEventListeners = unsubFunc))
-			.catch(error => {
-				return setTimeout(_ => {
-					throw Error();
-				});
-			});*/
 	}
 
 	cleanUp(): boolean {
@@ -67,10 +53,10 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 	}
 
 	protected async assertTraitExistsOnDataStorage(traitData: iBaseTraitData<N, V>): Promise<void> {
-		// try getting the document#
-		// ? does this need error handling?
+		// try getting the document
 		const doc = await this.#firestore.doc(this.path).get();
 
+		// assert document exists
 		if (!doc || !doc.exists) {
 			// if the document doesnt exist then try adding it
 			// console.log(__filename, `Trait does not exist at path ${this.path}, adding this now`);
@@ -84,7 +70,7 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 		}
 	}
 
-	// todo add cleanup method which calls this
+	/** Creates a trait path that satisfies firestore requirements */
 	protected createTraitPath(parentPath: string, name: string): string {
 		const segments = parentPath.split('/');
 
@@ -98,10 +84,8 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 	}
 
 	/** Attaches change event listeners for this trait via its parent collection, and returns the unsubscribe function */
-	private async attachFirestoreEventListeners(parentCollectionPath: string): Promise<() => void> {
+	private async attachFirestoreEventListenersAsync(parentCollectionPath: string): Promise<() => void> {
 		// todo test event listener
-
-		// todo this should be done by a FirestoreDocumentEventListener Class
 
 		let unsubscriber = () => {};
 
@@ -204,7 +188,7 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 
 		try {
 			// add event liseners
-			this.#unsubscribeFromEventListeners = await this.attachFirestoreEventListeners(parentPath);
+			this.#unsubscribeFromEventListeners = await this.attachFirestoreEventListenersAsync(parentPath);
 		} catch (error) {
 			this.#unsubscribeFromEventListeners();
 			console.error(__filename, `Could not add event listeners to trait with name ${this.name} at path ${this.path}`, {
