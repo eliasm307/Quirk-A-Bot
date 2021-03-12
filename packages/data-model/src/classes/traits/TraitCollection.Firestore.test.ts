@@ -22,7 +22,7 @@ const createtraitCollectionFactoryMethodProps = (groupName: string): iTraitColle
 	loggerCreator: null,
 });
 
-const deleteExistingCollectionData = async (collectionPath: string) => {
+const deleteExistingCollectionDataAsync = async (collectionPath: string) => {
 	// delete any existing data in the collection
 	let collectionSnapshot = await firestore.collection(collectionPath).get();
 	// if (collectionSnapshot.size) {
@@ -61,7 +61,7 @@ describe('TraitColleciton with Firestore data storage adding, and deleting', () 
 		const tc = TraitFactory.newAttributeTraitCollection(props);
 
 		// run tests after deleting any existing data
-		await deleteExistingCollectionData(tc.path);
+		await deleteExistingCollectionDataAsync(tc.path);
 
 		// test adding traits
 		tc.set('Charisma', 1).set('Composure', 2).set('Resolve', 3);
@@ -94,7 +94,7 @@ describe('TraitColleciton with Firestore data storage adding, and deleting', () 
 		const tc = TraitFactory.newAttributeTraitCollection(props);
 
 		// run tests after deleting any existing data
-		await deleteExistingCollectionData(tc.path);
+		await deleteExistingCollectionDataAsync(tc.path);
 
 		await new Promise(res => setTimeout(res, 200)); // wait for syncronisation
 
@@ -153,7 +153,7 @@ describe('TraitColleciton with Firestore data storage', () => {
 		const props = createtraitCollectionFactoryMethodProps('testingCollectionFromExistingData');
 
 		// delete any existing data
-		await deleteExistingCollectionData(`${props.parentPath}/${SKILL_COLLECTION_NAME}`);
+		await deleteExistingCollectionDataAsync(`${props.parentPath}/${SKILL_COLLECTION_NAME}`);
 
 		const initialData: iBaseTraitData<SkillName, number>[] = [
 			{ name: 'Academics', value: 1 },
@@ -186,7 +186,7 @@ describe('TraitColleciton with Firestore data storage', () => {
 		const expectedPath = `${props.parentPath}/${DISCIPLINE_COLLECTION_NAME}`;
 
 		// delete any existing data
-		await deleteExistingCollectionData(expectedPath);
+		await deleteExistingCollectionDataAsync(expectedPath);
 
 		await new Promise(res => setTimeout(res, 200)); // wait for syncronisation
 

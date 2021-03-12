@@ -2,10 +2,12 @@
 import { LogSourceTypeNameUnion } from '../../declarations/types';
 import AbstractLogger from './AbstractLogger';
 import {
-  iBaseLoggerProps, iBaseLogReporter, iCharacterSheetLogger, iCharacterSheetLogReport,
-  iChildLoggerCreatorProps, iLogEvent, iTraitCollectionLogger, iTraitCollectionLogReport,
-  iTraitLogger, iTraitLogReport
+  iBaseLoggerProps, iBaseLogReporter, iCharacterSheetLogger, iChildLoggerCreatorProps, iLogEvent,
+  iTraitCollectionLogger, iTraitLogger
 } from './interfaces/log-interfaces';
+import {
+  iCharacterSheetLogReport, iTraitCollectionLogReport, iTraitLogReport
+} from './interfaces/logReportInterfaces';
 import LogReporter from './LogReporter';
 import characterSheetLoggerToString from './utils/characterSheetLoggerToString';
 import createChildTraitCollectionLogger from './utils/createChildTraitCollectionLogger';

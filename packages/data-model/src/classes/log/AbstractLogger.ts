@@ -1,7 +1,8 @@
 import { LogSourceTypeNameUnion } from '../../declarations/types';
 import {
-  iBaseLogger, iBaseLoggerProps, iBaseLogReport, iBaseLogReporter, iLogEvent
+  iBaseLogger, iBaseLoggerProps, iBaseLogReporter, iLogEvent
 } from './interfaces/log-interfaces';
+import { iBaseLogReport } from './interfaces/logReportInterfaces';
 
 export default abstract class AbstractLogger<L extends iBaseLogReport> implements iBaseLogger<L> {
 	protected parentLogHandler: ((event: iLogEvent) => void) | null;

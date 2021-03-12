@@ -3,6 +3,9 @@
 
 import { iCanDescribe } from '../../../declarations/interfaces';
 import { LogOperationUnion, LogSourceTypeNameUnion } from '../../../declarations/types';
+import {
+  iBaseLogReport, iCharacterSheetLogReport, iTraitCollectionLogReport, iTraitLogReport
+} from './logReportInterfaces';
 
 // todo move to log interfaces
 export interface iHasOldValue<V> {
@@ -79,20 +82,6 @@ export interface iLogEvent extends iBaseLogEventProps {
 
 // -------------------------------------------------------
 // LOG REPORTS
-
-export interface iBaseLogReport extends iHasLogEvents {
-	sourceName: string;
-	sourceType: LogSourceTypeNameUnion;
-}
-
-export interface iTraitLogReport extends iBaseLogReport {}
-export interface iTraitCollectionLogReport extends iBaseLogReport {
-	traitLogReports: iTraitLogReport[];
-}
-export interface iCharacterSheetLogReport extends iBaseLogReport {
-	traitCollectionLogReports: iTraitCollectionLogReport[];
-	traitLogReports: iTraitLogReport[];
-}
 
 export interface iAddLogEvent<V> extends iLogEvent, iHasNewValue<V> {}
 
