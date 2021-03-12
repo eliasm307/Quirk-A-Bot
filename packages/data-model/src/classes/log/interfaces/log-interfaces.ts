@@ -67,13 +67,13 @@ export interface iBaseLoggerProps {
 export interface iLogEvent extends iBaseLogEventProps {
 	/** Date the log event occured */
 	date: Date;
+	/** Unique ID for log */
 	id: string;
 	operation: LogOperationUnion;
-	// ? is this required?
-
 	/** Timestamp to the nanosecond */
 	timeStamp: bigint;
 
+	/** Function to produce log description */
 	describe(): string;
 }
 
@@ -95,22 +95,6 @@ export interface iCharacterSheetLogReport extends iBaseLogReport {
 }
 
 export interface iAddLogEvent<V> extends iLogEvent, iHasNewValue<V> {}
-
-/*
-export interface iBaseLogger {
-	getLogEvents(): iLogEvent[];
-}
-*/
-
-/** For objects that require internal logging */
-/*
-export interface iLoggerSingle extends iBaseLogger {
-	getLogReport(): iLogReport;
-}
-export interface iLoggerCollection extends iBaseLogger {
-	getLogReports(): iLogReport[];
-}
-*/
 
 // -------------------------------------------------------
 // LOGGERS

@@ -8,10 +8,10 @@ import {
 export default abstract class AbstractNumberTrait<N extends TraitNameUnionOrString, D extends iNumberTraitData<N>>
 	extends AbstractBaseTrait<N, number, D>
 	implements iBaseNumberTrait<N, D> {
-	max: number;
-	min: number;
+  max: number;
+  min: number;
 
-	constructor({ min = 0, max, value = min, ...restProps }: iBaseNumberTraitProps<N, D>) {
+  constructor({ min = 0, max, value = min, ...restProps }: iBaseNumberTraitProps<N, D>) {
 		super({
 			...restProps,
 			value,
@@ -20,12 +20,14 @@ export default abstract class AbstractNumberTrait<N extends TraitNameUnionOrStri
 		this.max = max;
 	}
 
-	/** Only allows setting numbers within the allowed range for this trait */
-	newValueIsValid(newVal: number): boolean {
-		// ? is this required?
+  /** Only allows setting numbers within the allowed range for this trait */
+  newValueIsValid(newVal: number): boolean {
+		// ? is this required? delete
+    /*
 		// assert value is a number
 		if (typeof newVal !== 'number')
-			throw Error(`Value for trait ${this.name} should be a number, received a "${typeof newVal}`);
+      throw Error( `Value for trait ${ this.name } should be a number, received a "${ typeof newVal }` );
+    */
 
 		// make sure number is within allowable range before change
 		if (newVal < this.min) {
@@ -40,7 +42,7 @@ export default abstract class AbstractNumberTrait<N extends TraitNameUnionOrStri
 		return true;
 	}
 
-	preProcessValue(newValueRaw: number): number {
+  preProcessValue(newValueRaw: number): number {
 		// number values to be rounded before being used
 		return Math.round(newValueRaw);
 	}
