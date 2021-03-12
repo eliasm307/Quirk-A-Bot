@@ -13,21 +13,22 @@ import AbstractTraitDataStorage from '../AbstractTraitDataStorage';
 export default class LocalFileTraitDataStorage<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
 	extends AbstractTraitDataStorage<N, V>
 	implements iBaseTraitDataStorage<N, V> {
-	path: string;
-	#resolvedFilePath: string;
 	#characterSheet: iCharacterSheet;
+	#resolvedFilePath: string;
+	path: string;
+
 	constructor(props: iLocalFileTraitDataStorageProps<N, V>) {
 		super(props);
 		const { characterSheet, resolvedBasePath, name, parentPath } = props;
 		this.path = createPath(parentPath, name)
 
 		// ? is this required, needed to do some debugging before
-		if (!characterSheet) throw Error(`${__filename} characterSheet is not defined`);
+		if (!characterSheet) throw Error(`characterSheet is not defined`);
 
 		this.#characterSheet = characterSheet;
 		this.#resolvedFilePath = path.resolve(resolvedBasePath, `${characterSheet.id}.json`);
 	}
-	 
+
 	protected afterValueChange(): boolean {
 		// auto save character sheet to file
 		return saveCharacterSheetToFile(this.#characterSheet.toJson(), this.#resolvedFilePath);

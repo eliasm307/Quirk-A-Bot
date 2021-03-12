@@ -4,6 +4,8 @@ import { iCharacterSheetDataStorage, iDataStorageFactory } from './data-storage-
 // ? rename to "iHasGetData"
 export interface iHasToJson<D> {
 	readonly toJson: () => D;
+
+// ? rename to just data
 }
 
 export interface iCanHaveToJson<D> {
@@ -16,7 +18,7 @@ export interface iCanHaveSaveAction {
 
 export interface iCanDescribe {
 	describe(): string;
-} 
+}
 
 export interface iHasSaveAction {
 	saveAction: () => boolean;
@@ -32,19 +34,19 @@ export interface iHasNewValue<V> {
 }
 
 export interface iBaseCollection<K extends string, SetValueType, ReturnValueType, CollectionType> {
+	readonly size: number;
+
+	delete(key: K): CollectionType;
 	// todo this should extend a base iCollection
 	get(key: K): ReturnValueType | void;
-
+	has(key: K): boolean;
 	/**
 	 * Update trait value if it exists, otherwise add a new one
 	 * @param name name of trait to edit or create
 	 * @param newValue value to assign
 	 */
 	set(key: K, value: SetValueType): CollectionType;
-	delete(key: K): CollectionType;
-	has(key: K): boolean;
 	toArray(): ReturnValueType[];
-	readonly size: number;
 }
 
 // ? should this be renamed to id?

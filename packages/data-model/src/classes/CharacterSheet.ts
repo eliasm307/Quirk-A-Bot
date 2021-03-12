@@ -292,6 +292,7 @@ export default class CharacterSheet implements iCharacterSheet {
 
 */
 	public toJson(): iCharacterSheetData {
+    // todo move to external util
 		const data: iCharacterSheetData = {
 			id: this.id,
 

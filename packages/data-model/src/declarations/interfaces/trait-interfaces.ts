@@ -49,7 +49,7 @@ export interface iHasTraitInstanceCreator<
 > {
 	instanceCreator: (props: iBaseTraitProps<N, V, D>) => T;
 
-	// todo this should only require name and value, everything else should be pre configured
+// todo this should only require name and value, everything else should be pre configured
 }
 // -------------------------------------------------------
 // TRAIT PROPS
@@ -85,6 +85,8 @@ export interface iNumberTraitWithCategoryProps<N extends TraitNameUnionOrString,
 // todo relocate
 export interface iCanHaveLoggerCreator<L extends iBaseLogger<iBaseLogReport>> {
 	logger: ((props: iChildLoggerCreatorProps) => L) | null;
+
+// todo rename to loggerCreator
 }
 
 /*

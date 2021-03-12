@@ -20,7 +20,7 @@ export default class LocalFileCharacterSheetDataStorage implements iCharacterShe
 
 	path: string;
 
-	// todo parent path should be
+	// todo parent path should be used as base path
 	constructor({
 		id = `default/${Math.random() * 9}`,
 		dataStorageFactory,
@@ -35,16 +35,14 @@ export default class LocalFileCharacterSheetDataStorage implements iCharacterShe
 	}
 
 	async assertDataExistsOnDataStorage(): Promise<void> {
-		const exists = await fs.pathExistsSync(this.resolvedFilePath); // check file path exists
-
-		if (exists) return;
+		// check file path exists
+		const exists = await fs.pathExists(this.resolvedFilePath);
 
 		// if it doesnt exist initialise it as a blank character sheet
-		await saveCharacterSheetToFile(CharacterSheet.newDataObject({ id: this.id }), this.resolvedFilePath);
+		if (!exists) await saveCharacterSheetToFile(CharacterSheet.newDataObject({ id: this.id }), this.resolvedFilePath);
 	}
 
 	getData(): iCharacterSheetData {
-		// todo add option to create blank instance at the specified path if it doesnt exist?
 		const data = importDataFromFile(this.resolvedFilePath);
 
 		if (!data) throw Error(`Error importing data from ${this.resolvedFilePath}`);

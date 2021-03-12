@@ -109,6 +109,7 @@ export default class FirestoreTraitCollectionDataStorage<
 
 					const { name, value } = data as iBaseTraitData<N, V>;
 
+					// ? log these changes? since this is async, you need to manually make sure logs are in right order?
 					// handle collection changes internally
 					switch (change.type) {
 						case 'added':

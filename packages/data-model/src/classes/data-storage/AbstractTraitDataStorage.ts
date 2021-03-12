@@ -1,5 +1,6 @@
 import {
-  iBaseTraitDataStorage, iBaseTraitDataStorageProps
+	iBaseTraitDataStorage,
+	iBaseTraitDataStorageProps,
 } from '../../declarations/interfaces/data-storage-interfaces';
 import { iTraitLogger, iTraitLogReporter } from '../../declarations/interfaces/log-interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../declarations/types';
@@ -29,7 +30,7 @@ export default abstract class AbstractTraitDataStorage<N extends TraitNameUnionO
 			value: defaultValueIfNotDefined, // assign initial value
 		};
 
-		// initialise logging, use logger if provided or create a new one
+		// initialise logger
 		this.logger = logger ? logger({ sourceName: name }) : new TraitLogger({ sourceName: name, parentLogHandler: null });
 
 		// expose logger reporter
