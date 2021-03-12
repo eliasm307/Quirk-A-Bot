@@ -21,18 +21,18 @@ import TraitFactory from '../traits/TraitFactory';
 import {
   iCharacterSheet, iCharacterSheetData, iCharacterSheetLoaderProps, iCharacterSheetProps
 } from './interfaces/character-sheet-interfaces';
+import characterSheetToData from './utils/characterSheetToData';
+import newCharacterSheetData from './utils/newCharacterSheetData';
 
 // todo split this into smaller pieces
 
 // todo add a method to clean up when a character sheet is not in use anymore, ie detach all event listeners to data storage etc
 
 export default class CharacterSheet implements iCharacterSheet {
-	//-------------------------------------
-	// private properties with custom setters and/or getters
-
-	/** Existing instances of this class */
+	/** Existing singleton-ish instances of this class */
 	protected static instances: Map<string, CharacterSheet> = new Map<string, CharacterSheet>();
 
+	/** Internal logger */
 	protected logger: iCharacterSheetLogger;
 
 	//-------------------------------------
@@ -206,10 +206,10 @@ export default class CharacterSheet implements iCharacterSheet {
 
 		// ? should this be in a data storage object
 		// record this instance
-		CharacterSheet.instances.set(id, this);
+		CharacterSheet.instances.set(this.id, this);
+		CharacterSheet.instances.set(this.path, this);
 	}
 
-	// todo move to standalone util
 	// SINGLETON CONSTRUCTOR
 	static async load(props: iCharacterSheetLoaderProps): Promise<CharacterSheet> {
 		const { dataStorageFactory, id } = props;
@@ -249,68 +249,12 @@ export default class CharacterSheet implements iCharacterSheet {
 	}
 
 	/** Returns a new iCharacterSheetData object with default values */
-	static newDataObject({ id }: iHasId): iCharacterSheetData {
-		// todo move to standalone util
-		return {
-			id,
-			bloodPotency: { name: 'Blood Potency', value: 0 },
-			health: { name: 'Health', value: 0 },
-			humanity: { name: 'Humanity', value: 0 },
-			hunger: { name: 'Hunger', value: 0 },
-			willpower: { name: 'Willpower', value: 0 },
-			name: { name: 'Name', value: STRING_TRAIT_DEFAULT_VALUE },
-			sire: { name: 'Sire', value: STRING_TRAIT_DEFAULT_VALUE },
-			clan: { name: 'Clan', value: STRING_TRAIT_DEFAULT_VALUE },
-			attributes: [],
-			disciplines: [],
-			skills: [],
-			touchstonesAndConvictions: [],
-		};
+	static newDataObject(props: iHasId): iCharacterSheetData {
+		return newCharacterSheetData(props);
 	}
 
-	/*
-  *
-  getLogEvents(): iLogEvent[] {
-		// combine logs from reports and and sort oldest to newest
-		return this.getLogReports()
-			.reduce((events, report) => [...events, ...report.events], [] as iLogEvent[])
-			.sort((a, b) => {
-				return Number(a.timeStamp - b.timeStamp);
-			});
-	}
-
-  // todo character sheet shouldnt handle logs, this should be done similar to traits, expose a refernce to the internal logger then attach these methods to it
-  getLogReports(): iBaseLogReport[] {
-		// todo test
-		return this.getAllTraits().map(trait => trait.log.getLogReport());
-  }
-
-*/
 	public toJson(): iCharacterSheetData {
-		// todo move to external util
-		const data: iCharacterSheetData = {
-			id: this.id,
-
-			// trait collections
-			attributes: this.attributes.toJson(),
-			disciplines: this.disciplines.toJson(),
-			skills: this.skills.toJson(),
-			touchstonesAndConvictions: this.touchstonesAndConvictions.toJson(),
-
-			// core string traits
-			clan: this.clan.toJson(),
-			name: this.name.toJson(),
-			sire: this.sire.toJson(),
-
-			// core number traits
-			health: this.health.toJson(),
-			humanity: this.humanity.toJson(),
-			hunger: this.hunger.toJson(),
-			bloodPotency: this.bloodPotency.toJson(),
-			willpower: this.willpower.toJson(),
-		};
-		// console.log(__filename, { data });
-		return data;
+		return characterSheetToData(this);
 	}
 
 	// ? should this be public?
