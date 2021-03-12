@@ -8,6 +8,8 @@ interface iProps extends iBaseLogEventProps {
 	operation: LogOperationUnion;
 }
 
+// todo use strategy pattern for description function
+
 export default abstract class BaseLogEvent<T> implements iLogEvent {
 	public date: Date;
 	description?: string;
@@ -16,10 +18,12 @@ export default abstract class BaseLogEvent<T> implements iLogEvent {
 	public property: string;
 	public timeStamp: bigint;
 
+	public abstract describe(): string;
+
 	constructor({ operation, description, property }: iProps) {
 		this.id = generateId();
 		this.operation = operation;
-		this.description = description; // todo description function should be a property for the abstract, so it can be used here initially
+		this.description = this.describe(); // todo description function should be a property for the abstract, so it can be used here initially
 		this.property = property;
 
 		// generate time stamp and save date object
@@ -27,6 +31,4 @@ export default abstract class BaseLogEvent<T> implements iLogEvent {
 		this.date = date;
 		this.timeStamp = nanoSecondTimeStamp;
 	}
-
-	public abstract describe(): string;
 }

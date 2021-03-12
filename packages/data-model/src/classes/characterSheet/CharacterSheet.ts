@@ -1,31 +1,31 @@
-import {
-	iCanCreateChildTraitCollectionLogger,
-	iChildLoggerCreatorProps,
-} from './../declarations/interfaces/log-interfaces';
-import { STRING_TRAIT_DEFAULT_VALUE } from '../constants';
+// import saveCharacterSheetToFile from '../utils/saveCharacterSheetToFile';
+
+import { STRING_TRAIT_DEFAULT_VALUE } from '../../constants';
 import {
 	iCharacterSheet,
-	iCharacterSheetData,
-	iCharacterSheetLoaderProps,
 	iCharacterSheetProps,
-} from '../declarations/interfaces/character-sheet-interfaces';
-import { iHasId } from '../declarations/interfaces/data-storage-interfaces';
-import { iCharacterSheetLogger, iCharacterSheetLogReporter } from '../declarations/interfaces/log-interfaces';
+	iCharacterSheetLoaderProps,
+	iCharacterSheetData,
+} from '../../declarations/interfaces/character-sheet-interfaces';
+import { iHasId } from '../../declarations/interfaces/data-storage-interfaces';
+import {
+	iCharacterSheetLogger,
+	iCharacterSheetLogReporter,
+	iChildLoggerCreatorProps,
+} from '../../declarations/interfaces/log-interfaces';
 import {
 	iAttributeTraitCollection,
 	iDisciplineTraitCollection,
 	iSkillTraitCollection,
 	iTouchStoneOrConvictionCollection,
-} from '../declarations/interfaces/trait-collection-interfaces';
-import { iCoreNumberTrait, iCoreStringTrait, iGeneralTrait } from '../declarations/interfaces/trait-interfaces';
-import { ClanName, CoreNumberTraitName, CoreStringTraitName } from '../declarations/types';
-import { isCharacterSheetData } from '../utils/typePredicates';
-import CharacterSheetLogger from './log/CharacterSheetLogger';
-import NumberTrait from './traits/NumberTrait';
-import StringTrait from './traits/StringTrait';
-import TraitFactory from './traits/TraitFactory';
-
-// import saveCharacterSheetToFile from '../utils/saveCharacterSheetToFile';
+} from '../../declarations/interfaces/trait-collection-interfaces';
+import { iCoreNumberTrait, iCoreStringTrait, iGeneralTrait } from '../../declarations/interfaces/trait-interfaces';
+import { ClanName, CoreNumberTraitName, CoreStringTraitName } from '../../declarations/types';
+import { isCharacterSheetData } from '../../utils/typePredicates';
+import CharacterSheetLogger from '../log/CharacterSheetLogger';
+import NumberTrait from '../traits/NumberTrait';
+import StringTrait from '../traits/StringTrait';
+import TraitFactory from '../traits/TraitFactory';
 
 // todo split this into smaller pieces
 
@@ -292,7 +292,7 @@ export default class CharacterSheet implements iCharacterSheet {
 
 */
 	public toJson(): iCharacterSheetData {
-    // todo move to external util
+		// todo move to external util
 		const data: iCharacterSheetData = {
 			id: this.id,
 

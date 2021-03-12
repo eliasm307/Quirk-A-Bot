@@ -4,15 +4,15 @@ import {
 	DISCIPLINE_COLLECTION_NAME,
 	SKILL_COLLECTION_NAME,
 	TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME,
-} from './../constants';
-import { iCharacterSheetData } from './../declarations/interfaces/character-sheet-interfaces';
-import { createPath } from '../utils/createPath';
-import { firestoreEmulator } from '../utils/firebase';
-import { isCharacterSheetData } from '../utils/typePredicates';
-import readCharacterSheetDataFromFirestore from '../utils/readCharacterSheetDataFromFirestore';
+} from '../../constants';
+import { iCharacterSheetData } from '../../declarations/interfaces/character-sheet-interfaces';
+import { createPath } from '../../utils/createPath';
+import { firestoreEmulator } from '../../utils/firebase';
+import { isCharacterSheetData } from '../../utils/typePredicates';
+import readCharacterSheetDataFromFirestore from '../../utils/readCharacterSheetDataFromFirestore';
 import CharacterSheet from './CharacterSheet';
-import FirestoreDataStorageFactory from './data-storage/Firestore/FirestoreDataStorageFactory';
-import writeCharacterSheetDataToFirestore from '../utils/writeCharacterSheetDataToFirestore';
+import FirestoreDataStorageFactory from '../data-storage/Firestore/FirestoreDataStorageFactory';
+import writeCharacterSheetDataToFirestore from '../../utils/writeCharacterSheetDataToFirestore';
 
 const parentPath = 'characterSheetTestCollection';
 const firestore = firestoreEmulator;
