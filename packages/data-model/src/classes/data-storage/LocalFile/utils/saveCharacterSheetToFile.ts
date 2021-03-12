@@ -1,7 +1,5 @@
-import {
-  iCharacterSheetData
-} from '../classes/characterSheet/interfaces/character-sheet-interfaces';
-import exportDataToFile from './exportDataToFile';
+import exportDataToFile from '../../../../utils/exportDataToFile';
+import { iCharacterSheetData } from '../../../characterSheet/interfaces/character-sheet-interfaces';
 
 export default function saveCharacterSheetToFile(data: iCharacterSheetData, savePath: string): boolean {
 	// console.warn(`Saving character sheet with id ${data.discordUserId} to file ${savePath} `, { savePath, data });

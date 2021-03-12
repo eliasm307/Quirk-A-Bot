@@ -1,10 +1,11 @@
-import { iLocalFileTraitCollectionDataStorageProps } from '../interfaces/data-storage-interfaces'; 
-import { iBaseTrait, iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
-import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
-import saveCharacterSheetToFile from '../../../utils/saveCharacterSheetToFile';
 import path from 'path';
-import AbstractTraitCollectionDataStorage from '../AbstractTraitCollectionDataStorage';
+
+import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
 import { iCharacterSheet } from '../../characterSheet/interfaces/character-sheet-interfaces';
+import { iBaseTrait, iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
+import AbstractTraitCollectionDataStorage from '../AbstractTraitCollectionDataStorage';
+import { iLocalFileTraitCollectionDataStorageProps } from '../interfaces/data-storage-interfaces';
+import saveCharacterSheetToFile from './utils/saveCharacterSheetToFile';
 
 export default class LocalFileTraitCollectionDataStorage<
 	N extends TraitNameUnionOrString,

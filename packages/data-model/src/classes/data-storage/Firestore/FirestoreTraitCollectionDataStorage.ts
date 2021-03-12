@@ -1,9 +1,9 @@
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
-import { Firestore } from '../../../utils/firebase';
 import { isTraitData } from '../../../utils/typePredicates';
 import { iBaseTrait, iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
 import AbstractTraitCollectionDataStorage from '../AbstractTraitCollectionDataStorage';
 import { iFirestoreTraitCollectionDataStorageProps } from '../interfaces/data-storage-interfaces';
+import { Firestore } from './utils/firebase';
 
 export default class FirestoreTraitCollectionDataStorage<
 	N extends TraitNameUnionOrString,

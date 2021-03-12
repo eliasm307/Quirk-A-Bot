@@ -1,13 +1,13 @@
 import path from 'path';
 
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
-import { createPath } from '../../../utils/createPath';
-import saveCharacterSheetToFile from '../../../utils/saveCharacterSheetToFile';
 import { iCharacterSheet } from '../../characterSheet/interfaces/character-sheet-interfaces';
 import AbstractTraitDataStorage from '../AbstractTraitDataStorage';
 import {
   iBaseTraitDataStorage, iLocalFileTraitDataStorageProps
 } from '../interfaces/data-storage-interfaces';
+import { createPath } from '../utils/createPath';
+import saveCharacterSheetToFile from './utils/saveCharacterSheetToFile';
 
 export default class LocalFileTraitDataStorage<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
 	extends AbstractTraitDataStorage<N, V>

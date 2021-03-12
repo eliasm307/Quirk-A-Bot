@@ -1,8 +1,5 @@
  
 import { LogSourceTypeNameUnion } from '../../declarations/types';
-import characterSheetLoggerToString from '../../utils/characterSheetLoggerToString';
-import createChildTraitCollectionLogger from '../../utils/createChildTraitCollectionLogger';
-import createChildTraitLogger from '../../utils/createChildTraitLogger';
 import AbstractLogger from './AbstractLogger';
 import {
   iBaseLoggerProps, iBaseLogReporter, iCharacterSheetLogger, iCharacterSheetLogReport,
@@ -10,6 +7,9 @@ import {
   iTraitLogger, iTraitLogReport
 } from './interfaces/log-interfaces';
 import LogReporter from './LogReporter';
+import characterSheetLoggerToString from './utils/characterSheetLoggerToString';
+import createChildTraitCollectionLogger from './utils/createChildTraitCollectionLogger';
+import createChildTraitLogger from './utils/createChildTraitLogger';
 
 // todo test
 export default class CharacterSheetLogger

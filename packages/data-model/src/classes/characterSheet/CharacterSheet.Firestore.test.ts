@@ -2,12 +2,12 @@ import {
   ATTRIBUTE_COLLECTION_NAME, DISCIPLINE_COLLECTION_NAME, SKILL_COLLECTION_NAME,
   TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME
 } from '../../constants';
-import { createPath } from '../../utils/createPath';
-import { firestoreEmulator } from '../../utils/firebase';
-import readCharacterSheetDataFromFirestore from '../../utils/readCharacterSheetDataFromFirestore';
 import { isCharacterSheetData } from '../../utils/typePredicates';
-import writeCharacterSheetDataToFirestore from '../../utils/writeCharacterSheetDataToFirestore';
 import FirestoreDataStorageFactory from '../data-storage/Firestore/FirestoreDataStorageFactory';
+import { firestoreEmulator } from '../data-storage/Firestore/utils/firebase';
+import readCharacterSheetDataFromFirestore from '../data-storage/Firestore/utils/readCharacterSheetDataFromFirestore';
+import writeCharacterSheetDataToFirestore from '../data-storage/Firestore/utils/writeCharacterSheetDataToFirestore';
+import { createPath } from '../data-storage/utils/createPath';
 import CharacterSheet from './CharacterSheet';
 import { iCharacterSheetData } from './interfaces/character-sheet-interfaces';
 

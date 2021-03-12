@@ -1,10 +1,12 @@
-import { iBaseTraitDataStorage, iBaseTraitDataStorageProps } from '../interfaces/data-storage-interfaces';
-import { throws } from 'node:assert';
-import { iInMemoryTraitDataStorageProps } from '../interfaces/data-storage-interfaces';
-import { TraitValueTypeUnion, TraitNameUnionOrString } from '../../../declarations/types';
-import AbstractTraitDataStorage from '../AbstractTraitDataStorage';
+
+
+import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
 import { iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
-import { createPath } from '../../../utils/createPath';
+import AbstractTraitDataStorage from '../AbstractTraitDataStorage';
+import {
+  iBaseTraitDataStorage, iBaseTraitDataStorageProps
+} from '../interfaces/data-storage-interfaces';
+import { createPath } from '../utils/createPath';
 
 // ? does this need to be a separate interface
 

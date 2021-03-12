@@ -1,22 +1,22 @@
-import { createPath } from '../../../utils/createPath';
-import { Firestore } from '../../../utils/firebase';
-import readCharacterSheetDataFromFirestore from '../../../utils/readCharacterSheetDataFromFirestore';
-import writeCharacterSheetDataToFirestore from '../../../utils/writeCharacterSheetDataToFirestore';
 import CharacterSheet from '../../characterSheet/CharacterSheet';
 import { iCharacterSheetData } from '../../characterSheet/interfaces/character-sheet-interfaces';
 import {
   iCharacterSheetDataStorage, iDataStorageFactory, iFirestoreCharacterSheetDataStorageProps
 } from '../interfaces/data-storage-interfaces';
+import { createPath } from '../utils/createPath';
+import { Firestore } from './utils/firebase';
+import readCharacterSheetDataFromFirestore from './utils/readCharacterSheetDataFromFirestore';
+import writeCharacterSheetDataToFirestore from './utils/writeCharacterSheetDataToFirestore';
 
 export default class FirestoreCharacterSheetDataStorage implements iCharacterSheetDataStorage {
-  protected characterSheetData?: iCharacterSheetData;
-  protected dataStorageFactory: iDataStorageFactory;
-  protected firestore: Firestore;
-  protected id: string;
+	protected characterSheetData?: iCharacterSheetData;
+	protected dataStorageFactory: iDataStorageFactory;
+	protected firestore: Firestore;
+	protected id: string;
 
-  path: string;
+	path: string;
 
-  constructor({
+	constructor({
 		id = `default/${Math.random() * 9}`,
 		parentPath = 'characterSheets',
 		dataStorageFactory,
@@ -28,7 +28,7 @@ export default class FirestoreCharacterSheetDataStorage implements iCharacterShe
 		this.firestore = firestore;
 	}
 
-  async assertDataExistsOnDataStorage(): Promise<void> {
+	async assertDataExistsOnDataStorage(): Promise<void> {
 		// check character sheet exists
 		const docPromise = this.firestore.doc(this.path).get();
 		const docDataPromise = readCharacterSheetDataFromFirestore(this.firestore, this.path);
@@ -66,7 +66,7 @@ export default class FirestoreCharacterSheetDataStorage implements iCharacterShe
 		}
 	}
 
-  getData(): iCharacterSheetData {
+	getData(): iCharacterSheetData {
 		if (!this.characterSheetData)
 			throw Error('You need to call the method "assertDataExistsOnDataStorage" before getting the data');
 

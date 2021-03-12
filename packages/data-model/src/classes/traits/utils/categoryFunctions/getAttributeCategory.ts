@@ -1,4 +1,5 @@
-import { AttributeCategory, AttributeName } from './../declarations/types';
+import { AttributeCategory, AttributeName } from '../../../../declarations/types';
+
 export default function getAttributeCategory(name: AttributeName): AttributeCategory {
 	switch (name) {
 		case 'Strength':

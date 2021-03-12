@@ -3,14 +3,14 @@ import pathModule from 'path';
 import { CORE_TRAIT_COLLECTION_NAME } from '../../../constants';
 import { iHasCleanUp } from '../../../declarations/interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
-import { createPath } from '../../../utils/createPath';
-import { Firestore } from '../../../utils/firebase';
 import { isTraitData } from '../../../utils/typePredicates';
 import { iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
 import AbstractTraitDataStorage from '../AbstractTraitDataStorage';
 import {
   iBaseTraitDataStorage, iFirestoreTraitDataStorageProps
 } from '../interfaces/data-storage-interfaces';
+import { createPath } from '../utils/createPath';
+import { Firestore } from './utils/firebase';
 
 export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
 	extends AbstractTraitDataStorage<N, V>

@@ -1,16 +1,15 @@
- 
 import { LogSourceTypeNameUnion } from '../../declarations/types';
-import traitLoggerToString from '../../utils/traitLoggerToString';
 import AbstractLogger from './AbstractLogger';
 import {
   iBaseLoggerProps, iBaseLogReporter, iTraitLogger, iTraitLogReport
 } from './interfaces/log-interfaces';
 import LogReporter from './LogReporter';
+import traitLoggerToString from './utils/traitLoggerToString';
 
 export default class TraitLogger extends AbstractLogger<iTraitLogReport> implements iTraitLogger {
-	sourceType: LogSourceTypeNameUnion = 'Trait';
-
 	readonly reporter: iBaseLogReporter<iTraitLogReport>;
+
+	sourceType: LogSourceTypeNameUnion = 'Trait';
 
 	constructor(props: iBaseLoggerProps) {
 		super(props);

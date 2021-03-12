@@ -6,7 +6,6 @@ import {
   AttributeName, CoreNumberTraitName, CoreStringTraitName, DisciplineName, SkillName,
   TraitNameUnionOrString
 } from '../../declarations/types';
-import getAttributeCategory from '../../utils/getAttributeCategory';
 import {
   iAttributeTraitCollection, iDisciplineTraitCollection, iSkillTraitCollection,
   iTouchStoneOrConvictionCollection, iTraitCollectionFactoryMethodProps
@@ -19,6 +18,7 @@ import NumberTrait from './NumberTrait';
 import NumberTraitWithCategory from './NumberTraitWithCategory';
 import StringTrait from './StringTrait';
 import TraitCollection from './TraitCollection';
+import getAttributeCategory from './utils/categoryFunctions/getAttributeCategory';
 
 export default abstract class TraitFactory {
 	static newAttributeTrait({

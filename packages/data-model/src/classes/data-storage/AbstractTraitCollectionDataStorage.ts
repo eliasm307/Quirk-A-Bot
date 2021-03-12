@@ -1,5 +1,4 @@
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../declarations/types';
-import { createPath } from '../../utils/createPath';
 import AddLogEvent from '../log/AddLogEvent';
 import DeleteLogEvent from '../log/DeleteLogEvent';
 import {
@@ -12,6 +11,7 @@ import {
   iBaseTraitCollectionDataStorageProps, iBaseTraitDataStorage, iBaseTraitDataStorageProps,
   iTraitCollectionDataStorage
 } from './interfaces/data-storage-interfaces';
+import { createPath } from './utils/createPath';
 
 export default abstract class AbstractTraitCollectionDataStorage<
 	N extends TraitNameUnionOrString,

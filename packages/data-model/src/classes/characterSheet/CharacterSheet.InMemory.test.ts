@@ -1,4 +1,3 @@
-import CharacterSheet from './CharacterSheet';
 import InMemoryDataStorageFactory from '../data-storage/InMemory/InMemoryDataStorageFactory';
 
 const parentPath = 'characterSheetInMemoryTest';

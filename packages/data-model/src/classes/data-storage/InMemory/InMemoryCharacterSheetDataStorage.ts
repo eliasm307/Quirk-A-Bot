@@ -1,10 +1,10 @@
  
-import { createPath } from '../../../utils/createPath';
 import CharacterSheet from '../../characterSheet/CharacterSheet';
 import { iCharacterSheetData } from '../../characterSheet/interfaces/character-sheet-interfaces';
 import {
   iBaseCharacterSheetDataStorageProps, iCharacterSheetDataStorage, iDataStorageFactory
 } from '../interfaces/data-storage-interfaces';
+import { createPath } from '../utils/createPath';
 
 export default class InMemoryCharacterSheetDataStorage implements iCharacterSheetDataStorage {
 	protected characterSheetData: iCharacterSheetData;

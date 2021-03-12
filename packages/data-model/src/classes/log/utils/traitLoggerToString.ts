@@ -1,4 +1,4 @@
-import { iTraitLogger } from '../classes/log/interfaces/log-interfaces';
+import { iTraitLogger } from '../interfaces/log-interfaces';
 
 // todo implement?
 export default function traitLoggerToString(logger: iTraitLogger): string {
