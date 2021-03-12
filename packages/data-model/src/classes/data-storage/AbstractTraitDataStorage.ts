@@ -20,6 +20,8 @@ export default abstract class AbstractTraitDataStorage<N extends TraitNameUnionO
 	// the specific data storage defines this
 	abstract path: string;
 
+	abstract cleanUp(): boolean;
+
 	protected abstract afterValueChange(oldValue: V, newValue: V): void;
 
 	constructor(props: iBaseTraitDataStorageProps<N, V>) {

@@ -27,6 +27,11 @@ export default class LocalFileTraitCollectionDataStorage<
 		this.save();
 	}
 
+	protected afterTraitCleanUp(): boolean {
+		// do nothing
+		return true;
+	}
+
 	protected deleteTraitFromDataStorage(name: N): void {
 		this.save();
 	}

@@ -47,6 +47,9 @@ describe('Character sheet using Firestore', () => {
 		expect(doc.exists).toEqual(true);
 		expect(isCharacterSheetData(docData)).toEqual(true);
 		expect(docData).toEqual(CharacterSheet.newDataObject({ id: csId }));
+
+    // can clean up
+		expect(cs.cleanUp()).toEqual(true);
 	});
 
 	it('loads an existing charactersheet from firestore', async () => {
@@ -109,5 +112,7 @@ describe('Character sheet using Firestore', () => {
 		expect(disciplinesData).toEqual(initialData.disciplines);
 		expect(skillsData).toEqual(initialData.skills);
 		expect(touchstonesAndConvictionsData).toEqual(initialData.touchstonesAndConvictions);
+
+		cs.cleanUp();
 	});
 });

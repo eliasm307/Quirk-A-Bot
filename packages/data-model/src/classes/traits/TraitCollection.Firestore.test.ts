@@ -82,7 +82,8 @@ describe('TraitColleciton with Firestore data storage adding, and deleting', () 
 		expect(collectionDocumentData.every(isTraitData)).toBe(true);
 		expect(collectionDocumentData).toEqual(tcDataExpected);
 
-		tc.cleanUp();
+		// can clean up
+		expect(tc.cleanUp()).toEqual(true);
 	});
 	it('deletes traits from firestore collection', async () => {
 		expect.hasAssertions();
@@ -127,7 +128,8 @@ describe('TraitColleciton with Firestore data storage adding, and deleting', () 
 		expect(collectionDocumentData.length).toEqual(0);
 		expect(collectionDocumentData).toEqual([]);
 
-		tc.cleanUp();
+		// can clean up
+		expect(tc.cleanUp()).toEqual(true);
 	});
 
 	it('cleans up', () => {
@@ -172,7 +174,8 @@ describe('TraitColleciton with Firestore data storage', () => {
 		expect(collectionDocumentData.length).toEqual(3);
 		expect(collectionDocumentData).toEqual(initialData);
 
-		tc.cleanUp();
+		// can clean up
+		expect(tc.cleanUp()).toEqual(true);
 	});
 
 	it('listens to firestore and propagates changes to all trait collection instances', async () => {
@@ -211,14 +214,15 @@ describe('TraitColleciton with Firestore data storage', () => {
 			{ name: 'Celerity', value: 5 },
 		];
 
-		await new Promise(res => setTimeout(res, 1000)); // wait for syncronisation
+		await new Promise(res => setTimeout(res, 200)); // wait for syncronisation
 
 		// expect collection 2 to have the changes
 		expect(tc2.size).toEqual(3);
 		expect(tc2.toJson()).toEqual(tc1.toJson());
 		expect(tc2.toJson()).toEqual(resultingData);
 
-		tc1.cleanUp();
-		tc2.cleanUp();
+		// can clean up
+		expect(tc1.cleanUp()).toEqual(true);
+		expect(tc2.cleanUp()).toEqual(true);
 	});
 });

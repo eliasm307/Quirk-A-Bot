@@ -9,14 +9,14 @@ import readCharacterSheetDataFromFirestore from './utils/readCharacterSheetDataF
 import writeCharacterSheetDataToFirestore from './utils/writeCharacterSheetDataToFirestore';
 
 export default class FirestoreCharacterSheetDataStorage implements iCharacterSheetDataStorage {
-	protected characterSheetData?: iCharacterSheetData;
-	protected dataStorageFactory: iDataStorageFactory;
-	protected firestore: Firestore;
-	protected id: string;
+  protected characterSheetData?: iCharacterSheetData;
+  protected dataStorageFactory: iDataStorageFactory;
+  protected firestore: Firestore;
+  protected id: string;
 
-	path: string;
+  path: string;
 
-	constructor({
+  constructor({
 		id = `default/${Math.random() * 9}`,
 		parentPath = 'characterSheets',
 		dataStorageFactory,
@@ -28,7 +28,7 @@ export default class FirestoreCharacterSheetDataStorage implements iCharacterShe
 		this.firestore = firestore;
 	}
 
-	async assertDataExistsOnDataStorage(): Promise<void> {
+  async assertDataExistsOnDataStorage(): Promise<void> {
 		// check character sheet exists
 		const docPromise = this.firestore.doc(this.path).get();
 		const docDataPromise = readCharacterSheetDataFromFirestore(this.firestore, this.path);
@@ -51,7 +51,7 @@ export default class FirestoreCharacterSheetDataStorage implements iCharacterShe
 			if (!doc.exists) throw Error(`Document at path ${this.path} does not exist, initialising it now`);
 			this.characterSheetData = docData; // save data locally
 		} catch (error) {
-			console.warn(`Could not read character sheet data from path ${this.path}, initialising a new character sheet...`);
+			console.warn(`Could not read character sheet data from path ${this.path}, initialising a new character sheet...`, {error});
 			// if it doesnt exist or data is bad, initialise it as a blank character sheet if not
 			try {
 				const data = CharacterSheet.newDataObject({ id: this.id });
@@ -66,7 +66,7 @@ export default class FirestoreCharacterSheetDataStorage implements iCharacterShe
 		}
 	}
 
-	getData(): iCharacterSheetData {
+  getData(): iCharacterSheetData {
 		if (!this.characterSheetData)
 			throw Error('You need to call the method "assertDataExistsOnDataStorage" before getting the data');
 

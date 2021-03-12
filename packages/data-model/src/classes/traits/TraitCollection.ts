@@ -1,5 +1,4 @@
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../declarations/types';
-import { hasCleanUp } from '../../utils/typePredicates';
 import { iTraitCollectionDataStorage } from '../data-storage/interfaces/data-storage-interfaces';
 import { iTraitCollectionLogReporter } from '../log/interfaces/log-interfaces';
 import { iTraitCollection } from './interfaces/trait-collection-interfaces';
@@ -17,7 +16,7 @@ export default class TraitCollection<
 	#traitDataStorageInitialiser: <N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(
 		props: iBaseTraitDataStorageProps<N, V>
 	) => iBaseTraitDataStorage<N, V>;*/
-	// #typeName: TraitTypeNameUnion | string = 'Trait Collection';// ? is this required
+	// #typeName: TraitTypeNameUnion | string = 'Trait Collection'; // ? is this required
 	/** Read only log reporter */
 	log: iTraitCollectionLogReporter;
 	name: string;
@@ -67,7 +66,9 @@ export default class TraitCollection<
 	cleanUp(): boolean {
 		// if the data storage has a cleanup function then call it and return the result,
 		// otherwise return true if no cleanup required
-		return hasCleanUp(this.#dataStorage) ? this.#dataStorage.cleanUp() : true;
+		// todo run cleanup on all child traits also
+
+		return this.#dataStorage.cleanUp();
 	}
 
 	delete(name: N): iTraitCollection<N, V, D, T> {

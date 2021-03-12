@@ -11,9 +11,31 @@ export default class FirestoreTraitCollectionDataStorage<
 	D extends iBaseTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
 > extends AbstractTraitCollectionDataStorage<N, V, D, T> {
-	protected afterAddInternal(name: N): void {
-		// ? do nothing
+	#firestore: Firestore;
+	#unsubscribeFromEventListeners: () => void = () => {};
+
+	constructor(props: iFirestoreTraitCollectionDataStorageProps<N, V, D, T>) {
+		super(props);
+		const { firestore } = props;
+		this.#firestore = firestore;
+
+		this.initAsync();
 	}
+
+	protected afterAddInternal(name: N): void {
+		// do nothing
+	}
+
+	protected afterTraitCleanUp(): boolean {
+		try {
+			this.#unsubscribeFromEventListeners();
+			return true;
+		} catch (error) {
+			console.error(error);
+			return false;
+		}
+	}
+
 	protected deleteTraitFromDataStorage(name: N): void {
 		this.#firestore
 			.collection(this.path)
@@ -33,51 +55,10 @@ export default class FirestoreTraitCollectionDataStorage<
 				});
 			})
 			.catch(error => {
-				return setTimeout((_: any) => {
+				return setTimeout(() => {
 					throw Error(error);
 				});
 			});
-	}
-
-	#firestore: Firestore;
-	#unsubscribeFromEventListeners: () => void = () => {};
-
-	constructor(props: iFirestoreTraitCollectionDataStorageProps<N, V, D, T>) {
-		super(props);
-		const { firestore } = props;
-		this.#firestore = firestore;
-
-		this.initAsync();
-	}
-
-	private async initAsync() {
-		// ? should collections be asserted? when traits are initialised, these should auto populate collections
-		/*
-		try {
-			await this.assertTraitExistsOnDataStorage({ name: this.name, value: this.private.value });
-		} catch (error) {
-			console.error(
-				__filename,
-				`Could not assert that trait with name ${this.name} exists in collection at path ${this.path}`,
-				{ error }
-			);
-		}
-		*/
-
-		// add event liseners
-		try {
-			this.#unsubscribeFromEventListeners = await this.attachFirestoreEventListeners(this.path);
-		} catch (error) {
-			this.#unsubscribeFromEventListeners();
-			console.error(
-				__filename,
-				`Could not add event listeners to trait collection with name ${this.name} at path ${this.path}`,
-				{
-					error,
-					path: this.path,
-				}
-			);
-		}
 	}
 
 	/** Attaches change event listeners for this trait via its parent collection, and returns the unsubscribe function */
@@ -86,7 +67,7 @@ export default class FirestoreTraitCollectionDataStorage<
 
 		let unsubscriber = () => {};
 
-		// todo this should be done by a FirestoreCollectionEventListener Class
+		// ? this should be done by a FirestoreCollectionEventListener Class
 
 		try {
 			// subscribe to collection level changes
@@ -130,5 +111,35 @@ export default class FirestoreTraitCollectionDataStorage<
 			}
 		}
 		return unsubscriber;
+	}
+
+	private async initAsync() {
+		// ? should collections be asserted? when traits are initialised, these should auto populate collections
+		/*
+		try {
+			await this.assertTraitExistsOnDataStorage({ name: this.name, value: this.private.value });
+		} catch (error) {
+			console.error(
+				__filename,
+				`Could not assert that trait with name ${this.name} exists in collection at path ${this.path}`,
+				{ error }
+			);
+		}
+		*/
+
+		// add event liseners
+		try {
+			this.#unsubscribeFromEventListeners = await this.attachFirestoreEventListeners(this.path);
+		} catch (error) {
+			this.#unsubscribeFromEventListeners();
+			console.error(
+				__filename,
+				`Could not add event listeners to trait collection with name ${this.name} at path ${this.path}`,
+				{
+					error,
+					path: this.path,
+				}
+			);
+		}
 	}
 }

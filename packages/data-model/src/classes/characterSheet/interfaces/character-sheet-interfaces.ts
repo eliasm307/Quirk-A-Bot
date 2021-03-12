@@ -1,26 +1,16 @@
-import { iHasParentPath, iHasToJson } from '../../../declarations/interfaces';
+import { iHasCleanUp, iHasParentPath, iHasToJson } from '../../../declarations/interfaces';
 import { ClanName } from '../../../declarations/types';
 import {
-	iHasId,
-	iHasDataStorageFactory,
-	iHasCharacterSheetDataStorage,
+  iHasCharacterSheetDataStorage, iHasDataStorageFactory, iHasId
 } from '../../data-storage/interfaces/data-storage-interfaces';
 import { iHasCharacterSheetLogReporter } from '../../log/interfaces/log-interfaces';
 import {
-	iAttributeTraitCollection,
-	iDisciplineTraitCollection,
-	iSkillTraitCollection,
-	iTouchStoneOrConvictionCollection,
+  iAttributeTraitCollection, iDisciplineTraitCollection, iSkillTraitCollection,
+  iTouchStoneOrConvictionCollection
 } from '../../traits/interfaces/trait-collection-interfaces';
 import {
-	iAttributeData,
-	iCoreNumberTraitData,
-	iCoreStringTraitData,
-	iDisciplineData,
-	iSkillData,
-	iTouchStoneOrConvictionData,
-	iCoreNumberTrait,
-	iCoreStringTrait,
+  iAttributeData, iCoreNumberTrait, iCoreNumberTraitData, iCoreStringTrait, iCoreStringTraitData,
+  iDisciplineData, iSkillData, iTouchStoneOrConvictionData
 } from '../../traits/interfaces/trait-interfaces';
 
 export interface iHasCharacterSheet {
@@ -38,7 +28,7 @@ export interface iCharacterSheetProps
 		iHasCharacterSheetDataStorage {}
 
 /** The basic shape of a charactersheet */
-export interface iBaseCharacterSheet {
+export interface iCharacterSheetShape {
 	readonly id: string;
 
 	attributes: any;
@@ -57,7 +47,7 @@ export interface iBaseCharacterSheet {
 }
 
 /** The shape of character sheet as plain JSON data */
-export interface iCharacterSheetData extends iBaseCharacterSheet {
+export interface iCharacterSheetData extends iCharacterSheetShape {
 	attributes: iAttributeData[];
 	bloodPotency: iCoreNumberTraitData;
 	// ? should this be just a string?
@@ -76,9 +66,10 @@ export interface iCharacterSheetData extends iBaseCharacterSheet {
 
 /** The shape of a character sheet object instance */
 export interface iCharacterSheet
-	extends iBaseCharacterSheet,
+	extends iCharacterSheetShape,
 		iHasToJson<iCharacterSheetData>,
-		iHasCharacterSheetLogReporter {
+		iHasCharacterSheetLogReporter,
+		iHasCleanUp {
 	attributes: iAttributeTraitCollection;
 	bloodPotency: iCoreNumberTrait;
 	// ? should this be just a string?

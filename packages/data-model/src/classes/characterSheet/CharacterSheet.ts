@@ -1,7 +1,7 @@
 // import saveCharacterSheetToFile from '../utils/saveCharacterSheetToFile';
-
 import { STRING_TRAIT_DEFAULT_VALUE } from '../../constants';
 import { ClanName } from '../../declarations/types';
+import { hasCleanUp } from '../../utils/typePredicates';
 import { iHasId } from '../data-storage/interfaces/data-storage-interfaces';
 import CharacterSheetLogger from '../log/CharacterSheetLogger';
 import {
@@ -16,7 +16,8 @@ import {
 } from '../traits/interfaces/trait-interfaces';
 import TraitFactory from '../traits/TraitFactory';
 import {
-  iCharacterSheet, iCharacterSheetData, iCharacterSheetLoaderProps, iCharacterSheetProps
+  iCharacterSheet, iCharacterSheetData, iCharacterSheetLoaderProps, iCharacterSheetProps,
+  iCharacterSheetShape
 } from './interfaces/character-sheet-interfaces';
 import characterSheetToData from './utils/characterSheetToData';
 import newCharacterSheetData from './utils/newCharacterSheetData';
@@ -214,6 +215,51 @@ export default class CharacterSheet implements iCharacterSheet {
 	/** Returns a new iCharacterSheetData object with default values */
 	static newDataObject(props: iHasId): iCharacterSheetData {
 		return newCharacterSheetData(props);
+	}
+
+	cleanUp(): boolean {
+		const coreTraits: iCharacterSheetShape = {
+			attributes: this.attributes,
+			bloodPotency: this.bloodPotency,
+			clan: this.clan,
+			disciplines: this.disciplines,
+			health: this.health,
+			humanity: this.humanity,
+			hunger: this.hunger,
+			id: this.id,
+			name: this.name,
+			sire: this.sire,
+			skills: this.skills,
+			touchstonesAndConvictions: this.touchstonesAndConvictions,
+			willpower: this.willpower,
+		};
+
+		let total = 0;
+		let successCount = 0;
+		let failCount = 0;
+
+		// clean any cleanable properties
+		for (let [propName, prop] of Object.entries(this)) {
+			if (hasCleanUp(prop)) {
+				total++;
+				if (prop.cleanUp()) {
+					successCount++;
+				} else {
+					console.warn(__filename, `There was an issue cleaning up ${propName}`);
+					failCount++;
+				}
+			}
+		}
+
+		// if there are failures
+		if (!!failCount)
+			console.warn(
+				__filename,
+				`Cleaned ${successCount} / ${total} items Successfully, but ${failCount} / ${total} were unsuccessful`
+			);
+
+		// successful if no failures
+		return !failCount;
 	}
 
 	public toJson(): iCharacterSheetData {

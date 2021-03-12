@@ -1,5 +1,5 @@
 import {
-  iBaseCollection, iHasParentPath, iHasPath, iHasToJson
+  iBaseCollection, iHasCleanUp, iHasParentPath, iHasPath, iHasToJson
 } from '../../../declarations/interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
 import {
@@ -138,7 +138,8 @@ export interface iFirestoreCharacterSheetDataStorageProps extends iBaseCharacter
 export interface iBaseTraitDataStorage<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
 	extends iBaseTraitData<N, V>,
 		iHasPath,
-		iHasTraitLogReporter {}
+		iHasTraitLogReporter,
+		iHasCleanUp {}
 
 export interface iTraitCollectionDataStorage<
 	N extends TraitNameUnionOrString,
@@ -148,7 +149,8 @@ export interface iTraitCollectionDataStorage<
 > extends iBaseCollection<N, V, T, iTraitCollectionDataStorage<N, V, D, T>>,
 		iHasToJson<D[]>,
 		iHasTraitCollectionLogReporter,
-		iHasPath {
+		iHasPath,
+		iHasCleanUp {
 	name: string;
 }
 

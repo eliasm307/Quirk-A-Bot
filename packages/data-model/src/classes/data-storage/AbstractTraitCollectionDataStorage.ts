@@ -37,6 +37,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
 
 	// ? is this required? if colleciton adds data to storage this means creating trait data and connecting data to trait instances would be done by 2 classes async, so it might be done in the wrong order. Opted to have these both on the trait side
 	protected abstract afterAddInternal(name: N): void;
+	protected abstract afterTraitCleanUp(): boolean;
 	protected abstract deleteTraitFromDataStorage(name: N): void;
 
 	constructor({
@@ -65,9 +66,9 @@ export default abstract class AbstractTraitCollectionDataStorage<
 			: new TraitCollecitonLogger({ sourceName: name, parentLogHandler: null });
 
 		// expose logger reporter
-    this.log = this.logger.reporter;
-    
-    const traitLoggerCreator = (props: iChildLoggerCreatorProps) => this.logger.createChildTraitLogger(props); // ? if the closure is in the class will that work?
+		this.log = this.logger.reporter;
+
+		const traitLoggerCreator = (props: iChildLoggerCreatorProps) => this.logger.createChildTraitLogger(props); // ? if the closure is in the class will that work?
 
 		// add intial data, if any
 		this.map = new Map<N, T>(
@@ -88,6 +89,30 @@ export default abstract class AbstractTraitCollectionDataStorage<
 
 	get size(): number {
 		return this.map.size;
+	}
+
+	cleanUp(): boolean {
+		let result = true;
+
+		// try cleaning traits
+		this.map.forEach(trait => {
+			if (!trait.cleanUp()) {
+				console.warn(`Issue cleaning up trait "${trait.name}" in collection "${this.name}"`);
+				result = false;
+			}
+		});
+
+		// try cleaning this colleciton instance
+		if (!this.afterTraitCleanUp()) {
+			console.warn(
+				`Issue cleaning up collection "${this.name}" after child traits were cleaned ${
+					result ? 'successfully' : 'unsuccessfully'
+				}`
+			);
+			result = false;
+		}
+
+		return result;
 	}
 
 	delete(name: N): iTraitCollectionDataStorage<N, V, D, T> {

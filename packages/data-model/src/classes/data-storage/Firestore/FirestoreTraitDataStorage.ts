@@ -1,7 +1,6 @@
 import pathModule from 'path';
 
 import { CORE_TRAIT_COLLECTION_NAME } from '../../../constants';
-import { iHasCleanUp } from '../../../declarations/interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
 import { isTraitData } from '../../../utils/typePredicates';
 import { iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
@@ -14,7 +13,7 @@ import { Firestore } from './utils/firebase';
 
 export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
 	extends AbstractTraitDataStorage<N, V>
-	implements iBaseTraitDataStorage<N, V>, iHasCleanUp {
+	implements iBaseTraitDataStorage<N, V> {
 	#firestore: Firestore;
 	#unsubscribeFromEventListeners: () => void = () => null;
 
@@ -35,8 +34,8 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 				// console.warn(`Successfully initialised trait with path ${this.path} and value ${this.private.value}`);
 			})
 			.catch(console.error)
-			.finally( () => console.timeEnd( timerName ) );
-		
+			.finally(() => console.timeEnd(timerName));
+
 		// todo tidy up
 		/*this.assertTraitExistsOnDataStorage({ name: this.name, value: defaultValueIfNotDefined })
 			.then(_ => {
@@ -140,7 +139,7 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 						if (change.type === 'modified') {
 							// console.warn('Modified document: ', { data });
 							// apply private modification
-              // ? log this change? since this is async, you need to manually make sure logs are in right order?
+							// ? log this change? since this is async, you need to manually make sure logs are in right order?
 							this.private.value = data.value as V;
 						}
 					});

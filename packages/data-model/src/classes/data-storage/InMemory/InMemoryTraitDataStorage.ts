@@ -1,5 +1,3 @@
-
-
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
 import { iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
 import AbstractTraitDataStorage from '../AbstractTraitDataStorage';
@@ -14,15 +12,23 @@ export default class InMemoryTraitDataStorage<N extends TraitNameUnionOrString, 
 	extends AbstractTraitDataStorage<N, V>
 	implements iBaseTraitDataStorage<N, V> {
 	path: string;
-	constructor (props: iBaseTraitDataStorageProps<N, V>) {
-		super( props )
-		const { name, parentPath } = props
+
+	constructor(props: iBaseTraitDataStorageProps<N, V>) {
+		super(props);
+		const { name, parentPath } = props;
 		this.path = createPath(parentPath, name);
 	}
-	protected assertTraitExistsOnDataStorage({}: iBaseTraitData<N, V>): void {
-		// todo implement this
+
+	cleanUp(): boolean {
+		// do nothing
+		return true;
 	}
+
 	protected afterValueChange(): void {
 		// do nothing
+	}
+
+	protected assertTraitExistsOnDataStorage({}: iBaseTraitData<N, V>): void {
+		// do nothing, always starts from default for in memory
 	}
 }

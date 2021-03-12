@@ -1,10 +1,8 @@
-import {
-	iBaseNumberTrait,
-	iBaseNumberTraitProps,
-	iNumberTraitData,
-} from './interfaces/trait-interfaces';
 import { TraitNameUnionOrString } from '../../declarations/types';
 import AbstractBaseTrait from './AbstractBaseTrait';
+import {
+  iBaseNumberTrait, iBaseNumberTraitProps, iNumberTraitData
+} from './interfaces/trait-interfaces';
 
 /** class with behaviour for traits that have number values */
 export default abstract class AbstractNumberTrait<N extends TraitNameUnionOrString, D extends iNumberTraitData<N>>
@@ -31,11 +29,11 @@ export default abstract class AbstractNumberTrait<N extends TraitNameUnionOrStri
 
 		// make sure number is within allowable range before change
 		if (newVal < this.min) {
-			console.log(`Cannot set trait ${this.name} to ${newVal}, this is below the minimum allowed value of ${this.min}`);
+			// console.log(`Cannot set trait ${this.name} to ${newVal}, this is below the minimum allowed value of ${this.min}`);
 			return false;
 		}
 		if (newVal > this.max) {
-			console.log(`Cannot set trait ${this.name} to ${newVal}, this is above the maximum allowed value of ${this.max}`);
+			// console.log(`Cannot set trait ${this.name} to ${newVal}, this is above the maximum allowed value of ${this.max}`);
 			return false;
 		}
 

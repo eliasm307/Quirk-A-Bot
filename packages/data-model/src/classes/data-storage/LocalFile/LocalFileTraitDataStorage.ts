@@ -19,13 +19,18 @@ export default class LocalFileTraitDataStorage<N extends TraitNameUnionOrString,
 	constructor(props: iLocalFileTraitDataStorageProps<N, V>) {
 		super(props);
 		const { characterSheet, resolvedBasePath, name, parentPath } = props;
-		this.path = createPath(parentPath, name)
+		this.path = createPath(parentPath, name);
 
 		// ? is this required, needed to do some debugging before
 		if (!characterSheet) throw Error(`characterSheet is not defined`);
 
 		this.#characterSheet = characterSheet;
 		this.#resolvedFilePath = path.resolve(resolvedBasePath, `${characterSheet.id}.json`);
+	}
+
+	cleanUp(): boolean {
+		// do nothing
+		return true;
 	}
 
 	protected afterValueChange(): boolean {

@@ -12,8 +12,6 @@ const testSuiteParentPath = 'numberTrait-firestore';
 
 describe('Number trait with firestore data storage', () => {
 	it('asserts trait exists in firestore in the right format', async () => {
-		expect.assertions(3);
-
 		const trait1Name = 'trait1';
 		const testParentPath = testSuiteParentPath + '-trait-exists';
 
@@ -31,16 +29,17 @@ describe('Number trait with firestore data storage', () => {
 		const doc = await firestore.doc(trait1.path).get();
 		const data = doc.data();
 
+    expect.assertions( 4 );
+    
 		expect(doc.exists).toEqual(true);
 		expect(isTraitData(data)).toEqual(true);
 		expect(data).toEqual(trait1.toJson());
 
-		trait1.cleanUp();
+    // can clean up
+		expect(trait1.cleanUp()).toEqual(true);
 	});
 
 	it('writes changes to firestore', async () => {
-		expect.assertions(1); 
-
 		const trait1Name = 'trait1';
 		const testParentPath = testSuiteParentPath + '-trait-writes';
 
@@ -53,8 +52,8 @@ describe('Number trait with firestore data storage', () => {
 			logger: null,
 		});
 
-		await new Promise( res => setTimeout( res, 100 ) ); // wait for syncronisation
-		
+		await new Promise(res => setTimeout(res, 100)); // wait for syncronisation
+
 		trait1.value = 0;
 		trait1.value = 1;
 
@@ -63,13 +62,15 @@ describe('Number trait with firestore data storage', () => {
 		const doc = await firestore.doc(trait1.path).get();
 		const data: any = doc.data();
 
+    expect.assertions(2 );
+    
 		expect(data.value).toEqual(1);
 
-		trait1.cleanUp();
+		// can clean up
+		expect(trait1.cleanUp()).toEqual(true);
 	});
 
 	test('uses any existing value in firestore over the instance value', async () => {
-		expect.assertions(2);
 		const trait1Name = 'trait1';
 		const testParentPath = testSuiteParentPath + '-trait-init';
 
@@ -107,15 +108,16 @@ describe('Number trait with firestore data storage', () => {
 		const doc1Data: any = doc1.data();
 		const doc2Data: any = doc2.data();
 
+    expect.assertions( 4 );
+    
 		expect(doc1Data).toEqual(doc2Data);
 		expect(doc2Data.value).toEqual(knownValue);
 
-		trait1.cleanUp();
-		trait2.cleanUp();
+		// can clean up
+		expect(trait1.cleanUp()).toEqual(true); 
+		expect(trait2.cleanUp()).toEqual(true);
 	});
 	it('listens to firestore and propagates changes to all trait instances', async () => {
-		expect.assertions(1);
-
 		const trait1Name = 'trait1';
 		const testParentPath = testSuiteParentPath + '-trait-listeners';
 
@@ -157,11 +159,12 @@ describe('Number trait with firestore data storage', () => {
 
 		await new Promise(res => setTimeout(res, 100)); // wait for syncronisation
 
+    		expect.assertions(3);
 		// check if other trait syncronised
 		expect(trait2.value).toEqual(changeValue);
 
-		// do any cleanup
-		trait1.cleanUp();
-		trait2.cleanUp();
+		// can clean up
+		expect(trait1.cleanUp()).toEqual(true);
+		expect(trait2.cleanUp()).toEqual(true);
 	});
 });

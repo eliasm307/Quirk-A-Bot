@@ -76,11 +76,10 @@ test('TraitCollection logging functionality', () => {
 
 	let logEventsSnapshot = tc.log.events;
 
-	console.warn(__filename, { log: logEventsSnapshot });
+	// console.warn(__filename, { log: logEventsSnapshot });
 
 	// it('can count log items', () => {
-	expect(logEventsSnapshot.length).toEqual(5); // ! when wits is deleted, this also deletes its logs,
-	// todo maybe logging should be handled by a single top level object that distributes sub classes todo logging and report back to the master e.g. the charactersheet logger can produce traitCollection and trait loggers, and the traitCollection logger can produce trait loggers, all of which save a local record of logs but also report back any logs up the tree, benefit of this would be that logs are automatically sorted as they come in
+	expect(logEventsSnapshot.length).toEqual(5);
 
 	// it('produces log event details in order of time', () => {
 	expect(logEventsSnapshot[0].operation).toEqual('ADD' as LogOperationUnion);
