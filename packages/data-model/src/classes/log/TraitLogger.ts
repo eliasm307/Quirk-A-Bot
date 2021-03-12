@@ -1,9 +1,10 @@
-import {
-  iBaseLoggerProps, iBaseLogReporter, iTraitLogger, iTraitLogReport
-} from '../../declarations/interfaces/log-interfaces';
+ 
 import { LogSourceTypeNameUnion } from '../../declarations/types';
 import traitLoggerToString from '../../utils/traitLoggerToString';
 import AbstractLogger from './AbstractLogger';
+import {
+  iBaseLoggerProps, iBaseLogReporter, iTraitLogger, iTraitLogReport
+} from './interfaces/log-interfaces';
 import LogReporter from './LogReporter';
 
 export default class TraitLogger extends AbstractLogger<iTraitLogReport> implements iTraitLogger {

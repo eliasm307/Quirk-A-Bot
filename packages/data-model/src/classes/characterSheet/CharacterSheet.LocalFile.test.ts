@@ -1,7 +1,7 @@
 import fs from 'fs-extra';
 import path from 'path';
 import CharacterSheet from './CharacterSheet';
-import { iAttribute, iSkill, iTouchStoneOrConviction } from '../../declarations/interfaces/trait-interfaces';
+import { iAttribute, iSkill, iTouchStoneOrConviction } from '../traits/interfaces/trait-interfaces';
 import LocalFileDataStorageFactory from '../data-storage/LocalFile/LocalFileDataStorageFactory';
 
 // todo refactor this or do it as in memory tests

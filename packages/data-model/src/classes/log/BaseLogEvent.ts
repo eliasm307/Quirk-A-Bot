@@ -1,9 +1,9 @@
-import { iBaseLogEventProps, iLogEvent } from '../../declarations/interfaces/log-interfaces';
 import { LogOperationUnion } from '../../declarations/types';
 import generateId from '../../utils/generateId';
 import { getDateWithNanoSecondTimeStamp } from '../../utils/getNanoSecondTime';
+import { iBaseLogEventProps, iLogEvent } from './interfaces/log-interfaces';
 
-// ? this doesnt seem right
+// ? this doesnt seem right, why does this need to extend props made for itself?
 interface iProps extends iBaseLogEventProps {
 	operation: LogOperationUnion;
 }

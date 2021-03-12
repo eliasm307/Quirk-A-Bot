@@ -1,9 +1,11 @@
-import { iGeneralTrait, iGeneralTraitData } from './../declarations/interfaces/trait-interfaces';
-import { iGeneralTraitCollection } from './../declarations/interfaces/trait-collection-interfaces';
-import { ATTRIBUTE_NAMES, SKILL_NAMES, DISCIPLINE_NAMES } from '../constants';
-import { iCharacterSheetData } from '../declarations/interfaces/character-sheet-interfaces';
-import { AttributeName, SkillName, DisciplineName } from '../declarations/types';
-import { iHasCleanUp } from '../declarations/interfaces/general-interfaces';
+import {
+  iCharacterSheetData
+} from '../classes/characterSheet/interfaces/character-sheet-interfaces';
+import { iGeneralTraitCollection } from '../classes/traits/interfaces/trait-collection-interfaces';
+import { iGeneralTrait, iGeneralTraitData } from '../classes/traits/interfaces/trait-interfaces';
+import { ATTRIBUTE_NAMES, DISCIPLINE_NAMES, SKILL_NAMES } from '../constants';
+import { iHasCleanUp } from '../declarations/interfaces';
+import { AttributeName, DisciplineName, SkillName } from '../declarations/types';
 
 export function isAttributeName(name: string): name is AttributeName {
 	const allowedKeys: string[] = [...ATTRIBUTE_NAMES];

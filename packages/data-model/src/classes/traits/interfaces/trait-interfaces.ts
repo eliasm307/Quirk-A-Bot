@@ -1,3 +1,4 @@
+import { iHasParentPath, iCanHaveToJson, iHasToJson, iHasPath, iHasCleanUp } from '../../../declarations/interfaces';
 import {
 	AttributeCategory,
 	AttributeName,
@@ -7,19 +8,9 @@ import {
 	SkillName,
 	TraitNameUnionOrString,
 	TraitValueTypeUnion,
-} from '../types';
-import { iHasTraitDataStorageInitialiser } from './data-storage-interfaces';
-import { iCanHaveToJson, iHasCleanUp, iHasParentPath, iHasPath, iHasToJson } from './general-interfaces';
-import {
-	iBaseLogger,
-	iBaseLogReport,
-	iCharacterSheetLogger,
-	iChildLoggerCreatorProps,
-	iHasLogReporter,
-	iTraitCollectionLogger,
-	iTraitLogger,
-	iTraitLogReporter,
-} from './log-interfaces';
+} from '../../../declarations/types';
+import { iHasTraitDataStorageInitialiser } from '../../data-storage/interfaces/data-storage-interfaces';
+import { iTraitLogger, iBaseLogger, iBaseLogReport, iChildLoggerCreatorProps, iTraitCollectionLogger, iHasLogReporter, iTraitLogReporter } from '../../log/interfaces/log-interfaces';
 import { iTraitCollectionDataStorageInitialiserBundle } from './trait-collection-interfaces';
 
 export interface iHasCategorySelector<N extends string, C extends string> {

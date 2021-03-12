@@ -1,22 +1,17 @@
-import { iChildLoggerCreatorProps } from './../../declarations/interfaces/log-interfaces';
-import {
-	iBaseTraitCollectionDataStorageProps,
-	iBaseTraitDataStorage,
-	iBaseTraitDataStorageProps,
-	iTraitCollectionDataStorage,
-} from '../../declarations/interfaces/data-storage-interfaces';
-import {
-	iAddLogEventProps,
-	iDeleteLogEventProps,
-	iTraitCollectionLogger,
-	iTraitCollectionLogReporter,
-} from '../../declarations/interfaces/log-interfaces';
-import { iBaseTrait, iBaseTraitData, iBaseTraitProps } from '../../declarations/interfaces/trait-interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../declarations/types';
 import { createPath } from '../../utils/createPath';
-import DeleteLogEvent from '../log/DeleteLogEvent';
-import TraitCollecitonLogger from '../log/TraitCollectionLogger';
 import AddLogEvent from '../log/AddLogEvent';
+import DeleteLogEvent from '../log/DeleteLogEvent';
+import {
+  iAddLogEventProps, iChildLoggerCreatorProps, iDeleteLogEventProps, iTraitCollectionLogger,
+  iTraitCollectionLogReporter
+} from '../log/interfaces/log-interfaces';
+import TraitCollecitonLogger from '../log/TraitCollectionLogger';
+import { iBaseTrait, iBaseTraitData, iBaseTraitProps } from '../traits/interfaces/trait-interfaces';
+import {
+  iBaseTraitCollectionDataStorageProps, iBaseTraitDataStorage, iBaseTraitDataStorageProps,
+  iTraitCollectionDataStorage
+} from './interfaces/data-storage-interfaces';
 
 export default abstract class AbstractTraitCollectionDataStorage<
 	N extends TraitNameUnionOrString,

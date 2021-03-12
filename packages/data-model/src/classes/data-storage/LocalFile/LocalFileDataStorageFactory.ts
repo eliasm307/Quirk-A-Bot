@@ -1,23 +1,24 @@
-import { iHasCharacterSheet } from '../../../declarations/interfaces/character-sheet-interfaces';
+ 
 import {
   iBaseCharacterSheetDataStorageFactoryMethodProps, iBaseTraitCollectionDataStorageProps,
   iBaseTraitDataStorage, iBaseTraitDataStorageProps, iCharacterSheetDataStorage,
   iDataStorageFactory, iLocalFileDataStorageFactoryProps, iTraitCollectionDataStorage
-} from '../../../declarations/interfaces/data-storage-interfaces';
-import { iBaseTrait, iBaseTraitData } from '../../../declarations/interfaces/trait-interfaces';
+} from '../interfaces/data-storage-interfaces';
+import { iBaseTrait, iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
 import { TraitValueTypeUnion } from '../../../declarations/types';
 import LocalFileCharacterSheetDataStorage from './LocalFileCharacterSheetDataStorage';
 import LocalFileTraitCollectionDataStorage from './LocalFileTraitCollectionDataStorage';
 import LocalFileTraitDataStorage from './LocalFileTraitDataStorage';
+import { iHasCharacterSheet } from '../../characterSheet/interfaces/character-sheet-interfaces';
 
 export default class LocalFileDataStorageFactory implements iDataStorageFactory {
-	#resolvedBasePath: string;
+  #resolvedBasePath: string;
 
-	constructor({ resolvedBasePath }: iLocalFileDataStorageFactoryProps) {
+  constructor({ resolvedBasePath }: iLocalFileDataStorageFactoryProps) {
 		this.#resolvedBasePath = resolvedBasePath;
 	}
 
-	newCharacterSheetDataStorage(props: iBaseCharacterSheetDataStorageFactoryMethodProps): iCharacterSheetDataStorage {
+  newCharacterSheetDataStorage(props: iBaseCharacterSheetDataStorageFactoryMethodProps): iCharacterSheetDataStorage {
 		return new LocalFileCharacterSheetDataStorage({
 			...props,
 			dataStorageFactory: this,
@@ -25,7 +26,7 @@ export default class LocalFileDataStorageFactory implements iDataStorageFactory 
 		});
 	}
 
-	newTraitCollectionDataStorageInitialiser({
+  newTraitCollectionDataStorageInitialiser({
 		characterSheet,
 	}: iHasCharacterSheet): <
 		N extends string,
@@ -39,7 +40,7 @@ export default class LocalFileDataStorageFactory implements iDataStorageFactory 
 			new LocalFileTraitCollectionDataStorage({ ...props, characterSheet, resolvedBasePath: this.#resolvedBasePath });
 	}
 
-	newTraitDataStorageInitialiser({
+  newTraitDataStorageInitialiser({
 		characterSheet,
 	}: iHasCharacterSheet): <N extends string, V extends TraitValueTypeUnion>(
 		props: iBaseTraitDataStorageProps<N, V>

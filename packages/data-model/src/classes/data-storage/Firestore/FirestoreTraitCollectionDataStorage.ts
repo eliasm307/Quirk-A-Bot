@@ -1,14 +1,9 @@
-import { Firestore } from './../../../utils/firebase';
-
-import { iCharacterSheet } from '../../../declarations/interfaces/character-sheet-interfaces';
-import { iBaseTrait, iBaseTraitData } from '../../../declarations/interfaces/trait-interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
-import saveCharacterSheetToFile from '../../../utils/saveCharacterSheetToFile';
-import InMemoryTraitCollectionDataStorage from '../InMemory/InMemoryTraitCollectionDataStorage';
-import path from 'path';
-import AbstractTraitCollectionDataStorage from '../AbstractTraitCollectionDataStorage';
-import { iFirestoreTraitCollectionDataStorageProps } from '../../../declarations/interfaces/data-storage-interfaces';
+import { Firestore } from '../../../utils/firebase';
 import { isTraitData } from '../../../utils/typePredicates';
+import { iBaseTrait, iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
+import AbstractTraitCollectionDataStorage from '../AbstractTraitCollectionDataStorage';
+import { iFirestoreTraitCollectionDataStorageProps } from '../interfaces/data-storage-interfaces';
 
 export default class FirestoreTraitCollectionDataStorage<
 	N extends TraitNameUnionOrString,

@@ -3,7 +3,7 @@ import {
 	iCharacterSheetDataStorage,
 	iHasId,
 	iInMemoryFileDataStorageFactoryProps,
-} from './../../../declarations/interfaces/data-storage-interfaces';
+} from '../interfaces/data-storage-interfaces';
 import { TraitNameUnionOrString } from '../../../declarations/types';
 import { TraitValueTypeUnion } from '../../../declarations/types';
 import {
@@ -12,9 +12,9 @@ import {
 	iDataStorageFactory,
 	iTraitCollectionDataStorage,
 	iBaseTraitDataStorage,
-} from '../../../declarations/interfaces/data-storage-interfaces';
+} from '../interfaces/data-storage-interfaces';
 import InMemoryTraitDataStorage from './InMemoryTraitDataStorage';
-import { iBaseTraitData, iBaseTrait } from '../../../declarations/interfaces/trait-interfaces';
+import { iBaseTraitData, iBaseTrait } from '../../traits/interfaces/trait-interfaces';
 import InMemoryTraitCollectionDataStorage from './InMemoryTraitCollectionDataStorage';
 import InMemoryCharacterSheetDataStorage from './InMemoryCharacterSheetDataStorage';
 

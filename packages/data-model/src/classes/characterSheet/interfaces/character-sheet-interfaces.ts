@@ -1,17 +1,27 @@
-import { ClanName } from '../types';
+import { iHasParentPath, iHasToJson } from '../../../declarations/interfaces';
+import { ClanName } from '../../../declarations/types';
 import {
-  iHasCharacterSheetDataStorage, iHasDataStorageFactory, iHasId
-} from './data-storage-interfaces';
-import { iHasParentPath, iHasToJson } from './general-interfaces';
-import { iHasCharacterSheetLogReporter } from './log-interfaces';
+	iHasId,
+	iHasDataStorageFactory,
+	iHasCharacterSheetDataStorage,
+} from '../../data-storage/interfaces/data-storage-interfaces';
+import { iHasCharacterSheetLogReporter } from '../../log/interfaces/log-interfaces';
 import {
-  iAttributeTraitCollection, iDisciplineTraitCollection, iSkillTraitCollection,
-  iTouchStoneOrConvictionCollection
-} from './trait-collection-interfaces';
+	iAttributeTraitCollection,
+	iDisciplineTraitCollection,
+	iSkillTraitCollection,
+	iTouchStoneOrConvictionCollection,
+} from '../../traits/interfaces/trait-collection-interfaces';
 import {
-  iAttributeData, iCoreNumberTrait, iCoreNumberTraitData, iCoreStringTrait, iCoreStringTraitData,
-  iDisciplineData, iSkillData, iTouchStoneOrConvictionData
-} from './trait-interfaces';
+	iAttributeData,
+	iCoreNumberTraitData,
+	iCoreStringTraitData,
+	iDisciplineData,
+	iSkillData,
+	iTouchStoneOrConvictionData,
+	iCoreNumberTrait,
+	iCoreStringTrait,
+} from '../../traits/interfaces/trait-interfaces';
 
 export interface iHasCharacterSheet {
 	characterSheet: iCharacterSheet;

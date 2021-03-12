@@ -1,12 +1,11 @@
-import { CoreTraitName } from './../declarations/types';
 import {
-	CORE_TRAIT_COLLECTION_NAME,
-	ATTRIBUTE_COLLECTION_NAME,
-	DISCIPLINE_COLLECTION_NAME,
-	SKILL_COLLECTION_NAME,
-	TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME,
+  iCharacterSheetData
+} from '../classes/characterSheet/interfaces/character-sheet-interfaces';
+import {
+  ATTRIBUTE_COLLECTION_NAME, CORE_TRAIT_COLLECTION_NAME, DISCIPLINE_COLLECTION_NAME,
+  SKILL_COLLECTION_NAME, TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME
 } from '../constants';
-import { iCharacterSheetData } from '../declarations/interfaces/character-sheet-interfaces';
+import { CoreTraitName } from '../declarations/types';
 import { createPath } from './createPath';
 import { Firestore } from './firebase';
 import { isCharacterSheetData } from './typePredicates';

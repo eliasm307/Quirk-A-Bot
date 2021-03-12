@@ -1,9 +1,9 @@
-import { iNumberTraitData } from './../../declarations/interfaces/trait-interfaces';
+import { iNumberTraitData } from './interfaces/trait-interfaces';
 import { TraitNameUnion, TraitNameUnionOrString } from './../../declarations/types';
 import {
 	iNumberTraitWithCategory,
 	iNumberTraitWithCategoryProps,
-} from '../../declarations/interfaces/trait-interfaces';
+} from './interfaces/trait-interfaces';
 import AbstractNumberTrait from './AbstractNumberTrait';
 
 /** class with behaviour for traits that have number values and categories */

@@ -1,27 +1,25 @@
-import { iBaseTraitDataStorage } from '../../declarations/interfaces/data-storage-interfaces';
-import { iTraitLogReporter } from '../../declarations/interfaces/log-interfaces';
-import {
-  iBaseTrait, iBaseTraitData, iBaseTraitProps
-} from '../../declarations/interfaces/trait-interfaces';
+import { iBaseTraitDataStorage } from '../data-storage/interfaces/data-storage-interfaces';
+import { iBaseTrait, iBaseTraitData, iBaseTraitProps } from './interfaces/trait-interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../declarations/types';
 import { hasCleanUp } from '../../utils/typePredicates';
+import { iTraitLogReporter } from '../log/interfaces/log-interfaces';
 
 export default abstract class AbstractBaseTrait<
 	N extends TraitNameUnionOrString,
 	V extends TraitValueTypeUnion,
 	D extends iBaseTraitData<N, V>
 > implements iBaseTrait<N, V, D> {
-  protected dataStorage: iBaseTraitDataStorage<N, V>;
+	protected dataStorage: iBaseTraitDataStorage<N, V>;
 
-  readonly log: iTraitLogReporter;
-  readonly name: N;
-  readonly path: string;
-  readonly toJson: () => D;
+	readonly log: iTraitLogReporter;
+	readonly name: N;
+	readonly path: string;
+	readonly toJson: () => D;
 
-  protected abstract newValueIsValid(newVal: V): boolean;
-  protected abstract preProcessValue(newValueRaw: V): V;
+	protected abstract newValueIsValid(newVal: V): boolean;
+	protected abstract preProcessValue(newValueRaw: V): V;
 
-  constructor({ name, value, toJson, traitDataStorageInitialiser, parentPath, logger }: iBaseTraitProps<N, V, D>) {
+	constructor({ name, value, toJson, traitDataStorageInitialiser, parentPath, logger }: iBaseTraitProps<N, V, D>) {
 		this.name = name;
 
 		// initialise data store
@@ -42,13 +40,13 @@ export default abstract class AbstractBaseTrait<
 		this.toJson = toJson;
 	}
 
-  public get value() {
+	public get value() {
 		return this.dataStorage.value;
 	}
 
-  public set value( newValRaw: V ) {
-    // todo delete? data storage should handle actually changing the value
-    /*
+	public set value(newValRaw: V) {
+		// todo delete? data storage should handle actually changing the value
+		/*
 
 		// justification should be done in newValueIsValid function
 		if (!this.newValueIsValid(newValue)) return;
@@ -63,14 +61,14 @@ export default abstract class AbstractBaseTrait<
     }
     */
 
-    const newValueProcessed = this.preProcessValue(newValRaw); 
-    if ( !this.newValueIsValid( newValueProcessed ) ) return;
-    
+		const newValueProcessed = this.preProcessValue(newValRaw);
+		if (!this.newValueIsValid(newValueProcessed)) return;
+
 		// implement property change on data storage
 		this.dataStorage.value = newValueProcessed;
 	}
 
-  cleanUp(): boolean {
+	cleanUp(): boolean {
 		// if the data storage has a cleanup function then call it and return the result,
 		// otherwise return true if no cleanup required
 		return hasCleanUp(this.dataStorage) ? this.dataStorage.cleanUp() : true;

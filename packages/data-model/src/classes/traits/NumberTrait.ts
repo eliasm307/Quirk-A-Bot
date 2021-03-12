@@ -1,5 +1,5 @@
-import { iNumberTrait, iNumberTraitData } from '../../declarations/interfaces/trait-interfaces';
-import { iNumberTraitProps } from '../../declarations/interfaces/trait-interfaces';
+import { iNumberTrait, iNumberTraitData } from './interfaces/trait-interfaces';
+import { iNumberTraitProps } from './interfaces/trait-interfaces';
 import { TraitNameUnionOrString } from '../../declarations/types';
 import AbstractNumberTrait from './AbstractNumberTrait';
 

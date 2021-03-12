@@ -1,7 +1,8 @@
-import { AttributeName, DisciplineName, SkillName, TraitNameUnionOrString, TraitValueTypeUnion } from '../types';
-import { iHasTraitCollectionDataStorageInitialiser, iHasTraitDataStorageInitialiser } from './data-storage-interfaces';
-import { iBaseCollection, iHasCleanUp, iHasParentPath, iHasPath, iHasToJson } from './general-interfaces';
-import { iHasTraitCollectionLogReporter, iTraitCollectionLogger } from './log-interfaces';
+
+import { iHasParentPath, iBaseCollection, iHasToJson, iHasPath, iHasCleanUp } from '../../../declarations/interfaces';
+import { TraitNameUnionOrString, TraitValueTypeUnion, AttributeName, SkillName, DisciplineName } from '../../../declarations/types';
+import { iHasTraitCollectionDataStorageInitialiser, iHasTraitDataStorageInitialiser } from '../../data-storage/interfaces/data-storage-interfaces';
+import { iTraitCollectionLogger, iHasTraitCollectionLogReporter } from '../../log/interfaces/log-interfaces';
 import {
 	iAttribute,
 	iAttributeData,

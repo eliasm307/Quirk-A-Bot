@@ -1,16 +1,14 @@
 import fs from 'fs-extra';
 import path from 'path';
 
-import { iCharacterSheetData } from '../../../declarations/interfaces/character-sheet-interfaces';
-import {
-	iCharacterSheetDataStorage,
-	iDataStorageFactory,
-	iLocalFileCharacterSheetDataStorageProps,
-} from '../../../declarations/interfaces/data-storage-interfaces';
 import importDataFromFile from '../../../utils/importDataFromFile';
 import saveCharacterSheetToFile from '../../../utils/saveCharacterSheetToFile';
 import { isCharacterSheetData } from '../../../utils/typePredicates';
-import CharacterSheet from '../../CharacterSheet';
+import CharacterSheet from '../../characterSheet/CharacterSheet';
+import { iCharacterSheetData } from '../../characterSheet/interfaces/character-sheet-interfaces';
+import {
+  iCharacterSheetDataStorage, iDataStorageFactory, iLocalFileCharacterSheetDataStorageProps
+} from '../interfaces/data-storage-interfaces';
 
 export default class LocalFileCharacterSheetDataStorage implements iCharacterSheetDataStorage {
 	protected dataStorageFactory: iDataStorageFactory;

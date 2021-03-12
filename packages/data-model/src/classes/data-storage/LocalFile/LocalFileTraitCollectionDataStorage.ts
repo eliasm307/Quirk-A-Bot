@@ -1,11 +1,10 @@
-import { iLocalFileTraitCollectionDataStorageProps } from './../../../declarations/interfaces/data-storage-interfaces';
-import { iCharacterSheet } from './../../../declarations/interfaces/character-sheet-interfaces';
-import { iBaseTrait, iBaseTraitData } from '../../../declarations/interfaces/trait-interfaces';
+import { iLocalFileTraitCollectionDataStorageProps } from '../interfaces/data-storage-interfaces'; 
+import { iBaseTrait, iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
 import saveCharacterSheetToFile from '../../../utils/saveCharacterSheetToFile';
-import InMemoryTraitCollectionDataStorage from '../InMemory/InMemoryTraitCollectionDataStorage';
 import path from 'path';
 import AbstractTraitCollectionDataStorage from '../AbstractTraitCollectionDataStorage';
+import { iCharacterSheet } from '../../characterSheet/interfaces/character-sheet-interfaces';
 
 export default class LocalFileTraitCollectionDataStorage<
 	N extends TraitNameUnionOrString,
@@ -13,12 +12,6 @@ export default class LocalFileTraitCollectionDataStorage<
 	D extends iBaseTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
 > extends AbstractTraitCollectionDataStorage<N, V, D, T> {
-	protected afterAddInternal(name: N): void {
-		this.save();
-	}
-	protected deleteTraitFromDataStorage(name: N): void {
-		this.save();
-	}
 	#characterSheet: iCharacterSheet;
 	#resolvedBasePath: string;
 
@@ -27,6 +20,14 @@ export default class LocalFileTraitCollectionDataStorage<
 		const { characterSheet, resolvedBasePath } = props;
 		this.#characterSheet = characterSheet;
 		this.#resolvedBasePath = resolvedBasePath;
+	}
+
+	protected afterAddInternal(name: N): void {
+		this.save();
+	}
+
+	protected deleteTraitFromDataStorage(name: N): void {
+		this.save();
 	}
 
 	protected save(): boolean {

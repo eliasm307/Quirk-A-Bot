@@ -1,11 +1,11 @@
-import { SKILL_COLLECTION_NAME, DISCIPLINE_COLLECTION_NAME } from './../../constants';
-import { iBaseTraitData } from './../../declarations/interfaces/trait-interfaces';
-import { firestoreEmulator } from './../../utils/firebase';
-import { iTraitCollectionFactoryMethodProps } from '../../declarations/interfaces/trait-collection-interfaces';
-import FirestoreDataStorageFactory from '../data-storage/Firestore/FirestoreDataStorageFactory';
-import TraitFactory from './TraitFactory';
-import { isTraitData } from '../../utils/typePredicates';
+import { DISCIPLINE_COLLECTION_NAME, SKILL_COLLECTION_NAME } from '../../constants';
 import { AttributeName, DisciplineName, SkillName } from '../../declarations/types';
+import { firestoreEmulator } from '../../utils/firebase';
+import { isTraitData } from '../../utils/typePredicates';
+import FirestoreDataStorageFactory from '../data-storage/Firestore/FirestoreDataStorageFactory';
+import { iTraitCollectionFactoryMethodProps } from './interfaces/trait-collection-interfaces';
+import { iBaseTraitData } from './interfaces/trait-interfaces';
+import TraitFactory from './TraitFactory';
 
 // todo make these tests relevant
 

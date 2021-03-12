@@ -2,7 +2,7 @@ import {
 	iBaseNumberTrait,
 	iBaseNumberTraitProps,
 	iNumberTraitData,
-} from '../../declarations/interfaces/trait-interfaces';
+} from './interfaces/trait-interfaces';
 import { TraitNameUnionOrString } from '../../declarations/types';
 import AbstractBaseTrait from './AbstractBaseTrait';
 

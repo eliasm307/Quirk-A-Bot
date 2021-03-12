@@ -1,6 +1,4 @@
-import urlExistSync from 'url-exist-sync';
 import { firestoreEmulator, isFirestoreEmulatorRunning } from './firebase';
-import logFirestoreChange from './logFirestoreChange';
 
 const testDocData = { testProperty: `testing @ ${new Date().toLocaleString()}` };
 const testCollectionName = 'testCollection';

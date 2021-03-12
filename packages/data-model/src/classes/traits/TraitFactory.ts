@@ -3,18 +3,18 @@ import {
   STRING_TRAIT_DEFAULT_VALUE, TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME
 } from '../../constants';
 import {
-  iAttributeTraitCollection, iDisciplineTraitCollection, iSkillTraitCollection,
-  iTouchStoneOrConvictionCollection, iTraitCollectionFactoryMethodProps
-} from '../../declarations/interfaces/trait-collection-interfaces';
-import {
-  iAttribute, iAttributeData, iBaseTraitProps, iDiscipline, iDisciplineData, iNumberTraitProps,
-  iSkill, iSkillData, iStringTraitProps, iTouchStoneOrConviction, iTouchStoneOrConvictionData
-} from '../../declarations/interfaces/trait-interfaces';
-import {
   AttributeName, CoreNumberTraitName, CoreStringTraitName, DisciplineName, SkillName,
   TraitNameUnionOrString
 } from '../../declarations/types';
 import getAttributeCategory from '../../utils/getAttributeCategory';
+import {
+  iAttributeTraitCollection, iDisciplineTraitCollection, iSkillTraitCollection,
+  iTouchStoneOrConvictionCollection, iTraitCollectionFactoryMethodProps
+} from './interfaces/trait-collection-interfaces';
+import {
+  iAttribute, iAttributeData, iBaseTraitProps, iDiscipline, iDisciplineData, iNumberTraitProps,
+  iSkill, iSkillData, iStringTraitProps, iTouchStoneOrConviction, iTouchStoneOrConvictionData
+} from './interfaces/trait-interfaces';
 import NumberTrait from './NumberTrait';
 import NumberTraitWithCategory from './NumberTraitWithCategory';
 import StringTrait from './StringTrait';

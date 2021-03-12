@@ -1,4 +1,4 @@
-import { iBaseTraitData, iBaseTrait } from '../../../declarations/interfaces/trait-interfaces';
+import { iBaseTraitData, iBaseTrait } from '../../traits/interfaces/trait-interfaces';
 import { Firestore } from '../../../utils/firebase';
 import FirestoreTraitDataStorage from './FirestoreTraitDataStorage';
 import FirestoreTraitCollectionDataStorage from './FirestoreTraitCollectionDataStorage';
@@ -14,7 +14,7 @@ import {
 	iBaseTraitCollectionDataStorageProps,
 	iTraitCollectionDataStorage,
 	iBaseCharacterSheetDataStorageFactoryMethodProps,
-} from '../../../declarations/interfaces/data-storage-interfaces';
+} from '../interfaces/data-storage-interfaces';
 import { TraitValueTypeUnion } from '../../../declarations/types';
 export default class FirestoreDataStorageFactory implements iDataStorageFactory {
 	#firestore: Firestore;

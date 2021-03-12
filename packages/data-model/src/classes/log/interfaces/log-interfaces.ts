@@ -1,8 +1,10 @@
-import { LogOperationUnion, LogSourceTypeNameUnion } from '../types';
-import { iCanDescribe, iHasNewValue, iHasOldValue } from './general-interfaces';
+ 
 
 // -------------------------------------------------------
 // GENERAL
+
+import { iCanDescribe, iHasNewValue, iHasOldValue } from '../../../declarations/interfaces';
+import { LogOperationUnion, LogSourceTypeNameUnion } from '../../../declarations/types';
 
 export interface iHasLogReport<L extends iBaseLogReport> {
 	readonly report: L;

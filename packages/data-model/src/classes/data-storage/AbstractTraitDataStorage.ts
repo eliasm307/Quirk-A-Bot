@@ -1,11 +1,10 @@
-import {
-	iBaseTraitDataStorage,
-	iBaseTraitDataStorageProps,
-} from '../../declarations/interfaces/data-storage-interfaces';
-import { iTraitLogger, iTraitLogReporter } from '../../declarations/interfaces/log-interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../declarations/types';
+import { iTraitLogger, iTraitLogReporter } from '../log/interfaces/log-interfaces';
 import TraitLogger from '../log/TraitLogger';
 import UpdateLogEvent from '../log/UpdateLogEvent';
+import {
+  iBaseTraitDataStorage, iBaseTraitDataStorageProps
+} from './interfaces/data-storage-interfaces';
 
 interface iPrivateModifiableProperties<V extends TraitValueTypeUnion> {
 	value: V;

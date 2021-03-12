@@ -1,12 +1,12 @@
-import { iCharacterSheetData } from '../../../declarations/interfaces/character-sheet-interfaces';
-import {
-  iCharacterSheetDataStorage, iDataStorageFactory, iFirestoreCharacterSheetDataStorageProps
-} from '../../../declarations/interfaces/data-storage-interfaces';
 import { createPath } from '../../../utils/createPath';
 import { Firestore } from '../../../utils/firebase';
 import readCharacterSheetDataFromFirestore from '../../../utils/readCharacterSheetDataFromFirestore';
 import writeCharacterSheetDataToFirestore from '../../../utils/writeCharacterSheetDataToFirestore';
-import CharacterSheet from '../../CharacterSheet';
+import CharacterSheet from '../../characterSheet/CharacterSheet';
+import { iCharacterSheetData } from '../../characterSheet/interfaces/character-sheet-interfaces';
+import {
+  iCharacterSheetDataStorage, iDataStorageFactory, iFirestoreCharacterSheetDataStorageProps
+} from '../interfaces/data-storage-interfaces';
 
 export default class FirestoreCharacterSheetDataStorage implements iCharacterSheetDataStorage {
   protected characterSheetData?: iCharacterSheetData;

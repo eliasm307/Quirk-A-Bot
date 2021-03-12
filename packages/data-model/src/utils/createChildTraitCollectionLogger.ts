@@ -1,7 +1,5 @@
-import {
-	iLogEvent,
-	iTraitCollectionLogger,
-} from './../declarations/interfaces/log-interfaces';
+ 
+import { iLogEvent, iTraitCollectionLogger } from '../classes/log/interfaces/log-interfaces';
 import TraitCollectionLogger from '../classes/log/TraitCollectionLogger';
 
 export default function createChildTraitCollectionLogger(

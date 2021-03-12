@@ -1,7 +1,7 @@
 import {
 	iTraitCollectionDataStorage,
-} from '../../../declarations/interfaces/data-storage-interfaces';
-import { iBaseTrait, iBaseTraitData } from '../../../declarations/interfaces/trait-interfaces';
+} from '../interfaces/data-storage-interfaces';
+import { iBaseTrait, iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
 import AbstractTraitCollectionDataStorage from '../AbstractTraitCollectionDataStorage';
 

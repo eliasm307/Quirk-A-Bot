@@ -1,6 +1,6 @@
 import {
   iBaseLogger, iBaseLogReport, iBaseLogReporter, iBaseLogReporterProps, iLogEvent
-} from '../../declarations/interfaces/log-interfaces';
+} from './interfaces/log-interfaces';
 
 export default class LogReporter<L extends iBaseLogReport> implements iBaseLogReporter<L> {
   #logger: iBaseLogger<L>;

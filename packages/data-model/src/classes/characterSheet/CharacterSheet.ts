@@ -1,31 +1,26 @@
 // import saveCharacterSheetToFile from '../utils/saveCharacterSheetToFile';
 
 import { STRING_TRAIT_DEFAULT_VALUE } from '../../constants';
-import {
-	iCharacterSheet,
-	iCharacterSheetProps,
-	iCharacterSheetLoaderProps,
-	iCharacterSheetData,
-} from '../../declarations/interfaces/character-sheet-interfaces';
-import { iHasId } from '../../declarations/interfaces/data-storage-interfaces';
-import {
-	iCharacterSheetLogger,
-	iCharacterSheetLogReporter,
-	iChildLoggerCreatorProps,
-} from '../../declarations/interfaces/log-interfaces';
-import {
-	iAttributeTraitCollection,
-	iDisciplineTraitCollection,
-	iSkillTraitCollection,
-	iTouchStoneOrConvictionCollection,
-} from '../../declarations/interfaces/trait-collection-interfaces';
-import { iCoreNumberTrait, iCoreStringTrait, iGeneralTrait } from '../../declarations/interfaces/trait-interfaces';
 import { ClanName, CoreNumberTraitName, CoreStringTraitName } from '../../declarations/types';
 import { isCharacterSheetData } from '../../utils/typePredicates';
+import { iHasId } from '../data-storage/interfaces/data-storage-interfaces';
 import CharacterSheetLogger from '../log/CharacterSheetLogger';
+import {
+  iCharacterSheetLogger, iCharacterSheetLogReporter, iChildLoggerCreatorProps
+} from '../log/interfaces/log-interfaces';
+import {
+  iAttributeTraitCollection, iDisciplineTraitCollection, iSkillTraitCollection,
+  iTouchStoneOrConvictionCollection
+} from '../traits/interfaces/trait-collection-interfaces';
+import {
+  iCoreNumberTrait, iCoreStringTrait, iGeneralTrait
+} from '../traits/interfaces/trait-interfaces';
 import NumberTrait from '../traits/NumberTrait';
 import StringTrait from '../traits/StringTrait';
 import TraitFactory from '../traits/TraitFactory';
+import {
+  iCharacterSheet, iCharacterSheetData, iCharacterSheetLoaderProps, iCharacterSheetProps
+} from './interfaces/character-sheet-interfaces';
 
 // todo split this into smaller pieces
 

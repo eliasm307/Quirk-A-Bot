@@ -1,6 +1,4 @@
-import { TraitTypeNameUnion } from './../types';
-import { iCharacterSheetDataStorage, iDataStorageFactory } from './data-storage-interfaces';
-
+ 
 // ? rename to "iHasGetData"
 export interface iHasToJson<D> {
 	readonly toJson: () => D;

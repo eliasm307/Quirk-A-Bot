@@ -1,11 +1,10 @@
-import { iCharacterSheetData } from '../../../declarations/interfaces/character-sheet-interfaces';
+ 
 import { createPath } from '../../../utils/createPath';
-import CharacterSheet from '../../CharacterSheet';
+import CharacterSheet from '../../characterSheet/CharacterSheet';
+import { iCharacterSheetData } from '../../characterSheet/interfaces/character-sheet-interfaces';
 import {
-	iBaseCharacterSheetDataStorageProps,
-	iCharacterSheetDataStorage,
-	iDataStorageFactory,
-} from './../../../declarations/interfaces/data-storage-interfaces';
+  iBaseCharacterSheetDataStorageProps, iCharacterSheetDataStorage, iDataStorageFactory
+} from '../interfaces/data-storage-interfaces';
 
 export default class InMemoryCharacterSheetDataStorage implements iCharacterSheetDataStorage {
 	protected characterSheetData: iCharacterSheetData;

@@ -1,4 +1,4 @@
-import { iBaseStringTrait, iStringTraitData, iStringTraitProps } from '../../declarations/interfaces/trait-interfaces';
+import { iBaseStringTrait, iStringTraitData, iStringTraitProps } from './interfaces/trait-interfaces';
 import { TraitNameUnionOrString } from '../../declarations/types';
 import AbstractBaseTrait from './AbstractBaseTrait';
 

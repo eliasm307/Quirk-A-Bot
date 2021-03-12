@@ -1,13 +1,9 @@
-import {
-	iTraitCollectionDataStorage,
-} from '../../declarations/interfaces/data-storage-interfaces';
-import {
-	iTraitCollectionLogReporter,
-} from '../../declarations/interfaces/log-interfaces';
-import { iTraitCollection } from '../../declarations/interfaces/trait-collection-interfaces';
-import { iBaseTrait, iBaseTraitData, iTraitCollectionProps } from '../../declarations/interfaces/trait-interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../declarations/types';
 import { hasCleanUp } from '../../utils/typePredicates';
+import { iTraitCollectionDataStorage } from '../data-storage/interfaces/data-storage-interfaces';
+import { iTraitCollectionLogReporter } from '../log/interfaces/log-interfaces';
+import { iTraitCollection } from './interfaces/trait-collection-interfaces';
+import { iBaseTrait, iBaseTraitData, iTraitCollectionProps } from './interfaces/trait-interfaces';
 
 export default class TraitCollection<
 	N extends TraitNameUnionOrString,

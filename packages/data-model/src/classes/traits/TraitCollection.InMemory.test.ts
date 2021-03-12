@@ -1,9 +1,8 @@
-import { iBaseTraitData } from './../../declarations/interfaces/trait-interfaces';
-import { iGeneralTrait } from '../../declarations/interfaces/trait-interfaces';
 import { AttributeName, LogOperationUnion } from '../../declarations/types';
-import TraitFactory from './TraitFactory';
 import InMemoryDataStorageFactory from '../data-storage/InMemory/InMemoryDataStorageFactory';
-import { iTraitCollectionFactoryMethodProps } from '../../declarations/interfaces/trait-collection-interfaces';
+import { iTraitCollectionFactoryMethodProps } from './interfaces/trait-collection-interfaces';
+import { iBaseTraitData, iGeneralTrait } from './interfaces/trait-interfaces';
+import TraitFactory from './TraitFactory';
 
 let testName: string;
 
@@ -75,7 +74,7 @@ test('TraitCollection logging functionality', () => {
 	// delete non-existing items, should not generate log items
 	tc.delete('Wits').delete('Composure').delete('Dexterity');
 
-let logEventsSnapshot = tc.log.events;
+	let logEventsSnapshot = tc.log.events;
 
 	console.warn(__filename, { log: logEventsSnapshot });
 
@@ -93,7 +92,7 @@ let logEventsSnapshot = tc.log.events;
 	// delete the rest of the traits, 2 new log items
 	tc.delete('Charisma').delete('Manipulation');
 
-   logEventsSnapshot = tc.log.events;
+	logEventsSnapshot = tc.log.events;
 
 	// it('keeps logs after items are deleted', () => {
 	expect(tc.size).toEqual(0); // all items deleted
