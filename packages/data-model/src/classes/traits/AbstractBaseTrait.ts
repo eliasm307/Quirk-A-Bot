@@ -14,12 +14,12 @@ export default abstract class AbstractBaseTrait<
 	readonly log: iTraitLogReporter;
 	readonly name: N;
 	readonly path: string;
-	readonly toJson: () => D;
+	readonly data: () => D;
 
 	protected abstract newValueIsValid(newVal: V): boolean;
 	protected abstract preProcessValue(newValueRaw: V): V;
 
-	constructor({ name, value, toJson, traitDataStorageInitialiser, parentPath, loggerCreator: logger }: iBaseTraitProps<N, V, D>) {
+	constructor({ name, value, data: toJson, traitDataStorageInitialiser, parentPath, loggerCreator: logger }: iBaseTraitProps<N, V, D>) {
 		this.name = name;
 
 		// initialise data store
@@ -37,7 +37,7 @@ export default abstract class AbstractBaseTrait<
 
 		// make sure toJson is provided
 		if (!toJson) throw Error(`${__filename} toJson function not defined`);
-		this.toJson = toJson;
+		this.data = toJson;
 	}
 
 	public get value() {

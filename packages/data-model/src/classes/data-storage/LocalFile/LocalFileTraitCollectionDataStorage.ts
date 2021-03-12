@@ -39,7 +39,7 @@ export default class LocalFileTraitCollectionDataStorage<
 	protected save(): boolean {
 		// save if available
 		return saveCharacterSheetToFile(
-			this.#characterSheet.toJson(),
+			this.#characterSheet.data(),
 			path.resolve(this.#resolvedBasePath, `${this.#characterSheet.id}.json`)
 		);
 	}

@@ -107,7 +107,7 @@ describe('TraitCollection general functionality', () => {
 		const tc = TraitFactory.newAttributeTraitCollection(traitCollectionFactoryMethodProps);
 
 		// create initial tc data
-		const tcData = tc.set('Charisma', 1).set('Composure', 2).set('Dexterity', 3).set('Stamina', 4).toJson();
+		const tcData = tc.set('Charisma', 1).set('Composure', 2).set('Dexterity', 3).set('Stamina', 4).data();
 		const tCDataExpected: iBaseTraitData<AttributeName, number>[] = [
 			{ name: 'Charisma', value: 1 },
 			{ name: 'Composure', value: 2 },
@@ -135,7 +135,7 @@ describe('TraitCollection general functionality', () => {
 		expect((tc2.get('Composure') as iGeneralTrait).value).toEqual(2);
 		expect((tc2.get('Dexterity') as iGeneralTrait).value).toEqual(3);
 		expect((tc2.get('Stamina') as iGeneralTrait).value).toEqual(4);
-		expect(tc2.toJson()).toEqual(initialData);
+		expect(tc2.data()).toEqual(initialData);
 	});
 });
 /*

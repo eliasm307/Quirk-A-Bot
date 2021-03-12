@@ -1,4 +1,4 @@
-import { iHasCleanUp, iHasParentPath, iHasToJson } from '../../../declarations/interfaces';
+import { iHasCleanUp, iHasGetData, iHasParentPath } from '../../../declarations/interfaces';
 import { ClanName } from '../../../declarations/types';
 import {
   iHasCharacterSheetDataStorage, iHasDataStorageFactory, iHasId
@@ -67,7 +67,7 @@ export interface iCharacterSheetData extends iCharacterSheetShape {
 /** The shape of a character sheet object instance */
 export interface iCharacterSheet
 	extends iCharacterSheetShape,
-		iHasToJson<iCharacterSheetData>,
+		iHasGetData<iCharacterSheetData>,
 		iHasCharacterSheetLogReporter,
 		iHasCleanUp {
 	attributes: iAttributeTraitCollection;

@@ -1,22 +1,20 @@
 
-import { iHasParentPath, iBaseCollection, iHasToJson, iHasPath, iHasCleanUp } from '../../../declarations/interfaces';
-import { TraitNameUnionOrString, TraitValueTypeUnion, AttributeName, SkillName, DisciplineName } from '../../../declarations/types';
-import { iHasTraitCollectionDataStorageInitialiser, iHasTraitDataStorageInitialiser } from '../../data-storage/interfaces/data-storage-interfaces';
-import { iTraitCollectionLogger, iHasTraitCollectionLogReporter } from '../../log/interfaces/log-interfaces';
 import {
-	iAttribute,
-	iAttributeData,
-	iBaseTrait,
-	iBaseTraitData,
-	iCanHaveLoggerCreator,
-	iDiscipline,
-	iDisciplineData,
-	iGeneralTrait,
-	iGeneralTraitData,
-	iSkill,
-	iSkillData,
-	iTouchStoneOrConviction,
-	iTouchStoneOrConvictionData,
+  iBaseCollection, iHasCleanUp, iHasGetData, iHasParentPath, iHasPath
+} from '../../../declarations/interfaces';
+import {
+  AttributeName, DisciplineName, SkillName, TraitNameUnionOrString, TraitValueTypeUnion
+} from '../../../declarations/types';
+import {
+  iHasTraitCollectionDataStorageInitialiser, iHasTraitDataStorageInitialiser
+} from '../../data-storage/interfaces/data-storage-interfaces';
+import {
+  iHasTraitCollectionLogReporter, iTraitCollectionLogger
+} from '../../log/interfaces/log-interfaces';
+import {
+  iAttribute, iAttributeData, iBaseTrait, iBaseTraitData, iCanHaveLoggerCreator, iDiscipline,
+  iDisciplineData, iGeneralTrait, iGeneralTraitData, iSkill, iSkillData, iTouchStoneOrConviction,
+  iTouchStoneOrConvictionData
 } from './trait-interfaces';
 
 // -------------------------------------------------------
@@ -44,7 +42,7 @@ export interface iTraitCollection<
 	D extends iBaseTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
 > extends iBaseCollection<N, V, T, iTraitCollection<N, V, D, T>>,
-		iHasToJson<D[]>,
+		iHasGetData<D[]>,
 		iHasTraitCollectionLogReporter,
 		iHasPath,
 		iHasCleanUp {

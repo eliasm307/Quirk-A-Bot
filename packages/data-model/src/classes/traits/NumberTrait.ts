@@ -1,7 +1,6 @@
-import { iNumberTrait, iNumberTraitData } from './interfaces/trait-interfaces';
-import { iNumberTraitProps } from './interfaces/trait-interfaces';
 import { TraitNameUnionOrString } from '../../declarations/types';
 import AbstractNumberTrait from './AbstractNumberTrait';
+import { iNumberTrait, iNumberTraitData, iNumberTraitProps } from './interfaces/trait-interfaces';
 
 /** class with behaviour for traits that have number values */
 export default class NumberTrait<N extends TraitNameUnionOrString>
@@ -10,7 +9,7 @@ export default class NumberTrait<N extends TraitNameUnionOrString>
 	constructor({
 		min = 0,
 		value = min,
-		toJson = () => ({
+		data: toJson = () => ({
 			name: this.name,
 			value: this.value,
 		}),
@@ -19,7 +18,7 @@ export default class NumberTrait<N extends TraitNameUnionOrString>
 		super({
 			...restProps,
 			value,
-			toJson,
+			data: toJson,
 			min,
 		});
 	}

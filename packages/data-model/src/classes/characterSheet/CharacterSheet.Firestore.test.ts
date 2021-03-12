@@ -107,7 +107,7 @@ describe('Character sheet using Firestore', () => {
 		const skillsData = skillsCollection.docs.map(doc => doc.data());
 		const touchstonesAndConvictionsData = touchstonesAndConvictionsCollection.docs.map(doc => doc.data());
 
-		expect(cs.toJson()).toEqual(initialData);
+		expect(cs.data()).toEqual(initialData);
 		expect(attributesData).toEqual(initialData.attributes);
 		expect(disciplinesData).toEqual(initialData.disciplines);
 		expect(skillsData).toEqual(initialData.skills);

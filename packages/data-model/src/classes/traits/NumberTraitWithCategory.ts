@@ -1,10 +1,8 @@
-import { iNumberTraitData } from './interfaces/trait-interfaces';
-import { TraitNameUnion, TraitNameUnionOrString } from './../../declarations/types';
-import {
-	iNumberTraitWithCategory,
-	iNumberTraitWithCategoryProps,
-} from './interfaces/trait-interfaces';
+import { TraitNameUnionOrString } from '../../declarations/types';
 import AbstractNumberTrait from './AbstractNumberTrait';
+import {
+  iNumberTraitData, iNumberTraitWithCategory, iNumberTraitWithCategoryProps
+} from './interfaces/trait-interfaces';
 
 /** class with behaviour for traits that have number values and categories */
 export default class NumberTraitWithCategory<N extends TraitNameUnionOrString, C extends string>
@@ -18,13 +16,13 @@ export default class NumberTraitWithCategory<N extends TraitNameUnionOrString, C
 		min = 0,
 		value = min,
 		categorySelector,
-		toJson = () => ({
+		data: toJson = () => ({
 			name: this.name,
 			value: this.value,
 		}),
 		...restProps
 	}: iNumberTraitWithCategoryProps<N, C>) {
-		super({ ...restProps, value, min, toJson });
+		super({ ...restProps, value, min, data: toJson });
 
 		// get the input categorySelector
 		this.#categorySelector = categorySelector;

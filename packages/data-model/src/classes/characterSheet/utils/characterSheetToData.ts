@@ -5,22 +5,22 @@ export default function characterSheetToData( characterSheet: iCharacterSheet ):
 			id: characterSheet.id,
 
 			// trait collections
-			attributes: characterSheet.attributes.toJson(),
-			disciplines: characterSheet.disciplines.toJson(),
-			skills: characterSheet.skills.toJson(),
-			touchstonesAndConvictions: characterSheet.touchstonesAndConvictions.toJson(),
+			attributes: characterSheet.attributes.data(),
+			disciplines: characterSheet.disciplines.data(),
+			skills: characterSheet.skills.data(),
+			touchstonesAndConvictions: characterSheet.touchstonesAndConvictions.data(),
 
 			// core string traits
-			clan: characterSheet.clan.toJson(),
-			name: characterSheet.name.toJson(),
-			sire: characterSheet.sire.toJson(),
+			clan: characterSheet.clan.data(),
+			name: characterSheet.name.data(),
+			sire: characterSheet.sire.data(),
 
 			// core number traits
-			health: characterSheet.health.toJson(),
-			humanity: characterSheet.humanity.toJson(),
-			hunger: characterSheet.hunger.toJson(),
-			bloodPotency: characterSheet.bloodPotency.toJson(),
-			willpower: characterSheet.willpower.toJson(),
+			health: characterSheet.health.data(),
+			humanity: characterSheet.humanity.data(),
+			hunger: characterSheet.hunger.data(),
+			bloodPotency: characterSheet.bloodPotency.data(),
+			willpower: characterSheet.willpower.data(),
 		};
 		// console.log(__filename, { data });
 		return data;

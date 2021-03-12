@@ -1,5 +1,5 @@
 import {
-  iCanHaveToJson, iHasCleanUp, iHasParentPath, iHasPath, iHasToJson
+  iCanHaveGetData, iHasCleanUp, iHasGetData, iHasParentPath, iHasPath
 } from '../../../declarations/interfaces';
 import {
   AttributeCategory, AttributeName, CoreNumberTraitName, CoreStringTraitName, DisciplineName,
@@ -52,7 +52,7 @@ export interface iBaseTraitProps<
 	D extends iBaseTraitData<N, V>
 > extends iHasTraitDataStorageInitialiser,
 		iHasParentPath,
-		iCanHaveToJson<D>,
+		iCanHaveGetData<D>,
 		iCanHaveLoggerCreator<iTraitLogger> {
 	name: N;
 	value: V;
@@ -149,7 +149,7 @@ export interface iBaseTrait<
 	V extends TraitValueTypeUnion,
 	D extends iBaseTraitData<N, V>
 > extends iBaseTraitData<N, V>,
-		iHasToJson<D>,
+		iHasGetData<D>,
 		iHasLogReporter<iTraitLogReporter>,
 		iHasPath,
 		iHasCleanUp {

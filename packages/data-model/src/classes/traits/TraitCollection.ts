@@ -85,7 +85,7 @@ export default class TraitCollection<
 		return this.#dataStorage.toArray();
 	}
 
-	toJson(): D[] {
-		return this.toArray().map(e => e.toJson());
+	data(): D[] {
+		return this.toArray().map(e => e.data());
 	}
 }

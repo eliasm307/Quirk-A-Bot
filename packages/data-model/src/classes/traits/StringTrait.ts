@@ -1,6 +1,8 @@
-import { iBaseStringTrait, iStringTraitData, iStringTraitProps } from './interfaces/trait-interfaces';
 import { TraitNameUnionOrString } from '../../declarations/types';
 import AbstractBaseTrait from './AbstractBaseTrait';
+import {
+  iBaseStringTrait, iStringTraitData, iStringTraitProps
+} from './interfaces/trait-interfaces';
 
 /** class with behaviour for traits that have string values */
 export default class StringTrait<N extends TraitNameUnionOrString, V extends string>
@@ -9,7 +11,7 @@ export default class StringTrait<N extends TraitNameUnionOrString, V extends str
 	constructor(props: iStringTraitProps<N, V>) {
 		super({
 			...props,
-			toJson: () => ({
+			data: () => ({
 				name: this.name,
 				value: this.value,
 			}),

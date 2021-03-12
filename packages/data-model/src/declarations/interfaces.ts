@@ -1,12 +1,9 @@
-// ? rename to "iHasGetData"
-export interface iHasToJson<D> {
-	readonly toJson: () => D;
-
-// ? rename to just data
+export interface iHasGetData<D> {
+	readonly data: () => D;
 }
 
-export interface iCanHaveToJson<D> {
-	toJson?: () => D;
+export interface iCanHaveGetData<D> {
+	data?: () => D;
 }
 
 export interface iCanHaveSaveAction {
@@ -21,13 +18,10 @@ export interface iHasSaveAction {
 	saveAction: () => boolean;
 }
 
-
-
 export interface iBaseCollection<K extends string, SetValueType, ReturnValueType, CollectionType> {
 	readonly size: number;
 
 	delete(key: K): CollectionType;
-	// todo this should extend a base iCollection
 	get(key: K): ReturnValueType | void;
 	has(key: K): boolean;
 	/**
@@ -50,7 +44,7 @@ export interface iCanHaveParentPath {
 	parentPath?: string;
 }
 
-// ? should this be renamed to parentId?
+// ? should this be renamed to id?
 export interface iHasPath {
 	/** Path from the root to reach this item */
 	path: string;

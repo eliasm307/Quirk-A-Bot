@@ -262,7 +262,7 @@ export default class CharacterSheet implements iCharacterSheet {
 		return !failCount;
 	}
 
-	public toJson(): iCharacterSheetData {
+	public data(): iCharacterSheetData {
 		return characterSheetToData(this);
 	}
 

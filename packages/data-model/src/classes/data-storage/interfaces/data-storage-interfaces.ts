@@ -1,5 +1,5 @@
 import {
-  iBaseCollection, iHasCleanUp, iHasParentPath, iHasPath, iHasToJson
+  iBaseCollection, iHasCleanUp, iHasGetData, iHasParentPath, iHasPath
 } from '../../../declarations/interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
 import {
@@ -147,7 +147,7 @@ export interface iTraitCollectionDataStorage<
 	D extends iBaseTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
 > extends iBaseCollection<N, V, T, iTraitCollectionDataStorage<N, V, D, T>>,
-		iHasToJson<D[]>,
+		iHasGetData<D[]>,
 		iHasTraitCollectionLogReporter,
 		iHasPath,
 		iHasCleanUp {

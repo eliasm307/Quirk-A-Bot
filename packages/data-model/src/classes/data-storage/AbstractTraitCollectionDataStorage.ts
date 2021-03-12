@@ -191,8 +191,8 @@ export default abstract class AbstractTraitCollectionDataStorage<
 		return Array.from(this.map.values());
 	}
 
-	toJson(): D[] {
-		return this.toArray().map(e => e.toJson());
+	data(): D[] {
+		return this.toArray().map(e => e.data());
 	}
 
 	protected createTraitInstance(name: N, defaultValue: V) {

@@ -33,7 +33,7 @@ describe('Number trait with firestore data storage', () => {
     
 		expect(doc.exists).toEqual(true);
 		expect(isTraitData(data)).toEqual(true);
-		expect(data).toEqual(trait1.toJson());
+		expect(data).toEqual(trait1.data());
 
     // can clean up
 		expect(trait1.cleanUp()).toEqual(true);

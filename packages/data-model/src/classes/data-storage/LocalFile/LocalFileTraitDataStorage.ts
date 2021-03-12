@@ -35,6 +35,6 @@ export default class LocalFileTraitDataStorage<N extends TraitNameUnionOrString,
 
 	protected afterValueChange(): boolean {
 		// auto save character sheet to file
-		return saveCharacterSheetToFile(this.#characterSheet.toJson(), this.#resolvedFilePath);
+		return saveCharacterSheetToFile(this.#characterSheet.data(), this.#resolvedFilePath);
 	}
 }

@@ -218,8 +218,8 @@ describe('TraitColleciton with Firestore data storage', () => {
 
 		// expect collection 2 to have the changes
 		expect(tc2.size).toEqual(3);
-		expect(tc2.toJson()).toEqual(tc1.toJson());
-		expect(tc2.toJson()).toEqual(resultingData);
+		expect(tc2.data()).toEqual(tc1.data());
+		expect(tc2.data()).toEqual(resultingData);
 
 		// can clean up
 		expect(tc1.cleanUp()).toEqual(true);

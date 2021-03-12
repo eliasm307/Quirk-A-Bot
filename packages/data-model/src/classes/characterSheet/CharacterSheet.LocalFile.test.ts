@@ -1,8 +1,9 @@
 import fs from 'fs-extra';
 import path from 'path';
-import CharacterSheet from './CharacterSheet';
-import { iAttribute, iSkill, iTouchStoneOrConviction } from '../traits/interfaces/trait-interfaces';
+
 import LocalFileDataStorageFactory from '../data-storage/LocalFile/LocalFileDataStorageFactory';
+import { iAttribute, iSkill, iTouchStoneOrConviction } from '../traits/interfaces/trait-interfaces';
+import CharacterSheet from './CharacterSheet';
 
 // todo refactor this or do it as in memory tests
 
@@ -62,7 +63,7 @@ test(testName, async () => {
 	expect(csLoaded.id).toEqual(newDataId);
 
 	// sheets should be the same
-	expect(cs.toJson()).toEqual(csLoaded.toJson());
+	expect(cs.data()).toEqual(csLoaded.data());
 	expect(cs).toEqual(csLoaded);
 });
 
