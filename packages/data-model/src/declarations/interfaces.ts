@@ -1,4 +1,3 @@
- 
 // ? rename to "iHasGetData"
 export interface iHasToJson<D> {
 	readonly toJson: () => D;
@@ -22,14 +21,7 @@ export interface iHasSaveAction {
 	saveAction: () => boolean;
 }
 
-// todo move to log interfaces
-export interface iHasOldValue<V> {
-	oldValue: V;
-}
 
-export interface iHasNewValue<V> {
-	newValue: V;
-}
 
 export interface iBaseCollection<K extends string, SetValueType, ReturnValueType, CollectionType> {
 	readonly size: number;
@@ -47,7 +39,7 @@ export interface iBaseCollection<K extends string, SetValueType, ReturnValueType
 	toArray(): ReturnValueType[];
 }
 
-// ? should this be renamed to id?
+// ? should this be renamed to parentId?
 export interface iHasParentPath {
 	/** Path from the root to reach the parent of this item */
 	parentPath: string;
@@ -58,7 +50,7 @@ export interface iCanHaveParentPath {
 	parentPath?: string;
 }
 
-// ? should this be renamed to id?
+// ? should this be renamed to parentId?
 export interface iHasPath {
 	/** Path from the root to reach this item */
 	path: string;

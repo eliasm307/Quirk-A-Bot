@@ -1,9 +1,17 @@
 // -------------------------------------------------------
 // GENERAL
 
-import { iCanDescribe, iHasNewValue, iHasOldValue } from '../../../declarations/interfaces';
+import { iCanDescribe } from '../../../declarations/interfaces';
 import { LogOperationUnion, LogSourceTypeNameUnion } from '../../../declarations/types';
 
+// todo move to log interfaces
+export interface iHasOldValue<V> {
+	oldValue: V;
+}
+
+export interface iHasNewValue<V> {
+	newValue: V;
+}
 export interface iHasLogReport<L extends iBaseLogReport> {
 	readonly report: L;
 }

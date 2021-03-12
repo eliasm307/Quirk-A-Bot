@@ -10,7 +10,6 @@ export default class TraitCollection<
 	D extends iBaseTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
 > implements iTraitCollection<N, V, D, T> {
-	// ? should this be # or protected?
 	#dataStorage: iTraitCollectionDataStorage<N, V, D, T>;
 	/*
 	#traitDataStorageInitialiser: <N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(
@@ -35,14 +34,6 @@ export default class TraitCollection<
 	) {
 		this.name = name;
 
-		// todo delete
-		// this.#traitDataStorageInitialiser = traitDataStorageInitialiser;
-
-		// use provided logger creator otherwise create new local logger
-		/*this.logger = logger
-			? logger({ sourceName: name })
-			: new TraitCollectionLogger({ sourceName: name, parentLogHandler: null });*/
-
 		this.#dataStorage = traitCollectionDataStorageInitialiser({
 			instanceCreator,
 			name,
@@ -64,10 +55,6 @@ export default class TraitCollection<
 	}
 
 	cleanUp(): boolean {
-		// if the data storage has a cleanup function then call it and return the result,
-		// otherwise return true if no cleanup required
-		// todo run cleanup on all child traits also
-
 		return this.#dataStorage.cleanUp();
 	}
 
@@ -83,22 +70,6 @@ export default class TraitCollection<
 	has(name: N): boolean {
 		return this.#dataStorage.has(name);
 	}
-
-	// todo delete
-	/*
-  getLogEvents(): iLogEvent[] {
-		//todo memoise
-		// combine logs from reports and and sort oldest to newest
-		return this.getLogReports()
-			.reduce((events, report) => [...events, ...report.events], [] as iLogEvent[])
-			.sort((a, b) => Number(a.timeStamp - b.timeStamp));
-	}
-
-  getLogReports(): iBaseLogReport[] {
-		return [this.log.getReport(), ...this.toArray().map(e => e.getLogReport())];
-  }
-
-*/
 
 	/**
 	 * Update trait value if it exists, otherwise add a new one

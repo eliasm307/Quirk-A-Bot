@@ -1,7 +1,6 @@
  
-import { iHasOldValue } from '../../declarations/interfaces';
 import BaseLogEvent from './BaseLogEvent';
-import { iDeleteLogEventProps, iLogEvent } from './interfaces/log-interfaces';
+import { iDeleteLogEventProps, iHasOldValue, iLogEvent } from './interfaces/log-interfaces';
 
 export default class DeleteLogEvent<T> extends BaseLogEvent<T> implements iLogEvent, iHasOldValue<T> {
 	oldValue: T;
