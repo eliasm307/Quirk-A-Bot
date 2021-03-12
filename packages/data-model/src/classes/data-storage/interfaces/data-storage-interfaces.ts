@@ -1,10 +1,18 @@
- 
-import { iHasParentPath, iHasPath, iBaseCollection, iHasToJson } from '../../../declarations/interfaces';
+import {
+  iBaseCollection, iHasParentPath, iHasPath, iHasToJson
+} from '../../../declarations/interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
-import { Firestore } from '../../../utils/firebase';
-import { iHasCharacterSheet, iCharacterSheet, iCharacterSheetData } from '../../characterSheet/interfaces/character-sheet-interfaces';
-import { iTraitLogger, iTraitCollectionLogger, iAddLogEventProps, iDeleteLogEventProps, iHasTraitLogReporter, iHasTraitCollectionLogReporter } from '../../log/interfaces/log-interfaces';
-import { iBaseTrait, iBaseTraitData, iCanHaveLoggerCreator, iHasTraitInstanceCreator } from '../../traits/interfaces/trait-interfaces';
+import {
+  iCharacterSheet, iCharacterSheetData, iHasCharacterSheet
+} from '../../characterSheet/interfaces/character-sheet-interfaces';
+import {
+  iAddLogEventProps, iDeleteLogEventProps, iHasTraitCollectionLogReporter, iHasTraitLogReporter,
+  iTraitCollectionLogger, iTraitLogger
+} from '../../log/interfaces/log-interfaces';
+import {
+  iBaseTrait, iBaseTraitData, iCanHaveLoggerCreator, iHasTraitInstanceCreator
+} from '../../traits/interfaces/trait-interfaces';
+import { Firestore } from '../Firestore/utils/firebase';
 
 // todo split this up
 
