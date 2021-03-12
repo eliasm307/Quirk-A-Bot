@@ -1,6 +1,11 @@
 import {
-  iBaseLoggerProps, iBaseLogReporter, iChildLoggerCreatorProps, iTraitCollectionLogger,
-  iTraitCollectionLogReport, iTraitLogger, iTraitLogReport
+	iBaseLoggerProps,
+	iBaseLogReporter,
+	iChildLoggerCreatorProps,
+	iTraitCollectionLogger,
+	iTraitCollectionLogReport,
+	iTraitLogger,
+	iTraitLogReport,
 } from '../../declarations/interfaces/log-interfaces';
 import { LogSourceTypeNameUnion } from '../../declarations/types';
 import createChildTraitLogger from '../../utils/createChildTraitLogger';
@@ -11,7 +16,10 @@ import LogReporter from './LogReporter';
 export default class TraitCollecitonLogger
 	extends AbstractLogger<iTraitCollectionLogReport>
 	implements iTraitCollectionLogger {
+	protected childTraitLoggers = new Map<string, iTraitLogger>();
+
 	readonly reporter: iBaseLogReporter<iTraitCollectionLogReport>;
+
 	sourceType: LogSourceTypeNameUnion = 'Trait Collection';
 
 	constructor(props: iBaseLoggerProps) {
@@ -20,14 +28,6 @@ export default class TraitCollecitonLogger
 		this.reporter = new LogReporter({ logger: this, describe: toString });
 	}
 
-	createChildTraitLogger({ sourceName }: iChildLoggerCreatorProps): iTraitLogger {
-		return createChildTraitLogger(sourceName, this.childTraitLoggers, this.log);
-	}
-	protected childTraitLoggers = new Map<string, iTraitLogger>();
-
-	protected getChildTraitReports(): iTraitLogReport[] {
-		return Array.from(this.childTraitLoggers.values()).map(logger => logger.report);
-	}
 	get report(): iTraitCollectionLogReport {
 		return {
 			events: [...this.events],
@@ -35,5 +35,13 @@ export default class TraitCollecitonLogger
 			sourceType: this.sourceType,
 			traitLogReports: this.getChildTraitReports(),
 		};
+	}
+
+	createChildTraitLogger({ sourceName }: iChildLoggerCreatorProps): iTraitLogger {
+		return createChildTraitLogger(sourceName, this.childTraitLoggers, this.log);
+	}
+
+	protected getChildTraitReports(): iTraitLogReport[] {
+		return Array.from(this.childTraitLoggers.values()).map(logger => logger.report);
 	}
 }

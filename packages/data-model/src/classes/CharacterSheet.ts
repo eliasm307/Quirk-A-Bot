@@ -1,4 +1,7 @@
-import { iCanCreateChildTraitCollectionLogger } from './../declarations/interfaces/log-interfaces';
+import {
+	iCanCreateChildTraitCollectionLogger,
+	iChildLoggerCreatorProps,
+} from './../declarations/interfaces/log-interfaces';
 import { STRING_TRAIT_DEFAULT_VALUE } from '../constants';
 import {
 	iCharacterSheet,
@@ -79,14 +82,17 @@ export default class CharacterSheet implements iCharacterSheet {
 			characterSheet: this,
 		});
 
-		// create core trait logger initialiser function
-		const newTraitLogger = (sourceName: string) => this.logger.createChildTraitLogger({ sourceName });
-
 		// get initial data from data storage
 		const initialData = characterSheetDataStorage.getData();
 
 		if (!isCharacterSheetData(initialData))
 			throw Error(`${__filename} data is not valid character sheet data, "${initialData}"`);
+
+		// create core trait logger initialiser function
+		const traitLoggerCreator = (props: iChildLoggerCreatorProps) => this.logger.createChildTraitLogger(props);
+
+		const traitCollectionLoggerCreator = (props: iChildLoggerCreatorProps) =>
+			this.logger.createChildTraitCollectionLogger(props);
 
 		// ? trait factory could be instantiable so details like the data storage initialisers and parent path could be passed once and not need to be repeated all over
 		// core number traits
@@ -96,7 +102,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			value: initialData.bloodPotency.value || 0,
 			traitDataStorageInitialiser,
 			parentPath: this.path,
-			logger: this.logger.createChildTraitLogger,
+			logger: traitLoggerCreator,
 		});
 
 		this.hunger = new NumberTrait<CoreNumberTraitName>({
@@ -105,7 +111,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			value: initialData.hunger.value || 0,
 			traitDataStorageInitialiser,
 			parentPath: this.path,
-			logger: this.logger.createChildTraitLogger,
+			logger: traitLoggerCreator,
 		});
 
 		this.humanity = new NumberTrait<CoreNumberTraitName>({
@@ -114,7 +120,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			value: initialData.humanity.value || 0,
 			traitDataStorageInitialiser,
 			parentPath: this.path,
-			logger: this.logger.createChildTraitLogger,
+			logger: traitLoggerCreator,
 		});
 
 		this.health = new NumberTrait<CoreNumberTraitName>({
@@ -123,7 +129,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			value: initialData.health.value || 0,
 			traitDataStorageInitialiser,
 			parentPath: this.path,
-			logger: this.logger.createChildTraitLogger,
+			logger: traitLoggerCreator,
 		});
 
 		this.willpower = new NumberTrait<CoreNumberTraitName>({
@@ -132,7 +138,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			value: initialData.willpower.value || 0,
 			traitDataStorageInitialiser,
 			parentPath: this.path,
-			logger: this.logger.createChildTraitLogger,
+			logger: traitLoggerCreator,
 		});
 
 		// core string traits
@@ -141,7 +147,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			value: initialData.name.value || STRING_TRAIT_DEFAULT_VALUE,
 			traitDataStorageInitialiser,
 			parentPath: this.path,
-			logger: this.logger.createChildTraitLogger,
+			logger: traitLoggerCreator,
 		});
 
 		this.sire = new StringTrait<CoreStringTraitName, string>({
@@ -149,7 +155,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			value: initialData.sire.value || STRING_TRAIT_DEFAULT_VALUE,
 			traitDataStorageInitialiser,
 			parentPath: this.path,
-			logger: this.logger.createChildTraitLogger,
+			logger: traitLoggerCreator,
 		});
 
 		this.clan = new StringTrait<CoreStringTraitName, ClanName>({
@@ -157,7 +163,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			value: initialData.clan.value || STRING_TRAIT_DEFAULT_VALUE,
 			traitDataStorageInitialiser,
 			parentPath: this.path,
-			logger: this.logger.createChildTraitLogger,
+			logger: traitLoggerCreator,
 		});
 
 		// ? what if the trait factory wasnt static and actually took in arguments on instantiation, this would reduce some of the props required when using each factory method and hide some of the ugliness
@@ -168,7 +174,7 @@ export default class CharacterSheet implements iCharacterSheet {
 				traitCollectionDataStorageInitialiser,
 				traitDataStorageInitialiser,
 				parentPath: this.path,
-				logger: this.logger.createChildTraitCollectionLogger,
+				logger: traitCollectionLoggerCreator,
 			},
 			...initialData.attributes
 		);
@@ -178,7 +184,7 @@ export default class CharacterSheet implements iCharacterSheet {
 				traitCollectionDataStorageInitialiser,
 				traitDataStorageInitialiser,
 				parentPath: this.path,
-				logger: this.logger.createChildTraitCollectionLogger,
+				logger: traitCollectionLoggerCreator,
 			},
 			...initialData.skills
 		);
@@ -188,7 +194,7 @@ export default class CharacterSheet implements iCharacterSheet {
 				traitCollectionDataStorageInitialiser,
 				traitDataStorageInitialiser,
 				parentPath: this.path,
-				logger: this.logger.createChildTraitCollectionLogger,
+				logger: traitCollectionLoggerCreator,
 			},
 			...initialData.disciplines
 		);
@@ -198,7 +204,7 @@ export default class CharacterSheet implements iCharacterSheet {
 				traitCollectionDataStorageInitialiser,
 				traitDataStorageInitialiser,
 				parentPath: this.path,
-				logger: this.logger.createChildTraitCollectionLogger,
+				logger: traitCollectionLoggerCreator,
 			},
 			...initialData.touchstonesAndConvictions
 		);
@@ -243,7 +249,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			return new CharacterSheet({ ...props, characterSheetDataStorage });
 		} catch (error) {
 			console.error(__filename, { error });
-			throw Error(`Error creating character sheet instance with id "${id}", \nMessage: ${error}`);
+			throw Error(`Could not create character sheet instance with id "${id}", Message: ${error}`);
 		}
 	}
 

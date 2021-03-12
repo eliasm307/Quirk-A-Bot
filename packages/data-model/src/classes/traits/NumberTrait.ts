@@ -8,25 +8,19 @@ export default class NumberTrait<N extends TraitNameUnionOrString>
 	extends AbstractNumberTrait<N, iNumberTraitData<N>>
 	implements iNumberTrait<N> {
 	constructor({
-		max,
-		name,
 		min = 0,
 		value = min,
-		parentPath,
-		traitDataStorageInitialiser,
 		toJson = () => ({
 			name: this.name,
 			value: this.value,
 		}),
+		...restProps
 	}: iNumberTraitProps<N>) {
 		super({
-			name,
+			...restProps,
 			value,
-			traitDataStorageInitialiser,
 			toJson,
 			min,
-			max,
-			parentPath,
 		});
 	}
 }

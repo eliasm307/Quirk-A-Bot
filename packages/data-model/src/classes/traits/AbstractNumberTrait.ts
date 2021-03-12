@@ -10,31 +10,20 @@ import AbstractBaseTrait from './AbstractBaseTrait';
 export default abstract class AbstractNumberTrait<N extends TraitNameUnionOrString, D extends iNumberTraitData<N>>
 	extends AbstractBaseTrait<N, number, D>
 	implements iBaseNumberTrait<N, D> {
-	min: number;
 	max: number;
+	min: number;
 
-	constructor({
-		max,
-		name,
-		min = 0,
-		value = min,
-		toJson,
-		traitDataStorageInitialiser,
-		parentPath,
-	}: iBaseNumberTraitProps<N, D>) {
+	constructor({ min = 0, max, value = min, ...restProps }: iBaseNumberTraitProps<N, D>) {
 		super({
-			name,
+			...restProps,
 			value,
-			toJson,
-			traitDataStorageInitialiser,
-			parentPath,
 		});
 		this.min = min;
 		this.max = max;
 	}
 
 	/** Only allows setting numbers within the allowed range for this trait */
-	newValueIsValid( newVal: number ): boolean {
+	newValueIsValid(newVal: number): boolean {
 		// ? is this required?
 		// assert value is a number
 		if (typeof newVal !== 'number')
@@ -42,15 +31,11 @@ export default abstract class AbstractNumberTrait<N extends TraitNameUnionOrStri
 
 		// make sure number is within allowable range before change
 		if (newVal < this.min) {
-			console.log(
-				`Cannot set trait ${this.name} to ${newVal}, this is below the minimum allowed value of ${this.min}`
-			);
+			console.log(`Cannot set trait ${this.name} to ${newVal}, this is below the minimum allowed value of ${this.min}`);
 			return false;
 		}
 		if (newVal > this.max) {
-			console.log(
-				`Cannot set trait ${this.name} to ${newVal}, this is above the maximum allowed value of ${this.max}`
-			);
+			console.log(`Cannot set trait ${this.name} to ${newVal}, this is above the maximum allowed value of ${this.max}`);
 			return false;
 		}
 

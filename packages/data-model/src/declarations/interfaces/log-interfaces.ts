@@ -81,7 +81,7 @@ export interface iTraitCollectionLogReport extends iBaseLogReport {
 	traitLogReports: iTraitLogReport[];
 }
 export interface iCharacterSheetLogReport extends iBaseLogReport {
-	coreTraitLogReports: iTraitLogReport[];
+	traitLogReports: iTraitLogReport[];
 	traitCollectionLogReports: iTraitCollectionLogReport[];
 }
 

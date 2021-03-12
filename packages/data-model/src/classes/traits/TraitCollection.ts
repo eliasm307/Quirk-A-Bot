@@ -23,9 +23,6 @@ export default class TraitCollection<
 	D extends iBaseTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
 > implements iTraitCollection<N, V, D, T> {
-	/** Internal logger */
-	protected logger: iTraitCollectionLogger;
-
 	// ? should this be # or protected?
 	#dataStorage: iTraitCollectionDataStorage<N, V, D, T>;
 	/*
@@ -54,12 +51,9 @@ export default class TraitCollection<
 		// this.#traitDataStorageInitialiser = traitDataStorageInitialiser;
 
 		// use provided logger creator otherwise create new local logger
-		this.logger = logger
+		/*this.logger = logger
 			? logger({ sourceName: name })
-			: new TraitCollectionLogger({ sourceName: name, parentLogHandler: null });
-
-		// expose logger reporter
-		this.log = this.logger.reporter;
+			: new TraitCollectionLogger({ sourceName: name, parentLogHandler: null });*/
 
 		this.#dataStorage = traitCollectionDataStorageInitialiser({
 			instanceCreator,
@@ -67,10 +61,13 @@ export default class TraitCollection<
 			parentPath,
 			traitDataStorageInitialiser,
 			initialData,
-			onAdd: (props: iAddLogEventProps<V>) => this.logger.log(new AddLogEvent(props)),
-			onDelete: (props: iDeleteLogEventProps<V>) => this.logger.log(new DeleteLogEvent(props)),
+			// onAdd: (props: iAddLogEventProps<V>) => this.logger.log(new AddLogEvent(props)),
+			// onDelete: (props: iDeleteLogEventProps<V>) => this.logger.log(new DeleteLogEvent(props)),
 			logger,
 		});
+		// expose logger reporter
+		this.log = this.#dataStorage.log;
+
 		this.path = this.#dataStorage.path; // data storage defines path to use
 	}
 

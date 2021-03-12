@@ -102,8 +102,8 @@ export interface iBaseTraitCollectionDataStorageProps<
 		iCanHaveLoggerCreator<iTraitCollectionLogger> {
 	initialData?: D[];
 	name: string;
-	onAdd: (props: iAddLogEventProps<V>) => void;
-	onDelete: (props: iDeleteLogEventProps<V>) => void;
+	onAdd?: (props: iAddLogEventProps<V>) => void;
+	onDelete?: (props: iDeleteLogEventProps<V>) => void;
 }
 
 export interface iLocalFileTraitCollectionDataStorageProps<
@@ -158,7 +158,7 @@ export interface iCharacterSheetDataStorage extends iHasPath {
 	/** Returns the character sheet data from the data storage */
 	getData(): iCharacterSheetData;
 
-	/** Tests if a character sheet with the given id actually exists in the given data storage */
+/** Tests if a character sheet with the given id actually exists in the given data storage */
 	// exists(): Promise<boolean>;
 
 	/** Creates new character sheet data for the given id, with default values */

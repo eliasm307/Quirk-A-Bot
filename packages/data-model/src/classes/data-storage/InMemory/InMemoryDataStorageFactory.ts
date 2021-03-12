@@ -20,22 +20,9 @@ import InMemoryCharacterSheetDataStorage from './InMemoryCharacterSheetDataStora
 
 export default class InMemoryDataStorageFactory implements iDataStorageFactory {
 	constructor(props?: iInMemoryFileDataStorageFactoryProps) {}
+
 	newCharacterSheetDataStorage(props: iBaseCharacterSheetDataStorageFactoryMethodProps): iCharacterSheetDataStorage {
 		return new InMemoryCharacterSheetDataStorage({ ...props, dataStorageFactory: this });
-	}
-	/*
-	newTraitCollectionDataStorage<
-		N extends string,
-		V extends TraitValueTypeUnion,
-		D extends iBaseTraitData<N, V>,
-		T extends iBaseTrait<N, V, D>
-	>(props: iBaseTraitCollectionDataStorageProps<N, V, D, T>): iTraitCollectionDataStorage<N, V, D, T> {
-		return new InMemoryTraitCollectionDataStorage({ ...props });
-	}*/
-	newTraitDataStorageInitialiser(): <N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(
-		props: iBaseTraitDataStorageProps<N, V>
-	) => iBaseTraitDataStorage<N, V> {
-		return props => new InMemoryTraitDataStorage({ ...props });
 	}
 
 	newTraitCollectionDataStorageInitialiser(): <
@@ -47,5 +34,11 @@ export default class InMemoryDataStorageFactory implements iDataStorageFactory {
 		props: iBaseTraitCollectionDataStorageProps<N, V, D, T>
 	) => iTraitCollectionDataStorage<N, V, D, T> {
 		return props => new InMemoryTraitCollectionDataStorage({ ...props });
+	}
+
+	newTraitDataStorageInitialiser(): <N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(
+		props: iBaseTraitDataStorageProps<N, V>
+	) => iBaseTraitDataStorage<N, V> {
+		return props => new InMemoryTraitDataStorage({ ...props });
 	}
 }

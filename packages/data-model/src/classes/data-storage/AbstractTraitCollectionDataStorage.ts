@@ -1,3 +1,4 @@
+import { iChildLoggerCreatorProps } from './../../declarations/interfaces/log-interfaces';
 import {
 	iBaseTraitCollectionDataStorageProps,
 	iBaseTraitDataStorage,
@@ -15,6 +16,7 @@ import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../declarations/
 import { createPath } from '../../utils/createPath';
 import DeleteLogEvent from '../log/DeleteLogEvent';
 import TraitCollecitonLogger from '../log/TraitCollectionLogger';
+import AddLogEvent from '../log/AddLogEvent';
 
 export default abstract class AbstractTraitCollectionDataStorage<
 	N extends TraitNameUnionOrString,
@@ -22,11 +24,14 @@ export default abstract class AbstractTraitCollectionDataStorage<
 	D extends iBaseTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
 > implements iTraitCollectionDataStorage<N, V, D, T> {
-	protected afterDelete: (props: iDeleteLogEventProps<V>) => void;
+	protected afterAddCustom?: (props: iAddLogEventProps<V>) => void;
+	// ? is this required
+	protected afterDeleteCustom?: (props: iDeleteLogEventProps<V>) => void;
+	// ? is this required
 	protected logger: iTraitCollectionLogger;
 	protected map: Map<N, T>;
-	protected onAdd: (props: iAddLogEventProps<V>) => void;
 
+	// ? is this required
 	instanceCreator: (props: iBaseTraitProps<N, V, D>) => T;
 	log: iTraitCollectionLogReporter;
 	name: string;
@@ -36,7 +41,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
 	) => iBaseTraitDataStorage<N, V>;
 
 	// ? is this required? if colleciton adds data to storage this means creating trait data and connecting data to trait instances would be done by 2 classes async, so it might be done in the wrong order. Opted to have these both on the trait side
-	protected abstract afterAdd(name: N): void;
+	protected abstract afterAddInternal(name: N): void;
 	protected abstract deleteTraitFromDataStorage(name: N): void;
 
 	constructor({
@@ -50,8 +55,8 @@ export default abstract class AbstractTraitCollectionDataStorage<
 		logger,
 	}: iBaseTraitCollectionDataStorageProps<N, V, D, T>) {
 		// save local values
-		this.onAdd = onAdd;
-		this.afterDelete = onDelete;
+		this.afterAddCustom = onAdd;
+		this.afterDeleteCustom = onDelete;
 		this.name = name;
 		this.instanceCreator = instanceCreator;
 		this.traitDataStorageInitialiser = traitDataStorageInitialiser;
@@ -65,7 +70,9 @@ export default abstract class AbstractTraitCollectionDataStorage<
 			: new TraitCollecitonLogger({ sourceName: name, parentLogHandler: null });
 
 		// expose logger reporter
-		this.log = this.logger.reporter;
+    this.log = this.logger.reporter;
+    
+    const traitLoggerCreator = (props: iChildLoggerCreatorProps) => this.logger.createChildTraitLogger(props); // ? if the closure is in the class will that work?
 
 		// add intial data, if any
 		this.map = new Map<N, T>(
@@ -77,7 +84,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
 							value,
 							traitDataStorageInitialiser,
 							parentPath: this.path,
-							logger: this.logger.createChildTraitLogger,
+							logger: traitLoggerCreator,
 						}),
 				  ])
 				: []
@@ -113,7 +120,9 @@ export default abstract class AbstractTraitCollectionDataStorage<
 
 			// log change
 			this.logger.log(new DeleteLogEvent({ oldValue, property: name }));
-			this.afterDelete({ oldValue, property: name }); // ? is this required if logging is done here?
+
+			// do any custom after delete action
+			if (this.afterDeleteCustom) this.afterDeleteCustom({ oldValue, property: name }); // ? is this required if logging is done here?
 		} else {
 			console.error(__filename, `old value was "${oldValue}" when deleting property "${name}"`);
 		}
@@ -147,10 +156,12 @@ export default abstract class AbstractTraitCollectionDataStorage<
 			this.map.set(name, this.createTraitInstance(name, newValue));
 
 			// log change
-			this.onAdd({ newValue, property: name });
+			this.logger.log(new AddLogEvent({ newValue, property: name }));
 
 			// post add event
-			this.afterAdd(name);
+			this.afterAddInternal(name); // ? is this required
+
+			if (this.afterAddCustom) this.afterAddCustom({ newValue, property: name }); // ? is this required
 		}
 
 		return this; // return this instance for chaining
@@ -173,7 +184,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
 				value: defaultValue,
 				parentPath: this.path,
 				traitDataStorageInitialiser: this.traitDataStorageInitialiser,
-				logger: this.logger.createChildTraitLogger,
+				logger: (props: iChildLoggerCreatorProps) => this.logger.createChildTraitLogger(props), // NOTE this needs to be extracted into a function to create a closure such that the 'this' references are maintained
 			})
 		);
 	}
