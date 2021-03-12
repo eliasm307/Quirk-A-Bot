@@ -1,21 +1,13 @@
 import {
-	iBaseTraitDataStorage,
-	iBaseTraitDataStorageProps,
 	iTraitCollectionDataStorage,
 } from '../../declarations/interfaces/data-storage-interfaces';
 import {
-	iAddLogEventProps,
-	iDeleteLogEventProps,
-	iTraitCollectionLogger,
 	iTraitCollectionLogReporter,
 } from '../../declarations/interfaces/log-interfaces';
 import { iTraitCollection } from '../../declarations/interfaces/trait-collection-interfaces';
 import { iBaseTrait, iBaseTraitData, iTraitCollectionProps } from '../../declarations/interfaces/trait-interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../declarations/types';
 import { hasCleanUp } from '../../utils/typePredicates';
-import AddLogEvent from '../log/AddLogEvent';
-import DeleteLogEvent from '../log/DeleteLogEvent';
-import TraitCollectionLogger from '../log/TraitCollectionLogger';
 
 export default class TraitCollection<
 	N extends TraitNameUnionOrString,
@@ -48,6 +40,7 @@ export default class TraitCollection<
 	) {
 		this.name = name;
 
+		// todo delete
 		// this.#traitDataStorageInitialiser = traitDataStorageInitialiser;
 
 		// use provided logger creator otherwise create new local logger
@@ -61,7 +54,7 @@ export default class TraitCollection<
 			parentPath,
 			traitDataStorageInitialiser,
 			initialData,
-			// onAdd: (props: iAddLogEventProps<V>) => this.logger.log(new AddLogEvent(props)),
+			// onAdd: (props: iAddLogEventProps<V>) => this.logger.log(new AddLogEvent(props)), // todo delete?
 			// onDelete: (props: iDeleteLogEventProps<V>) => this.logger.log(new DeleteLogEvent(props)),
 			logger,
 		});

@@ -51,7 +51,7 @@ export default abstract class AbstractTraitDataStorage<N extends TraitNameUnionO
 		this.private.value = newValue;
 
 		// log change
-		this.logger.log(new UpdateLogEvent({ property: 'value', oldValue, newValue }));
+		this.logger.log(new UpdateLogEvent({ property: this.name, oldValue, newValue }));
 
 		// run any custom logic after internal value is changed
 		this.afterValueChange(oldValue, newValue);

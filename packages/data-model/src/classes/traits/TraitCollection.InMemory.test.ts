@@ -66,7 +66,8 @@ test('TraitCollection logging functionality', () => {
 	// add items using chaining
 	tc.set('Wits', 3).set('Charisma', 4).set('Manipulation', 1).set('Wits', 1);
 	expect(tc.size).toEqual(3);
-	expect(tc.log.report.traitLogReports.length).toEqual(4);
+	expect(tc.log.report.traitLogReports.length).toEqual(3);
+	expect(tc.log.events.length).toEqual(4);
 
 	// delete an existing item
 	tc.delete('Wits');
@@ -74,27 +75,31 @@ test('TraitCollection logging functionality', () => {
 	// delete non-existing items, should not generate log items
 	tc.delete('Wits').delete('Composure').delete('Dexterity');
 
-	const log = tc.log.events;
+let logEventsSnapshot = tc.log.events;
+
+	console.warn(__filename, { log: logEventsSnapshot });
 
 	// it('can count log items', () => {
-	expect(log.length).toEqual(5); // ! when wits is deleted, this also deletes its logs,
+	expect(logEventsSnapshot.length).toEqual(5); // ! when wits is deleted, this also deletes its logs,
 	// todo maybe logging should be handled by a single top level object that distributes sub classes todo logging and report back to the master e.g. the charactersheet logger can produce traitCollection and trait loggers, and the traitCollection logger can produce trait loggers, all of which save a local record of logs but also report back any logs up the tree, benefit of this would be that logs are automatically sorted as they come in
 
 	// it('produces log event details in order of time', () => {
-	expect(log[0].operation).toEqual('ADD' as LogOperationUnion);
-	expect(log[1].operation).toEqual('ADD' as LogOperationUnion);
-	expect(log[2].operation).toEqual('ADD' as LogOperationUnion);
-	expect(log[3].operation).toEqual('UPDATE' as LogOperationUnion);
-	expect(log[4].operation).toEqual('DELETE' as LogOperationUnion);
+	expect(logEventsSnapshot[0].operation).toEqual('ADD' as LogOperationUnion);
+	expect(logEventsSnapshot[1].operation).toEqual('ADD' as LogOperationUnion);
+	expect(logEventsSnapshot[2].operation).toEqual('ADD' as LogOperationUnion);
+	expect(logEventsSnapshot[3].operation).toEqual('UPDATE' as LogOperationUnion);
+	expect(logEventsSnapshot[4].operation).toEqual('DELETE' as LogOperationUnion);
 
 	// delete the rest of the traits, 2 new log items
 	tc.delete('Charisma').delete('Manipulation');
 
+   logEventsSnapshot = tc.log.events;
+
 	// it('keeps logs after items are deleted', () => {
 	expect(tc.size).toEqual(0); // all items deleted
-	expect(log.length).toEqual(7); // 2 new delete logs
-	expect(log[5].operation).toEqual('DELETE' as LogOperationUnion);
-	expect(log[6].operation).toEqual('DELETE' as LogOperationUnion);
+	expect(logEventsSnapshot.length).toEqual(7); // 2 new delete logs
+	expect(logEventsSnapshot[5].operation).toEqual('DELETE' as LogOperationUnion);
+	expect(logEventsSnapshot[6].operation).toEqual('DELETE' as LogOperationUnion);
 });
 
 describe('TraitCollection general functionality', () => {

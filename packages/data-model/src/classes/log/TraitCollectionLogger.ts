@@ -1,3 +1,4 @@
+import { iLogEvent } from './../../declarations/interfaces/log-interfaces';
 import {
 	iBaseLoggerProps,
 	iBaseLogReporter,
@@ -38,7 +39,7 @@ export default class TraitCollecitonLogger
 	}
 
 	createChildTraitLogger({ sourceName }: iChildLoggerCreatorProps): iTraitLogger {
-		return createChildTraitLogger(sourceName, this.childTraitLoggers, this.log);
+		return createChildTraitLogger(sourceName, this.childTraitLoggers, (event: iLogEvent) => this.log(event));
 	}
 
 	protected getChildTraitReports(): iTraitLogReport[] {

@@ -4,6 +4,7 @@ import {
 	iCharacterSheetLogger,
 	iCharacterSheetLogReport,
 	iChildLoggerCreatorProps,
+	iLogEvent,
 	iTraitCollectionLogger,
 	iTraitCollectionLogReport,
 	iTraitLogger,
@@ -49,11 +50,13 @@ export default class CharacterSheetLogger
 	}
 
 	createChildTraitCollectionLogger({ sourceName }: iChildLoggerCreatorProps): iTraitCollectionLogger {
-		return createChildTraitCollectionLogger(sourceName, this.childTraitCollectionLoggers, this.log);
+		return createChildTraitCollectionLogger(sourceName, this.childTraitCollectionLoggers, (event: iLogEvent) =>
+			this.log(event)
+		);
 	}
 
 	createChildTraitLogger({ sourceName }: iChildLoggerCreatorProps): iTraitLogger {
-		return createChildTraitLogger(sourceName, this.childTraitLoggers, this.log);
+		return createChildTraitLogger(sourceName, this.childTraitLoggers, (event: iLogEvent) => this.log(event));
 	}
 
 	protected getChildTraitCollectionReports(): iTraitCollectionLogReport[] {
