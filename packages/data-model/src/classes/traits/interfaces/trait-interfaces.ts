@@ -1,16 +1,17 @@
-import { iHasParentPath, iCanHaveToJson, iHasToJson, iHasPath, iHasCleanUp } from '../../../declarations/interfaces';
 import {
-	AttributeCategory,
-	AttributeName,
-	CoreNumberTraitName,
-	CoreStringTraitName,
-	DisciplineName,
-	SkillName,
-	TraitNameUnionOrString,
-	TraitValueTypeUnion,
+  iCanHaveToJson, iHasCleanUp, iHasParentPath, iHasPath, iHasToJson
+} from '../../../declarations/interfaces';
+import {
+  AttributeCategory, AttributeName, CoreNumberTraitName, CoreStringTraitName, DisciplineName,
+  SkillName, TraitNameUnionOrString, TraitValueTypeUnion
 } from '../../../declarations/types';
-import { iHasTraitDataStorageInitialiser } from '../../data-storage/interfaces/data-storage-interfaces';
-import { iTraitLogger, iBaseLogger, iBaseLogReport, iChildLoggerCreatorProps, iTraitCollectionLogger, iHasLogReporter, iTraitLogReporter } from '../../log/interfaces/log-interfaces';
+import {
+  iHasTraitDataStorageInitialiser
+} from '../../data-storage/interfaces/data-storage-interfaces';
+import {
+  iBaseLogger, iBaseLogReport, iChildLoggerCreatorProps, iHasLogReporter, iTraitCollectionLogger,
+  iTraitLogger, iTraitLogReporter
+} from '../../log/interfaces/log-interfaces';
 import { iTraitCollectionDataStorageInitialiserBundle } from './trait-collection-interfaces';
 
 export interface iHasCategorySelector<N extends string, C extends string> {
@@ -75,7 +76,7 @@ export interface iNumberTraitWithCategoryProps<N extends TraitNameUnionOrString,
 
 // todo relocate
 export interface iCanHaveLoggerCreator<L extends iBaseLogger<iBaseLogReport>> {
-	logger: ((props: iChildLoggerCreatorProps) => L) | null;
+	loggerCreator: ((props: iChildLoggerCreatorProps) => L) | null;
 
 // todo rename to loggerCreator
 }

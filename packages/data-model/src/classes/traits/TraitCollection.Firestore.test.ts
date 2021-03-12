@@ -19,7 +19,7 @@ const createtraitCollectionFactoryMethodProps = (groupName: string): iTraitColle
 	traitCollectionDataStorageInitialiser: dataStorageFactory.newTraitCollectionDataStorageInitialiser(),
 	traitDataStorageInitialiser: dataStorageFactory.newTraitDataStorageInitialiser(),
 	parentPath: `${rootCollectionPath}/${groupName}`,
-	logger: null,
+	loggerCreator: null,
 });
 
 const deleteExistingCollectionData = async (collectionPath: string) => {

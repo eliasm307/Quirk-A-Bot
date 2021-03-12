@@ -14,7 +14,7 @@ const traitCollectionFactoryMethodProps: iTraitCollectionFactoryMethodProps = {
 	traitCollectionDataStorageInitialiser: dataStorageFactory.newTraitCollectionDataStorageInitialiser(),
 	traitDataStorageInitialiser: dataStorageFactory.newTraitDataStorageInitialiser(),
 	parentPath: rootCollectionPath,
-	logger: null,
+	loggerCreator: null,
 };
 
 test('TraitCollection CRUD functionality', () => {

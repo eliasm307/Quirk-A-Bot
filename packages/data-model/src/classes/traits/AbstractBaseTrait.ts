@@ -1,8 +1,8 @@
-import { iBaseTraitDataStorage } from '../data-storage/interfaces/data-storage-interfaces';
-import { iBaseTrait, iBaseTraitData, iBaseTraitProps } from './interfaces/trait-interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../declarations/types';
 import { hasCleanUp } from '../../utils/typePredicates';
+import { iBaseTraitDataStorage } from '../data-storage/interfaces/data-storage-interfaces';
 import { iTraitLogReporter } from '../log/interfaces/log-interfaces';
+import { iBaseTrait, iBaseTraitData, iBaseTraitProps } from './interfaces/trait-interfaces';
 
 export default abstract class AbstractBaseTrait<
 	N extends TraitNameUnionOrString,
@@ -19,7 +19,7 @@ export default abstract class AbstractBaseTrait<
 	protected abstract newValueIsValid(newVal: V): boolean;
 	protected abstract preProcessValue(newValueRaw: V): V;
 
-	constructor({ name, value, toJson, traitDataStorageInitialiser, parentPath, logger }: iBaseTraitProps<N, V, D>) {
+	constructor({ name, value, toJson, traitDataStorageInitialiser, parentPath, loggerCreator: logger }: iBaseTraitProps<N, V, D>) {
 		this.name = name;
 
 		// initialise data store
@@ -27,7 +27,7 @@ export default abstract class AbstractBaseTrait<
 			name,
 			defaultValueIfNotDefined: this.preProcessValue(value),
 			parentPath,
-			logger,
+			loggerCreator: logger,
 		});
 
 		this.log = this.dataStorage.log;

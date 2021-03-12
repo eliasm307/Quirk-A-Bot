@@ -21,7 +21,7 @@ describe('Number trait with firestore data storage', () => {
 			value: 5.2,
 			traitDataStorageInitialiser,
       parentPath: testParentPath,
-      logger: null
+      loggerCreator: null
 		});
 
 		await new Promise(res => setTimeout(res, 100)); // wait for syncronisation
@@ -49,7 +49,7 @@ describe('Number trait with firestore data storage', () => {
 			value: 5.2,
 			traitDataStorageInitialiser,
 			parentPath: testParentPath,
-			logger: null,
+			loggerCreator: null,
 		});
 
 		await new Promise(res => setTimeout(res, 100)); // wait for syncronisation
@@ -80,7 +80,7 @@ describe('Number trait with firestore data storage', () => {
 			value: 5.2,
 			traitDataStorageInitialiser,
 			parentPath: testParentPath,
-			logger: null,
+			loggerCreator: null,
 		});
 		await new Promise(res => setTimeout(res, 100)); // wait for syncronisation
 
@@ -90,7 +90,7 @@ describe('Number trait with firestore data storage', () => {
 			value: 5,
 			traitDataStorageInitialiser,
 			parentPath: testParentPath,
-			logger: null,
+			loggerCreator: null,
 		});
 
 		await new Promise(res => setTimeout(res, 100)); // wait for syncronisation
@@ -129,7 +129,7 @@ describe('Number trait with firestore data storage', () => {
 			value: 5.2,
 			traitDataStorageInitialiser,
 			parentPath: testParentPath,
-			logger: null,
+			loggerCreator: null,
 		});
 
 		await new Promise(res => setTimeout(res, 100)); // wait for syncronisation
@@ -140,7 +140,7 @@ describe('Number trait with firestore data storage', () => {
 			value: 5,
 			traitDataStorageInitialiser,
 			parentPath: testParentPath,
-			logger: null,
+			loggerCreator: null,
 		});
 
 		await new Promise(res => setTimeout(res, 100)); // wait for syncronisation

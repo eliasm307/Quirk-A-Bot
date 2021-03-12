@@ -25,7 +25,7 @@ export default abstract class AbstractTraitDataStorage<N extends TraitNameUnionO
 	protected abstract afterValueChange(oldValue: V, newValue: V): void;
 
 	constructor(props: iBaseTraitDataStorageProps<N, V>) {
-		const { name, defaultValueIfNotDefined, parentPath, logger } = props;
+		const { name, defaultValueIfNotDefined, parentPath, loggerCreator: logger } = props;
 		this.name = name;
 		this.private = {
 			value: defaultValueIfNotDefined, // assign initial value

@@ -88,7 +88,7 @@ export default class CharacterSheet implements iCharacterSheet {
 		const partialTraitFactoryProps = {
 			traitDataStorageInitialiser,
 			parentPath: this.path,
-			logger: traitLoggerCreator,
+			loggerCreator: traitLoggerCreator,
 		};
 
 		// create traitCollection factory method props
@@ -96,7 +96,7 @@ export default class CharacterSheet implements iCharacterSheet {
 			traitCollectionDataStorageInitialiser,
 			traitDataStorageInitialiser,
 			parentPath: this.path,
-			logger: traitCollectionLoggerCreator,
+			loggerCreator: traitCollectionLoggerCreator,
 		};
 
 		// core number traits

@@ -29,7 +29,7 @@ export default class TraitCollection<
 			traitDataStorageInitialiser,
 			traitCollectionDataStorageInitialiser,
 			parentPath,
-			logger,
+			loggerCreator: logger,
 		}: iTraitCollectionProps<N, V, D, T>,
 		...initialData: D[]
 	) {
@@ -51,7 +51,7 @@ export default class TraitCollection<
 			initialData,
 			// onAdd: (props: iAddLogEventProps<V>) => this.logger.log(new AddLogEvent(props)), // todo delete?
 			// onDelete: (props: iDeleteLogEventProps<V>) => this.logger.log(new DeleteLogEvent(props)),
-			logger,
+			loggerCreator: logger,
 		});
 		// expose logger reporter
 		this.log = this.#dataStorage.log;

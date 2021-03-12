@@ -48,7 +48,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
 		onDelete,
 		initialData,
 		parentPath,
-		logger,
+		loggerCreator: logger,
 	}: iBaseTraitCollectionDataStorageProps<N, V, D, T>) {
 		// save local values
 		this.afterAddCustom = onAdd;
@@ -80,7 +80,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
 							value,
 							traitDataStorageInitialiser,
 							parentPath: this.path,
-							logger: traitLoggerCreator,
+							loggerCreator: traitLoggerCreator,
 						}),
 				  ])
 				: []
@@ -204,7 +204,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
 				value: defaultValue,
 				parentPath: this.path,
 				traitDataStorageInitialiser: this.traitDataStorageInitialiser,
-				logger: (props: iChildLoggerCreatorProps) => this.logger.createChildTraitLogger(props), // NOTE this needs to be extracted into a function to create a closure such that the 'this' references are maintained
+				loggerCreator: (props: iChildLoggerCreatorProps) => this.logger.createChildTraitLogger(props), // NOTE this needs to be extracted into a function to create a closure such that the 'this' references are maintained
 			})
 		);
 	}
