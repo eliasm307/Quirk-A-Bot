@@ -1,11 +1,11 @@
 import fs, { WriteOptions } from 'fs-extra';
 import path from 'path';
 
-export default function exportDataToFile(data: any, outputFilePath: string): boolean { 
+export default function exportDataToFile(data: any, outputFilePath: string): boolean {
 	// todo test
 
 	if (!data || typeof data !== 'object' || (!Object.keys(data).length && !Array.isArray(data))) {
-		console.error(__filename,`Data should be an object or an array`, { typeofData: typeof data, data });
+		console.error(__filename, `Data should be an object or an array`, { typeofData: typeof data, data });
 		return false;
 	}
 
@@ -18,8 +18,8 @@ export default function exportDataToFile(data: any, outputFilePath: string): boo
 	};
 
 	try {
-		fs.ensureFileSync(resolvedOutputFilePath); // ensure file path exists
-		fs.writeJSONSync(resolvedOutputFilePath, data, writeOptions); // write JSON to file path // todo replace with https://github.com/jprichardson/node-fs-extra/blob/master/docs/outputJson-sync.md
+		// fs.ensureFileSync(resolvedOutputFilePath); // ensure file path exists
+		fs.outputJSONSync(resolvedOutputFilePath, data, writeOptions); // write JSON to file path, create it if it doesnt exist // todo replace with https://github.com/jprichardson/node-fs-extra/blob/master/docs/outputJson-sync.md
 
 		// check file path exists
 		if (fs.pathExistsSync(resolvedOutputFilePath)) {
