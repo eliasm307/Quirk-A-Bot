@@ -1,12 +1,10 @@
 import {
   iCharacterSheetData
 } from '../classes/characterSheet/interfaces/character-sheet-interfaces';
-import { iGeneralTraitCollection } from '../classes/traits/interfaces/trait-collection-interfaces';
-import { iGeneralTrait, iGeneralTraitData } from '../classes/traits/interfaces/trait-interfaces';
-import { ATTRIBUTE_NAMES, DISCIPLINE_NAMES, SKILL_NAMES } from '../constants';
+import { iGeneralTraitData } from '../classes/traits/interfaces/trait-interfaces';
 import { iHasCleanUp } from '../declarations/interfaces';
-import { AttributeName, DisciplineName, SkillName } from '../declarations/types';
 
+/*
 export function isAttributeName(name: string): name is AttributeName {
 	const allowedKeys: string[] = [...ATTRIBUTE_NAMES];
 	return allowedKeys.indexOf(name) !== -1;
@@ -18,7 +16,7 @@ export function isSkillName(name: string): name is SkillName {
 export function isDisciplineName(name: string): name is DisciplineName {
 	const allowedKeys: string[] = [...DISCIPLINE_NAMES];
 	return allowedKeys.indexOf(name) !== -1;
-}
+}*/
 export function isCharacterSheetData(data: any): data is iCharacterSheetData {
 	// todo test
 	if (typeof data !== 'object') {
@@ -66,7 +64,7 @@ export function isCharacterSheetData(data: any): data is iCharacterSheetData {
 	// check core string traits
 	const coreStringTraitData: any[] = [clan, name, sire];
 	for (let traitData of coreStringTraitData) {
-		if (!isTraitData(traitData) || typeof traitData.value !== 'string') {
+		if (!isTraitData(traitData)) {
 			console.warn(
 				`isCharacterSheetData, core string trait ${traitData} is not a valid trait data or does not have a string value`,
 				{ traitData, isTraitData: isTraitData(traitData), typeofValue: typeof traitData.value }
@@ -106,10 +104,16 @@ export function isTraitData(data: any): data is iGeneralTraitData {
 
 	const nameExists = typeof name === 'string';
 	const valueExists = typeof value === 'string' || typeof value === 'number';
+	const onlyHas2Properties = Object.keys(data).length === 2;
 
-	return nameExists && valueExists;
+	if (nameExists && valueExists && onlyHas2Properties) {
+		return true;
+	} else {
+		console.log(`Object is not valid trait data`, { data, nameExists, valueExists, onlyHas2Properties });
+		return false;
+	}
 }
-
+/*
 export function isTraitCollection(data: any): data is iGeneralTraitCollection {
 	// todo test
 	return (
@@ -126,14 +130,20 @@ export function isTraitCollection(data: any): data is iGeneralTraitCollection {
 		!!data.toJson
 	);
 }
+*/
+/*
+export function isBaseTrait(item: any): item is iGeneralTrait {
+	if (typeof item !== 'object') return false;
 
-export function isBaseTrait(data: any): data is iGeneralTrait {
+	const { cleanUp, data, log, name, path, value } = item as iGeneralTrait;
 	// todo test
-	if (typeof data !== 'object') return false;
+
 	// todo improve this to account for types
-	return !!data.name && !!data.value && !!data.getLogEvents && !!data.getLogReport && !!data.toJson;
+  // ? add instanceOf AbstractBaseTrait check? are property checks required also?
+	return item instanceof AbstractBaseTrait && !!name && !!value && !!path && !!log && !!data && !!cleanUp;
 }
+*/
 
 export function hasCleanUp(o: any): o is iHasCleanUp {
-	return (o as iHasCleanUp).cleanUp !== undefined;
+	return typeof o === 'object' && (o as iHasCleanUp).cleanUp !== undefined;
 }
