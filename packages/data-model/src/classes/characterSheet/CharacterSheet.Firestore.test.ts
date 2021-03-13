@@ -2,7 +2,7 @@ import {
   ATTRIBUTE_COLLECTION_NAME, DISCIPLINE_COLLECTION_NAME, SKILL_COLLECTION_NAME,
   TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME
 } from '../../constants';
-import { isCharacterSheetData } from '../../utils/type-predicates/typePredicates';
+import isCharacterSheetData from '../../utils/type-predicates/isCharacterSheetData';
 import FirestoreDataStorageFactory from '../data-storage/Firestore/FirestoreDataStorageFactory';
 import { firestoreEmulator } from '../data-storage/Firestore/utils/firebase';
 import readCharacterSheetDataFromFirestore from '../data-storage/Firestore/utils/readCharacterSheetDataFromFirestore';

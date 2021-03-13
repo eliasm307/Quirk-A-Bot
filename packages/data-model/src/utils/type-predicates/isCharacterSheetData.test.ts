@@ -1,36 +1,7 @@
 import {
   iCharacterSheetData
 } from '../../classes/characterSheet/interfaces/character-sheet-interfaces';
-import { iGeneralTraitData } from '../../classes/traits/interfaces/trait-interfaces';
-import { hasCleanUp, isCharacterSheetData, isTraitData } from './typePredicates';
-
-// todo split these to different files
-test('Trait data predicate', () => {
-	const numberTraitData: iGeneralTraitData = {
-		name: 'name',
-		value: Number.MAX_SAFE_INTEGER,
-	};
-
-	const stringTraitData: iGeneralTraitData = {
-		name: 'name',
-		value: 'value',
-	};
-
-	const notTraitData = {
-		name: 'name',
-	};
-
-	const notTraitData2 = {
-		...stringTraitData,
-		groove: 'yes',
-	};
-
-	expect(isTraitData(numberTraitData)).toBeTruthy();
-	expect(isTraitData(stringTraitData)).toBeTruthy();
-	expect(isTraitData(notTraitData)).toBeFalsy();
-	expect(isTraitData(notTraitData2)).toBeFalsy();
-	expect(isTraitData(1)).toBeFalsy();
-});
+import isCharacterSheetData from './isCharacterSheetData';
 
 test('Character sheet data predicate', () => {
 	const correctData: iCharacterSheetData = {
@@ -70,10 +41,4 @@ test('Character sheet data predicate', () => {
 	expect(isCharacterSheetData(badData5)).toBeFalsy();
 	expect(isCharacterSheetData(badData6)).toBeFalsy();
 	expect(isCharacterSheetData(badData7)).toBeFalsy();
-});
-
-test('hasCleanUp predicate', () => {
-	expect(hasCleanUp({ cleanUp: () => {} })).toBeTruthy();
-	expect(hasCleanUp(5)).toBeFalsy();
-	expect(hasCleanUp({})).toBeFalsy();
 });

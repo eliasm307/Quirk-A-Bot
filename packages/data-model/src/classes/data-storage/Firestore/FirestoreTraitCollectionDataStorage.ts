@@ -1,5 +1,5 @@
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
-import { isTraitData } from '../../../utils/type-predicates/typePredicates';
+import isTraitData from '../../../utils/type-predicates/isTraitData';
 import { iBaseTrait, iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
 import AbstractTraitCollectionDataStorage from '../AbstractTraitCollectionDataStorage';
 import {

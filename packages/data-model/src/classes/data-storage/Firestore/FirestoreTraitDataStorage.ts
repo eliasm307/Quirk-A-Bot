@@ -2,7 +2,7 @@ import pathModule from 'path';
 
 import { CORE_TRAIT_COLLECTION_NAME } from '../../../constants';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
-import { isTraitData } from '../../../utils/type-predicates/typePredicates';
+import isTraitData from '../../../utils/type-predicates/isTraitData';
 import UpdateLogEvent from '../../log/log-events/UpdateLogEvent';
 import { iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
 import AbstractTraitDataStorage from '../AbstractTraitDataStorage';

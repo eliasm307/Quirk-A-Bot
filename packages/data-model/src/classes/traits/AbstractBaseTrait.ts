@@ -1,5 +1,5 @@
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../declarations/types';
-import { hasCleanUp } from '../../utils/type-predicates/typePredicates';
+import hasCleanUp from '../../utils/type-predicates/hasCleanUp';
 import { iBaseTraitDataStorage } from '../data-storage/interfaces/data-storage-interfaces';
 import { iTraitLogReporter } from '../log/interfaces/log-interfaces';
 import { iAbstractBaseTraitProps, iBaseTrait, iBaseTraitData } from './interfaces/trait-interfaces';
@@ -19,7 +19,14 @@ export default abstract class AbstractBaseTrait<
 	protected abstract newValueIsValid(newVal: V): boolean;
 	protected abstract preProcessValue(newValueRaw: V): V;
 
-	constructor({ name, value,  traitDataStorageInitialiser, parentPath, loggerCreator, data}: iAbstractBaseTraitProps<N, V, D>) {
+	constructor({
+		name,
+		value,
+		traitDataStorageInitialiser,
+		parentPath,
+		loggerCreator,
+		data,
+	}: iAbstractBaseTraitProps<N, V, D>) {
 		this.name = name;
 
 		// initialise data store
@@ -27,7 +34,7 @@ export default abstract class AbstractBaseTrait<
 			name,
 			defaultValueIfNotDefined: this.preProcessValue(value),
 			parentPath,
-			loggerCreator ,
+			loggerCreator,
 		});
 
 		this.log = this.dataStorage.log;
@@ -35,7 +42,7 @@ export default abstract class AbstractBaseTrait<
 		// the data storage is responsible for providing a suitable path
 		this.path = this.dataStorage.path;
 
-		// make sure toJson is provided 
+		// make sure toJson is provided
 		this.data = data;
 	}
 
