@@ -1,7 +1,7 @@
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../declarations/types';
 import { iTraitLogger, iTraitLogReporter } from '../log/interfaces/log-interfaces';
-import TraitLogger from '../log/TraitLogger';
-import UpdateLogEvent from '../log/UpdateLogEvent';
+import UpdateLogEvent from '../log/log-events/UpdateLogEvent';
+import TraitLogger from '../log/loggers/TraitLogger';
 import { iBaseTraitDataStorage } from './interfaces/data-storage-interfaces';
 import { iBaseTraitDataStorageProps } from './interfaces/props/trait-data-storage';
 

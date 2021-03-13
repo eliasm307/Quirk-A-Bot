@@ -1,13 +1,13 @@
-import { LogSourceTypeNameUnion } from '../../declarations/types';
-import AbstractLogger from './AbstractLogger';
+import { LogSourceTypeNameUnion } from '../../../declarations/types';
 import {
   iBaseLoggerProps, iBaseLogReporter, iChildLoggerCreatorProps, iLogEvent, iTraitCollectionLogger,
   iTraitLogger
-} from './interfaces/log-interfaces';
-import { iTraitCollectionLogReport, iTraitLogReport } from './interfaces/logReportInterfaces';
-import LogReporter from './LogReporter';
-import createChildTraitLogger from './utils/createChildTraitLogger';
-import traitCollectionLoggerToString from './utils/traitCollectionLoggerToString';
+} from '../interfaces/log-interfaces';
+import { iTraitCollectionLogReport, iTraitLogReport } from '../interfaces/logReportInterfaces';
+import LogReporter from '../LogReporter';
+import createChildTraitLogger from '../utils/createChildTraitLogger';
+import traitCollectionLoggerToString from '../utils/traitCollectionLoggerToString';
+import AbstractLogger from './AbstractLogger';
 
 export default class TraitCollecitonLogger
 	extends AbstractLogger<iTraitCollectionLogReport>

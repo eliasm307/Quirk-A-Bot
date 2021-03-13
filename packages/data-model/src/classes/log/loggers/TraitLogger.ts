@@ -1,9 +1,9 @@
-import { LogSourceTypeNameUnion } from '../../declarations/types';
+import { LogSourceTypeNameUnion } from '../../../declarations/types';
+import { iBaseLoggerProps, iBaseLogReporter, iTraitLogger } from '../interfaces/log-interfaces';
+import { iTraitLogReport } from '../interfaces/logReportInterfaces';
+import LogReporter from '../LogReporter';
+import traitLoggerToString from '../utils/traitLoggerToString';
 import AbstractLogger from './AbstractLogger';
-import { iBaseLoggerProps, iBaseLogReporter, iTraitLogger } from './interfaces/log-interfaces';
-import { iTraitLogReport } from './interfaces/logReportInterfaces';
-import LogReporter from './LogReporter';
-import traitLoggerToString from './utils/traitLoggerToString';
 
 export default class TraitLogger extends AbstractLogger<iTraitLogReport> implements iTraitLogger {
   readonly reporter: iBaseLogReporter<iTraitLogReport>;

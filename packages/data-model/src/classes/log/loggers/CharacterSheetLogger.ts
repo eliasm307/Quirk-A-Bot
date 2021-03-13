@@ -1,17 +1,17 @@
  
-import { LogSourceTypeNameUnion } from '../../declarations/types';
-import AbstractLogger from './AbstractLogger';
+import { LogSourceTypeNameUnion } from '../../../declarations/types';
 import {
   iBaseLoggerProps, iBaseLogReporter, iCharacterSheetLogger, iChildLoggerCreatorProps, iLogEvent,
   iTraitCollectionLogger, iTraitLogger
-} from './interfaces/log-interfaces';
+} from '../interfaces/log-interfaces';
 import {
   iCharacterSheetLogReport, iTraitCollectionLogReport, iTraitLogReport
-} from './interfaces/logReportInterfaces';
-import LogReporter from './LogReporter';
-import characterSheetLoggerToString from './utils/characterSheetLoggerToString';
-import createChildTraitCollectionLogger from './utils/createChildTraitCollectionLogger';
-import createChildTraitLogger from './utils/createChildTraitLogger';
+} from '../interfaces/logReportInterfaces';
+import LogReporter from '../LogReporter';
+import characterSheetLoggerToString from '../utils/characterSheetLoggerToString';
+import createChildTraitCollectionLogger from '../utils/createChildTraitCollectionLogger';
+import createChildTraitLogger from '../utils/createChildTraitLogger';
+import AbstractLogger from './AbstractLogger';
 
 // todo test
 export default class CharacterSheetLogger

@@ -3,10 +3,10 @@ import { STRING_TRAIT_DEFAULT_VALUE } from '../../constants';
 import { ClanName } from '../../declarations/types';
 import { hasCleanUp } from '../../utils/typePredicates';
 import { iHasId } from '../data-storage/interfaces/data-storage-interfaces';
-import CharacterSheetLogger from '../log/CharacterSheetLogger';
 import {
   iCharacterSheetLogger, iCharacterSheetLogReporter, iChildLoggerCreatorProps
 } from '../log/interfaces/log-interfaces';
+import CharacterSheetLogger from '../log/loggers/CharacterSheetLogger';
 import {
   iAttributeTraitCollection, iDisciplineTraitCollection, iSkillTraitCollection,
   iTouchStoneOrConvictionCollection, iTraitCollectionFactoryMethodProps

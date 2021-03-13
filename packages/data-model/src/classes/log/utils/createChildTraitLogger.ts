@@ -1,5 +1,5 @@
 import { iLogEvent, iTraitLogger } from '../interfaces/log-interfaces';
-import TraitLogger from '../TraitLogger';
+import TraitLogger from '../loggers/TraitLogger';
 
 export default function createChildTraitLogger(
 	sourceName: string,

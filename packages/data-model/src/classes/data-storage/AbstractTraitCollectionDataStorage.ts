@@ -1,11 +1,11 @@
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../declarations/types';
-import AddLogEvent from '../log/AddLogEvent';
-import DeleteLogEvent from '../log/DeleteLogEvent';
 import {
   iAddLogEventProps, iChildLoggerCreatorProps, iDeleteLogEventProps, iTraitCollectionLogger,
   iTraitCollectionLogReporter
 } from '../log/interfaces/log-interfaces';
-import TraitCollecitonLogger from '../log/TraitCollectionLogger';
+import AddLogEvent from '../log/log-events/AddLogEvent';
+import DeleteLogEvent from '../log/log-events/DeleteLogEvent';
+import TraitCollecitonLogger from '../log/loggers/TraitCollectionLogger';
 import { iBaseTrait, iBaseTraitData, iBaseTraitProps } from '../traits/interfaces/trait-interfaces';
 import {
   iBaseTraitDataStorage, iTraitCollectionDataStorage
@@ -118,6 +118,10 @@ export default abstract class AbstractTraitCollectionDataStorage<
 		return result;
 	}
 
+	data(): D[] {
+		return this.toArray().map(e => e.data());
+	}
+
 	delete(name: N): iTraitCollectionDataStorage<N, V, D, T> {
 		if (!this.map.has(name)) {
 			console.log(
@@ -192,10 +196,6 @@ export default abstract class AbstractTraitCollectionDataStorage<
 
 	toArray(): T[] {
 		return Array.from(this.map.values());
-	}
-
-	data(): D[] {
-		return this.toArray().map(e => e.data());
 	}
 
 	protected createTraitInstance(name: N, defaultValue: V) {
