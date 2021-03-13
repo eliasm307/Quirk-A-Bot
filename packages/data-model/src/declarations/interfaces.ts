@@ -11,7 +11,7 @@ export interface iCanHaveSaveAction {
 }
 
 export interface iCanDescribe {
-	describe: () => string;
+	describe(): string;
 }
 
 export interface iHasSaveAction {

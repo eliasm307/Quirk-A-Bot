@@ -1,5 +1,5 @@
 import BaseLogEvent from './BaseLogEvent';
-import { iAddLogEventProps } from './interfaces/log-interfaces';
+import { iAddLogEvent, iAddLogEventProps } from './interfaces/log-interfaces';
 
 export default class AddLogEvent<T> extends BaseLogEvent<T> implements iAddLogEvent<T> {
 	public newValue: T;
