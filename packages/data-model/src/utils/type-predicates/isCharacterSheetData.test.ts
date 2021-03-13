@@ -31,6 +31,7 @@ test('Character sheet data predicate', () => {
 	const badData5 = { ...correctData, skills: [{ name: '' }, { name: 'Hunger', value: 2 }] };
 	const badData6 = { ...correctData, health: { name: 5, value: 5 } };
 	const badData7 = { ...correctData, clan: { name: '' } };
+	const badData8 = { ...correctData, id: false };
 
 	expect(isCharacterSheetData(correctData)).toBeTruthy();
 	expect(isCharacterSheetData(1)).toBeFalsy();
@@ -41,4 +42,5 @@ test('Character sheet data predicate', () => {
 	expect(isCharacterSheetData(badData5)).toBeFalsy();
 	expect(isCharacterSheetData(badData6)).toBeFalsy();
 	expect(isCharacterSheetData(badData7)).toBeFalsy();
+	expect(isCharacterSheetData(badData8)).toBeFalsy();
 });

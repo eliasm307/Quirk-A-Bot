@@ -74,8 +74,6 @@ describe('firestore emulator', () => {
 
 		// console.log('document observer attached');
 
-		// todo delete existing documents before attaching listeners
-
 		// subscribe to collection level changes
 		const unsubscribeToCollection = firestoreEmulator.collection(localTestCollectionName).onSnapshot(querySnapshot => {
 			querySnapshot.docChanges().forEach(change => {
@@ -84,19 +82,18 @@ describe('firestore emulator', () => {
 				if (!change.doc.exists)
 					throw Error(`Document at path ${localTestCollectionName}/${change.doc.id} is marked as doesnt exist`);
 
+				// todo use switch statement
 				// logFirestoreChange(change, console.log);
 				if (change.type === 'added') {
 					// console.log('New item: ', { data });
 					expect(data).toEqual(testDocData);
-				}
-				if (change.type === 'modified') {
+				} else if (change.type === 'modified') {
 					// console.log('Modified document: ', { data });
 					expect(data.added).toBeTruthy();
-				}
-				if (change.type === 'removed') {
+				} else if (change.type === 'removed') {
 					// console.log('Removed document: ', { data });
 					// pause for syncronisation then check deletion
-					new Promise(res => setTimeout(res, 200)).then(() => {
+					new Promise(res => setTimeout(res, 50)).then(() => {
 						expect(
 							firestoreEmulator
 								.collection(localTestCollectionName)
@@ -133,9 +130,11 @@ describe('firestore emulator', () => {
 		unsubscribeToDocument();
 		// console.log('observers detached');
 
+		await new Promise(res => setTimeout(res, 200)); // pause for syncronisation
+
 		// these should not create any events on observer
 		await firestoreEmulator.doc(`${localTestCollectionName}/${testDocumentName}`).set(testDocData);
 		await firestoreEmulator.doc(`${localTestCollectionName}/${testDocumentName}`).update({ added: 'something' });
 		await firestoreEmulator.doc(`${localTestCollectionName}/${testDocumentName}`).delete();
-	});
+	};);
 });

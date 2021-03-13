@@ -12,7 +12,7 @@ export default function isTraitData(data: any): data is iGeneralTraitData {
 	if (nameExists && valueExists && onlyHas2Properties) {
 		return true;
 	} else {
-		console.log(`Object is not valid trait data`, { data, nameExists, valueExists, onlyHas2Properties });
+		// console.log(`Object is not valid trait data`, { data, nameExists, valueExists, onlyHas2Properties });
 		return false;
 	}
 }

@@ -1,8 +1,8 @@
-import { TraitNameUnionOrString } from '../../declarations/types';
-import AbstractBaseTrait from './AbstractBaseTrait';
+import { TraitNameUnionOrString } from '../../../declarations/types';
 import {
   iAbstractNumberTraitProps, iBaseNumberTrait, iNumberTraitData
-} from './interfaces/trait-interfaces';
+} from '../interfaces/trait-interfaces';
+import AbstractBaseTrait from './AbstractBaseTrait';
 
 /** class with behaviour for traits that have number values */
 export default abstract class AbstractNumberTrait<N extends TraitNameUnionOrString, D extends iNumberTraitData<N>>

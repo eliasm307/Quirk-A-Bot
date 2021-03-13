@@ -80,19 +80,24 @@ export default function isCharacterSheetData(data: any): data is iCharacterSheet
 	}
 
 	// check trait arrays
-	const traitDataArrays: any[] = [attributes, disciplines, skills, touchstonesAndConvictions];
-	for (let tc of traitDataArrays) {
-		if (!Array.isArray(tc)) {
-			console.warn(`isCharacterSheetData, trait collection is not an array, it is "${tc}"`, { tc });
+	const traitDataCollections: any = { attributes, disciplines, skills, touchstonesAndConvictions };
+	for (let [traitCollectionName, traitDataArray] of Object.entries(traitDataCollections)) {
+		if (!Array.isArray(traitDataArray)) {
+			console.warn(`isCharacterSheetData, trait collection is not an array, it is "${traitDataArray}"`, {
+				tc: traitDataArray,
+			});
 			return false;
 		}
-		for (let traitData of tc) {
+		for (let traitData of traitDataArray) {
 			if (!isTraitData(traitData)) {
-				console.warn(`isCharacterSheetData, item in trait collection is not a valid trait data, it is "${traitData}"`, {
-					traitData,
-					isTraitData: isTraitData(traitData),
-					typeofValue: typeof traitData.value,
-				});
+				console.warn(
+					`isCharacterSheetData, item in trait collection ${traitCollectionName} is not a valid trait data, it is "${traitData}"`,
+					{
+						traitData,
+						isTraitData: isTraitData(traitData),
+						typeofValue: typeof traitData.value,
+					}
+				);
 				return false;
 			}
 		}

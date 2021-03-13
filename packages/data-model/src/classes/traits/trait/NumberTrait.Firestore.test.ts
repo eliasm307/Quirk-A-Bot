@@ -1,6 +1,6 @@
-import isTraitData from '../../utils/type-predicates/isTraitData';
-import FirestoreDataStorageFactory from '../data-storage/Firestore/FirestoreDataStorageFactory';
-import { firestoreEmulator } from '../data-storage/Firestore/utils/firebase';
+import isTraitData from '../../../utils/type-predicates/isTraitData';
+import FirestoreDataStorageFactory from '../../data-storage/Firestore/FirestoreDataStorageFactory';
+import { firestoreEmulator } from '../../data-storage/Firestore/utils/firebase';
 import NumberTrait from './NumberTrait';
 
 const firestore = firestoreEmulator;

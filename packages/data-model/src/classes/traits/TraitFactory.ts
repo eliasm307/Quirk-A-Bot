@@ -13,10 +13,10 @@ import {
   iAttribute, iAttributeData, iBaseTraitProps, iDiscipline, iDisciplineData, iNumberTraitProps,
   iSkill, iSkillData, iStringTraitProps, iTouchStoneOrConviction, iTouchStoneOrConvictionData
 } from './interfaces/trait-interfaces';
-import NumberTrait from './NumberTrait';
-import NumberTraitWithCategory from './NumberTraitWithCategory';
-import StringTrait from './StringTrait';
-import TraitCollection from './TraitCollection';
+import TraitCollection from './trait-collection/TraitCollection';
+import NumberTrait from './trait/NumberTrait';
+import NumberTraitWithCategory from './trait/NumberTraitWithCategory';
+import StringTrait from './trait/StringTrait';
 import getAttributeCategory from './utils/categoryFunctions/getAttributeCategory';
 
 export default abstract class TraitFactory {

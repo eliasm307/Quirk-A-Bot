@@ -1,8 +1,8 @@
-import { TraitNameUnionOrString } from '../../declarations/types';
-import AbstractBaseTrait from './AbstractBaseTrait';
+import { TraitNameUnionOrString } from '../../../declarations/types';
 import {
   iBaseStringTrait, iStringTraitData, iStringTraitProps
-} from './interfaces/trait-interfaces';
+} from '../interfaces/trait-interfaces';
+import AbstractBaseTrait from './AbstractBaseTrait';
 
 /** class with behaviour for traits that have string values */
 export default class StringTrait<N extends TraitNameUnionOrString, V extends string>
