@@ -136,5 +136,5 @@ describe('firestore emulator', () => {
 		await firestoreEmulator.doc(`${localTestCollectionName}/${testDocumentName}`).set(testDocData);
 		await firestoreEmulator.doc(`${localTestCollectionName}/${testDocumentName}`).update({ added: 'something' });
 		await firestoreEmulator.doc(`${localTestCollectionName}/${testDocumentName}`).delete();
-	};);
+	});
 });
