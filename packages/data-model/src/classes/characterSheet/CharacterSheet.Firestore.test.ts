@@ -2,7 +2,7 @@ import {
   ATTRIBUTE_COLLECTION_NAME, DISCIPLINE_COLLECTION_NAME, SKILL_COLLECTION_NAME,
   TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME
 } from '../../constants';
-import { isCharacterSheetData } from '../../utils/typePredicates';
+import { isCharacterSheetData } from '../../utils/type-predicates/typePredicates';
 import FirestoreDataStorageFactory from '../data-storage/Firestore/FirestoreDataStorageFactory';
 import { firestoreEmulator } from '../data-storage/Firestore/utils/firebase';
 import readCharacterSheetDataFromFirestore from '../data-storage/Firestore/utils/readCharacterSheetDataFromFirestore';
@@ -48,7 +48,7 @@ describe('Character sheet using Firestore', () => {
 		expect(isCharacterSheetData(docData)).toEqual(true);
 		expect(docData).toEqual(CharacterSheet.newDataObject({ id: csId }));
 
-    // can clean up
+		// can clean up
 		expect(cs.cleanUp()).toEqual(true);
 	});
 

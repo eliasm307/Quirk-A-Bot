@@ -1,5 +1,4 @@
- 
-import { isTraitData } from '../../utils/typePredicates';
+import { isTraitData } from '../../utils/type-predicates/typePredicates';
 import FirestoreDataStorageFactory from '../data-storage/Firestore/FirestoreDataStorageFactory';
 import { firestoreEmulator } from '../data-storage/Firestore/utils/firebase';
 import NumberTrait from './NumberTrait';
@@ -20,8 +19,8 @@ describe('Number trait with firestore data storage', () => {
 			name: trait1Name,
 			value: 5.2,
 			traitDataStorageInitialiser,
-      parentPath: testParentPath,
-      loggerCreator: null
+			parentPath: testParentPath,
+			loggerCreator: null,
 		});
 
 		await new Promise(res => setTimeout(res, 100)); // wait for syncronisation
@@ -29,13 +28,13 @@ describe('Number trait with firestore data storage', () => {
 		const doc = await firestore.doc(trait1.path).get();
 		const data = doc.data();
 
-    expect.assertions( 4 );
-    
+		expect.assertions(4);
+
 		expect(doc.exists).toEqual(true);
 		expect(isTraitData(data)).toEqual(true);
 		expect(data).toEqual(trait1.data());
 
-    // can clean up
+		// can clean up
 		expect(trait1.cleanUp()).toEqual(true);
 	});
 
@@ -62,8 +61,8 @@ describe('Number trait with firestore data storage', () => {
 		const doc = await firestore.doc(trait1.path).get();
 		const data: any = doc.data();
 
-    expect.assertions(2 );
-    
+		expect.assertions(2);
+
 		expect(data.value).toEqual(1);
 
 		// can clean up
@@ -108,13 +107,13 @@ describe('Number trait with firestore data storage', () => {
 		const doc1Data: any = doc1.data();
 		const doc2Data: any = doc2.data();
 
-    expect.assertions( 4 );
-    
+		expect.assertions(4);
+
 		expect(doc1Data).toEqual(doc2Data);
 		expect(doc2Data.value).toEqual(knownValue);
 
 		// can clean up
-		expect(trait1.cleanUp()).toEqual(true); 
+		expect(trait1.cleanUp()).toEqual(true);
 		expect(trait2.cleanUp()).toEqual(true);
 	});
 	it('listens to firestore and propagates changes to all trait instances', async () => {
@@ -159,7 +158,7 @@ describe('Number trait with firestore data storage', () => {
 
 		await new Promise(res => setTimeout(res, 100)); // wait for syncronisation
 
-    		expect.assertions(3);
+		expect.assertions(3);
 		// check if other trait syncronised
 		expect(trait2.value).toEqual(changeValue);
 
