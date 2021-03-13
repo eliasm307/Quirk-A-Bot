@@ -3,6 +3,7 @@ import pathModule from 'path';
 import { CORE_TRAIT_COLLECTION_NAME } from '../../../constants';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
 import { isTraitData } from '../../../utils/typePredicates';
+import UpdateLogEvent from '../../log/log-events/UpdateLogEvent';
 import { iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
 import AbstractTraitDataStorage from '../AbstractTraitDataStorage';
 import { iBaseTraitDataStorage } from '../interfaces/data-storage-interfaces';
@@ -93,8 +94,8 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 			unsubscriber = this.#firestore
 				.collection(parentCollectionPath)
 				.where('name', '==', this.name)
-        .onSnapshot( querySnapshot => {
-          // ? delete
+				.onSnapshot(querySnapshot => {
+					// ? delete
 					// confirm query only returns 1 result
 					/*if (querySnapshot.size !== 1) {
 						console.error(
@@ -123,8 +124,11 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 						if (change.type === 'modified') {
 							// console.warn('Modified document: ', { data });
 							// apply private modification
+              const newValue = data.value as V;
+              this.private.value = newValue;
+
 							// ? log this change? since this is async, you need to manually make sure logs are in right order?
-							this.private.value = data.value as V;
+							this.logger.log(new UpdateLogEvent({ property: this.name, newValue, oldValue: this.private.value }));
 						}
 					});
 				});

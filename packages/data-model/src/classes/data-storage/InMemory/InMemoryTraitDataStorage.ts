@@ -5,8 +5,6 @@ import { iBaseTraitDataStorage } from '../interfaces/data-storage-interfaces';
 import { iBaseTraitDataStorageProps } from '../interfaces/props/trait-data-storage';
 import { createPath } from '../utils/createPath';
 
-// ? does this need to be a separate interface
-
 export default class InMemoryTraitDataStorage<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
 	extends AbstractTraitDataStorage<N, V>
 	implements iBaseTraitDataStorage<N, V> {

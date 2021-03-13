@@ -69,8 +69,6 @@ export default class FirestoreTraitCollectionDataStorage<
 
 		let unsubscriber = () => {};
 
-		// ? this should be done by a FirestoreCollectionEventListener Class
-
 		try {
 			// subscribe to collection level changes
 			unsubscriber = this.#firestore.collection(parentCollectionPath).onSnapshot(querySnapshot => {

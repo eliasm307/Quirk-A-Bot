@@ -22,28 +22,28 @@ export default abstract class AbstractTraitCollectionDataStorage<
 	D extends iBaseTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
 > implements iTraitCollectionDataStorage<N, V, D, T> {
-	protected afterAddCustom?: (props: iAddLogEventProps<V>) => void;
-	// ? is this required
-	protected afterDeleteCustom?: (props: iDeleteLogEventProps<V>) => void;
-	// ? is this required
-	protected logger: iTraitCollectionLogger;
-	protected map: Map<N, T>;
+  protected afterAddCustom?: (props: iAddLogEventProps<V>) => void;
+  // ? is this required
+  protected afterDeleteCustom?: (props: iDeleteLogEventProps<V>) => void;
+  // ? is this required
+  protected logger: iTraitCollectionLogger;
+  protected map: Map<N, T>;
 
-	// ? is this required
-	instanceCreator: (props: iBaseTraitProps<N, V, D>) => T;
-	log: iTraitCollectionLogReporter;
-	name: string;
-	path: string;
-	traitDataStorageInitialiser: <N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(
+  // ? is this required
+  instanceCreator: (props: iBaseTraitProps<N, V, D>) => T;
+  log: iTraitCollectionLogReporter;
+  name: string;
+  path: string;
+  traitDataStorageInitialiser: <N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(
 		props: iBaseTraitDataStorageProps<N, V>
 	) => iBaseTraitDataStorage<N, V>;
 
-	// ? is this required? if colleciton adds data to storage this means creating trait data and connecting data to trait instances would be done by 2 classes async, so it might be done in the wrong order. Opted to have these both on the trait side
-	protected abstract afterAddInternal(name: N): void;
-	protected abstract afterTraitCleanUp(): boolean;
-	protected abstract deleteTraitFromDataStorage(name: N): void;
+  // ? is this required? if colleciton adds data to storage this means creating trait data and connecting data to trait instances would be done by 2 classes async, so it might be done in the wrong order. Opted to have these both on the trait side
+  protected abstract afterAddInternal(name: N): void;
+  protected abstract afterTraitCleanUp(): boolean;
+  protected abstract deleteTraitFromDataStorage(name: N): void;
 
-	constructor({
+  constructor({
 		instanceCreator,
 		traitDataStorageInitialiser,
 		name,
@@ -90,11 +90,11 @@ export default abstract class AbstractTraitCollectionDataStorage<
 		);
 	}
 
-	get size(): number {
+  get size(): number {
 		return this.map.size;
 	}
 
-	cleanUp(): boolean {
+  cleanUp(): boolean {
 		let result = true;
 
 		// try cleaning traits
@@ -118,11 +118,11 @@ export default abstract class AbstractTraitCollectionDataStorage<
 		return result;
 	}
 
-	data(): D[] {
+  data(): D[] {
 		return this.toArray().map(e => e.data());
 	}
 
-	delete(name: N): iTraitCollectionDataStorage<N, V, D, T> {
+  delete(name: N): iTraitCollectionDataStorage<N, V, D, T> {
 		if (!this.map.has(name)) {
 			console.log(
 				__filename,
@@ -157,15 +157,15 @@ export default abstract class AbstractTraitCollectionDataStorage<
 		return this; // return this instance for chaining
 	}
 
-	get(key: N): T | void {
+  get(key: N): T | void {
 		return this.map.get(key);
 	}
 
-	has(name: N): boolean {
+  has(name: N): boolean {
 		return this.map.has(name);
 	}
 
-	set(name: N, newValue: V): iTraitCollectionDataStorage<N, V, D, T> {
+  set(name: N, newValue: V): iTraitCollectionDataStorage<N, V, D, T> {
 		// if trait already exists then just update it
 		if (this.map.has(name)) {
 			const trait = this.map.get(name);
@@ -186,7 +186,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
 			this.logger.log(new AddLogEvent({ newValue, property: name }));
 
 			// post add event
-			this.afterAddInternal(name); // ? is this required
+			this.afterAddInternal(name); 
 
 			if (this.afterAddCustom) this.afterAddCustom({ newValue, property: name }); // ? is this required
 		}
@@ -194,11 +194,11 @@ export default abstract class AbstractTraitCollectionDataStorage<
 		return this; // return this instance for chaining
 	}
 
-	toArray(): T[] {
+  toArray(): T[] {
 		return Array.from(this.map.values());
 	}
 
-	protected createTraitInstance(name: N, defaultValue: V) {
+  protected createTraitInstance(name: N, defaultValue: V) {
 		// return existing instance or new instance
 		return (
 			this.map.get(name) ||

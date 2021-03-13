@@ -101,7 +101,7 @@ export interface iDataStorageFactory {
 	) => iBaseTraitDataStorage<N, V>;
 }
 
-// todo move to standalone file? 
+// todo move to standalone file?
 // -------------------------------------------------------
 // INITIALISERS
 
