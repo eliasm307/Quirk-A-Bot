@@ -1,52 +1,23 @@
-import { CORE_TRAIT_COLLECTION_NAME } from './../../../constants';
-import { Firestore } from './../../../utils/firebase';
-import {
-	iFirestoreTraitDataStorageProps,
-	iBaseTraitDataStorage,
-} from '../../../declarations/interfaces/data-storage-interfaces';
-import { TraitValueTypeUnion, TraitNameUnionOrString } from '../../../declarations/types';
-import AbstractTraitDataStorage from '../AbstractTraitDataStorage';
 import pathModule from 'path';
-import { isTraitData } from '../../../utils/typePredicates';
-import { iBaseTraitData } from '../../../declarations/interfaces/trait-interfaces';
-import { iHasCleanUp } from '../../../declarations/interfaces/general-interfaces';
-import { createPath } from '../../../utils/createPath';
+
+import { CORE_TRAIT_COLLECTION_NAME } from '../../../constants';
+import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
+import isTraitData from '../../../utils/type-predicates/isTraitData';
+import UpdateLogEvent from '../../log/log-events/UpdateLogEvent';
+import { iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
+import AbstractTraitDataStorage from '../AbstractTraitDataStorage';
+import { iBaseTraitDataStorage } from '../interfaces/data-storage-interfaces';
+import { iFirestoreTraitDataStorageProps } from '../interfaces/props/trait-data-storage';
+import { createPath } from '../utils/createPath';
+import { Firestore } from './utils/firebase';
 
 export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
 	extends AbstractTraitDataStorage<N, V>
-	implements iBaseTraitDataStorage<N, V>, iHasCleanUp {
-	protected async assertTraitExistsOnDataStorage(traitData: iBaseTraitData<N, V>): Promise<void> {
-		// try getting the document#
-		// ? does this need error handling?
-		const doc = await this.#firestore.doc(this.path).get();
-
-		if (!doc || !doc.exists) {
-			// if the document doesnt exist then try adding it
-			// console.log(__filename, `Trait does not exist at path ${this.path}, adding this now`);
-			try {
-				await this.#firestore.doc(this.path).set(traitData);
-				// console.log(__filename, `Trait added at path ${this.path}`, { path: this.path, traitData });
-			} catch (error) {
-				console.error(__filename, { error });
-				throw Error(`Trait with name ${this.name} did not exist and could not be added to data store`);
-			}
-		}
-	}
+	implements iBaseTraitDataStorage<N, V> {
 	#firestore: Firestore;
+	#unsubscribeFromEventListeners: () => void = () => null;
+
 	path: string;
-	#unsubscribeFromEventListeners: () => void = () => null; // todo add cleanup method which calls this
-
-	protected createTraitPath(parentPath: string, name: string): string {
-		const segments = parentPath.split('/');
-
-		if (segments.length % 2) {
-			// if parent is a collection (even path segments) then return as normal
-			return createPath(parentPath, name);
-		}
-
-		// if parent is a document (odd path segments) then put this in a core collection, to satisfy firestore requirements
-		return createPath(`${parentPath}/${CORE_TRAIT_COLLECTION_NAME}`, name);
-	}
 
 	constructor(props: iFirestoreTraitDataStorageProps<N, V>) {
 		super(props);
@@ -63,53 +34,58 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 				// console.warn(`Successfully initialised trait with path ${this.path} and value ${this.private.value}`);
 			})
 			.catch(console.error)
-			.finally( () => console.timeEnd( timerName ) );
-		
-		// todo tidy up
-		/*this.assertTraitExistsOnDataStorage({ name: this.name, value: defaultValueIfNotDefined })
-			.then(_ => {
-				// add event liseners
-				const parentPath = pathModule.dirname(this.#path);
-				return this.attachFirestoreEventListeners(parentPath);
-			})
-			.then(unsubFunc => (this.#unsubscribeFromEventListeners = unsubFunc))
-			.catch(error => {
-				return setTimeout(_ => {
-					throw Error();
-				});
-			});*/
+			.finally(() => console.timeEnd(timerName));
 	}
 
-	private async initAsync() {
+	cleanUp(): boolean {
 		try {
-			await this.assertTraitExistsOnDataStorage({ name: this.name, value: this.private.value });
-		} catch (error) {
-			console.error(
-				__filename,
-				`Could not assert that trait with name ${this.name} exists in collection at path ${this.path}`,
-				{ error }
-			);
-		}
-		const parentPath = pathModule.dirname(this.path);
-
-		try {
-			// add event liseners
-			this.#unsubscribeFromEventListeners = await this.attachFirestoreEventListeners(parentPath);
-		} catch (error) {
 			this.#unsubscribeFromEventListeners();
-			console.error(__filename, `Could not add event listeners to trait with name ${this.name} at path ${this.path}`, {
-				error,
-				parentPath,
-				path: this.path,
-			});
+			return true;
+		} catch (error) {
+			console.error(__filename, `Error cleaning up listeners for trait with path ${this.path}`);
+			return false;
 		}
+	}
+
+	/** Function to be called after the local value is changed, to signal that the data storage value should also be changed */
+	protected afterValueChange(oldValue: V, newValue: V): void {
+		this.handleChangeAsync(oldValue, newValue);
+	}
+
+	protected async assertTraitExistsOnDataStorage(traitData: iBaseTraitData<N, V>): Promise<void> {
+		// try getting the document
+		const doc = await this.#firestore.doc(this.path).get();
+
+		// assert document exists
+		if (!doc || !doc.exists) {
+			// if the document doesnt exist then try adding it
+			// console.log(__filename, `Trait does not exist at path ${this.path}, adding this now`);
+			try {
+				await this.#firestore.doc(this.path).set(traitData);
+				// console.log(__filename, `Trait added at path ${this.path}`, { path: this.path, traitData });
+			} catch (error) {
+				console.error(__filename, { error });
+				throw Error(`Trait with name ${this.name} did not exist and could not be added to data store`);
+			}
+		}
+	}
+
+	/** Creates a trait path that satisfies firestore requirements */
+	protected createTraitPath(parentPath: string, name: string): string {
+		const segments = parentPath.split('/');
+
+		if (segments.length % 2) {
+			// if parent is a collection (even path segments) then return as normal
+			return createPath(parentPath, name);
+		}
+
+		// if parent is a document (odd path segments) then put this in a core collection, to satisfy firestore requirements
+		return createPath(`${parentPath}/${CORE_TRAIT_COLLECTION_NAME}`, name);
 	}
 
 	/** Attaches change event listeners for this trait via its parent collection, and returns the unsubscribe function */
-	private async attachFirestoreEventListeners(parentCollectionPath: string): Promise<() => void> {
+	private async attachFirestoreEventListenersAsync(parentCollectionPath: string): Promise<() => void> {
 		// todo test event listener
-
-		// todo this should be done by a FirestoreDocumentEventListener Class
 
 		let unsubscriber = () => {};
 
@@ -119,6 +95,7 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 				.collection(parentCollectionPath)
 				.where('name', '==', this.name)
 				.onSnapshot(querySnapshot => {
+					// ? delete
 					// confirm query only returns 1 result
 					/*if (querySnapshot.size !== 1) {
 						console.error(
@@ -147,7 +124,11 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 						if (change.type === 'modified') {
 							// console.warn('Modified document: ', { data });
 							// apply private modification
-							this.private.value = data.value as V;
+              const newValue = data.value as V;
+              this.private.value = newValue;
+
+							// ? log this change? since this is async, you need to manually make sure logs are in right order?
+							this.logger.log(new UpdateLogEvent({ property: this.name, newValue, oldValue: this.private.value }));
 						}
 					});
 				});
@@ -162,11 +143,6 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 			}
 		}
 		return unsubscriber;
-	}
-
-	/** Function to be called after the local value is changed, to signal that the data storage value should also be changed */
-	protected afterValueChange(oldValue: V, newValue: V): void {
-		this.handleChangeAsync(oldValue, newValue);
 	}
 
 	private async handleChangeAsync(oldValue: V, newValue: V) {
@@ -201,13 +177,29 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 			console.error(__filename, { error });
 		}
 	}
-	cleanUp(): boolean {
+
+	private async initAsync() {
 		try {
-			this.#unsubscribeFromEventListeners();
-			return true;
+			await this.assertTraitExistsOnDataStorage({ name: this.name, value: this.private.value });
 		} catch (error) {
-			console.error(__filename, `Error cleaning up listeners for trait with path ${this.path}`);
-			return false;
+			console.error(
+				__filename,
+				`Could not assert that trait with name ${this.name} exists in collection at path ${this.path}`,
+				{ error }
+			);
+		}
+		const parentPath = pathModule.dirname(this.path);
+
+		try {
+			// add event liseners
+			this.#unsubscribeFromEventListeners = await this.attachFirestoreEventListenersAsync(parentPath);
+		} catch (error) {
+			this.#unsubscribeFromEventListeners();
+			console.error(__filename, `Could not add event listeners to trait with name ${this.name} at path ${this.path}`, {
+				error,
+				parentPath,
+				path: this.path,
+			});
 		}
 	}
 }

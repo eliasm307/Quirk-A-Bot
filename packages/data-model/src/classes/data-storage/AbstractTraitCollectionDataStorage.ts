@@ -1,22 +1,20 @@
-import { iChildLoggerCreatorProps } from './../../declarations/interfaces/log-interfaces';
-import {
-	iBaseTraitCollectionDataStorageProps,
-	iBaseTraitDataStorage,
-	iBaseTraitDataStorageProps,
-	iTraitCollectionDataStorage,
-} from '../../declarations/interfaces/data-storage-interfaces';
-import {
-	iAddLogEventProps,
-	iDeleteLogEventProps,
-	iTraitCollectionLogger,
-	iTraitCollectionLogReporter,
-} from '../../declarations/interfaces/log-interfaces';
-import { iBaseTrait, iBaseTraitData, iBaseTraitProps } from '../../declarations/interfaces/trait-interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../declarations/types';
-import { createPath } from '../../utils/createPath';
-import DeleteLogEvent from '../log/DeleteLogEvent';
-import TraitCollecitonLogger from '../log/TraitCollectionLogger';
-import AddLogEvent from '../log/AddLogEvent';
+import {
+  iAddLogEventProps, iChildLoggerCreatorProps, iDeleteLogEventProps, iTraitCollectionLogger,
+  iTraitCollectionLogReporter
+} from '../log/interfaces/log-interfaces';
+import AddLogEvent from '../log/log-events/AddLogEvent';
+import DeleteLogEvent from '../log/log-events/DeleteLogEvent';
+import TraitCollecitonLogger from '../log/loggers/TraitCollectionLogger';
+import { iBaseTrait, iBaseTraitData, iBaseTraitProps } from '../traits/interfaces/trait-interfaces';
+import {
+  iBaseTraitDataStorage, iTraitCollectionDataStorage
+} from './interfaces/data-storage-interfaces';
+import {
+  iBaseTraitCollectionDataStorageProps
+} from './interfaces/props/trait-collection-data-storage';
+import { iBaseTraitDataStorageProps } from './interfaces/props/trait-data-storage';
+import { createPath } from './utils/createPath';
 
 export default abstract class AbstractTraitCollectionDataStorage<
 	N extends TraitNameUnionOrString,
@@ -24,27 +22,28 @@ export default abstract class AbstractTraitCollectionDataStorage<
 	D extends iBaseTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
 > implements iTraitCollectionDataStorage<N, V, D, T> {
-	protected afterAddCustom?: (props: iAddLogEventProps<V>) => void;
-	// ? is this required
-	protected afterDeleteCustom?: (props: iDeleteLogEventProps<V>) => void;
-	// ? is this required
-	protected logger: iTraitCollectionLogger;
-	protected map: Map<N, T>;
+  protected afterAddCustom?: (props: iAddLogEventProps<V>) => void;
+  // ? is this required
+  protected afterDeleteCustom?: (props: iDeleteLogEventProps<V>) => void;
+  // ? is this required
+  protected logger: iTraitCollectionLogger;
+  protected map: Map<N, T>;
 
-	// ? is this required
-	instanceCreator: (props: iBaseTraitProps<N, V, D>) => T;
-	log: iTraitCollectionLogReporter;
-	name: string;
-	path: string;
-	traitDataStorageInitialiser: <N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(
+  // ? is this required
+  instanceCreator: (props: iBaseTraitProps<N, V, D>) => T;
+  log: iTraitCollectionLogReporter;
+  name: string;
+  path: string;
+  traitDataStorageInitialiser: <N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(
 		props: iBaseTraitDataStorageProps<N, V>
 	) => iBaseTraitDataStorage<N, V>;
 
-	// ? is this required? if colleciton adds data to storage this means creating trait data and connecting data to trait instances would be done by 2 classes async, so it might be done in the wrong order. Opted to have these both on the trait side
-	protected abstract afterAddInternal(name: N): void;
-	protected abstract deleteTraitFromDataStorage(name: N): void;
+  // ? is this required? if colleciton adds data to storage this means creating trait data and connecting data to trait instances would be done by 2 classes async, so it might be done in the wrong order. Opted to have these both on the trait side
+  protected abstract afterAddInternal(name: N): void;
+  protected abstract afterTraitCleanUp(): boolean;
+  protected abstract deleteTraitFromDataStorage(name: N): void;
 
-	constructor({
+  constructor({
 		instanceCreator,
 		traitDataStorageInitialiser,
 		name,
@@ -52,7 +51,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
 		onDelete,
 		initialData,
 		parentPath,
-		logger,
+		loggerCreator: logger,
 	}: iBaseTraitCollectionDataStorageProps<N, V, D, T>) {
 		// save local values
 		this.afterAddCustom = onAdd;
@@ -70,9 +69,9 @@ export default abstract class AbstractTraitCollectionDataStorage<
 			: new TraitCollecitonLogger({ sourceName: name, parentLogHandler: null });
 
 		// expose logger reporter
-    this.log = this.logger.reporter;
-    
-    const traitLoggerCreator = (props: iChildLoggerCreatorProps) => this.logger.createChildTraitLogger(props); // ? if the closure is in the class will that work?
+		this.log = this.logger.reporter;
+
+		const traitLoggerCreator = (props: iChildLoggerCreatorProps) => this.logger.createChildTraitLogger(props);
 
 		// add intial data, if any
 		this.map = new Map<N, T>(
@@ -84,18 +83,46 @@ export default abstract class AbstractTraitCollectionDataStorage<
 							value,
 							traitDataStorageInitialiser,
 							parentPath: this.path,
-							logger: traitLoggerCreator,
+							loggerCreator: traitLoggerCreator,
 						}),
 				  ])
 				: []
 		);
 	}
 
-	get size(): number {
+  get size(): number {
 		return this.map.size;
 	}
 
-	delete(name: N): iTraitCollectionDataStorage<N, V, D, T> {
+  cleanUp(): boolean {
+		let result = true;
+
+		// try cleaning traits
+		this.map.forEach(trait => {
+			if (!trait.cleanUp()) {
+				console.warn(`Issue cleaning up trait "${trait.name}" in collection "${this.name}"`);
+				result = false;
+			}
+		});
+
+		// try cleaning this colleciton instance
+		if (!this.afterTraitCleanUp()) {
+			console.warn(
+				`Issue cleaning up collection "${this.name}" after child traits were cleaned ${
+					result ? 'successfully' : 'unsuccessfully'
+				}`
+			);
+			result = false;
+		}
+
+		return result;
+	}
+
+  data(): D[] {
+		return this.toArray().map(e => e.data());
+	}
+
+  delete(name: N): iTraitCollectionDataStorage<N, V, D, T> {
 		if (!this.map.has(name)) {
 			console.log(
 				__filename,
@@ -130,15 +157,15 @@ export default abstract class AbstractTraitCollectionDataStorage<
 		return this; // return this instance for chaining
 	}
 
-	get(key: N): T | void {
+  get(key: N): T | void {
 		return this.map.get(key);
 	}
 
-	has(name: N): boolean {
+  has(name: N): boolean {
 		return this.map.has(name);
 	}
 
-	set(name: N, newValue: V): iTraitCollectionDataStorage<N, V, D, T> {
+  set(name: N, newValue: V): iTraitCollectionDataStorage<N, V, D, T> {
 		// if trait already exists then just update it
 		if (this.map.has(name)) {
 			const trait = this.map.get(name);
@@ -159,7 +186,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
 			this.logger.log(new AddLogEvent({ newValue, property: name }));
 
 			// post add event
-			this.afterAddInternal(name); // ? is this required
+			this.afterAddInternal(name); 
 
 			if (this.afterAddCustom) this.afterAddCustom({ newValue, property: name }); // ? is this required
 		}
@@ -167,15 +194,11 @@ export default abstract class AbstractTraitCollectionDataStorage<
 		return this; // return this instance for chaining
 	}
 
-	toArray(): T[] {
+  toArray(): T[] {
 		return Array.from(this.map.values());
 	}
 
-	toJson(): D[] {
-		return this.toArray().map(e => e.toJson());
-	}
-
-	protected createTraitInstance(name: N, defaultValue: V) {
+  protected createTraitInstance(name: N, defaultValue: V) {
 		// return existing instance or new instance
 		return (
 			this.map.get(name) ||
@@ -184,7 +207,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
 				value: defaultValue,
 				parentPath: this.path,
 				traitDataStorageInitialiser: this.traitDataStorageInitialiser,
-				logger: (props: iChildLoggerCreatorProps) => this.logger.createChildTraitLogger(props), // NOTE this needs to be extracted into a function to create a closure such that the 'this' references are maintained
+				loggerCreator: (props: iChildLoggerCreatorProps) => this.logger.createChildTraitLogger(props), // NOTE this needs to be extracted into a function to create a closure such that the 'this' references are maintained
 			})
 		);
 	}

@@ -1,22 +1,20 @@
+import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
+import { iBaseTrait, iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
 import {
-	iBaseCharacterSheetDataStorageFactoryMethodProps,
-	iCharacterSheetDataStorage,
-	iHasId,
-	iInMemoryFileDataStorageFactoryProps,
-} from './../../../declarations/interfaces/data-storage-interfaces';
-import { TraitNameUnionOrString } from '../../../declarations/types';
-import { TraitValueTypeUnion } from '../../../declarations/types';
+  iBaseTraitDataStorage, iCharacterSheetDataStorage, iDataStorageFactory,
+  iTraitCollectionDataStorage
+} from '../interfaces/data-storage-interfaces';
 import {
-	iBaseTraitCollectionDataStorageProps,
-	iBaseTraitDataStorageProps,
-	iDataStorageFactory,
-	iTraitCollectionDataStorage,
-	iBaseTraitDataStorage,
-} from '../../../declarations/interfaces/data-storage-interfaces';
-import InMemoryTraitDataStorage from './InMemoryTraitDataStorage';
-import { iBaseTraitData, iBaseTrait } from '../../../declarations/interfaces/trait-interfaces';
-import InMemoryTraitCollectionDataStorage from './InMemoryTraitCollectionDataStorage';
+  iBaseCharacterSheetDataStorageFactoryMethodProps
+} from '../interfaces/props/data-storage-creator';
+import { iInMemoryFileDataStorageFactoryProps } from '../interfaces/props/data-storage-factory';
+import {
+  iBaseTraitCollectionDataStorageProps
+} from '../interfaces/props/trait-collection-data-storage';
+import { iBaseTraitDataStorageProps } from '../interfaces/props/trait-data-storage';
 import InMemoryCharacterSheetDataStorage from './InMemoryCharacterSheetDataStorage';
+import InMemoryTraitCollectionDataStorage from './InMemoryTraitCollectionDataStorage';
+import InMemoryTraitDataStorage from './InMemoryTraitDataStorage';
 
 export default class InMemoryDataStorageFactory implements iDataStorageFactory {
 	constructor(props?: iInMemoryFileDataStorageFactoryProps) {}

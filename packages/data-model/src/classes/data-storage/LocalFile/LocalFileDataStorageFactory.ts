@@ -1,11 +1,18 @@
-import { iHasCharacterSheet } from '../../../declarations/interfaces/character-sheet-interfaces';
-import {
-  iBaseCharacterSheetDataStorageFactoryMethodProps, iBaseTraitCollectionDataStorageProps,
-  iBaseTraitDataStorage, iBaseTraitDataStorageProps, iCharacterSheetDataStorage,
-  iDataStorageFactory, iLocalFileDataStorageFactoryProps, iTraitCollectionDataStorage
-} from '../../../declarations/interfaces/data-storage-interfaces';
-import { iBaseTrait, iBaseTraitData } from '../../../declarations/interfaces/trait-interfaces';
 import { TraitValueTypeUnion } from '../../../declarations/types';
+import { iHasCharacterSheet } from '../../characterSheet/interfaces/character-sheet-interfaces';
+import { iBaseTrait, iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
+import {
+  iBaseTraitDataStorage, iCharacterSheetDataStorage, iDataStorageFactory,
+  iTraitCollectionDataStorage
+} from '../interfaces/data-storage-interfaces';
+import {
+  iBaseCharacterSheetDataStorageFactoryMethodProps
+} from '../interfaces/props/data-storage-creator';
+import { iLocalFileDataStorageFactoryProps } from '../interfaces/props/data-storage-factory';
+import {
+  iBaseTraitCollectionDataStorageProps
+} from '../interfaces/props/trait-collection-data-storage';
+import { iBaseTraitDataStorageProps } from '../interfaces/props/trait-data-storage';
 import LocalFileCharacterSheetDataStorage from './LocalFileCharacterSheetDataStorage';
 import LocalFileTraitCollectionDataStorage from './LocalFileTraitCollectionDataStorage';
 import LocalFileTraitDataStorage from './LocalFileTraitDataStorage';

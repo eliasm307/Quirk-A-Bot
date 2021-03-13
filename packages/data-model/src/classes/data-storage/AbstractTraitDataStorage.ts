@@ -1,10 +1,9 @@
-import {
-  iBaseTraitDataStorage, iBaseTraitDataStorageProps
-} from '../../declarations/interfaces/data-storage-interfaces';
-import { iTraitLogger, iTraitLogReporter } from '../../declarations/interfaces/log-interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../declarations/types';
-import TraitLogger from '../log/TraitLogger';
-import UpdateLogEvent from '../log/UpdateLogEvent';
+import { iTraitLogger, iTraitLogReporter } from '../log/interfaces/log-interfaces';
+import UpdateLogEvent from '../log/log-events/UpdateLogEvent';
+import TraitLogger from '../log/loggers/TraitLogger';
+import { iBaseTraitDataStorage } from './interfaces/data-storage-interfaces';
+import { iBaseTraitDataStorageProps } from './interfaces/props/trait-data-storage';
 
 interface iPrivateModifiableProperties<V extends TraitValueTypeUnion> {
 	value: V;
@@ -20,16 +19,18 @@ export default abstract class AbstractTraitDataStorage<N extends TraitNameUnionO
 	// the specific data storage defines this
 	abstract path: string;
 
+	abstract cleanUp(): boolean;
+
 	protected abstract afterValueChange(oldValue: V, newValue: V): void;
 
 	constructor(props: iBaseTraitDataStorageProps<N, V>) {
-		const { name, defaultValueIfNotDefined, parentPath, logger } = props;
+		const { name, defaultValueIfNotDefined, parentPath, loggerCreator: logger } = props;
 		this.name = name;
 		this.private = {
 			value: defaultValueIfNotDefined, // assign initial value
 		};
 
-		// initialise logging, use logger if provided or create a new one
+		// initialise logger
 		this.logger = logger ? logger({ sourceName: name }) : new TraitLogger({ sourceName: name, parentLogHandler: null });
 
 		// expose logger reporter

@@ -1,12 +1,15 @@
-import { iCharacterSheetData } from '../../../declarations/interfaces/character-sheet-interfaces';
+import CharacterSheet from '../../characterSheet/CharacterSheet';
+import { iCharacterSheetData } from '../../characterSheet/interfaces/character-sheet-interfaces';
 import {
-  iCharacterSheetDataStorage, iDataStorageFactory, iFirestoreCharacterSheetDataStorageProps
-} from '../../../declarations/interfaces/data-storage-interfaces';
-import { createPath } from '../../../utils/createPath';
-import { Firestore } from '../../../utils/firebase';
-import readCharacterSheetDataFromFirestore from '../../../utils/readCharacterSheetDataFromFirestore';
-import writeCharacterSheetDataToFirestore from '../../../utils/writeCharacterSheetDataToFirestore';
-import CharacterSheet from '../../CharacterSheet';
+  iCharacterSheetDataStorage, iDataStorageFactory
+} from '../interfaces/data-storage-interfaces';
+import {
+  iFirestoreCharacterSheetDataStorageProps
+} from '../interfaces/props/trait-collection-data-storage';
+import { createPath } from '../utils/createPath';
+import { Firestore } from './utils/firebase';
+import readCharacterSheetDataFromFirestore from './utils/readCharacterSheetDataFromFirestore';
+import writeCharacterSheetDataToFirestore from './utils/writeCharacterSheetDataToFirestore';
 
 export default class FirestoreCharacterSheetDataStorage implements iCharacterSheetDataStorage {
   protected characterSheetData?: iCharacterSheetData;
@@ -47,17 +50,19 @@ export default class FirestoreCharacterSheetDataStorage implements iCharacterShe
 				}
 			}
 			*/
-			// ? should this check if document exists?
+
 			if (!doc.exists) throw Error(`Document at path ${this.path} does not exist, initialising it now`);
 			this.characterSheetData = docData; // save data locally
 		} catch (error) {
-			console.warn(`Could not read character sheet data from path ${this.path}, initialising a new character sheet...`);
+			console.warn(
+				`Could not read character sheet data from path ${this.path}, initialising a new character sheet...`,
+				{ error }
+			);
 			// if it doesnt exist or data is bad, initialise it as a blank character sheet if not
 			try {
 				const data = CharacterSheet.newDataObject({ id: this.id });
-				this.characterSheetData = data; // save data locally
+				this.characterSheetData = CharacterSheet.newDataObject({ id: this.id });; // save data locally
 
-				// await this.firestore.doc(this.path).set(data); // ! this didnt write sub-collections but instead put them in as arrays in the same collection
 				await writeCharacterSheetDataToFirestore(this.firestore, this.path, data);
 			} catch (error) {
 				console.error(__filename, { error });
