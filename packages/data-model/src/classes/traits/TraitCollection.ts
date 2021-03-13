@@ -11,10 +11,6 @@ export default class TraitCollection<
 	T extends iBaseTrait<N, V, D>
 > implements iTraitCollection<N, V, D, T> {
 	#dataStorage: iTraitCollectionDataStorage<N, V, D, T>;
-	/*
-	#traitDataStorageInitialiser: <N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(
-		props: iBaseTraitDataStorageProps<N, V>
-	) => iBaseTraitDataStorage<N, V>;*/
 	// #typeName: TraitTypeNameUnion | string = 'Trait Collection'; // ? is this required
 	/** Read only log reporter */
 	log: iTraitCollectionLogReporter;
@@ -58,6 +54,10 @@ export default class TraitCollection<
 		return this.#dataStorage.cleanUp();
 	}
 
+	data(): D[] {
+		return this.toArray().map(e => e.data());
+	}
+
 	delete(name: N): iTraitCollection<N, V, D, T> {
 		this.#dataStorage.delete(name);
 		return this;
@@ -83,9 +83,5 @@ export default class TraitCollection<
 
 	toArray(): T[] {
 		return this.#dataStorage.toArray();
-	}
-
-	data(): D[] {
-		return this.toArray().map(e => e.data());
 	}
 }
