@@ -13,10 +13,10 @@ export default class FirestoreTraitCollectionDataStorage<
 	D extends iBaseTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
 > extends AbstractTraitCollectionDataStorage<N, V, D, T> {
-	#firestore: Firestore;
-	#unsubscribeFromEventListeners: () => void = () => {};
+  #firestore: Firestore;
+  #unsubscribeFromEventListeners: () => void = () => {};
 
-	constructor(props: iFirestoreTraitCollectionDataStorageProps<N, V, D, T>) {
+  constructor(props: iFirestoreTraitCollectionDataStorageProps<N, V, D, T>) {
 		super(props);
 		const { firestore } = props;
 		this.#firestore = firestore;
@@ -24,11 +24,11 @@ export default class FirestoreTraitCollectionDataStorage<
 		this.initAsync();
 	}
 
-	protected afterAddInternal(name: N): void {
+  protected afterAddInternal(name: N): void {
 		// do nothing
 	}
 
-	protected afterTraitCleanUp(): boolean {
+  protected afterTraitCleanUp(): boolean {
 		try {
 			this.#unsubscribeFromEventListeners();
 			return true;
@@ -38,21 +38,21 @@ export default class FirestoreTraitCollectionDataStorage<
 		}
 	}
 
-	protected deleteTraitFromDataStorage(name: N): void {
+  protected deleteTraitFromDataStorage(name: N): void {
 		this.#firestore
 			.collection(this.path)
 			.where('name', '==', name)
 			.get()
 			.then(queryDocs => {
-				if (queryDocs.size !== 1) {
+				if (queryDocs.size === 0) {
 					throw Error(
-						`There should have been exactly 1 trait with name ${name} in collection at path ${this.path}, instead found ${queryDocs.size}`
+						`There should have been exactly 1 trait with name ${name} in collection at path ${this.path}, instead found none`
 					);
 				}
 				queryDocs.forEach(doc => {
 					doc.ref.delete().catch(error => {
-						console.error(__filename, { error });
-						throw Error(`Could not delete trait with name ${name}`);
+						console.error(__filename, `Could not delete trait with name ${name}` ,{ error });
+				 
 					});
 				});
 			})
@@ -63,8 +63,8 @@ export default class FirestoreTraitCollectionDataStorage<
 			});
 	}
 
-	/** Attaches change event listeners for this trait via its parent collection, and returns the unsubscribe function */
-	private async attachFirestoreEventListeners(parentCollectionPath: string): Promise<() => void> {
+  /** Attaches change event listeners for this trait via its parent collection, and returns the unsubscribe function */
+  private async attachFirestoreEventListeners(parentCollectionPath: string): Promise<() => void> {
 		// todo test event listener
 
 		let unsubscriber = () => {};
@@ -113,7 +113,7 @@ export default class FirestoreTraitCollectionDataStorage<
 		return unsubscriber;
 	}
 
-	private async initAsync() {
+  private async initAsync() {
 		// ? should collections be asserted? when traits are initialised, these should auto populate collections
 		/*
 		try {

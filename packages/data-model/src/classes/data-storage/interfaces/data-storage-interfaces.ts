@@ -70,12 +70,6 @@ export interface iCharacterSheetDataStorage extends iHasPath {
 	assertDataExistsOnDataStorage(): Promise<void>;
 	/** Returns the character sheet data from the data storage */
 	getData(): iCharacterSheetData;
-
-/** Tests if a character sheet with the given id actually exists in the given data storage */
-	// exists(): Promise<boolean>;
-
-	/** Creates new character sheet data for the given id, with default values */
-	// initialise(): Promise<boolean>;
 }
 
 // -------------------------------------------------------

@@ -1,11 +1,11 @@
 // Firebase App (the core Firebase SDK) is always required and
-// must be listed before other Firebase SDKs
-import firebase from 'firebase/app';
-import dotenv from 'dotenv';
-
 // Add the Firebase services that you want to use
 import 'firebase/auth';
 import 'firebase/firestore';
+
+import dotenv from 'dotenv';
+// must be listed before other Firebase SDKs
+import firebase from 'firebase/app';
 import urlExistSync from 'url-exist-sync';
 
 // load dotenv entries
@@ -72,6 +72,7 @@ export function isFirestoreEmulatorRunning() {
 
 // ? is a deep recursive delete util required?
 // from https://firebase.google.com/docs/firestore/manage-data/delete-data
+/*
 async function deleteDocumentsCompletely(query: firebase.firestore.Query) {
 	return new Promise((resolve, reject) => {
 		deleteQueryBatch(query, resolve).catch(reject);
@@ -101,7 +102,7 @@ async function deleteQueryBatch(query: firebase.firestore.Query, resolve: (value
 		deleteQueryBatch(query, resolve);
 	});
 }
-
+*/
 // firebase types
 export interface Firestore extends firebase.firestore.Firestore {}
 export interface FirestoreDocumentChange extends firebase.firestore.DocumentChange<firebase.firestore.DocumentData> {}
