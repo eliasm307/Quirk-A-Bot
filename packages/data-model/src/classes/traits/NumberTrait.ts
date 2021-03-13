@@ -9,16 +9,16 @@ export default class NumberTrait<N extends TraitNameUnionOrString>
 	constructor({
 		min = 0,
 		value = min,
-		data: toJson = () => ({
-			name: this.name,
-			value: this.value,
-		}),
+
 		...restProps
 	}: iNumberTraitProps<N>) {
 		super({
 			...restProps,
-			value,
-			data: toJson,
+      value, 
+			data: () => ({ 
+				name: this.name,
+				value: this.value,
+			}),
 			min,
 		});
 	}

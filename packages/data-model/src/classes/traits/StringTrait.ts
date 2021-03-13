@@ -8,7 +8,7 @@ import {
 export default class StringTrait<N extends TraitNameUnionOrString, V extends string>
 	extends AbstractBaseTrait<N, V, iStringTraitData<N, V>>
 	implements iBaseStringTrait<N, V> {
-	constructor(props: iStringTraitProps<N, V>) {
+  constructor(props: iStringTraitProps<N, V>) {
 		super({
 			...props,
 			data: () => ({
@@ -18,12 +18,14 @@ export default class StringTrait<N extends TraitNameUnionOrString, V extends str
 		});
 	}
 
-	/** Only allows setting non-empty strings */
-	protected newValueIsValid(newVal: string): boolean {
+  /** Only allows setting non-empty strings */
+  protected newValueIsValid(newVal: string): boolean {
 		// assert value is a number
+    /* ? delete
 		if (typeof newVal !== 'string') {
 			throw Error(`Value for trait ${this.name} should be a string, received a "${typeof newVal}`);
-		}
+    }
+    */
 
 		// make sure string has content before change
 		if (!newVal) {
@@ -34,7 +36,7 @@ export default class StringTrait<N extends TraitNameUnionOrString, V extends str
 		return true;
 	}
 
-	protected preProcessValue(newValueRaw: V): V {
+  protected preProcessValue(newValueRaw: V): V {
 		// no pre processing for string values
 		return newValueRaw;
 	}
