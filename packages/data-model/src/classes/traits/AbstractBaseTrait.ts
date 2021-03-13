@@ -1,5 +1,5 @@
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../declarations/types';
-import { hasCleanUp } from '../../utils/typePredicates';
+import { hasCleanUp } from '../../utils/type-predicates/typePredicates';
 import { iBaseTraitDataStorage } from '../data-storage/interfaces/data-storage-interfaces';
 import { iTraitLogReporter } from '../log/interfaces/log-interfaces';
 import { iAbstractBaseTraitProps, iBaseTrait, iBaseTraitData } from './interfaces/trait-interfaces';

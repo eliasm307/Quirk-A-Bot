@@ -1,7 +1,7 @@
 import fs from 'fs-extra';
 import path from 'path';
 
-import { isCharacterSheetData } from '../../../utils/typePredicates';
+import { isCharacterSheetData } from '../../../utils/type-predicates/typePredicates';
 import CharacterSheet from '../../characterSheet/CharacterSheet';
 import { iCharacterSheetData } from '../../characterSheet/interfaces/character-sheet-interfaces';
 import {

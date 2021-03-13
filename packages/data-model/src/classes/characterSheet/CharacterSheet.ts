@@ -1,7 +1,7 @@
 // import saveCharacterSheetToFile from '../utils/saveCharacterSheetToFile';
 import { STRING_TRAIT_DEFAULT_VALUE } from '../../constants';
 import { ClanName } from '../../declarations/types';
-import { hasCleanUp } from '../../utils/typePredicates';
+import { hasCleanUp } from '../../utils/type-predicates/typePredicates';
 import { iHasId } from '../data-storage/interfaces/data-storage-interfaces';
 import {
   iCharacterSheetLogger, iCharacterSheetLogReporter, iChildLoggerCreatorProps

@@ -1,9 +1,10 @@
 import {
   iCharacterSheetData
-} from '../classes/characterSheet/interfaces/character-sheet-interfaces';
-import { iGeneralTraitData } from '../classes/traits/interfaces/trait-interfaces';
+} from '../../classes/characterSheet/interfaces/character-sheet-interfaces';
+import { iGeneralTraitData } from '../../classes/traits/interfaces/trait-interfaces';
 import { hasCleanUp, isCharacterSheetData, isTraitData } from './typePredicates';
 
+// todo split these to different files
 test('Trait data predicate', () => {
 	const numberTraitData: iGeneralTraitData = {
 		name: 'name',

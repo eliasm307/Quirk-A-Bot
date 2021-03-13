@@ -1,8 +1,8 @@
 import {
   iCharacterSheetData
-} from '../classes/characterSheet/interfaces/character-sheet-interfaces';
-import { iGeneralTraitData } from '../classes/traits/interfaces/trait-interfaces';
-import { iHasCleanUp } from '../declarations/interfaces';
+} from '../../classes/characterSheet/interfaces/character-sheet-interfaces';
+import { iGeneralTraitData } from '../../classes/traits/interfaces/trait-interfaces';
+import { iHasCleanUp } from '../../declarations/interfaces';
 
 /*
 export function isAttributeName(name: string): name is AttributeName {

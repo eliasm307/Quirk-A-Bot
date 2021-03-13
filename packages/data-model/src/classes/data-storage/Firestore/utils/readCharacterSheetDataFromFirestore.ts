@@ -3,7 +3,7 @@ import {
   SKILL_COLLECTION_NAME, TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME
 } from '../../../../constants';
 import { CoreTraitName } from '../../../../declarations/types';
-import { isCharacterSheetData } from '../../../../utils/typePredicates';
+import { isCharacterSheetData } from '../../../../utils/type-predicates/typePredicates';
 import { iCharacterSheetData } from '../../../characterSheet/interfaces/character-sheet-interfaces';
 import { createPath } from '../../utils/createPath';
 import { Firestore } from './firebase';
