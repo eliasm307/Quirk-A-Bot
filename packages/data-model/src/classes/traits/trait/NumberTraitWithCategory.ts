@@ -8,9 +8,9 @@ import AbstractNumberTrait from './AbstractNumberTrait';
 export default class NumberTraitWithCategory<N extends TraitNameUnionOrString, C extends string>
 	extends AbstractNumberTrait<N, iNumberTraitData<N>>
 	implements iNumberTraitWithCategory<N, C> {
-	readonly category: C;
+	protected categorySelector: (name: N) => C;
 
-	#categorySelector: (name: N) => C;
+	readonly category: C;
 
 	constructor({ min = 0, value = min, categorySelector, ...restProps }: iNumberTraitWithCategoryProps<N, C>) {
 		super({
@@ -25,9 +25,9 @@ export default class NumberTraitWithCategory<N extends TraitNameUnionOrString, C
 		});
 
 		// get the input categorySelector
-		this.#categorySelector = categorySelector;
+		this.categorySelector = categorySelector;
 
 		// get category from name
-		this.category = this.#categorySelector(this.name);
+		this.category = this.categorySelector(this.name);
 	}
 }

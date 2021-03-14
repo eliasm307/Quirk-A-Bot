@@ -1,12 +1,9 @@
 {
-  "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "module": "commonjs",
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ]
+    "sourceMap": true,
+    "noEmitOnError": true
   },
   "include": [
     "src"
