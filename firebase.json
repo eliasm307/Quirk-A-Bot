@@ -1,6 +1,7 @@
 {
 	"hosting": {
 		"public": "packages/web-client/public",
+    ""
 		"ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
 	}
 }

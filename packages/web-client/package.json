@@ -25,11 +25,11 @@
 		"typescript": "^4.1.5",
 		"@typescript-eslint/parser": "^4.17.0"
 	},
-	"scripts": {
-		"start:cra": "yarn && react-scripts start",
-		"start": "cross-env SKIP_PREFLIGHT_CHECK=true react-app-rewired start",
-		"build": "yarn && react-scripts build",
-		"test": "yarn && react-scripts test",
+	"scripts": { 
+		"start": "yarn && cross-env SKIP_PREFLIGHT_CHECK=true react-app-rewired start",
+		"build:cra": "yarn && react-scripts build",
+		"build": "yarn && react-app-rewired build && rm -rf public && mv build public",
+		"test": "yarn && react-app-rewired test",
 		"eject": "react-scripts eject",
 		"tsc": "tsc"
 	},
