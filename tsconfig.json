@@ -12,9 +12,6 @@
       "dom.iterable",
       "esnext"
     ],
-    "types": [
-      "@types/jest"
-    ],
     "downlevelIteration": true,
     "allowJs": true,
     "skipLibCheck": true,

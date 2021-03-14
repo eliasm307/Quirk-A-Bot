@@ -1,9 +1,25 @@
 {
   "extends": "../../tsconfig.json",
+  "target": "es2015",
+  "allowJs": true,
+  "checkJs": true,
+  "types": [
+    "@types/jest"
+  ],
+  "typeRoots": [
+    "./src/declarations",
+    "./node_modules/@types"
+  ],
+  "lib": [
+    "es2017",
+    "es7",
+    "es6",
+    "dom"
+  ],
   "compilerOptions": {
-    "outDir": "dist",
+    "outDir": "dist"
   },
   "include": [
     "src"
-  ],
+  ]
 }
