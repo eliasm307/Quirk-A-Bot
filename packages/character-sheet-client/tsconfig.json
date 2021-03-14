@@ -21,13 +21,12 @@
     "jsx": "react-jsx",
     "isolatedModules": true,
     "declaration": true,
-
+    "baseUrl": "./"
   },
   "include": [
-    "./src/",
+    "./src/"
   ],
   "exclude": [
     "./node_modules/"
   ]
-
 }
