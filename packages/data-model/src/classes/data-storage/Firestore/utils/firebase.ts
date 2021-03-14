@@ -1,3 +1,5 @@
+// todo move this to standalone package in monorepo
+
 // Firebase App (the core Firebase SDK) is always required and
 // Add the Firebase services that you want to use
 import 'firebase/auth';

@@ -3,8 +3,8 @@
 	"private": true,
 	"version": "1.0.0",
 	"description": "",
-	"scripts": { 
-		"test": "echo \"Error: no test specified\" && exit 1", 
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
 		"start": "yarn --cwd packages/discord-bot start",
 		"dev-bot": "yarn --cwd packages/discord-bot start dev",
 		"dev-client": "yarn --cwd packages/character-sheet-client start",
@@ -12,11 +12,11 @@
 	},
 	"author": "",
 	"license": "ISC",
-	"dependencies": {},
 	"devDependencies": {
 		"eslint": "^7.20.0",
 		"eslint-config-airbnb-base": "^14.2.1",
-		"eslint-plugin-import": "^2.22.1"
+		"eslint-plugin-import": "^2.22.1",
+		"lerna": "^4.0.0"
 	},
 	"workspaces": [
 		"packages/*"
