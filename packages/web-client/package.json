@@ -20,12 +20,13 @@
 	},
 	"devDependencies": {
 		"@babel/preset-typescript": "^7.13.0",
+		"@typescript-eslint/parser": "^4.17.0",
 		"babel-plugin-module-resolver": "^4.1.0",
 		"eslint-config-react-app": "^6.0.0",
-		"typescript": "^4.1.5",
-		"@typescript-eslint/parser": "^4.17.0"
+		"tsconfig-paths-webpack-plugin": "^3.4.1",
+		"typescript": "^4.1.5"
 	},
-	"scripts": { 
+	"scripts": {
 		"start": "yarn && cross-env SKIP_PREFLIGHT_CHECK=true react-app-rewired start",
 		"build:cra": "yarn && react-scripts build",
 		"build": "yarn && react-app-rewired build && rm -rf public && mv build public",
