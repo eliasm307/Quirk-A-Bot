@@ -1,6 +1,6 @@
 {
   "extends": "./tsconfig.build.json",
-  "compilerOptions": { 
+  "compilerOptions": {
     "baseUrl": ".",
     "paths": {
       "@quirk-a-bot/*": [
@@ -12,20 +12,25 @@
       "dom.iterable",
       "esnext"
     ],
+    "types": [
+      "@types/jest"
+    ],
     "downlevelIteration": true,
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
+    "alwaysStrict": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "noEmit": true,
-    "jsx": "react-jsx",
+    "jsx": "react",
     "isolatedModules": true,
-    "declaration": true, 
-  }, 
+    "declaration": true,
+    "checkJs": true,
+  },
 }

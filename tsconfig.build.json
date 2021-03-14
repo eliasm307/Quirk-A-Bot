@@ -5,12 +5,12 @@
     "sourceMap": true,
     "noEmitOnError": true
   },
-  "include": [
-    "src"
-  ],
   "exclude": [
-    "node_modules",
-    "dist",
-    "public"
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/public/**",
+    "**/*.spec.*",
+    "**/*.test.*",
+    "**/coverage/**"
   ]
 }

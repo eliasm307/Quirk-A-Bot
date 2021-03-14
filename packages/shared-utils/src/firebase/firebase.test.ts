@@ -1,4 +1,4 @@
-import { firestoreEmulator, isFirestoreEmulatorRunning } from './firebase';
+import { firestoreEmulator, isFirestoreEmulatorRunning } from './';
 
 const testDocData = { testProperty: `testing @ ${new Date().toLocaleString()}` };
 const testCollectionName = 'testCollection';

@@ -9,7 +9,7 @@
 		"dist"
 	],
 	"scripts": {
-		"test": "rm -rf dist && yarn build && npx tsc && jest --colors --logHeapUsage  ", 
+		"test": "rm -rf dist && yarn build && npx tsc && jest --colors --logHeapUsage", 
 		"build": "yarn && npx tsc --build",
 		"firebase:start-emulators": "firebase emulators:start"
 	},
