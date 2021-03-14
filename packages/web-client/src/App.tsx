@@ -1,6 +1,6 @@
 import './App.css';
 
-
+import React from 'react';
 
 import { CharacterSheet } from '@quirk-a-bot/data-model';
 

@@ -7,6 +7,9 @@
         "packages/*/src"
       ]
     },
+    "types": [
+      "@types/jest"
+    ],
     "lib": [
       "dom",
       "dom.iterable",
@@ -24,7 +27,7 @@
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "noEmit": true,
+    // "noEmit": true,
     "jsx": "react",
     "isolatedModules": true,
     "declaration": true,
