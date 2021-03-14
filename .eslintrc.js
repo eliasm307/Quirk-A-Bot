@@ -4,6 +4,12 @@ module.exports = {
 		node: true,
 		es6: true,
 	},
+	ignorePatterns: [
+		'**/lib/**/*', // Ignore built files.
+		'**/build/**/*', // Ignore built files.
+		'**/public/**/*', // Ignore built files.
+		'**/node_modules/**/*', // Ignore built files.
+	],
 	extends: ['eslint:recommended', 'airbnb-base'],
 	parserOptions: {
 		ecmaVersion: 2019,
@@ -32,5 +38,6 @@ module.exports = {
 		curly: 0,
 		'arrow-parens': 0,
 		'object-curly-newline': 0,
+		'import/prefer-default-export': 0,
 	},
 };
