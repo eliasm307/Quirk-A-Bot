@@ -1,3 +1,5 @@
+// firebase hosting setup from https://medium.com/firelayer/structuring-a-firebase-web-project-with-lerna-ab6b5ea8e1f8
+
 import './index.css';
 
 import React from 'react';
