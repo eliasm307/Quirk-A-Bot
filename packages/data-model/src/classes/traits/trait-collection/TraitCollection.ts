@@ -10,7 +10,7 @@ export default class TraitCollection<
 	D extends iBaseTraitData<N, V>,
 	T extends iBaseTrait<N, V, D>
 > implements iTraitCollection<N, V, D, T> {
-	#dataStorage: iTraitCollectionDataStorage<N, V, D, T>;
+	protected dataStorage: iTraitCollectionDataStorage<N, V, D, T>;
 	// #typeName: TraitTypeNameUnion | string = 'Trait Collection'; // ? is this required
 	/** Read only log reporter */
 	log: iTraitCollectionLogReporter;
@@ -30,7 +30,7 @@ export default class TraitCollection<
 	) {
 		this.name = name;
 
-		this.#dataStorage = traitCollectionDataStorageInitialiser({
+		this.dataStorage = traitCollectionDataStorageInitialiser({
 			instanceCreator,
 			name,
 			parentPath,
@@ -41,17 +41,17 @@ export default class TraitCollection<
 			loggerCreator: logger,
 		});
 		// expose logger reporter
-		this.log = this.#dataStorage.log;
+		this.log = this.dataStorage.log;
 
-		this.path = this.#dataStorage.path; // data storage defines path to use
+		this.path = this.dataStorage.path; // data storage defines path to use
 	}
 
 	get size(): number {
-		return this.#dataStorage.size;
+		return this.dataStorage.size;
 	}
 
 	cleanUp(): boolean {
-		return this.#dataStorage.cleanUp();
+		return this.dataStorage.cleanUp();
 	}
 
 	data(): D[] {
@@ -59,16 +59,16 @@ export default class TraitCollection<
 	}
 
 	delete(name: N): iTraitCollection<N, V, D, T> {
-		this.#dataStorage.delete(name);
+		this.dataStorage.delete(name);
 		return this;
 	}
 
 	get(name: N): T | void {
-		return this.#dataStorage.get(name);
+		return this.dataStorage.get(name);
 	}
 
 	has(name: N): boolean {
-		return this.#dataStorage.has(name);
+		return this.dataStorage.has(name);
 	}
 
 	/**
@@ -77,11 +77,11 @@ export default class TraitCollection<
 	 * @param newValue value to assign
 	 */
 	set(name: N, newValue: V): iTraitCollection<N, V, D, T> {
-		this.#dataStorage.set(name, newValue);
+		this.dataStorage.set(name, newValue);
 		return this;
 	}
 
 	toArray(): T[] {
-		return this.#dataStorage.toArray();
+		return this.dataStorage.toArray();
 	}
 }

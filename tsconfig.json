@@ -1,6 +1,12 @@
 {
-  "compilerOptions": {
-    "target": "es5",
+  "extends": "./tsconfig.build.json",
+  "compilerOptions": { 
+    "baseUrl": ".",
+    "paths": {
+      "@quirk-a-bot/*": [
+        "packages/*/src"
+      ]
+    },
     "lib": [
       "dom",
       "dom.iterable",
@@ -20,14 +26,6 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "isolatedModules": true,
-    "declaration": true,
-
-  },
-  "include": [
-    "./src/",
-  ],
-  "exclude": [
-    "./node_modules/"
-  ]
-
+    "declaration": true, 
+  }, 
 }
