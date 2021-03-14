@@ -29,7 +29,7 @@
 	"scripts": {
 		"start": "yarn && react-app-rewired start",
 		"deploy": "firebase deploy",
-		"build": "yarn && react-app-rewired build",
+		"build": "yarn && rm -rf build && react-app-rewired build",
 		"test": "yarn && react-app-rewired test",
 		"eject": "react-scripts eject",
 		"tsc": "tsc"

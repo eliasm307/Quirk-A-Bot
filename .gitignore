@@ -2,6 +2,14 @@ example message
 notes
 Blank
 
+# Firebase
+.idea 
+**/.firebaserc
+
+# Firebase Patch
+.runtimeconfig.json
+**/.firebase/
+
 # temporary folders
 **/temporary/**
 
