@@ -24,13 +24,14 @@ describe('Number trait with firestore data storage', () => {
 			loggerCreator: null,
 		});
 
-		await new Promise(res => setTimeout(res, 100)); // wait for syncronisation
+		await new Promise(res => setTimeout(res, 200)); // wait for syncronisation
 
 		const doc = await firestore.doc(trait1.path).get();
 		const data = doc.data();
 
-		expect.assertions(4);
+		expect.assertions(5);
 
+		expect(doc).toBeTruthy();
 		expect(doc.exists).toEqual(true);
 		expect(isTraitData(data)).toEqual(true);
 		expect(data).toEqual(trait1.data());
