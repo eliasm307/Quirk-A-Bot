@@ -1,0 +1,24 @@
+{
+  "presets": [
+    "preact-cli/babel",
+    "@babel/preset-typescript",
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "node": "current"
+        }
+      }
+    ]
+  ],
+  "plugins": [
+    [
+      "module-resolver",
+      {
+        "alias": {
+          "^@quirk-a-bot/(.+)": "../../packages/\\1/src"
+        }
+      }
+    ]
+  ]
+}

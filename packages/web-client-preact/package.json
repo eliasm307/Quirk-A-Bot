@@ -1,6 +1,6 @@
 {
 	"private": true,
-	"name": "preact-typescript-example",
+	"name": "@quirk-a-bot/web-client-preact",
 	"version": "0.0.0",
 	"license": "MIT",
 	"workspaces": {
@@ -20,6 +20,7 @@
 		"test": "yarn && jest ./tests"
 	},
 	"dependencies": {
+		"@quirk-a-bot/data-model": "*",
 		"preact": "^10.3.1",
 		"preact-render-to-string": "^5.1.4",
 		"preact-router": "^3.2.1"

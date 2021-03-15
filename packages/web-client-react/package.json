@@ -1,5 +1,5 @@
 {
-	"name": "@quirk-a-bot/web-client",
+	"name": "@quirk-a-bot/web-client-react",
 	"version": "0.1.0",
 	"private": true,
 	"dependencies": {
