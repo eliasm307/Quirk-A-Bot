@@ -64,8 +64,7 @@ const firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
-export default firebase;
-
+export const auth = firebase.auth();
 export const firestoreLive = firebase.firestore();
 
 const _firestoreEmulator = firebase.firestore();
@@ -114,3 +113,7 @@ export interface Firestore extends firebase.firestore.Firestore {}
 export interface FirestoreDocumentChange extends firebase.firestore.DocumentChange<firebase.firestore.DocumentData> {}
 
 export interface FirestoreBatch extends firebase.firestore.WriteBatch {}
+
+export interface FireBaseUser extends firebase.User {}
+
+export default firebase;

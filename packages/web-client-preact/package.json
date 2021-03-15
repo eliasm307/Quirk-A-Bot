@@ -20,6 +20,7 @@
 		"test": "yarn && jest ./tests"
 	},
 	"dependencies": {
+		"@quirk-a-bot/firebase-utils": "*",
 		"@quirk-a-bot/data-model": "*",
 		"preact": "^10.3.1",
 		"preact-render-to-string": "^5.1.4",

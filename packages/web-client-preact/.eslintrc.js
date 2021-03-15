@@ -4,6 +4,7 @@ module.exports = {
 	rules: {
 		'no-unused-vars': 0,
 		'@typescript-eslint/no-unused-vars': 0,
+    '@typescript-eslint/explicit-function-return-type': 0
 	},
 	ignorePatterns: ['build/'],
 };
