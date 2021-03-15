@@ -131,7 +131,7 @@ describe('TraitColleciton with Firestore data storage adding, and deleting', () 
 
 		// can clean up
 		expect(tc.cleanUp()).toEqual(true);
-	});
+	}, 9999);
 
 	it('cleans up', () => {
 		expect.hasAssertions();
@@ -177,7 +177,7 @@ describe('TraitColleciton with Firestore data storage', () => {
 
 		// can clean up
 		expect(tc.cleanUp()).toEqual(true);
-	});
+	}, 9999);
 
 	it('listens to firestore and propagates changes to all trait collection instances', async () => {
 		expect.hasAssertions();
@@ -225,5 +225,5 @@ describe('TraitColleciton with Firestore data storage', () => {
 		// can clean up
 		expect(tc1.cleanUp()).toEqual(true);
 		expect(tc2.cleanUp()).toEqual(true);
-	});
+	}, 9999);
 });
