@@ -8,6 +8,8 @@
       "esnext"
     ],
     "noEmit": true,
+    "module": "esnext",
+    "jsx": "react-jsx"
   },
   "include": [
     "src"
