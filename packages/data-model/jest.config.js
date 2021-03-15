@@ -2,7 +2,8 @@ module.exports = {
 	preset: 'ts-jest',
 	testEnvironment: 'node',
 	verbose: false,
-	modulePathIgnorePatterns: ['\\/dist\\/', '\\/node_modules\\/', '\\/coverage\\/', '\\/dist\\/index\\.js'],
+	modulePathIgnorePatterns: ['\\/dist\\/', '\\/node_modules\\/', '\\/coverage\\/'],
 	collectCoverage: true,
 	collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}'],
+	// transformIgnorePatterns: ['packages/shared-utils/(?!(dist)/)'],
 };

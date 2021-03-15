@@ -2,7 +2,7 @@
 	"name": "@quirk-a-bot/shared-utils",
 	"version": "1.0.0",
 	"private": true,
-	"main": "index.js",
+	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"files": [
 		"dist"
@@ -16,7 +16,6 @@
 	"license": "ISC",
 	"dependencies": {
 		"@types/node": "^14.14.22",
-		"esm": "^3.2.25",
 		"firebase": "^8.2.10"
 	},
 	"devDependencies": {

@@ -1,11 +1,12 @@
 {
   "extends": "../../tsconfig.json",
-  "typeRoots": [
-    "./src/declarations",
-    "./node_modules/@types"
-  ],
   "compilerOptions": {
-    "outDir": "dist"
+    "typeRoots": [
+      "./src/declarations",
+      "./node_modules/@types"
+    ],
+    "outDir": "dist",
+    "module": "CommonJS",
   },
   "include": [
     "src"
