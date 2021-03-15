@@ -1,4 +1,4 @@
-import { firestoreEmulator } from '@quirk-a-bot/shared-utils';
+import { firestoreEmulator } from '@quirk-a-bot/firebase-utils';
 
 import {
   ATTRIBUTE_COLLECTION_NAME, DISCIPLINE_COLLECTION_NAME, SKILL_COLLECTION_NAME,

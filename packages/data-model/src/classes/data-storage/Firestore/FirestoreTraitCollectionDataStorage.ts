@@ -1,4 +1,4 @@
-import { Firestore } from '@quirk-a-bot/shared-utils';
+import { Firestore } from '@quirk-a-bot/firebase-utils';
 
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
 import isTraitData from '../../../utils/type-predicates/isTraitData';

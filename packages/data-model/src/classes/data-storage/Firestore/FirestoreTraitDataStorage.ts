@@ -1,6 +1,6 @@
 import pathModule from 'path';
 
-import { Firestore } from '@quirk-a-bot/shared-utils';
+import { Firestore } from '@quirk-a-bot/firebase-utils';
 
 import { CORE_TRAIT_COLLECTION_NAME } from '../../../constants';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';

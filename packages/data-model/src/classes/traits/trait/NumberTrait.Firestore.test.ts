@@ -1,4 +1,4 @@
-import { firestoreEmulator } from '@quirk-a-bot/shared-utils';
+import { firestoreEmulator } from '@quirk-a-bot/firebase-utils';
 
 import isTraitData from '../../../utils/type-predicates/isTraitData';
 import FirestoreDataStorageFactory from '../../data-storage/Firestore/FirestoreDataStorageFactory';
@@ -37,7 +37,7 @@ describe('Number trait with firestore data storage', () => {
 
 		// can clean up
 		expect(trait1.cleanUp()).toEqual(true);
-	});
+	}, 9999);
 
 	it('writes changes to firestore', async () => {
 		const trait1Name = 'trait1';
@@ -68,7 +68,7 @@ describe('Number trait with firestore data storage', () => {
 
 		// can clean up
 		expect(trait1.cleanUp()).toEqual(true);
-	});
+	}, 9999);
 
 	test('uses any existing value in firestore over the instance value', async () => {
 		const trait1Name = 'trait1';

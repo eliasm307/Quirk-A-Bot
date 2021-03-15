@@ -1,4 +1,4 @@
-import { firestoreEmulator } from '@quirk-a-bot/shared-utils';
+import { firestoreEmulator } from '@quirk-a-bot/firebase-utils';
 
 import { DISCIPLINE_COLLECTION_NAME, SKILL_COLLECTION_NAME } from '../../../constants';
 import { AttributeName, DisciplineName, SkillName } from '../../../declarations/types';
