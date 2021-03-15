@@ -16,12 +16,13 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
-		"@types/node": "^14.14.22",
-		"firebase": "^8.2.10",
-		"fs-extra": "^9.1.0",
-		"url-exist-sync": "^1.0.2"
+		"@quirk-a-bot/firebase-utils": "*"
 	},
 	"devDependencies": {
+		"firebase": "^8.2.10",
+		"fs-extra": "^9.1.0",
+		"url-exist-sync": "^1.0.2",
+		"@types/node": "^14.14.22",
 		"@babel/preset-env": "^7.13.10",
 		"@types/fs-extra": "^9.0.6",
 		"@types/jest": "^26.0.20",

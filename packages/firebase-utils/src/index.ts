@@ -1,5 +1,4 @@
 // todo move this to standalone package in monorepo
-
 // Firebase App (the core Firebase SDK) is always required and
 // Add the Firebase services that you want to use
 import 'firebase/auth';
@@ -8,10 +7,13 @@ import 'firebase/firestore';
 import dotenv from 'dotenv';
 // must be listed before other Firebase SDKs
 import firebase from 'firebase/app';
+import path from 'path';
 import urlExistSync from 'url-exist-sync';
 
-// load dotenv entries
-dotenv.config();
+const localDotenvPath = path.resolve(__dirname, '..', '.env');
+
+// load local dotenv entries
+dotenv.config({ path: localDotenvPath });
 
 // destructure required entries
 const {

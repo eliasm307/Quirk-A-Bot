@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "target": "ES5",
+    "module": "ESNext",
+    "jsx": "react",
+    "jsxFactory": "h",
+    "noEmit": true,
+    "moduleResolution": "node",
+  },
+  "include": [
+    "src/**/*",
+    "tests/**/*",
+    "babel.config.js"
+  ]
+}
