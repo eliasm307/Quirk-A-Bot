@@ -17,6 +17,7 @@ export default function SignUp() {
 		setPassword('');
 		setDisplayName('');
 	};
+	// todo create type alias for JSX.TargetedEvent<HTMLInputElement, Event>
 	const onChangeHandler = (event: JSX.TargetedEvent<HTMLInputElement, Event>): void => {
 		const { name, value } = event.currentTarget;
 		switch (name) {
