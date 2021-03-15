@@ -3,6 +3,14 @@
 	"name": "preact-typescript-example",
 	"version": "0.0.0",
 	"license": "MIT",
+	"workspaces": {
+		"nohoist": [
+			"preact",
+			"**/preact/**",
+			"preact-render-to-string",
+			"**/preact-render-to-string/**"
+		]
+	},
 	"scripts": {
 		"start": "yarn && preact watch",
 		"deploy": "firebase deploy",
