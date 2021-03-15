@@ -1,5 +1,5 @@
 {
-	"name": "@quirk-a-bot/shared-utils",
+	"name": "@quirk-a-bot/firebase-utils",
 	"version": "1.0.0",
 	"private": true,
 	"main": "dist/index.js",
