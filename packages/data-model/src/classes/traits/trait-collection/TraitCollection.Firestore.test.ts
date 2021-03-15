@@ -85,7 +85,7 @@ describe('TraitColleciton with Firestore data storage adding, and deleting', () 
 
 		// can clean up
 		expect(tc.cleanUp()).toEqual(true);
-	});
+	}, 9999);
 	it('deletes traits from firestore collection', async () => {
 		expect.hasAssertions();
 
