@@ -64,6 +64,8 @@ const firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
+export default firebase;
+
 export const firestoreLive = firebase.firestore();
 
 const _firestoreEmulator = firebase.firestore();
