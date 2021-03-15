@@ -1,4 +1,4 @@
-// ? is this required, using cra-rewired instead
+// ? is this required?
 module.exports = {
 	presets: [['@babel/preset-env', { targets: { node: 'current' } }], '@babel/preset-typescript'],
 	env: {
