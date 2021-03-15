@@ -1,6 +1,7 @@
 import { FunctionalComponent, h, JSX } from 'preact';
 import { Route, Router, Link } from 'preact-router';
 import { useState } from 'preact/hooks';
+import { signInWithGoogle } from '../../utils/firebaseAuthProviders';
 
 export default function SignUp() {
 	const [email, setEmail] = useState('');
@@ -83,7 +84,9 @@ export default function SignUp() {
 					</button>
 				</form>
 				<p className="text-center my-3">or</p>
-				<button className="bg-red-500 hover:bg-red-600 w-full py-2 text-white">Sign In with Google</button>
+				<button className="bg-red-500 hover:bg-red-600 w-full py-2 text-white" onClick={signInWithGoogle}>
+					Sign In with Google
+				</button>
 				<p className="text-center my-3">
 					Already have an account?{' '}
 					<Link href="/" className="text-blue-500 hover:text-blue-600">
