@@ -4,7 +4,7 @@ import { Route, Router } from 'preact-router';
 import SignIn from '../routes/sign-in';
 import Home from '../routes/home';
 import Profile from '../routes/profile';
-import NotFoundPage from '../routes/notfound';
+import NotFoundPage from '../routes/not-found';
 import Header from './header';
 
 const App: FunctionalComponent = () => {
