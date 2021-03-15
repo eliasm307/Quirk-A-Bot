@@ -1,5 +1,7 @@
 import pathModule from 'path';
 
+import { Firestore } from '@quirk-a-bot/shared-utils';
+
 import { CORE_TRAIT_COLLECTION_NAME } from '../../../constants';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
 import isTraitData from '../../../utils/type-predicates/isTraitData';
@@ -9,7 +11,6 @@ import AbstractTraitDataStorage from '../AbstractTraitDataStorage';
 import { iBaseTraitDataStorage } from '../interfaces/data-storage-interfaces';
 import { iFirestoreTraitDataStorageProps } from '../interfaces/props/trait-data-storage';
 import { createPath } from '../utils/createPath';
-import { Firestore } from './utils/firebase';
 
 export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
 	extends AbstractTraitDataStorage<N, V>
@@ -124,8 +125,8 @@ export default class FirestoreTraitDataStorage<N extends TraitNameUnionOrString,
 						if (change.type === 'modified') {
 							// console.warn('Modified document: ', { data });
 							// apply private modification
-              const newValue = data.value as V;
-              this.private.value = newValue;
+							const newValue = data.value as V;
+							this.private.value = newValue;
 
 							// ? log this change? since this is async, you need to manually make sure logs are in right order?
 							this.logger.log(new UpdateLogEvent({ property: this.name, newValue, oldValue: this.private.value }));

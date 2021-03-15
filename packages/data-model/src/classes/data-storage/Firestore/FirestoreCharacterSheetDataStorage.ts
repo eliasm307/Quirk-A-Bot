@@ -1,3 +1,5 @@
+import { Firestore } from '@quirk-a-bot/shared-utils';
+
 import CharacterSheet from '../../characterSheet/CharacterSheet';
 import { iCharacterSheetData } from '../../characterSheet/interfaces/character-sheet-interfaces';
 import {
@@ -7,7 +9,6 @@ import {
   iFirestoreCharacterSheetDataStorageProps
 } from '../interfaces/props/trait-collection-data-storage';
 import { createPath } from '../utils/createPath';
-import { Firestore } from './utils/firebase';
 import readCharacterSheetDataFromFirestore from './utils/readCharacterSheetDataFromFirestore';
 import writeCharacterSheetDataToFirestore from './utils/writeCharacterSheetDataToFirestore';
 

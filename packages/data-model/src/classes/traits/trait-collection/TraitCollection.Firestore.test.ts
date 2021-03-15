@@ -1,8 +1,9 @@
+import { firestoreEmulator } from '@quirk-a-bot/shared-utils';
+
 import { DISCIPLINE_COLLECTION_NAME, SKILL_COLLECTION_NAME } from '../../../constants';
 import { AttributeName, DisciplineName, SkillName } from '../../../declarations/types';
 import isTraitData from '../../../utils/type-predicates/isTraitData';
 import FirestoreDataStorageFactory from '../../data-storage/Firestore/FirestoreDataStorageFactory';
-import { firestoreEmulator } from '../../data-storage/Firestore/utils/firebase';
 import { iTraitCollectionFactoryMethodProps } from '../interfaces/trait-collection-interfaces';
 import { iBaseTraitData } from '../interfaces/trait-interfaces';
 import TraitFactory from '../TraitFactory';
