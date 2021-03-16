@@ -83,3 +83,5 @@ export const TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME = `TouchstonesAndConvicti
 export const STRING_TRAIT_DEFAULT_VALUE = '';
 
 export const USER_COLLECTION_NAME = 'Users';
+
+export const DEFAULT_USER_NAME = 'Nameless Wanderer';
