@@ -1,5 +1,5 @@
 import { TraitValueTypeUnion } from '../../../declarations/types';
-import { iHasCharacterSheet } from '../../characterSheet/interfaces/character-sheet-interfaces';
+import { iHasCharacterSheet } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import { iBaseTrait, iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
 import {
   iBaseTraitDataStorage, iCharacterSheetDataStorage, iDataStorageFactory,

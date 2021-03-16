@@ -1,7 +1,7 @@
-import CharacterSheet from '../../classes/characterSheet/CharacterSheet';
+import CharacterSheet from '../../classes/character-sheet/CharacterSheet';
 import {
   iCharacterSheetData
-} from '../../classes/characterSheet/interfaces/character-sheet-interfaces';
+} from '../../classes/character-sheet/interfaces/character-sheet-interfaces';
 import isTraitData from './isTraitData';
 
 export default function isCharacterSheetData(data: any): data is iCharacterSheetData {

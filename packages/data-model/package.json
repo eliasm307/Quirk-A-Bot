@@ -18,17 +18,18 @@
 		"@quirk-a-bot/firebase-utils": "*"
 	},
 	"devDependencies": {
-		"firebase": "^8.2.10",
-		"fs-extra": "^9.1.0",
-		"url-exist-sync": "^1.0.2",
-		"@types/node": "^14.14.22",
 		"@babel/preset-env": "^7.13.10",
+		"@babel/preset-typescript": "^7.13.0",
 		"@types/fs-extra": "^9.0.6",
 		"@types/jest": "^26.0.20",
+		"@types/node": "^14.14.22",
 		"babel-jest": "^26.6.3",
+		"firebase": "^8.2.10",
+		"fs-extra": "^9.1.0",
 		"jest": "^26.6.3",
 		"nodemon": "^2.0.7",
 		"ts-jest": "^26.5.3",
-		"typescript": "^4.1.5"
+		"typescript": "^4.1.5",
+		"url-exist-sync": "^1.0.2"
 	}
 }

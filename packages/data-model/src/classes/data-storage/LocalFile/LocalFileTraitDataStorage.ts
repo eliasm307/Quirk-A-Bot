@@ -1,7 +1,7 @@
 import path from 'path';
 
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
-import { iCharacterSheet } from '../../characterSheet/interfaces/character-sheet-interfaces';
+import { iCharacterSheet } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import AbstractTraitDataStorage from '../AbstractTraitDataStorage';
 import { iBaseTraitDataStorage } from '../interfaces/data-storage-interfaces';
 import { iLocalFileTraitDataStorageProps } from '../interfaces/props/trait-data-storage';

@@ -4,7 +4,7 @@ import {
   iBaseCollection, iHasCleanUp, iHasGetData, iHasPath
 } from '../../../declarations/interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
-import { iCharacterSheetData } from '../../characterSheet/interfaces/character-sheet-interfaces';
+import { iCharacterSheetData } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import {
   iHasTraitCollectionLogReporter, iHasTraitLogReporter
 } from '../../log/interfaces/log-interfaces';

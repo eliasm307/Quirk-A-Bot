@@ -6,7 +6,9 @@ import {
 } from '../../../../constants';
 import { CoreTraitName } from '../../../../declarations/types';
 import isCharacterSheetData from '../../../../utils/type-predicates/isCharacterSheetData';
-import { iCharacterSheetData } from '../../../characterSheet/interfaces/character-sheet-interfaces';
+import {
+  iCharacterSheetData
+} from '../../../character-sheet/interfaces/character-sheet-interfaces';
 import { createPath } from '../../utils/createPath';
 
 // todo test

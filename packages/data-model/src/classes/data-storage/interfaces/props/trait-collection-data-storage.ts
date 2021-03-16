@@ -2,7 +2,7 @@
 
 import { iHasParentPath } from '../../../../declarations/interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../../declarations/types';
-import { iCharacterSheet } from '../../../characterSheet/interfaces/character-sheet-interfaces';
+import { iCharacterSheet } from '../../../character-sheet/interfaces/character-sheet-interfaces';
 import {
   iAddLogEventProps, iDeleteLogEventProps, iTraitCollectionLogger
 } from '../../../log/interfaces/log-interfaces';

@@ -1,4 +1,6 @@
-import { iCharacterSheetData } from '../../../characterSheet/interfaces/character-sheet-interfaces';
+import {
+  iCharacterSheetData
+} from '../../../character-sheet/interfaces/character-sheet-interfaces';
 import exportDataToFile from './exportDataToFile';
 
 export default function saveCharacterSheetToFile(data: iCharacterSheetData, savePath: string): boolean {

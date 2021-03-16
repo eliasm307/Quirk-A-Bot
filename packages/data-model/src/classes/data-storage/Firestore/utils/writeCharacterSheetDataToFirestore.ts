@@ -6,7 +6,9 @@ import {
   ATTRIBUTE_COLLECTION_NAME, CORE_TRAIT_COLLECTION_NAME, DISCIPLINE_COLLECTION_NAME,
   SKILL_COLLECTION_NAME, TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME
 } from '../../../../constants';
-import { iCharacterSheetData } from '../../../characterSheet/interfaces/character-sheet-interfaces';
+import {
+  iCharacterSheetData
+} from '../../../character-sheet/interfaces/character-sheet-interfaces';
 import { iGeneralTraitData } from '../../../traits/interfaces/trait-interfaces';
 
 export default async function writeCharacterSheetDataToFirestore(
