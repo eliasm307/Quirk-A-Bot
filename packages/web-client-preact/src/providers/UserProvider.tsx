@@ -2,7 +2,7 @@ import { auth, FireBaseUser } from '@quirk-a-bot/firebase-utils';
 import { ComponentChildren, createContext, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 
-export const UserContext = createContext({ user: null as FireBaseUser | null });
+export const UserContext = createContext(null as FireBaseUser | null);
 
 interface Props {
 	children: ComponentChildren;
@@ -18,5 +18,5 @@ export default function UserProvider({ children }: Props): JSX.Element {
 		});
 	}, []);
 
-	return <UserContext.Provider value={{ user }}>{children}</UserContext.Provider>;
+	return <UserContext.Provider value={user}>{children}</UserContext.Provider>;
 }
