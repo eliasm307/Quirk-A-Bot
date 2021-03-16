@@ -4,16 +4,18 @@
 import 'firebase/auth';
 import 'firebase/firestore';
 
-import dotenv from 'dotenv';
+// import dotenv from 'dotenv';
 // must be listed before other Firebase SDKs
 import firebase from 'firebase/app';
 import path from 'path';
 import urlExistSync from 'url-exist-sync';
 
-const localDotenvPath = path.resolve(__dirname, '..', '.env');
+import config from '../config';
+
+// const localDotenvPath = path.resolve(__dirname, '..', '.env');
 
 // load local dotenv entries
-dotenv.config({ path: localDotenvPath });
+// dotenv.config({ path: localDotenvPath });
 
 // destructure required entries
 const {
@@ -24,7 +26,7 @@ const {
 	FIREBASE_STORAGE_BUCKET,
 	FIREBASE_MESSAGING_SENDER_ID,
 	FIREBASE_APP_ID,
-} = process.env;
+} = config;
 
 // check if all required keys are defined
 if (

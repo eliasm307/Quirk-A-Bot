@@ -6,7 +6,7 @@ import { useContext } from 'preact/hooks';
 import Router, { Link } from 'preact-router';
 import { FireBaseUser } from '@quirk-a-bot/firebase-utils/src';
 
-const Home: FunctionalComponent = () => {
+export default function Home() {
 	const user = useContext(UserContext);
 	const { photoURL, displayName, email } = user as FireBaseUser;
 	const csData = CharacterSheet.newDataObject({ id: 'preactTest' });
@@ -28,6 +28,4 @@ const Home: FunctionalComponent = () => {
 			<pre>{JSON.stringify(csData, null, 2)}</pre>
 		</div>
 	);
-};
-
-export default Home;
+}

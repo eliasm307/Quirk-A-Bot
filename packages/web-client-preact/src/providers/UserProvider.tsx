@@ -14,6 +14,7 @@ export default function UserProvider({ children }: Props) {
 	// on mount, add auth state listener
 	useEffect(() => {
 		auth.onAuthStateChanged(userAuth => {
+			console.log(`User state changed to:`, { userAuth });
 			setUser(userAuth);
 		});
 	}, []);
