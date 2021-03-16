@@ -10,7 +10,7 @@ import firebase from 'firebase/app';
 import path from 'path';
 import urlExistSync from 'url-exist-sync';
 
-import config from '../config';
+import config from './config';
 
 // const localDotenvPath = path.resolve(__dirname, '..', '.env');
 

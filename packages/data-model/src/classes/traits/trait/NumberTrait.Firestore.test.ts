@@ -38,7 +38,7 @@ describe('Number trait with firestore data storage', () => {
 
 		// can clean up
 		expect(trait1.cleanUp()).toEqual(true);
-	}, 9999);
+	}, 15999);
 
 	it('writes changes to firestore', async () => {
 		const trait1Name = 'trait1';
