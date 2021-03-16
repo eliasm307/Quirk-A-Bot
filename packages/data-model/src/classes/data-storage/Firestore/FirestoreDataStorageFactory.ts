@@ -1,3 +1,5 @@
+import { Firestore } from '@quirk-a-bot/firebase-utils';
+
 import { TraitValueTypeUnion } from '../../../declarations/types';
 import { iBaseTrait, iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
 import {
@@ -15,7 +17,6 @@ import { iBaseTraitDataStorageProps } from '../interfaces/props/trait-data-stora
 import FirestoreCharacterSheetDataStorage from './FirestoreCharacterSheetDataStorage';
 import FirestoreTraitCollectionDataStorage from './FirestoreTraitCollectionDataStorage';
 import FirestoreTraitDataStorage from './FirestoreTraitDataStorage';
-import { Firestore } from './utils/firebase';
 
 export default class FirestoreDataStorageFactory implements iDataStorageFactory {
 	#firestore: Firestore;

@@ -1,6 +1,7 @@
+import { firestoreEmulator } from '@quirk-a-bot/firebase-utils';
+
 import isTraitData from '../../../utils/type-predicates/isTraitData';
 import FirestoreDataStorageFactory from '../../data-storage/Firestore/FirestoreDataStorageFactory';
-import { firestoreEmulator } from '../../data-storage/Firestore/utils/firebase';
 import NumberTrait from './NumberTrait';
 
 const firestore = firestoreEmulator;
@@ -23,20 +24,21 @@ describe('Number trait with firestore data storage', () => {
 			loggerCreator: null,
 		});
 
-		await new Promise(res => setTimeout(res, 100)); // wait for syncronisation
+		await new Promise(res => setTimeout(res, 200)); // wait for syncronisation
 
 		const doc = await firestore.doc(trait1.path).get();
 		const data = doc.data();
 
-		expect.assertions(4);
+		expect.assertions(5);
 
+		expect(doc).toBeTruthy();
 		expect(doc.exists).toEqual(true);
 		expect(isTraitData(data)).toEqual(true);
 		expect(data).toEqual(trait1.data());
 
 		// can clean up
 		expect(trait1.cleanUp()).toEqual(true);
-	});
+	}, 9999);
 
 	it('writes changes to firestore', async () => {
 		const trait1Name = 'trait1';
@@ -67,7 +69,7 @@ describe('Number trait with firestore data storage', () => {
 
 		// can clean up
 		expect(trait1.cleanUp()).toEqual(true);
-	});
+	}, 9999);
 
 	test('uses any existing value in firestore over the instance value', async () => {
 		const trait1Name = 'trait1';

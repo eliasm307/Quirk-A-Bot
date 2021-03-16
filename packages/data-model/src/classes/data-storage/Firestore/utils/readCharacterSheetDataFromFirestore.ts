@@ -1,3 +1,5 @@
+import { Firestore } from '@quirk-a-bot/firebase-utils';
+
 import {
   ATTRIBUTE_COLLECTION_NAME, CORE_TRAIT_COLLECTION_NAME, DISCIPLINE_COLLECTION_NAME,
   SKILL_COLLECTION_NAME, TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME
@@ -6,7 +8,6 @@ import { CoreTraitName } from '../../../../declarations/types';
 import isCharacterSheetData from '../../../../utils/type-predicates/isCharacterSheetData';
 import { iCharacterSheetData } from '../../../characterSheet/interfaces/character-sheet-interfaces';
 import { createPath } from '../../utils/createPath';
-import { Firestore } from './firebase';
 
 // todo test
 

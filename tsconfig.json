@@ -1,12 +1,16 @@
 {
   "extends": "./tsconfig.build.json",
-  "compilerOptions": { 
+  "compilerOptions": {
     "baseUrl": ".",
     "paths": {
       "@quirk-a-bot/*": [
         "packages/*/src"
       ]
     },
+    "types": [
+      "@types/jest",
+      "@types/node"
+    ],
     "lib": [
       "dom",
       "dom.iterable",
@@ -18,14 +22,16 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
+    "alwaysStrict": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-    "module": "esnext",
+    "module": "CommonJS",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "noEmit": true,
-    "jsx": "react-jsx",
+    // "noEmit": true,
+    "jsx": "react",
     "isolatedModules": true,
-    "declaration": true, 
-  }, 
+    "declaration": true,
+    "checkJs": true,
+  },
 }

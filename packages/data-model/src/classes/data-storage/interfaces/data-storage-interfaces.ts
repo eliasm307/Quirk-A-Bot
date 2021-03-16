@@ -1,3 +1,5 @@
+import { Firestore } from '@quirk-a-bot/firebase-utils';
+
 import {
   iBaseCollection, iHasCleanUp, iHasGetData, iHasPath
 } from '../../../declarations/interfaces';
@@ -7,7 +9,6 @@ import {
   iHasTraitCollectionLogReporter, iHasTraitLogReporter
 } from '../../log/interfaces/log-interfaces';
 import { iBaseTrait, iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
-import { Firestore } from '../Firestore/utils/firebase';
 import {
   iCharacterSheetDataStorageFactoryProps, iTraitCollectionDataStorageInitialiserFactoryProps,
   iTraitDataStorageInitialiserFactoryProps

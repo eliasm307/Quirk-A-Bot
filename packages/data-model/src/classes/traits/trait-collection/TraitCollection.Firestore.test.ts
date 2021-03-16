@@ -1,8 +1,9 @@
+import { firestoreEmulator } from '@quirk-a-bot/firebase-utils';
+
 import { DISCIPLINE_COLLECTION_NAME, SKILL_COLLECTION_NAME } from '../../../constants';
 import { AttributeName, DisciplineName, SkillName } from '../../../declarations/types';
 import isTraitData from '../../../utils/type-predicates/isTraitData';
 import FirestoreDataStorageFactory from '../../data-storage/Firestore/FirestoreDataStorageFactory';
-import { firestoreEmulator } from '../../data-storage/Firestore/utils/firebase';
 import { iTraitCollectionFactoryMethodProps } from '../interfaces/trait-collection-interfaces';
 import { iBaseTraitData } from '../interfaces/trait-interfaces';
 import TraitFactory from '../TraitFactory';
@@ -84,7 +85,7 @@ describe('TraitColleciton with Firestore data storage adding, and deleting', () 
 
 		// can clean up
 		expect(tc.cleanUp()).toEqual(true);
-	});
+	}, 9999);
 	it('deletes traits from firestore collection', async () => {
 		expect.hasAssertions();
 
@@ -130,7 +131,7 @@ describe('TraitColleciton with Firestore data storage adding, and deleting', () 
 
 		// can clean up
 		expect(tc.cleanUp()).toEqual(true);
-	});
+	}, 9999);
 
 	it('cleans up', () => {
 		expect.hasAssertions();
@@ -176,7 +177,7 @@ describe('TraitColleciton with Firestore data storage', () => {
 
 		// can clean up
 		expect(tc.cleanUp()).toEqual(true);
-	});
+	}, 9999);
 
 	it('listens to firestore and propagates changes to all trait collection instances', async () => {
 		expect.hasAssertions();
@@ -224,5 +225,5 @@ describe('TraitColleciton with Firestore data storage', () => {
 		// can clean up
 		expect(tc1.cleanUp()).toEqual(true);
 		expect(tc2.cleanUp()).toEqual(true);
-	});
+	}, 9999);
 });

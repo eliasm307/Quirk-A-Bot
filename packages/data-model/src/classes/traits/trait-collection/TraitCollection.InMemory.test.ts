@@ -4,8 +4,6 @@ import { iTraitCollectionFactoryMethodProps } from '../interfaces/trait-collecti
 import { iBaseTraitData, iGeneralTrait } from '../interfaces/trait-interfaces';
 import TraitFactory from '../TraitFactory';
 
-let testName: string;
-
 const dataStorageFactory = new InMemoryDataStorageFactory();
 
 const rootCollectionPath = 'traitCollectionTests';
