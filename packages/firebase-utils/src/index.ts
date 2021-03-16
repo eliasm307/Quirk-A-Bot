@@ -67,15 +67,18 @@ firebase.initializeApp(firebaseConfig);
 ////////////////////////////////////////////////////////
 // Firebase Authentication exports
 
-export const auth = firebase.auth();
+const _auth = firebase.auth();
+_auth.useEmulator('http://localhost:9099'); // todo use environment variables to conditionally use this
+export const auth = _auth;
+
+export const GoogleAuthProvider = firebase.auth.GoogleAuthProvider;
+
+export const EmailAuthProvider = firebase.auth.EmailAuthProvider;
 
 export interface FireBaseUser extends firebase.User {}
 
-
-
 ////////////////////////////////////////////////////////
 // Firestore exports
-
 
 export const firestoreLive = firebase.firestore();
 
@@ -126,6 +129,4 @@ export interface FirestoreDocumentChange extends firebase.firestore.DocumentChan
 
 export interface FirestoreBatch extends firebase.firestore.WriteBatch {}
 
-
-
-export default firebase;
+// export default firebase;

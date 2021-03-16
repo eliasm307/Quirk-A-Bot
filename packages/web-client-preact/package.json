@@ -17,11 +17,13 @@
 		"build": "yarn && rm -rf build && preact build",
 		"serve": "sirv build --port 8080 --cors --single",
 		"lint": "eslint 'src/**/*.{js,jsx,ts,tsx}'",
-		"test": "yarn && jest ./tests"
+		"test": "yarn && jest ./tests",
+		"firebase:start-emulators": "firebase emulators:start"
 	},
 	"dependencies": {
-		"@quirk-a-bot/firebase-utils": "*",
 		"@quirk-a-bot/data-model": "*",
+		"@quirk-a-bot/firebase-utils": "*",
+		"fs": "^0.0.1-security",
 		"preact": "^10.3.1",
 		"preact-render-to-string": "^5.1.4",
 		"preact-router": "^3.2.1"
@@ -47,6 +49,9 @@
 			"<rootDir>/tests/__mocks__/browserMocks.ts",
 			"<rootDir>/tests/__mocks__/setupTests.ts"
 		]
+	},
+	"browser": {
+		"fs": false
 	},
 	"browserslist": {
 		"production": [

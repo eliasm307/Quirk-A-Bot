@@ -8,7 +8,7 @@ interface Props {
 	children: ComponentChildren;
 }
 
-export default function UserProvider({ children }: Props): JSX.Element {
+export default function UserProvider({ children }: Props) {
 	const [user, setUser] = useState(null as FireBaseUser | null);
 
 	// on mount, add auth state listener

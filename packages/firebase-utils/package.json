@@ -10,7 +10,8 @@
 	"description": "",
 	"scripts": {
 		"test": "yarn build && jest --colors --logHeapUsage --detectOpenHandles",
-		"build": "rm -rf dist && yarn && npx tsc --build"
+		"build": "rm -rf dist && yarn && npx tsc --build",
+		"firebase:start-emulators": "firebase emulators:start"
 	},
 	"author": "",
 	"license": "ISC",
