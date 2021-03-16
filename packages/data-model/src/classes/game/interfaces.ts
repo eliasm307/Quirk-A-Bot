@@ -10,7 +10,20 @@ export interface iGame {
 }
 
 /** Represents a VTM game as viewed by an admin player */
-export interface iGameAdmin extends iGame {
+export interface iAdminGame extends iGame {
+	/** List of players and game masters involved in this game */
+	players: iGamePlayer[];
+
+	// todo this should allow adding and removing to firestore
+}
+
+/** Game data as saved in Firestore in JSON format */
+export interface iGameData {
+	/** The character sheets a game has as an array */
+	characterSheets: iCharacterSheet[];
+	/** Optional description of the game */
+	description: string;
+	id: string;
 	/** List of players and game masters involved in this game */
 	players: iGamePlayer[];
 }

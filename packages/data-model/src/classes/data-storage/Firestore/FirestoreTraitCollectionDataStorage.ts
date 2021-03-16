@@ -22,7 +22,7 @@ export default class FirestoreTraitCollectionDataStorage<
 		const { firestore } = props;
 		this.#firestore = firestore;
 
-		this.initAsync();
+		this.init();
 	}
 
 	protected afterAddInternal(name: N): void {
@@ -63,8 +63,9 @@ export default class FirestoreTraitCollectionDataStorage<
 			});
 	}
 
+	// todo extract this as a util
 	/** Attaches change event listeners for this trait via its parent collection, and returns the unsubscribe function */
-	private async attachFirestoreEventListeners(parentCollectionPath: string): Promise<() => void> {
+	private attachFirestoreEventListeners(parentCollectionPath: string): () => void {
 		// todo test event listener
 
 		let unsubscriber = () => {};
@@ -113,7 +114,7 @@ export default class FirestoreTraitCollectionDataStorage<
 		return unsubscriber;
 	}
 
-	private async initAsync() {
+	private init() {
 		// ? should collections be asserted? when traits are initialised, these should auto populate collections
 		/*
 		try {
@@ -129,7 +130,7 @@ export default class FirestoreTraitCollectionDataStorage<
 
 		// add event liseners
 		try {
-			this.#unsubscribeFromEventListeners = await this.attachFirestoreEventListeners(this.path);
+			this.#unsubscribeFromEventListeners = this.attachFirestoreEventListeners(this.path);
 		} catch (error) {
 			this.#unsubscribeFromEventListeners();
 			console.error(

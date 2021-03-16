@@ -7,6 +7,7 @@ interface iLoadProps extends iHasFirestore {
 	uid: string;
 }
 export default class UserViewer implements iUser {
+	// todo this should be a proxy over a base editable object?
 	readonly myGames: Map<string, iUserGameParticipationData>;
 	readonly name: string;
 
