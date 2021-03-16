@@ -72,7 +72,7 @@ describe('TraitColleciton with Firestore data storage adding, and deleting', () 
 			{ name: 'Resolve', value: 3 },
 		];
 
-		await new Promise(res => setTimeout(res, 1000)); // wait for syncronisation
+		await new Promise(res => setTimeout(res, 2000)); // wait for syncronisation
 
 		// get snapshot data
 		let collectionSnapshot = await firestore.collection(tc.path).get();
