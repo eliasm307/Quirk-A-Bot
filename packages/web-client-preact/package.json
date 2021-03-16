@@ -18,7 +18,7 @@
 		"serve": "sirv build --port 8080 --cors --single",
 		"lint": "eslint 'src/**/*.{js,jsx,ts,tsx}'",
 		"test": "yarn && jest ./tests",
-		"firebase:start-emulators": "firebase emulators:start"
+		"firebase:start-emulators": "yarn --cwd ../firebase-utils start-emulators"
 	},
 	"dependencies": {
 		"@quirk-a-bot/data-model": "*",

@@ -10,7 +10,8 @@
 	],
 	"scripts": {
 		"test": "yarn build && jest --colors --logHeapUsage",
-		"build": "rm -rf dist && yarn && npx tsc --build"
+		"build": "rm -rf dist && yarn && npx tsc --build",
+		"firebase:start-emulators": "yarn --cwd ../firebase-utils start-emulators"
 	},
 	"author": "",
 	"license": "ISC",
