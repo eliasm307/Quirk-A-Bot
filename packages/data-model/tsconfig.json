@@ -2,14 +2,8 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "target": "es2015",
-    "paths": {
-      "@quirk-a-bot/*": [
-        "packages/*/src"
-      ]
-    },
     "outDir": "dist",
     "typeRoots": [
-      "./src/declarations",
       "./node_modules/@types"
     ],
   },

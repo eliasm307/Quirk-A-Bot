@@ -26,7 +26,7 @@ export default class FirestoreTraitCollectionDataStorage<
 	}
 
 	protected afterAddInternal(name: N): void {
-		// do nothing
+		// do nothing, traits add themselves to firestore
 	}
 
 	protected afterTraitCleanUp(): boolean {
