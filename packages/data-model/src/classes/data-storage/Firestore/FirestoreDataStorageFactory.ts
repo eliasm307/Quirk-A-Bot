@@ -15,6 +15,7 @@ import {
 } from '../interfaces/props/trait-collection-data-storage';
 import { iBaseTraitDataStorageProps } from '../interfaces/props/trait-data-storage';
 import FirestoreCharacterSheetDataStorage from './FirestoreCharacterSheetDataStorage';
+import FirestoreGameDataStorage from './FirestoreGameDataStorage';
 import FirestoreTraitCollectionDataStorage from './FirestoreTraitCollectionDataStorage';
 import FirestoreTraitDataStorage from './FirestoreTraitDataStorage';
 
@@ -43,7 +44,11 @@ export default class FirestoreDataStorageFactory
 
   newGameDataStorage(props: iGameDataStorageFactoryProps): iGameDataStorage {
     // todo implement
-    throw new Error("Method not implemented.");
+    return new FirestoreGameDataStorage({
+      ...props,
+      dataStorageFactory: this,
+      firestore: this.#firestore,
+    });
   }
 
   newTraitCollectionDataStorageInitialiser(): <

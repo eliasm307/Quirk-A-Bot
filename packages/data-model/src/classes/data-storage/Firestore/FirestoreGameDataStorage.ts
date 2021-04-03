@@ -79,7 +79,21 @@ export default class FirestoreGameDataStorage implements iGameDataStorage {
     }
   }
 
-  getCharacterSheets(): Map<string, iCharacterSheet> {}
+  getCharacterSheets(): Map<string, iCharacterSheet> {
+    if (!this.characterSheets)
+      throw Error(
+        `Game character sheets not loaded, please call assertDataExistsOnDataStorage before using this method`
+      );
 
-  getData(): iGameData {}
+    return this.characterSheets;
+  }
+
+  getData(): iGameData {
+    if (!this.gameData)
+      throw Error(
+        `Game data not loaded, please call assertDataExistsOnDataStorage before using this method`
+      );
+
+    return this.gameData;
+  }
 }
