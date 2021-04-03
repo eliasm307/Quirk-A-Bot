@@ -1,7 +1,8 @@
 // -------------------------------------------------------
 
-import { iHasParentPath } from '../../../../declarations/interfaces';
-import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../../declarations/types';
+import { iHasParentPath } from 'src/declarations/interfaces';
+import { TraitNameUnionOrString, TraitValueTypeUnion } from 'src/declarations/types';
+
 import { iCharacterSheet } from '../../../character-sheet/interfaces/character-sheet-interfaces';
 import {
   iAddLogEventProps, iDeleteLogEventProps, iTraitCollectionLogger,
