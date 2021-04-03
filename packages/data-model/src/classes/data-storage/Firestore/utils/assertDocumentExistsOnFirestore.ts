@@ -6,14 +6,20 @@ import { iHasFirestore, iHasId } from '../../interfaces/data-storage-interfaces'
 
 interface Props<D> extends iHasFirestore, iHasPath {
   /** A function to produce default data to use if the document doesnt exist */
-  defaultData(): D;
+  newDefaultData(): D;
   /** A function which returns a promise that resolves a Firestore document into the required data format  */
-  documentDataReader(firestore: Firestore, path: string): Promise<D>;
-  documentDataWriter(
-    firestore: Firestore,
-    path: string,
-    data: D
-  ): Promise<void>;
+  documentDataReader(props: DocumentDataReaderProps): Promise<D>;
+  /** A function which writes custom data to a firestore document and or sub collections in the correct manner  */
+  documentDataWriter(props: DocumentDataWriterProps<D>): Promise<void>;
+}
+
+export interface DocumentDataReaderProps {
+  firestore: Firestore;
+  path: string;
+}
+
+export interface DocumentDataWriterProps<D> extends DocumentDataReaderProps {
+  data: D;
 }
 
 export default async function assertDocumentExistsOnFirestore<D>({
@@ -21,10 +27,10 @@ export default async function assertDocumentExistsOnFirestore<D>({
   documentDataReader,
   documentDataWriter,
   path,
-  defaultData,
+  newDefaultData: defaultData,
 }: Props<D>): Promise<D> {
   const docPromise = firestore.doc(path).get();
-  const docDataPromise = documentDataReader(firestore, path);
+  const docDataPromise = documentDataReader({ firestore, path });
 
   try {
     const [doc, docData] = await Promise.all([docPromise, docDataPromise]);
@@ -43,7 +49,7 @@ export default async function assertDocumentExistsOnFirestore<D>({
     try {
       const data = defaultData(); // use default data and save data locally
 
-      await documentDataWriter(firestore, path, data);
+      await documentDataWriter({ firestore, path, data });
 
       return data;
     } catch (error) {

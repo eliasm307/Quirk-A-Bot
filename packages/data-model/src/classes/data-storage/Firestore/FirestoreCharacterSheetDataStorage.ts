@@ -39,7 +39,7 @@ export default class FirestoreCharacterSheetDataStorage
       {
         firestore: this.firestore,
         path: this.path,
-        defaultData: () => CharacterSheet.newDataObject({ id: this.id }),
+        newDefaultData: () => CharacterSheet.newDataObject({ id: this.id }),
         documentDataReader: readCharacterSheetDataFromFirestore,
         documentDataWriter: writeCharacterSheetDataToFirestore,
       }
