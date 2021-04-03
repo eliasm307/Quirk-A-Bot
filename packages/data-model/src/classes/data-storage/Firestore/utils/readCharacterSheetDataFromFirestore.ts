@@ -1,11 +1,12 @@
-import { Firestore } from '@quirk-a-bot/firebase-utils';
-
 import {
   ATTRIBUTE_COLLECTION_NAME, CORE_TRAIT_COLLECTION_NAME, DISCIPLINE_COLLECTION_NAME,
   SKILL_COLLECTION_NAME, TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME,
-} from '../../../../constants';
-import { CoreTraitName } from '../../../../declarations/types';
-import isCharacterSheetData from '../../../../utils/type-predicates/isCharacterSheetData';
+} from 'src/constants';
+import { CoreTraitName } from 'src/declarations/types';
+import isCharacterSheetData from 'src/utils/type-predicates/isCharacterSheetData';
+
+import { Firestore } from '@quirk-a-bot/firebase-utils';
+
 import {
   iCharacterSheetData,
 } from '../../../character-sheet/interfaces/character-sheet-interfaces';

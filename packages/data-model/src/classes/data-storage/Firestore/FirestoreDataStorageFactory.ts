@@ -1,6 +1,7 @@
+import { TraitValueTypeUnion } from 'src/declarations/types';
+
 import { Firestore } from '@quirk-a-bot/firebase-utils';
 
-import { TraitValueTypeUnion } from '../../../declarations/types';
 import { iBaseTrait, iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
 import {
   iBaseTraitDataStorage, iCharacterSheetDataStorage, iDataStorageFactory, iGameDataStorage,

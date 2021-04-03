@@ -1,60 +1,61 @@
-import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
-import hasCleanUp from '../../../utils/type-predicates/hasCleanUp';
+import { TraitNameUnionOrString, TraitValueTypeUnion } from 'src/declarations/types';
+import hasCleanUp from 'src/utils/type-predicates/hasCleanUp';
+
 import { iBaseTraitDataStorage } from '../../data-storage/interfaces/data-storage-interfaces';
 import { iTraitLogReporter } from '../../log/interfaces/log-interfaces';
 import {
-  iAbstractBaseTraitProps, iBaseTrait, iBaseTraitData
+  iAbstractBaseTraitProps, iBaseTrait, iBaseTraitData,
 } from '../interfaces/trait-interfaces';
 
 export default abstract class AbstractBaseTrait<
-	N extends TraitNameUnionOrString,
-	V extends TraitValueTypeUnion,
-	D extends iBaseTraitData<N, V>
+  N extends TraitNameUnionOrString,
+  V extends TraitValueTypeUnion,
+  D extends iBaseTraitData<N, V>
 > implements iBaseTrait<N, V, D> {
-	protected dataStorage: iBaseTraitDataStorage<N, V>;
+  protected dataStorage: iBaseTraitDataStorage<N, V>;
 
-	readonly data: () => D;
-	readonly log: iTraitLogReporter;
-	readonly name: N;
-	readonly path: string;
+  readonly data: () => D;
+  readonly log: iTraitLogReporter;
+  readonly name: N;
+  readonly path: string;
 
-	protected abstract newValueIsValid(newVal: V): boolean;
-	protected abstract preProcessValue(newValueRaw: V): V;
+  protected abstract newValueIsValid(newVal: V): boolean;
+  protected abstract preProcessValue(newValueRaw: V): V;
 
-	constructor({
-		name,
-		value,
-		traitDataStorageInitialiser,
-		parentPath,
-		loggerCreator,
-		data,
-	}: iAbstractBaseTraitProps<N, V, D>) {
-		this.name = name;
+  constructor({
+    name,
+    value,
+    traitDataStorageInitialiser,
+    parentPath,
+    loggerCreator,
+    data,
+  }: iAbstractBaseTraitProps<N, V, D>) {
+    this.name = name;
 
-		// initialise data store
-		this.dataStorage = traitDataStorageInitialiser({
-			name,
-			defaultValueIfNotDefined: this.preProcessValue(value),
-			parentPath,
-			loggerCreator,
-		});
+    // initialise data store
+    this.dataStorage = traitDataStorageInitialiser({
+      name,
+      defaultValueIfNotDefined: this.preProcessValue(value),
+      parentPath,
+      loggerCreator,
+    });
 
-		this.log = this.dataStorage.log;
+    this.log = this.dataStorage.log;
 
-		// the data storage is responsible for providing a suitable path
-		this.path = this.dataStorage.path;
+    // the data storage is responsible for providing a suitable path
+    this.path = this.dataStorage.path;
 
-		// make sure toJson is provided
-		this.data = data;
-	}
+    // make sure toJson is provided
+    this.data = data;
+  }
 
-	public get value() {
-		return this.dataStorage.value;
-	}
+  public get value() {
+    return this.dataStorage.value;
+  }
 
-	public set value(newValRaw: V) {
-		// todo delete? data storage should handle actually changing the value
-		/*
+  public set value(newValRaw: V) {
+    // todo delete? data storage should handle actually changing the value
+    /*
 
 		// justification should be done in newValueIsValid function
 		if (!this.newValueIsValid(newValue)) return;
@@ -69,16 +70,16 @@ export default abstract class AbstractBaseTrait<
     }
     */
 
-		const newValueProcessed = this.preProcessValue(newValRaw);
-		if (!this.newValueIsValid(newValueProcessed)) return;
+    const newValueProcessed = this.preProcessValue(newValRaw);
+    if (!this.newValueIsValid(newValueProcessed)) return;
 
-		// implement property change on data storage
-		this.dataStorage.value = newValueProcessed;
-	}
+    // implement property change on data storage
+    this.dataStorage.value = newValueProcessed;
+  }
 
-	cleanUp(): boolean {
-		// if the data storage has a cleanup function then call it and return the result,
-		// otherwise return true if no cleanup required
-		return hasCleanUp(this.dataStorage) ? this.dataStorage.cleanUp() : true;
-	}
+  cleanUp(): boolean {
+    // if the data storage has a cleanup function then call it and return the result,
+    // otherwise return true if no cleanup required
+    return hasCleanUp(this.dataStorage) ? this.dataStorage.cleanUp() : true;
+  }
 }

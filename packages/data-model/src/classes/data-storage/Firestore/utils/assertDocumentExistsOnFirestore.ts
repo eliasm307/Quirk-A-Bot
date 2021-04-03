@@ -1,6 +1,7 @@
+import { iHasPath } from 'src/declarations/interfaces';
+
 import { Firestore } from '@quirk-a-bot/firebase-utils';
 
-import { iHasPath } from '../../../../declarations/interfaces';
 import { iHasFirestore, iHasId } from '../../interfaces/data-storage-interfaces';
 
 // todo move to firestore utils

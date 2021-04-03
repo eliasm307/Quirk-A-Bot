@@ -1,4 +1,5 @@
-import { iHasParentPath } from '../../../../declarations/interfaces';
+import { iHasParentPath } from 'src/declarations/interfaces';
+
 import { iHasDataStorageFactory, iHasFirestore, iHasId } from '../data-storage-interfaces';
 
 export interface iBaseGameDataStorageProps
