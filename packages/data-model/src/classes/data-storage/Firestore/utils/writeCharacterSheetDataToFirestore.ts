@@ -1,16 +1,12 @@
-// todo test
+import { iHasPath } from 'packages/data-model/src/declarations/interfaces';
 
-import { Firestore, FirestoreBatch } from '@quirk-a-bot/firebase-utils';
+import { Firestore } from '@quirk-a-bot/firebase-utils/src';
 
-import {
-  ATTRIBUTE_COLLECTION_NAME, CORE_TRAIT_COLLECTION_NAME, DISCIPLINE_COLLECTION_NAME,
-  SKILL_COLLECTION_NAME, TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME
-} from '../../../../constants';
-import {
+import { iGeneralTraitData } from '../../../traits/interfaces/trait-interfaces';
+import { iHasFirestore, iHasId } from '../../interfaces/data-storage-interfaces';
+
   iCharacterSheetData
 } from '../../../character-sheet/interfaces/character-sheet-interfaces';
-import { iGeneralTraitData } from '../../../traits/interfaces/trait-interfaces';
-
 export default async function writeCharacterSheetDataToFirestore(
 	firestore: Firestore,
 	characterSheetDocpath: string,

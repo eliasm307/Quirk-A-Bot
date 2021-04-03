@@ -16,25 +16,29 @@ export interface iPlayerGame extends iHasParentPath {
 /** Represents a VTM game as viewed by an admin player */
 export interface iAdminGame extends iPlayerGame {
   /** List of players and game masters involved in this game */
-  players: iGamePlayer[];
+  players: iGamePlayerData[];
 
 // todo this should allow adding and removing to firestore
 }
 
 /** Game data as saved in Firestore in JSON format */
-export interface iGameData {
-  /** The ids of character sheets in a game (equivalent to the non-game master player ids)  */
+export interface iGameData extends iCoreGameData {
+  /** The ids of character sheets in a game (equivalent to the non-game master player ids), from a sub-collection  */
   characterSheetIds: string[];
+  /** List of players and game masters involved in this game, from a sub-collection */
+  players: iGamePlayerData[];
+}
+
+/** The data contained in the core game data document */
+export interface iCoreGameData {
   /** Optional description of the game */
   description: string;
   /** Unique game id */
   id: string;
-  /** List of players and game masters involved in this game */
-  players: iGamePlayer[];
 }
 
 /** Represents user details specific to a game */
-export interface iGamePlayer {
+export interface iGamePlayerData {
   /** Id for this users in this particular game, id matches the users auth id */
   id: string;
   /** A flag to say if a player is a game master, this grants extra privileges */
