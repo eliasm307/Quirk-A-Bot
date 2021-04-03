@@ -1,15 +1,15 @@
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
 import { iBaseTrait, iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
 import {
-  iBaseTraitDataStorage, iCharacterSheetDataStorage, iDataStorageFactory,
-  iTraitCollectionDataStorage
+  iBaseTraitDataStorage, iCharacterSheetDataStorage, iDataStorageFactory, iGameDataStorage,
+  iTraitCollectionDataStorage,
 } from '../interfaces/data-storage-interfaces';
 import {
-  iBaseCharacterSheetDataStorageFactoryMethodProps
+  iBaseCharacterSheetDataStorageFactoryMethodProps, iGameDataStorageFactoryProps,
 } from '../interfaces/props/data-storage-creator';
 import { iInMemoryFileDataStorageFactoryProps } from '../interfaces/props/data-storage-factory';
 import {
-  iBaseTraitCollectionDataStorageProps
+  iBaseTraitCollectionDataStorageProps,
 } from '../interfaces/props/trait-collection-data-storage';
 import { iBaseTraitDataStorageProps } from '../interfaces/props/trait-data-storage';
 import InMemoryCharacterSheetDataStorage from './InMemoryCharacterSheetDataStorage';
@@ -17,26 +17,42 @@ import InMemoryTraitCollectionDataStorage from './InMemoryTraitCollectionDataSto
 import InMemoryTraitDataStorage from './InMemoryTraitDataStorage';
 
 export default class InMemoryDataStorageFactory implements iDataStorageFactory {
-	constructor(props?: iInMemoryFileDataStorageFactoryProps) {}
+  constructor(props?: iInMemoryFileDataStorageFactoryProps) {}
 
-	newCharacterSheetDataStorage(props: iBaseCharacterSheetDataStorageFactoryMethodProps): iCharacterSheetDataStorage {
-		return new InMemoryCharacterSheetDataStorage({ ...props, dataStorageFactory: this });
-	}
+  idIsValid(id: string): boolean {
+    throw new Error("Method not implemented.");
+  }
 
-	newTraitCollectionDataStorageInitialiser(): <
-		N extends string,
-		V extends TraitValueTypeUnion,
-		D extends iBaseTraitData<N, V>,
-		T extends iBaseTrait<N, V, D>
-	>(
-		props: iBaseTraitCollectionDataStorageProps<N, V, D, T>
-	) => iTraitCollectionDataStorage<N, V, D, T> {
-		return props => new InMemoryTraitCollectionDataStorage({ ...props });
-	}
+  newCharacterSheetDataStorage(
+    props: iBaseCharacterSheetDataStorageFactoryMethodProps
+  ): iCharacterSheetDataStorage {
+    return new InMemoryCharacterSheetDataStorage({
+      ...props,
+      dataStorageFactory: this,
+    });
+  }
 
-	newTraitDataStorageInitialiser(): <N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(
-		props: iBaseTraitDataStorageProps<N, V>
-	) => iBaseTraitDataStorage<N, V> {
-		return props => new InMemoryTraitDataStorage({ ...props });
-	}
+  newGameDataStorage(props: iGameDataStorageFactoryProps): iGameDataStorage {
+    throw new Error("Method not implemented.");
+  }
+
+  newTraitCollectionDataStorageInitialiser(): <
+    N extends string,
+    V extends TraitValueTypeUnion,
+    D extends iBaseTraitData<N, V>,
+    T extends iBaseTrait<N, V, D>
+  >(
+    props: iBaseTraitCollectionDataStorageProps<N, V, D, T>
+  ) => iTraitCollectionDataStorage<N, V, D, T> {
+    return (props) => new InMemoryTraitCollectionDataStorage({ ...props });
+  }
+
+  newTraitDataStorageInitialiser(): <
+    N extends TraitNameUnionOrString,
+    V extends TraitValueTypeUnion
+  >(
+    props: iBaseTraitDataStorageProps<N, V>
+  ) => iBaseTraitDataStorage<N, V> {
+    return (props) => new InMemoryTraitDataStorage({ ...props });
+  }
 }

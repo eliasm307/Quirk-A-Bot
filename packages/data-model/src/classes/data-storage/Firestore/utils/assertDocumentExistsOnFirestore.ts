@@ -4,13 +4,15 @@ import { Firestore } from '@quirk-a-bot/firebase-utils/src';
 
 import { iHasFirestore, iHasId } from '../../interfaces/data-storage-interfaces';
 
+// todo move to firestore utils
+
 interface Props<D> extends iHasFirestore, iHasPath {
-  /** A function to produce default data to use if the document doesnt exist */
-  newDefaultData(): D;
   /** A function which returns a promise that resolves a Firestore document into the required data format  */
   documentDataReader(props: DocumentDataReaderProps): Promise<D>;
   /** A function which writes custom data to a firestore document and or sub collections in the correct manner  */
   documentDataWriter(props: DocumentDataWriterProps<D>): Promise<void>;
+  /** A function to produce default data to use if the document doesnt exist */
+  newDefaultData(): D;
 }
 
 export interface DocumentDataReaderProps {
