@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": [
+      "@types/node",
+      "./node_modules/network-information-types"
+    ],
+  },
+  "include": [
+    "src/**/*",
+    "babel.config.js",
+    "gatsby-*.js"
+  ]
+}
