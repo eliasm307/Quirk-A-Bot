@@ -8,9 +8,17 @@
   "exclude": [
     "**/node_modules/**",
     "**/dist/**",
+    "**/build/**",
+    "**/lib/**",
     "**/public/**",
     "**/*.spec.*",
     "**/*.test.*",
-    "**/coverage/**"
+    "**/coverage/**",
+    "**/sw.js",
+    "**/*-overrides.js",
+    "**/*.config.js",
+    "**/*.eslintrc.js",
+    "**/jest.config.js",
+    "**/discord-bot/**"
   ]
 }

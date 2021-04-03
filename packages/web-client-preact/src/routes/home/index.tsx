@@ -10,6 +10,7 @@ export default function Home() {
 	const user = useContext(UserContext);
 	const { photoURL, displayName, email } = user as FireBaseUser;
 	const csData = CharacterSheet.newDataObject({ id: 'preactTest' });
+
 	console.warn({ csData });
 	return (
 		<div class={style.home}>

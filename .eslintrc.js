@@ -1,4 +1,5 @@
 module.exports = {
+	parser: '@typescript-eslint/parser',
 	env: {
 		browser: true,
 		node: true,
@@ -36,11 +37,11 @@ module.exports = {
 		'space-in-parens': 0,
 		'spaced-comment': 0,
     '@typescript-eslint/no-unused-vars': 1,
-    '@typescript-eslint/explicit-function-return-type': 0
+    '@typescript-eslint/explicit-function-return-type': 0,
 		curly: 0,
 		indent: 0,
 		quotes: 0,
     radix: 0,
-    
+
 	},
 };
