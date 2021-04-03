@@ -55,6 +55,16 @@ module.exports = {
     "@typescript-eslint/restrict-template-expressions": 1,
     "@typescript-eslint/semi": 0,
     "@typescript-eslint/space-before-function-paren": 0,
+    "@typescript-eslint/naming-convention": [
+      1,
+      {
+        selector: "interface",
+        custom: {
+          regex: "^i?[A-Z]",
+          match: true,
+        },
+      },
+    ],
     "array-bracket-spacing": 0,
     "arrow-body-style": 0,
     "arrow-parens": 0,
