@@ -1,5 +1,6 @@
-import { iHasParentPath } from '../../declarations/interfaces';
-import { iCharacterSheet } from '../character-sheet/interfaces/character-sheet-interfaces';
+import { iHasParentPath } from '../../../declarations/interfaces';
+import { iCharacterSheet } from '../../character-sheet/interfaces/character-sheet-interfaces';
+import { PlayerStatus } from './types';
 
 /** Represents a VTM game as viewed by a non-admin player*/
 export interface iPlayerGame extends iHasParentPath {
@@ -18,7 +19,12 @@ export interface iAdminGame extends iPlayerGame {
   /** List of players and game masters involved in this game */
   players: iGamePlayerData[];
 
-// todo this should allow adding and removing to firestore
+  /** Accept a player's request to join a game, initialise their character sheet or re-enable any existing character sheet for this player, then update their status to `Active` */
+  acceptPlayerRequest(playerId: string): Promise<boolean>;
+  /** Reject a player's request to join a game and update their status to `Rejected` */
+  rejectPlayerRequest(playerId: string, reason?: string): Promise<boolean>;
+  /** Remove a player from a game, mark their character sheet as hidden, then update their status to `Removed` */
+  removePlayer(playerId: string, reason?: string): Promise<boolean>;
 }
 
 /** Game data as saved in Firestore in JSON format */
@@ -45,4 +51,5 @@ export interface iGamePlayerData {
   isGameMaster: boolean;
   /** How the player would like to be addressed as in this game, defaults to User.name */
   playerName: string;
+  status: PlayerStatus;
 }

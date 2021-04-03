@@ -1,6 +1,6 @@
 import { PLAYER_COLLECTION_NAME } from 'src/constants';
 
-import { iGameData } from '../../../game/interfaces';
+import { iGameData } from '../../../game/declarations/interfaces';
 import { iHasFirestore } from '../../interfaces/data-storage-interfaces';
 import { DocumentDataWriterProps } from './assertDocumentExistsOnFirestore';
 

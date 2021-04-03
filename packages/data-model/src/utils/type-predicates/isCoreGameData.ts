@@ -1,4 +1,4 @@
-import { iCoreGameData } from '../../classes/game/interfaces';
+import { iCoreGameData } from '../../classes/game/declarations/interfaces';
 
 export default function isCoreGameData(data: any): data is iCoreGameData {
   if (typeof data !== "object") return false;

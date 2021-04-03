@@ -3,9 +3,9 @@ import { iCharacterSheet } from '../character-sheet/interfaces/character-sheet-i
 import {
   iGameDataStorage, iHasDataStorageFactory, iHasId,
 } from '../data-storage/interfaces/data-storage-interfaces';
-import { iPlayerGame } from './interfaces';
+import { iPlayerGame } from './declarations/interfaces';
 
-interface PlayerGameProps extends iLoaderProps {
+export interface iPlayerGameProps extends iLoaderProps {
   gameDataStorage: iGameDataStorage;
 }
 
@@ -30,7 +30,7 @@ export default class PlayerGame implements iPlayerGame {
     dataStorageFactory,
     gameDataStorage,
     parentPath,
-  }: PlayerGameProps) {
+  }: iPlayerGameProps) {
     this.id = id;
     this.parentPath = parentPath;
 

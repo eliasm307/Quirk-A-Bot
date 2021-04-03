@@ -1,4 +1,4 @@
-import { iGamePlayerData } from '../../classes/game/interfaces';
+import { iGamePlayerData } from '../../classes/game/declarations/interfaces';
 
 export default function isGamePlayerData(data: any): data is iGamePlayerData {
   if (typeof data !== "object") return false;

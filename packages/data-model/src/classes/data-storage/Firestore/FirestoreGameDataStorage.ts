@@ -3,7 +3,7 @@ import CharacterSheet from 'src/classes/character-sheet/CharacterSheet';
 import { Firestore } from '@quirk-a-bot/firebase-utils';
 
 import { iCharacterSheet } from '../../character-sheet/interfaces/character-sheet-interfaces';
-import { iGameData } from '../../game/interfaces';
+import { iGameData } from '../../game/declarations/interfaces';
 import { iDataStorageFactory, iGameDataStorage } from '../interfaces/data-storage-interfaces';
 import { iFirestoreCharacterSheetDataStorageProps } from '../interfaces/props/game-data-storage';
 import { createPath } from '../utils/createPath';

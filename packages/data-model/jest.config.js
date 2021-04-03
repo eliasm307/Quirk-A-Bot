@@ -12,9 +12,11 @@ module.exports = {
     "\\/dist\\/",
     "\\/node_modules\\/",
     "\\/coverage\\/",
+    "\\/src/index\\/", // ignore main index file for test coverage
   ],
   collectCoverage: true,
   collectCoverageFrom: ["src/**/*.{js,jsx,ts,tsx}"],
+
   // transformIgnorePatterns: ['packages/shared-utils/(?!(dist)/)'],
   moduleNameMapper: pathsToModuleNameMapper(
     { ...compilerOptions.paths, ...compilerOptionsLocal.paths },
