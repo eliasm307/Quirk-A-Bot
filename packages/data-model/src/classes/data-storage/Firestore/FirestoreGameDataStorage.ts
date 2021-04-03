@@ -13,6 +13,7 @@ import assertDocumentExistsOnFirestore from './utils/assertDocumentExistsOnFires
 import readCharacterSheetDataFromFirestore from './utils/readCharacterSheetDataFromFirestore';
 import readGameDataFromFirestore from './utils/readGameDataFromFirestore';
 import writeCharacterSheetDataToFirestore from './utils/writeCharacterSheetDataToFirestore';
+import writeGameDataToFirestore from './utils/writeGameDataToFirestore';
 
 export default class FirestoreGameDataStorage implements iGameDataStorage {
   protected dataStorageFactory: iDataStorageFactory;
@@ -34,7 +35,7 @@ export default class FirestoreGameDataStorage implements iGameDataStorage {
     this.gameData = await assertDocumentExistsOnFirestore<iGameData>({
       firestore: this.firestore,
       path: this.path,
-      defaultData: () => ({
+      newDefaultData: () => ({
         id: this.id,
         characterSheetIds: [],
         description: "",

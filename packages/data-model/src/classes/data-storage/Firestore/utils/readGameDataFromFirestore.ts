@@ -6,11 +6,12 @@ import { Firestore } from '@quirk-a-bot/firebase-utils/src';
 
 import { iGameData, iGamePlayerData } from '../../../game/interfaces';
 import { createPath } from '../../utils/createPath';
+import { DocumentDataReaderProps } from './assertDocumentExistsOnFirestore';
 
-export default async function readGameDataFromFirestore(
-  firestore: Firestore,
-  path: string
-): Promise<iGameData> {
+export default async function readGameDataFromFirestore({
+  firestore,
+  path,
+}: DocumentDataReaderProps): Promise<iGameData> {
   const timerName = `Time to read game data at path ${path}`;
   console.time(timerName);
 
@@ -22,12 +23,14 @@ export default async function readGameDataFromFirestore(
   const coreGameData = coreDataDocument.data();
 
   // todo assert it is core game data
-  if (!isCoreGameData(coreGameData))
+  if (!isCoreGameData(coreGameData)) {
+    console.timeEnd(timerName);
     return Promise.reject({
       __filename,
       message: `Core game data was read but format is invalid`,
       coreGameData,
     });
+  }
 
   const { description, id } = coreGameData;
 
@@ -43,16 +46,19 @@ export default async function readGameDataFromFirestore(
     const playerData = snapshot.data();
 
     // todo assert player data is correct format
-    if (!isGamePlayerData(playerData))
+    if (!isGamePlayerData(playerData)) {
+      console.timeEnd(timerName);
       return Promise.reject({
         error: `Data for player document with id ${snapshot.id} is not valid player data`,
         playerData,
       });
+    }
 
     players.push(playerData);
     characterSheetIds.push(playerData.id);
   });
 
+  console.timeEnd(timerName);
   return {
     characterSheetIds,
     description,
