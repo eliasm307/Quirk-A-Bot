@@ -10,8 +10,8 @@ export default function SignUp() {
   const [error, setError] = useState(null);
   const createUserWithEmailAndPasswordHandler = (
     event: JSX.TargetedMouseEvent<HTMLButtonElement>,
-    email: string,
-    password: string
+    _email: string,
+    _password: string
   ) => {
     event.preventDefault();
     setEmail("");
@@ -46,41 +46,45 @@ export default function SignUp() {
         <form className=''>
           <label htmlFor='displayName' className='block'>
             Display Name:
+            <input
+              type='text'
+              className='my-1 p-1 w-full '
+              name='displayName'
+              value={displayName}
+              placeholder='E.g: Faruq'
+              id='displayName'
+              onChange={(event) => onChangeHandler(event)}
+            />
           </label>
-          <input
-            type='text'
-            className='my-1 p-1 w-full '
-            name='displayName'
-            value={displayName}
-            placeholder='E.g: Faruq'
-            id='displayName'
-            onChange={(event) => onChangeHandler(event)}
-          />
+
           <label htmlFor='userEmail' className='block'>
             Email:
+            <input
+              type='email'
+              className='my-1 p-1 w-full'
+              name='userEmail'
+              value={email}
+              placeholder='E.g: faruq123@gmail.com'
+              id='userEmail'
+              onChange={(event) => onChangeHandler(event)}
+            />
           </label>
-          <input
-            type='email'
-            className='my-1 p-1 w-full'
-            name='userEmail'
-            value={email}
-            placeholder='E.g: faruq123@gmail.com'
-            id='userEmail'
-            onChange={(event) => onChangeHandler(event)}
-          />
+
           <label htmlFor='userPassword' className='block'>
             Password:
+            <input
+              type='password'
+              className='mt-1 mb-3 p-1 w-full'
+              name='userPassword'
+              value={password}
+              placeholder='Your Password'
+              id='userPassword'
+              onChange={(event) => onChangeHandler(event)}
+            />
           </label>
-          <input
-            type='password'
-            className='mt-1 mb-3 p-1 w-full'
-            name='userPassword'
-            value={password}
-            placeholder='Your Password'
-            id='userPassword'
-            onChange={(event) => onChangeHandler(event)}
-          />
+
           <button
+            type='button'
             className='bg-green-400 hover:bg-green-500 w-full py-2 text-white'
             onClick={(event) => {
               createUserWithEmailAndPasswordHandler(event, email, password);
@@ -91,6 +95,7 @@ export default function SignUp() {
         </form>
         <p className='text-center my-3'>or</p>
         <button
+          type='button'
           className='bg-red-500 hover:bg-red-600 w-full py-2 text-white'
           onClick={signInWithGoogle}
         >

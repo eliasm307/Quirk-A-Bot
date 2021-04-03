@@ -1,7 +1,8 @@
-// see top level eslint config
+// extend top level eslint config
+const mainConfig = require("../../.eslintrc");
+
 module.exports = {
-  parser: "@typescript-eslint/parser",
-  extends: [],
+  ...mainConfig,
   parserOptions: {
     project: "./tsconfig.eslint.json",
     ecmaFeatures: {
@@ -22,5 +23,4 @@ module.exports = {
       typescript: {}, // this loads <rootdir>/tsconfig.json to eslint
     },
   },
-  rules: {},
 };
