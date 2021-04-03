@@ -1,6 +1,4 @@
-import { PLAYER_COLLECTION_NAME } from 'packages/data-model/src/constants';
-import { iHasPath } from 'packages/data-model/src/declarations/interfaces';
-
+import { PLAYER_COLLECTION_NAME } from '../../../../constants';
 import { iGameData } from '../../../game/interfaces';
 import { iHasFirestore } from '../../interfaces/data-storage-interfaces';
 import { DocumentDataWriterProps } from './assertDocumentExistsOnFirestore';

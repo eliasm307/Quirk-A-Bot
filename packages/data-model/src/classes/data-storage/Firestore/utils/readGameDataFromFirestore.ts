@@ -1,9 +1,8 @@
-import { PLAYER_COLLECTION_NAME } from 'packages/data-model/src/constants';
-import isCoreGameData from 'packages/data-model/src/utils/type-predicates/isCoreGameData';
-import isGamePlayerData from 'packages/data-model/src/utils/type-predicates/isGamePlayerData';
+import { Firestore } from '@quirk-a-bot/firebase-utils';
 
-import { Firestore } from '@quirk-a-bot/firebase-utils/src';
-
+import { PLAYER_COLLECTION_NAME } from '../../../../constants';
+import isCoreGameData from '../../../../utils/type-predicates/isCoreGameData';
+import isGamePlayerData from '../../../../utils/type-predicates/isGamePlayerData';
 import { iGameData, iGamePlayerData } from '../../../game/interfaces';
 import { createPath } from '../../utils/createPath';
 import { DocumentDataReaderProps } from './assertDocumentExistsOnFirestore';

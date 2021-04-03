@@ -1,5 +1,4 @@
-import { iHasParentPath } from 'packages/data-model/src/declarations/interfaces';
-
+import { iHasParentPath } from '../../../../declarations/interfaces';
 import {
   iHasDataStorageFactory, iHasFirestore, iHasId, iHasResolvedBasePath,
 } from '../data-storage-interfaces';

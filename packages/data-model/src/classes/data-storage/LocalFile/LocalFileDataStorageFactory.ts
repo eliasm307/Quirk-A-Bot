@@ -1,6 +1,7 @@
 import { TraitValueTypeUnion } from '../../../declarations/types';
 import { iHasCharacterSheet } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import { iBaseTrait, iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
+import firestoreIdIsValid from '../Firestore/utils/firestoreIdIsValid';
 import {
   iBaseTraitDataStorage, iCharacterSheetDataStorage, iDataStorageFactory, iGameDataStorage,
   iTraitCollectionDataStorage,
@@ -26,7 +27,7 @@ export default class LocalFileDataStorageFactory
   }
 
   idIsValid(id: string): boolean {
-    throw new Error("Method not implemented.");
+    return firestoreIdIsValid(id);
   }
 
   newCharacterSheetDataStorage(

@@ -18,6 +18,7 @@ import FirestoreCharacterSheetDataStorage from './FirestoreCharacterSheetDataSto
 import FirestoreGameDataStorage from './FirestoreGameDataStorage';
 import FirestoreTraitCollectionDataStorage from './FirestoreTraitCollectionDataStorage';
 import FirestoreTraitDataStorage from './FirestoreTraitDataStorage';
+import firestoreIdIsValid from './utils/firestoreIdIsValid';
 
 export default class FirestoreDataStorageFactory
   implements iDataStorageFactory {
@@ -28,8 +29,7 @@ export default class FirestoreDataStorageFactory
   }
 
   idIsValid(id: string): boolean {
-    // id should only contain alpha numeric characters
-    return !/\W\-/.test(id);
+    return firestoreIdIsValid(id);
   }
 
   newCharacterSheetDataStorage(

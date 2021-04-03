@@ -1,20 +1,13 @@
-import { iHasParentPath } from 'packages/data-model/src/declarations/interfaces';
-
-import { CharacterSheet } from '@quirk-a-bot/data-model/src';
-import { Firestore } from '@quirk-a-bot/firebase-utils/src';
+import { CharacterSheet } from '@quirk-a-bot/data-model';
+import { Firestore } from '@quirk-a-bot/firebase-utils';
 
 import { iCharacterSheet } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import { iGameData } from '../../game/interfaces';
-import {
-  iDataStorageFactory, iGameDataStorage, iHasFirestore, iHasId,
-} from '../interfaces/data-storage-interfaces';
+import { iDataStorageFactory, iGameDataStorage } from '../interfaces/data-storage-interfaces';
 import { iFirestoreCharacterSheetDataStorageProps } from '../interfaces/props/game-data-storage';
 import { createPath } from '../utils/createPath';
-import FirestoreDataStorageFactory from './FirestoreDataStorageFactory';
 import assertDocumentExistsOnFirestore from './utils/assertDocumentExistsOnFirestore';
-import readCharacterSheetDataFromFirestore from './utils/readCharacterSheetDataFromFirestore';
 import readGameDataFromFirestore from './utils/readGameDataFromFirestore';
-import writeCharacterSheetDataToFirestore from './utils/writeCharacterSheetDataToFirestore';
 import writeGameDataToFirestore from './utils/writeGameDataToFirestore';
 
 export default class FirestoreGameDataStorage implements iGameDataStorage {
