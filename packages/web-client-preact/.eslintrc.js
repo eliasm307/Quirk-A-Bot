@@ -1,15 +1,7 @@
 // see top level eslint config
 module.exports = {
   parser: "@typescript-eslint/parser",
-  extends: [
-    "plugin:@typescript-eslint/recommended",
-    "plugin:react/recommended",
-    "airbnb",
-    "airbnb-typescript",
-    "prettier",
-    "prettier/react",
-    "plugin:import/typescript",
-  ],
+  extends: [],
   plugins: ["@typescript-eslint", "react-hooks"],
   parserOptions: {
     project: "./tsconfig.eslint.json",
@@ -31,9 +23,5 @@ module.exports = {
       typescript: {}, // this loads <rootdir>/tsconfig.json to eslint
     },
   },
-  rules: {
-    "no-unused-vars": 1,
-    "@typescript-eslint/no-unused-vars": 1,
-    "@typescript-eslint/explicit-function-return-type": 0,
-  },
+  rules: {},
 };
