@@ -3,12 +3,12 @@
   "compilerOptions": {
     "types": [
       "@types/node",
-      "./node_modules/network-information-types"
     ],
   },
   "include": [
     "src/**/*",
-    "babel.config.js",
+    "*.config.js",
     "gatsby-*.js",
+    ".eslintrc.js"
   ]
 }
