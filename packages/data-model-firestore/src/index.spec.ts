@@ -1,3 +1,5 @@
+export {};
+
 describe("data model for trait group documents", () => {
   it("can read and write entire trait groups to/from firestore", async () => {
     expect.hasAssertions();
