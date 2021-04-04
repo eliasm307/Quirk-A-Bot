@@ -1,9 +1,7 @@
-type DocumentChangeHandler<D> = (newData: D) => void;
-
-// attaches a listener to a firestore document
-export interface iDocumentListener<D> {
-  onChange: (handler: DocumentChangeHandler<D>) => void;
-  stop: () => void;
+export interface iDocumentGroup<K, V> {
+  get(key: K): V | undefined;
+  set(key: K, value: V): iDocumentGroup<K, V>;
 }
-
-export int
+export type GenericObject<K extends string, V> = {
+  [key in K]: V;
+};

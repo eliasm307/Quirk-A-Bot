@@ -1,17 +1,22 @@
 import { Firestore, iFirestoreDocumentObserver } from '../';
 
-interface Props<D> {
+export interface FirestoreDocumentObserverProps<D> {
   dataPredicate: (data: any) => data is D;
   firestore: Firestore;
-  handler: (newData: D) => void;
+  handleChange: (newData: D) => void;
   path: string;
 }
 
-export default class DocumentObserver<D>
+export default class FirestoreDocumentObserver<D>
   implements iFirestoreDocumentObserver<D> {
   protected unsub: () => void;
 
-  constructor({ firestore, path, dataPredicate, handler }: Props<D>) {
+  constructor({
+    firestore,
+    path,
+    dataPredicate,
+    handleChange,
+  }: FirestoreDocumentObserverProps<D>) {
     this.unsub = firestore.doc(path).onSnapshot({
       next: (snapshot) => {
         if (!snapshot.exists) {
@@ -33,7 +38,7 @@ export default class DocumentObserver<D>
           );
 
         // remote change
-        handler(data);
+        handleChange(data);
       },
       error: console.error,
     });

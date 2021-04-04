@@ -10,6 +10,7 @@ import firebase from 'firebase/app';
 import path from 'path';
 import urlExistSync from 'url-exist-sync';
 
+import FirestoreDocumentObserver from './classes/FirestoreDocumentObserver';
 import config from './config';
 
 // const localDotenvPath = path.resolve(__dirname, '..', '.env');
@@ -125,6 +126,9 @@ async function deleteQueryBatch(query: firebase.firestore.Query, resolve: (value
 	});
 }
 */
+
+export { default as FirestoreDocumentObserver } from "./classes/FirestoreDocumentObserver";
+
 // firebase types
 export interface Firestore extends firebase.firestore.Firestore {}
 export interface FirestoreDocumentChange
@@ -137,5 +141,7 @@ type DocumentChangeHandler<D> = (newData: D) => void;
 export interface iFirestoreDocumentObserver<D> {
   unsubscribe(): void;
 }
+
+export type { FirestoreDocumentObserverProps } from "./classes/FirestoreDocumentObserver";
 
 // export default firebase;

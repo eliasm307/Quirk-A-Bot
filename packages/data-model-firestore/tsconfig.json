@@ -6,7 +6,8 @@
     "typeRoots": ["./node_modules/@types"],
     "baseUrl": "../../",
     "paths": {
-      "src/*": ["packages/data-model-firestore/src/*"]
+      "src/*": ["packages/data-model-firestore/src/*"],
+      "@quirk-a-bot/*": ["packages/*/src"]
     }
   },
   "include": ["src"]
