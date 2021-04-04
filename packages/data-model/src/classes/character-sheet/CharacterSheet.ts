@@ -37,7 +37,7 @@ export default class CharacterSheet implements iCharacterSheet {
   protected logger: iCharacterSheetLogger;
 
   //-------------------------------------
-  // NON BASIC PRIMITIVE VARIABLES
+  // NON-BASIC-PRIMITIVE VARIABLES
   readonly attributes: iAttributeTraitCollection;
   readonly bloodPotency: iCoreNumberTrait;
   readonly clan: iCoreStringTrait<ClanName>;

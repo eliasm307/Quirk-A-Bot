@@ -1,39 +1,50 @@
-import { iHasParentPath } from '../../declarations/interfaces';
+import { iHasParentPath } from 'src/declarations/interfaces';
+
 import { iCharacterSheet } from '../character-sheet/interfaces/character-sheet-interfaces';
 import {
   iGameDataStorage, iHasDataStorageFactory, iHasId,
 } from '../data-storage/interfaces/data-storage-interfaces';
-import { iPlayerGame } from './declarations/interfaces';
+import { iTraitCollection } from '../traits/interfaces/trait-collection-interfaces';
+import { iBaseTrait, iBaseTraitData, iStringTrait } from '../traits/interfaces/trait-interfaces';
+import { iGame } from './declarations/game-interfaces';
+import { iGamePlayerData } from './declarations/game-player-interfaces';
 
-export interface iPlayerGameProps extends iLoaderProps {
+interface Props extends iGameProps {}
+
+export interface iGameProps extends iLoaderProps {
   gameDataStorage: iGameDataStorage;
 }
 
 // ? similar to characterSheetDataStorage loader, should these be the same?
 interface iLoaderProps extends iHasId, iHasDataStorageFactory, iHasParentPath {}
 
-export default class PlayerGame implements iPlayerGame {
+export default class Game implements iGame {
   /** Existing singleton-ish instances of this class */
-  protected static instances: Map<string, PlayerGame> = new Map<
-    string,
-    PlayerGame
-  >();
+  protected static instances: Map<string, Game> = new Map<string, Game>();
 
   botWebsocketUri?: string | undefined;
+  characterSheetIds: string[];
   characterSheets: Map<string, iCharacterSheet>;
-  description: string;
+  description: iStringTrait<string, string>;
+  gameMasters: iTraitCollection<
+    string,
+    string,
+    iBaseTraitData<string, string>,
+    iBaseTrait<string, string, iBaseTraitData<string, string>>
+  >;
   id: string;
   parentPath: string;
+  players: iGamePlayerData[];
 
   constructor({
     id,
     dataStorageFactory,
     gameDataStorage,
     parentPath,
-  }: iPlayerGameProps) {
+  }: iGameProps) {
     this.id = id;
     this.parentPath = parentPath;
-
+    throw Error("Not implemented");
     // get initial data from data storage
     const { description } = gameDataStorage.getData();
     this.description = description;
@@ -41,7 +52,7 @@ export default class PlayerGame implements iPlayerGame {
   }
 
   /** SINGLETON CONSTRUCTOR **/
-  static async load(props: iLoaderProps): Promise<PlayerGame> {
+  static async load(props: iLoaderProps): Promise<Game> {
     const { dataStorageFactory, id } = props;
 
     if (!dataStorageFactory.idIsValid(id)) {
@@ -51,7 +62,7 @@ export default class PlayerGame implements iPlayerGame {
       // return;
     }
 
-    const preExistingInstance = PlayerGame.instances.get(id);
+    const preExistingInstance = Game.instances.get(id);
 
     // if an instance has already been created with this id then use that instance
     if (preExistingInstance) return preExistingInstance;
@@ -65,12 +76,24 @@ export default class PlayerGame implements iPlayerGame {
 
       // return a new character sheet instance as requested
       // Note a character sheet instance only creates an object that is connected to a character sheet on the data source, it doesnt initialise a new character sheet on the data source
-      return new PlayerGame({ ...props, gameDataStorage, dataStorageFactory });
+      return new Game({ ...props, gameDataStorage, dataStorageFactory });
     } catch (error) {
       console.error(__filename, { error });
       throw Error(
         `Could not create character sheet instance with id "${id}", Message: ${error}`
       );
     }
+  }
+
+  acceptPlayerRequest(playerId: string): Promise<boolean> {
+    throw new Error("Method not implemented.");
+  }
+
+  rejectPlayerRequest(playerId: string, reason?: string): Promise<boolean> {
+    throw new Error("Method not implemented.");
+  }
+
+  removePlayer(playerId: string, reason?: string): Promise<boolean> {
+    throw new Error("Method not implemented.");
   }
 }
