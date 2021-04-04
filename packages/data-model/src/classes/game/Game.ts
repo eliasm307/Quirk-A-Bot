@@ -6,8 +6,8 @@ import {
 } from '../data-storage/interfaces/data-storage-interfaces';
 import { iTraitCollection } from '../traits/interfaces/trait-collection-interfaces';
 import { iBaseTrait, iBaseTraitData, iStringTrait } from '../traits/interfaces/trait-interfaces';
-import { iGame } from './declarations/game-interfaces';
-import { iGamePlayerData } from './declarations/game-player-interfaces';
+import { iGame } from './interfaces/game-interfaces';
+import { iGamePlayerData } from './interfaces/game-player-interfaces';
 
 interface Props extends iGameProps {}
 

@@ -4,7 +4,7 @@ import isGamePlayerData from 'src/utils/type-predicates/isGamePlayerData';
 
 import { Firestore } from '@quirk-a-bot/firebase-utils';
 
-import { iGameData, iGamePlayerData } from '../../../game/declarations/game-interfaces';
+import { iGameData, iGamePlayerData } from '../../../game/interfaces/game-interfaces';
 import { createPath } from '../../utils/createPath';
 import { DocumentDataReaderProps } from './assertDocumentExistsOnFirestore';
 

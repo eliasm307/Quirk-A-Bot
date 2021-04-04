@@ -7,7 +7,7 @@ import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declaratio
 import {
   iCharacterSheet, iCharacterSheetData,
 } from '../../character-sheet/interfaces/character-sheet-interfaces';
-import { iGameData, iPlayerGame } from '../../game/declarations/game-interfaces';
+import { iGameData, iPlayerGame } from '../../game/interfaces/game-interfaces';
 import {
   iHasTraitCollectionLogReporter, iHasTraitLogReporter,
 } from '../../log/interfaces/log-interfaces';

@@ -1,6 +1,6 @@
 import { iStringTrait } from 'src/classes/traits/interfaces/trait-interfaces';
 
-import { PlayerStatus } from './types';
+import { PlayerStatus } from '../types';
 
 /** Represents user details specific to a game */
 export interface iGamePlayer extends iGamePlayerShape {
