@@ -19,48 +19,48 @@ import config from './config';
 
 // destructure required entries
 const {
-	FIREBASE_API_KEY,
-	FIREBASE_AUTH_DOMAIN,
-	FIREBASE_DATABASE_URL,
-	FIREBASE_PROJECT_ID,
-	FIREBASE_STORAGE_BUCKET,
-	FIREBASE_MESSAGING_SENDER_ID,
-	FIREBASE_APP_ID,
+  FIREBASE_API_KEY,
+  FIREBASE_AUTH_DOMAIN,
+  FIREBASE_DATABASE_URL,
+  FIREBASE_PROJECT_ID,
+  FIREBASE_STORAGE_BUCKET,
+  FIREBASE_MESSAGING_SENDER_ID,
+  FIREBASE_APP_ID,
 } = config;
 
 // check if all required keys are defined
 if (
-	!(
-		FIREBASE_API_KEY &&
-		FIREBASE_AUTH_DOMAIN &&
-		FIREBASE_DATABASE_URL &&
-		FIREBASE_PROJECT_ID &&
-		FIREBASE_STORAGE_BUCKET &&
-		FIREBASE_MESSAGING_SENDER_ID &&
-		FIREBASE_APP_ID
-	)
+  !(
+    FIREBASE_API_KEY &&
+    FIREBASE_AUTH_DOMAIN &&
+    FIREBASE_DATABASE_URL &&
+    FIREBASE_PROJECT_ID &&
+    FIREBASE_STORAGE_BUCKET &&
+    FIREBASE_MESSAGING_SENDER_ID &&
+    FIREBASE_APP_ID
+  )
 ) {
-	console.error({
-		FIREBASE_API_KEY: typeof FIREBASE_API_KEY,
-		FIREBASE_AUTH_DOMAIN: typeof FIREBASE_AUTH_DOMAIN,
-		FIREBASE_DATABASE_URL: typeof FIREBASE_DATABASE_URL,
-		FIREBASE_PROJECT_ID: typeof FIREBASE_PROJECT_ID,
-		FIREBASE_STORAGE_BUCKET: typeof FIREBASE_STORAGE_BUCKET,
-		FIREBASE_MESSAGING_SENDER_ID: typeof FIREBASE_MESSAGING_SENDER_ID,
-		FIREBASE_APP_ID: typeof FIREBASE_APP_ID,
-	});
-	throw Error(`Firebase config keys not defined correctly`);
+  console.error({
+    FIREBASE_API_KEY: typeof FIREBASE_API_KEY,
+    FIREBASE_AUTH_DOMAIN: typeof FIREBASE_AUTH_DOMAIN,
+    FIREBASE_DATABASE_URL: typeof FIREBASE_DATABASE_URL,
+    FIREBASE_PROJECT_ID: typeof FIREBASE_PROJECT_ID,
+    FIREBASE_STORAGE_BUCKET: typeof FIREBASE_STORAGE_BUCKET,
+    FIREBASE_MESSAGING_SENDER_ID: typeof FIREBASE_MESSAGING_SENDER_ID,
+    FIREBASE_APP_ID: typeof FIREBASE_APP_ID,
+  });
+  throw Error(`Firebase config keys not defined correctly`);
 }
 
 // setup firebase config object
 const firebaseConfig = {
-	apiKey: FIREBASE_API_KEY,
-	authDomain: FIREBASE_AUTH_DOMAIN,
-	databaseURL: FIREBASE_DATABASE_URL,
-	projectId: FIREBASE_PROJECT_ID,
-	storageBucket: FIREBASE_STORAGE_BUCKET,
-	messagingSenderId: FIREBASE_MESSAGING_SENDER_ID,
-	appId: FIREBASE_APP_ID,
+  apiKey: FIREBASE_API_KEY,
+  authDomain: FIREBASE_AUTH_DOMAIN,
+  databaseURL: FIREBASE_DATABASE_URL,
+  projectId: FIREBASE_PROJECT_ID,
+  storageBucket: FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: FIREBASE_MESSAGING_SENDER_ID,
+  appId: FIREBASE_APP_ID,
 };
 
 // Initialize Firebase
@@ -70,7 +70,7 @@ firebase.initializeApp(firebaseConfig);
 // Firebase Authentication exports
 
 const _auth = firebase.auth();
-_auth.useEmulator('http://localhost:9099'); // todo use environment variables to conditionally use this
+_auth.useEmulator("http://localhost:9099"); // todo use environment variables to conditionally use this
 export const auth = _auth;
 
 export const GoogleAuthProvider = firebase.auth.GoogleAuthProvider;
@@ -85,11 +85,11 @@ export interface FireBaseUser extends firebase.User {}
 export const firestoreLive = firebase.firestore();
 
 const _firestoreEmulator = firebase.firestore();
-_firestoreEmulator.useEmulator('localhost', 8080);
+_firestoreEmulator.useEmulator("localhost", 8080);
 export const firestoreEmulator = _firestoreEmulator;
 
 export function isFirestoreEmulatorRunning() {
-	return urlExistSync('http://localhost:4000/firestore/');
+  return urlExistSync("http://localhost:4000/firestore/");
 }
 
 // ? is a deep recursive delete util required?
@@ -127,8 +127,15 @@ async function deleteQueryBatch(query: firebase.firestore.Query, resolve: (value
 */
 // firebase types
 export interface Firestore extends firebase.firestore.Firestore {}
-export interface FirestoreDocumentChange extends firebase.firestore.DocumentChange<firebase.firestore.DocumentData> {}
+export interface FirestoreDocumentChange
+  extends firebase.firestore.DocumentChange<firebase.firestore.DocumentData> {}
 
 export interface FirestoreBatch extends firebase.firestore.WriteBatch {}
+
+type DocumentChangeHandler<D> = (newData: D) => void;
+
+export interface iFirestoreDocumentObserver<D> {
+  unsubscribe(): void;
+}
 
 // export default firebase;

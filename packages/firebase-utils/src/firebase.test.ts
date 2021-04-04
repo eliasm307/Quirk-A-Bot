@@ -94,7 +94,6 @@ describe("firestore emulator", () => {
       .doc(`${localTestCollectionName}/${testDocumentName}`)
       .onSnapshot({
         next: (snapshot) => {
-          snapshot.data({});
           const data: any = snapshot.data();
           // console.log('doc change', { data });
           if (snapshot.exists) {
