@@ -21,18 +21,28 @@ export default abstract class DocumentGroup<K extends string, V extends any>
     firestore: Firestore;
     subDocuments: Map<K, iSubDocument<V>>;
     data?: GenericObject<K, V>;
+    observer: FirestoreDocumentObserver<GenericObject<K, V>>;
   };
+  data?: GenericObject<K, V> | undefined;
 
-  constructor(props: DocumentGroupProps<K, V>) {
+  // todo only return instance when data is loaded initially from firestore
+  private constructor(props: DocumentGroupProps<K, V>) {
     const { firestore, path } = props;
-
-    this.#private = { firestore, subDocuments: new Map<K, iSubDocument<V>>() };
-    this.path = path;
-
-    new FirestoreDocumentObserver({
+    const observer = new FirestoreDocumentObserver({
       ...props,
-      handleChange: async (newData) => await this.handleChange(newData),
+      handleChange: async (newData) => this.handleChange(newData),
     });
+
+    this.path = path;
+    this.#private = {
+      firestore,
+      subDocuments: new Map<K, iSubDocument<V>>(),
+      observer,
+    };
+  }
+
+  cleanUp(): void {
+    this.#private.observer.unsubscribe();
   }
 
   get(key: K): iSubDocument<V> | undefined {
@@ -80,7 +90,7 @@ export default abstract class DocumentGroup<K extends string, V extends any>
   }
 
   private handleSubDocumentAddition(newData: GenericObject<K, V>) {
-    for (let [_key, _value] of Object.entries(newData)) {
+    for (const [_key, _value] of Object.entries(newData)) {
       const key = _key as K;
       const data = _value as V;
       // add missing sub document and stop (assuming there is only 1)
@@ -102,7 +112,7 @@ export default abstract class DocumentGroup<K extends string, V extends any>
 
   private handleSubDocumentChange(newData: GenericObject<K, V>): number {
     let affectedDocuments = 0;
-    for (let [key, value] of Object.entries(newData)) {
+    for (const [key, value] of Object.entries(newData)) {
       // update changed documents only
       const subDocument = this.#private.subDocuments.get(key as K);
 
@@ -120,13 +130,14 @@ export default abstract class DocumentGroup<K extends string, V extends any>
   }
 
   private handleSubDocumentRemoval(newData: GenericObject<K, V>) {
-    for (let key of this.#private.subDocuments.keys()) {
+    for (const key of this.#private.subDocuments.keys()) {
       // remove extra sub document and stop (assuming there is only 1)
       if (!newData[key]) return this.#private.subDocuments.delete(key);
     }
   }
 
   private async subDocumentRemover(key: K) {
+    // todo move to util
     if (!this.#private.data)
       return console.warn(
         __filename,
