@@ -35,7 +35,7 @@ module.exports = {
       "babel-module": {
         root: ["./"],
       },
-      // typescript: {}, // this loads <rootdir>/tsconfig.json to eslint
+      typescript: {}, // this loads <rootdir>/tsconfig.json to eslint for eslint-import-resolver-typescript
     },
   },
   // for rules, 0 means ignore, 1 means warn, and 2 means error

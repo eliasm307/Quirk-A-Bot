@@ -14,7 +14,7 @@
   "description": "",
   "scripts": {
     "test": "yarn build && jest --colors --logHeapUsage",
-    "build": "rm -rf dist && yarn && npx tsc --build",
+    "build": "rm -rf dist && yarn && npx tsc -p tsconfig.build.json",
     "start-emulators": "firebase emulators:start"
   },
   "author": "",

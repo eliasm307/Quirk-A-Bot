@@ -9,7 +9,7 @@ describe("DocumentGroup", () => {
   it("can delete sub documents from firestore", () => {
     expect.hasAssertions();
 
-    const props: DocumentGroupProps<K, V> = {};
+    const props: DocumentGroupProps<K, V> = { de: "ed" };
 
     const docGroup = new DocumentGroup<K, V>(props);
   });

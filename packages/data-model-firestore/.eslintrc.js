@@ -12,6 +12,8 @@ const {
 } = mainConfig;
 */
 
+// console.log(__filename, `Resulting ESlint config`, tsConfig);
+
 module.exports = { ...tsConfig, root: true };
 /*
 module.exports = {

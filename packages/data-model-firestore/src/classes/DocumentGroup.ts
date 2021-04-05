@@ -132,7 +132,7 @@ export default class DocumentGroup<K extends string, V extends any>
   private handleSubDocumentRemoval(newData: GenericObject<K, V>) {
     for (const key of this.#private.subDocuments.keys()) {
       // remove extra sub document and stop (assuming there is only 1)
-      if (!newData[key]) return this.#private.subDocuments.delete(key);
+      if (!newData[key as K]) return this.#private.subDocuments.delete(key);
     }
   }
 

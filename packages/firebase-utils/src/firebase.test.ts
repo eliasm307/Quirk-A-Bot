@@ -132,6 +132,7 @@ describe("firestore emulator", () => {
             expect(data).toEqual(testDocData);
           } else if (change.type === "modified") {
             // console.log('Modified document: ', { data });
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             expect(data.added).toBeTruthy();
           } else if (change.type === "removed") {
             // console.log('Removed document: ', { data });
