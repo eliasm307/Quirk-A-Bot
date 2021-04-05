@@ -6,7 +6,7 @@ const testDocData = {
 const testCollectionName = "testCollection";
 const testDocumentName = "testDoc";
 
-describe.only("firestore", () => {
+describe("firestore", () => {
   it("can write and read objects and arrays", async () => {
     expect.assertions(1);
 

@@ -1,4 +1,8 @@
+import { firestoreEmulator } from '@quirk-a-bot/firebase-utils';
+
 import DocumentGroup, { DocumentGroupProps } from './DocumentGroup';
+
+const firestore = firestoreEmulator;
 
 type K = "a" | "b";
 interface V {
@@ -9,7 +13,7 @@ describe("DocumentGroup", () => {
   it("can delete sub documents from firestore", () => {
     expect.hasAssertions();
 
-    const props: DocumentGroupProps<K, V> = {};
+    const props: DocumentGroupProps<K, V> = { firestore };
 
     const docGroup = new DocumentGroup<K, V>(props);
   });

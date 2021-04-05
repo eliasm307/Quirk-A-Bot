@@ -1,20 +1,12 @@
 {
-  "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "types": ["@types/node", "@types/jest"],
-    "typeRoots": ["./node_modules/@types"],
-    "baseUrl": "../../",
-    "paths": {
-      "src/*": ["packages/firebase-utils/src/*"],
-      "@quirk-a-bot/*": ["packages/*/src"]
-    }
-  },
-  "exclude": [],
-  "include": [
-    "src/**/*",
-    "*.config.js",
-    "gatsby-*.js",
-    "*.eslintrc.js",
-    ".eslintrc.*"
+  "extends": "../../tsconfig.json",
+  "include": ["src/**/*", "*.js"],
+  "exclude": [
+    "**/node_modules/**/*",
+    "node_modules",
+    "**/dist/**",
+    "**/build/**",
+    "**/lib/**",
+    "**/public/**"
   ]
 }
