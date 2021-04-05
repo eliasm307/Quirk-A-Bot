@@ -1,19 +1,33 @@
-module.exports = {
-  parser: "@typescript-eslint/parser",
+/** Extends main config for js to apply to ts */
 
-  /*
+const mainConfig = require("./.eslintrc");
+
+const {
+  parserOptions: mainParserOptions,
+  rules: mainRules,
+  plugins: mainPlugins,
+  settings: mainSettings,
+  extends: mainExtends,
+} = mainConfig;
+
+module.exports = {
+  ...mainConfig,
+  parser: "@typescript-eslint/parser",
   parserOptions: {
+    ...mainParserOptions,
     project: "./tsconfig.eslint.json",
   },
-  */
-  plugins: ["@typescript-eslint"],
+
+  plugins: [...mainPlugins, "@typescript-eslint"],
   extends: [
+    ...mainExtends,
     "airbnb-typescript",
     "plugin:import/typescript",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
   ],
   settings: {
+    ...mainSettings,
     "import/resolver": {
       node: {
         extensions: [".js", ".jsx", ".ts", ".tsx"],
@@ -26,6 +40,7 @@ module.exports = {
   },
   // for rules, 0 means ignore, 1 means warn, and 2 means error
   rules: {
+    ...mainRules,
     "@typescript-eslint/await-thenable": 0,
     "@typescript-eslint/comma-dangle": 0,
     "@typescript-eslint/dot-notation": 0,
