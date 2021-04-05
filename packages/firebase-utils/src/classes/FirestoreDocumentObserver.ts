@@ -1,5 +1,8 @@
-import { Firestore, iFirestoreDocumentObserver } from '../';
+import { Firestore } from '../FirebaseExports';
 
+export interface iFirestoreDocumentObserver {
+  unsubscribe(): void;
+}
 export interface FirestoreDocumentObserverProps<D> {
   dataPredicate: (data: any) => data is D;
   firestore: Firestore;
@@ -8,7 +11,7 @@ export interface FirestoreDocumentObserverProps<D> {
 }
 
 export default class FirestoreDocumentObserver<D>
-  implements iFirestoreDocumentObserver<D> {
+  implements iFirestoreDocumentObserver {
   protected unsub: () => void;
 
   constructor({
@@ -48,7 +51,7 @@ export default class FirestoreDocumentObserver<D>
   unsubscribe(): void {
     try {
       this.unsub();
-    } catch (error) {
+    } catch (error: any) {
       console.error(__filename, `Could not unsubscribe to firestore document`, {
         error,
       });

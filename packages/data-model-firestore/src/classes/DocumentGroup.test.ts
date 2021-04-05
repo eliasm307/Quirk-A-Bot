@@ -1,10 +1,17 @@
-import DocumentGroup from './DocumentGroup';
+import DocumentGroup, { DocumentGroupProps } from './DocumentGroup';
+
+type K = "a" | "b";
+interface V {
+  val1: string;
+}
 
 describe("DocumentGroup", () => {
   it("can delete sub documents from firestore", () => {
     expect.hasAssertions();
 
-    const docGroup = new DocumentGroup({});
+    const props: DocumentGroupProps<K, V> = {};
+
+    const docGroup = new DocumentGroup<K, V>(props);
   });
   it("can write documents to firestore", () => {
     expect.hasAssertions();

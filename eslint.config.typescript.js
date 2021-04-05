@@ -23,7 +23,7 @@ module.exports = {
     ...mainExtends,
     "airbnb-typescript",
     "plugin:import/typescript",
-    "plugin:@typescript-eslint/eslint-recommended",
+    // "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
   ],
   settings: {
@@ -53,7 +53,7 @@ module.exports = {
     "@typescript-eslint/no-extra-semi": 1,
     "@typescript-eslint/no-floating-promises": 0,
     "@typescript-eslint/no-non-null-assertion": 0,
-    "@typescript-eslint/no-unsafe-assignment": 1,
+    "@typescript-eslint/no-unsafe-assignment": 0,
     "@typescript-eslint/no-unsafe-call": 1,
     "@typescript-eslint/no-unsafe-member-access": 1,
     "@typescript-eslint/no-unsafe-return": 1,
