@@ -1,6 +1,13 @@
-export interface iDocumentGroup<K, V> {
-  get(key: K): V | undefined;
-  set(key: K, value: V): iDocumentGroup<K, V>;
+export interface iDocumentGroup<K extends string, V> {
+  get(key: K): iSubDocument<V> | undefined;
+  toArray(): iSubDocument<V>[];
+}
+export interface iSubDocument<V> {
+  data: V;
+  parentDocumentPath: string;
+
+  delete(): void;
+  setDataSilently(newValue: V): void;
 }
 export type GenericObject<K extends string, V> = {
   [key in K]: V;
