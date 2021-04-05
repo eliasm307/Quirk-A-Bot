@@ -1,13 +1,10 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "target": "es2015",
-    "outDir": "dist",
-    "typeRoots": ["./node_modules/@types"],
     "baseUrl": "../../",
     "paths": {
-      "src/*": ["packages/data-model/src/*"]
+      "src/*": ["packages/data-model/src/*"],
+      "@quirk-a-bot/*": ["packages/*/src"]
     }
-  },
-  "include": ["src"]
+  }
 }
