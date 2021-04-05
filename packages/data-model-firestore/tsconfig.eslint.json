@@ -2,10 +2,10 @@
   "extends": "../../tsconfig.json",
   "include": ["**/*"],
   "exclude": [
-    "**/node_modules/**",
-    "**/dist/**",
-    "**/build/**",
-    "**/lib/**",
-    "**/public/**"
+    "node_modules/**/*",
+    "dist/**/*",
+    "build/**/*",
+    "lib/**/*",
+    "public/**/*"
   ]
 }
