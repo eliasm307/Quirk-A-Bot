@@ -2,9 +2,10 @@ import { iSubDocument } from 'src/declarations/interfaces';
 
 import { Firestore } from '@quirk-a-bot/firebase-utils';
 
-interface Props<K extends string, V> {
+export interface SubDocumentProps<K extends string, V> {
+  data: V;
   firestore: Firestore;
-  initialData: V;
+  firestoreDataUpdater: (newData: V) => Promise<void>;
   key: K;
   onChangeCallback?: OnChangeCallback<V>;
   parentDocumentPath: string;
@@ -12,30 +13,17 @@ interface Props<K extends string, V> {
 
 type OnChangeCallback<V> = (handleChange: (newData: V) => void) => void;
 
+/** Provides an interface for viewing and mutating sub documents */
 export default class SubDocument<K extends string, V>
   implements iSubDocument<V> {
-  #private: {
-    data: V;
-    firestore: Firestore;
-    key: K;
-    onChangeCallback?: OnChangeCallback<V>;
-  };
+  #private: Omit<SubDocumentProps<K, V>, "parentDocumentPath">;
   parentDocumentPath: string;
 
-  constructor(props: Props<K, V>) {
-    const {
-      initialData,
-      firestore,
-      key,
-      parentDocumentPath,
-      onChangeCallback,
-    } = props;
+  constructor(props: SubDocumentProps<K, V>) {
+    const { parentDocumentPath, ...privateProps } = props;
 
     this.#private = {
-      data: initialData,
-      firestore: firestore,
-      key: key,
-      onChangeCallback: onChangeCallback,
+      ...privateProps,
     };
 
     this.parentDocumentPath = parentDocumentPath;
@@ -50,22 +38,15 @@ export default class SubDocument<K extends string, V>
   }
 
   async setData(newValue: V) {
-    // todo set data on firestore
+    // save data locally
     this.#private.data = newValue;
 
-    try {
-      await this.#private.firestore
-        .doc(this.parentDocumentPath)
-        .set({ [this.#private.key]: newValue }, { merge: true });
-    } catch (error) {
-      console.error(__filename, `Error setting data to sub-document`, {
-        key: this.#private.key,
-        parentDocumentPath: this.parentDocumentPath,
-      });
-    }
+    // apply change to firestore
+    await this.#private.firestoreDataUpdater(newValue);
   }
 
-  setDataSilently(newValue: V): void {
+  /** Sets data locally without applying the change to firestore */
+  setLocalData(newValue: V): void {
     throw new Error("Method not implemented.");
   }
 }

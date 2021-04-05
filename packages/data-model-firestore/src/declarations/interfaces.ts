@@ -7,7 +7,7 @@ export interface iSubDocument<V> {
   parentDocumentPath: string;
 
   delete(): void;
-  setDataSilently(newValue: V): void;
+  setLocalData(newValue: V): void;
 }
 export type GenericObject<K extends string, V> = {
   [key in K]: V;

@@ -7,23 +7,22 @@ import {
 
 import SubDocument from './SubDocument';
 
-interface Props<K extends string, V>
+export interface DocumentGroupProps<K extends string, V>
   extends Omit<
     FirestoreDocumentObserverProps<GenericObject<K, V>>,
     "handler"
   > {}
 
-export default class DocumentGroup<K extends string, V extends any>
+export default abstract class DocumentGroup<K extends string, V extends any>
   implements iDocumentGroup<K, V> {
   readonly path: string;
 
-  #firestore: Firestore;
-  #subDocuments = new Map<K, iSubDocument<V>>();
+  #private: { firestore: Firestore; subDocuments: Map<K, iSubDocument<V>> };
 
-  constructor(props: Props<K, V>) {
+  constructor(props: DocumentGroupProps<K, V>) {
     const { firestore, path } = props;
 
-    this.#firestore = firestore;
+    this.#private = { firestore, subDocuments: new Map<K, iSubDocument<V>>() };
     this.path = path;
 
     new FirestoreDocumentObserver({
@@ -33,18 +32,18 @@ export default class DocumentGroup<K extends string, V extends any>
   }
 
   get(key: K): iSubDocument<V> | undefined {
-    return this.#subDocuments.get(key);
+    return this.#private.subDocuments.get(key);
   }
 
   toArray(): iSubDocument<V>[] {
-    return Array.from(this.#subDocuments.values());
+    return Array.from(this.#private.subDocuments.values());
   }
 
   private async handleChange(newData: GenericObject<K, V>) {
     if (!newData) console.warn(__filename, `newData was ${typeof newData}`);
 
     const newSubDocumentCount = Object.keys(newData).length;
-    const existingSubDocumentCount = this.#subDocuments.size;
+    const existingSubDocumentCount = this.#private.subDocuments.size;
     let affectedSubDocuments = Math.abs(
       newSubDocumentCount - existingSubDocumentCount
     );
@@ -76,14 +75,16 @@ export default class DocumentGroup<K extends string, V extends any>
   private handleSubDocumentAddition(newData: GenericObject<K, V>) {
     for (let [key, value] of Object.entries(newData)) {
       // add missing sub document and stop (assuming there is only 1)
-      if (!this.#subDocuments.has(key as K))
-        return this.#subDocuments.set(
+      if (!this.#private.subDocuments.has(key as K))
+        return this.#private.subDocuments.set(
           key as K,
           new SubDocument({
-            firestore: this.#firestore,
-            initialData: value as V,
+            firestore: this.#private.firestore,
+            data: value as V,
             key,
             parentDocumentPath: this.path,
+            firestoreDataUpdater: (newValue: V) =>
+              this.subDocumentUpdater(key as K, newValue),
           })
         );
     }
@@ -93,7 +94,7 @@ export default class DocumentGroup<K extends string, V extends any>
     let affectedDocuments = 0;
     for (let [key, value] of Object.entries(newData)) {
       // update changed documents only
-      const subDocument = this.#subDocuments.get(key as K);
+      const subDocument = this.#private.subDocuments.get(key as K);
 
       if (!subDocument)
         throw Error(
@@ -109,9 +110,23 @@ export default class DocumentGroup<K extends string, V extends any>
   }
 
   private handleSubDocumentRemoval(newData: GenericObject<K, V>) {
-    for (let key of this.#subDocuments.keys()) {
+    for (let key of this.#private.subDocuments.keys()) {
       // remove extra sub document and stop (assuming there is only 1)
-      if (!newData[key]) return this.#subDocuments.delete(key);
+      if (!newData[key]) return this.#private.subDocuments.delete(key);
+    }
+  }
+
+  private async subDocumentUpdater(key: K, newValue: V) {
+    // todo move to util
+    try {
+      await this.#private.firestore
+        .doc(this.path)
+        .set({ [key]: newValue }, { merge: true });
+    } catch (error) {
+      console.error(__filename, `Error setting data to sub-document`, {
+        key,
+        parentDocumentPath: this.path,
+      });
     }
   }
 }
