@@ -4,14 +4,13 @@ import { Firestore } from '@quirk-a-bot/firebase-utils';
 
 export interface SubDocumentProps<K extends string, V> {
   data: V;
+  deleteFromDataStorage: () => Promise<void>;
   firestore: Firestore;
-  firestoreDataUpdater: (newData: V) => Promise<void>;
   key: K;
-  onChangeCallback?: OnChangeCallback<V>;
+  onChangeCallback?: (newData: V) => void;
   parentDocumentPath: string;
+  updateOnDataStorage: (newData: V) => Promise<void>;
 }
-
-type OnChangeCallback<V> = (handleChange: (newData: V) => void) => void;
 
 /** Provides an interface for viewing and mutating sub documents */
 export default class SubDocument<K extends string, V>
@@ -34,7 +33,7 @@ export default class SubDocument<K extends string, V>
   }
 
   delete(): void {
-    throw new Error("Method not implemented.");
+    this.#private.deleteFromDataStorage();
   }
 
   async setData(newValue: V) {
@@ -42,11 +41,18 @@ export default class SubDocument<K extends string, V>
     this.#private.data = newValue;
 
     // apply change to firestore
-    await this.#private.firestoreDataUpdater(newValue);
+    await this.#private.updateOnDataStorage(newValue);
+
+    if (this.#private.onChangeCallback)
+      this.#private.onChangeCallback(newValue);
   }
 
   /** Sets data locally without applying the change to firestore */
-  setLocalData(newValue: V): void {
-    throw new Error("Method not implemented.");
+  setDataLocallyOnly(newValue: V): void {
+    // save data locally
+    this.#private.data = newValue;
+
+    if (this.#private.onChangeCallback)
+      this.#private.onChangeCallback(newValue);
   }
 }

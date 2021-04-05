@@ -5,6 +5,9 @@ module.exports = {
     node: true,
     es6: true,
   },
+  parserOptions: {
+    project: "./tsconfig.eslint.json",
+  },
   ignorePatterns: [
     "**/lib/**/*", // Ignore built files.
     "**/build/**/*", // Ignore built files.
@@ -31,13 +34,13 @@ module.exports = {
   rules: {
     "@typescript-eslint/await-thenable": 0,
     "@typescript-eslint/comma-dangle": 0,
-    "@typescript-eslint/dot-notation": 1,
+    "@typescript-eslint/dot-notation": 0,
     "@typescript-eslint/explicit-function-return-type": 0,
     "@typescript-eslint/explicit-module-boundary-types": 0,
     "@typescript-eslint/indent": 1,
     "@typescript-eslint/no-empty-interface": 0,
     "@typescript-eslint/no-explicit-any": 0,
-    "@typescript-eslint/no-extra-semi": 0,
+    "@typescript-eslint/no-extra-semi": 1,
     "@typescript-eslint/no-floating-promises": 0,
     "@typescript-eslint/no-non-null-assertion": 0,
     "@typescript-eslint/no-unsafe-assignment": 0,
@@ -58,6 +61,11 @@ module.exports = {
       1,
       {
         selector: "interface",
+        format: ["PascalCase"],
+      },
+      {
+        selector: "interface",
+        format: ["strictCamelCase"],
         custom: {
           regex: "^i?[A-Z]",
           match: true,

@@ -17,7 +17,11 @@ export default abstract class DocumentGroup<K extends string, V extends any>
   implements iDocumentGroup<K, V> {
   readonly path: string;
 
-  #private: { firestore: Firestore; subDocuments: Map<K, iSubDocument<V>> };
+  #private: {
+    firestore: Firestore;
+    subDocuments: Map<K, iSubDocument<V>>;
+    data?: GenericObject<K, V>;
+  };
 
   constructor(props: DocumentGroupProps<K, V>) {
     const { firestore, path } = props;
@@ -41,6 +45,9 @@ export default abstract class DocumentGroup<K extends string, V extends any>
 
   private async handleChange(newData: GenericObject<K, V>) {
     if (!newData) console.warn(__filename, `newData was ${typeof newData}`);
+
+    // update local data
+    this.#private.data = newData;
 
     const newSubDocumentCount = Object.keys(newData).length;
     const existingSubDocumentCount = this.#private.subDocuments.size;
@@ -73,18 +80,21 @@ export default abstract class DocumentGroup<K extends string, V extends any>
   }
 
   private handleSubDocumentAddition(newData: GenericObject<K, V>) {
-    for (let [key, value] of Object.entries(newData)) {
+    for (let [_key, _value] of Object.entries(newData)) {
+      const key = _key as K;
+      const data = _value as V;
       // add missing sub document and stop (assuming there is only 1)
-      if (!this.#private.subDocuments.has(key as K))
+      if (!this.#private.subDocuments.has(key))
         return this.#private.subDocuments.set(
-          key as K,
+          key,
           new SubDocument({
             firestore: this.#private.firestore,
-            data: value as V,
+            data,
             key,
             parentDocumentPath: this.path,
-            firestoreDataUpdater: (newValue: V) =>
-              this.subDocumentUpdater(key as K, newValue),
+            updateOnDataStorage: (newValue: V) =>
+              this.subDocumentUpdater(key, newValue),
+            deleteFromDataStorage: () => this.subDocumentRemover(key),
           })
         );
     }
@@ -113,6 +123,36 @@ export default abstract class DocumentGroup<K extends string, V extends any>
     for (let key of this.#private.subDocuments.keys()) {
       // remove extra sub document and stop (assuming there is only 1)
       if (!newData[key]) return this.#private.subDocuments.delete(key);
+    }
+  }
+
+  private async subDocumentRemover(key: K) {
+    if (!this.#private.data)
+      return console.warn(
+        __filename,
+        `Could not delete sub-document with key ${key} at document path ${this.path}`
+      );
+
+    const {
+      [key]: excludedSubDocument,
+      ...dataAfterDelete
+    } = this.#private.data;
+    /*
+    const dataAfterDelete: any = { ...this.#private.data };
+    delete dataAfterDelete[key];
+    */
+
+    try {
+      await this.#private.firestore.doc(this.path).set(dataAfterDelete);
+    } catch (error) {
+      console.error(
+        __filename,
+        `Error setting new data with deleted sub-document`,
+        {
+          key,
+          parentDocumentPath: this.path,
+        }
+      );
     }
   }
 
