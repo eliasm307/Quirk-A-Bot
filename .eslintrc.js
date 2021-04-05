@@ -1,37 +1,39 @@
 module.exports = {
+  root: true,
   parser: "@typescript-eslint/parser",
   env: {
     browser: true,
     node: true,
     es6: true,
   },
+  /*
   parserOptions: {
     project: "./tsconfig.eslint.json",
   },
+  */
   ignorePatterns: [
     "**/lib/**/*", // Ignore built files.
     "**/build/**/*", // Ignore built files.
     "**/public/**/*", // Ignore built files.
     "**/node_modules/**/*", // Ignore built files.
+    "**/.eslint.*",
   ],
   extends: [
     "eslint:recommended",
     "airbnb-base",
     "plugin:jsx-a11y/recommended",
-    "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended",
     "airbnb",
-    "airbnb-typescript",
     "prettier",
     "prettier/react",
-    "plugin:import/typescript",
   ],
-  plugins: ["@typescript-eslint", "react-hooks"],
+  plugins: ["react-hooks"],
   parserOptions: {
     ecmaVersion: 2019,
   },
   // for rules, 0 means ignore, 1 means warn, and 2 means error
   rules: {
+    /*
     "@typescript-eslint/await-thenable": 0,
     "@typescript-eslint/comma-dangle": 0,
     "@typescript-eslint/dot-notation": 0,
@@ -68,6 +70,7 @@ module.exports = {
         },
       },
     ],
+    */
     "array-bracket-spacing": 0,
     "arrow-body-style": 0,
     "arrow-parens": 0,

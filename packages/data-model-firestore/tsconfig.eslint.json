@@ -3,5 +3,13 @@
   "compilerOptions": {
     "types": ["@types/node"]
   },
-  "include": ["src/**/*", "*.config.js", "gatsby-*.js", "*.eslintrc.js"]
+  "include": [
+    "src/**/*",
+    "*.config.js",
+    "gatsby-*.js",
+    "*.eslintrc.js",
+    ".eslintrc.*",
+    "**/*.test.*",
+    "**/*.spec.*"
+  ]
 }

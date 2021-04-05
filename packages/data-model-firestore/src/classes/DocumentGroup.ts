@@ -13,7 +13,7 @@ export interface DocumentGroupProps<K extends string, V>
     "handler"
   > {}
 
-export default abstract class DocumentGroup<K extends string, V extends any>
+export default class DocumentGroup<K extends string, V extends any>
   implements iDocumentGroup<K, V> {
   readonly path: string;
 
@@ -26,7 +26,7 @@ export default abstract class DocumentGroup<K extends string, V extends any>
   data?: GenericObject<K, V> | undefined;
 
   // todo only return instance when data is loaded initially from firestore
-  private constructor(props: DocumentGroupProps<K, V>) {
+  constructor(props: DocumentGroupProps<K, V>) {
     const { firestore, path } = props;
     const observer = new FirestoreDocumentObserver({
       ...props,
