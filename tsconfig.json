@@ -3,21 +3,12 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@quirk-a-bot/*": [
-        "packages/*/src"
-      ]
+      "@quirk-a-bot/*": ["packages/*/src"]
     },
-    "types": [
-      "@types/jest",
-      "@types/node"
-    ],
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "types": ["@types/jest", "@types/node"],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "downlevelIteration": true,
-    "allowJs": true,
+    "allowJs": false,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,

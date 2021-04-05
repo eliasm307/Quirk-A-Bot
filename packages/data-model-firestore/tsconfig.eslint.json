@@ -1,15 +1,12 @@
 {
-  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "types": ["@types/node"]
+    "types": ["@types/node", "@types/jest"]
   },
   "include": [
     "src/**/*",
     "*.config.js",
     "gatsby-*.js",
     "*.eslintrc.js",
-    ".eslintrc.*",
-    "**/*.test.*",
-    "**/*.spec.*"
+    ".eslintrc.*"
   ]
 }

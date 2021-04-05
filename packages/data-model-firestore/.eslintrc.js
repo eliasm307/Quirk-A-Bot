@@ -12,7 +12,7 @@ const {
 } = mainConfig;
 */
 
-module.exports = { ...tsConfig };
+module.exports = { ...tsConfig, root: true };
 /*
 module.exports = {
   root: true,
