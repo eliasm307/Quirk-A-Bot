@@ -4,16 +4,33 @@ import DocumentGroup, { DocumentGroupProps } from './DocumentGroup';
 
 const firestore = firestoreEmulator;
 
+const rootPath = `DocumentGroupTests`;
+
 type K = "a" | "b";
+
 interface V {
   val1: string;
+}
+
+function dataPredicate(data: any): data is V {
+  if (typeof data !== "object") return false;
+
+  const { val1 } = data as V;
+
+  return typeof val1 === "string";
 }
 
 describe("DocumentGroup", () => {
   it("can delete sub documents from firestore", () => {
     expect.hasAssertions();
 
-    const props: DocumentGroupProps<K, V> = { firestore };
+    const props: DocumentGroupProps<K, V> = {
+      path: `${rootPath}/CRUD`,
+      firestore,
+      dataPredicate,
+      handleChange: (data) =>
+        console.log(__filename, `Data change in document group`, { data }),
+    };
 
     const docGroup = new DocumentGroup<K, V>(props);
   });

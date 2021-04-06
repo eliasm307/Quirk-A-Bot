@@ -1,11 +1,17 @@
 {
-  "extends": "../../tsconfig.json",
-  "include": ["**/*"],
+  "compilerOptions": {
+    "baseUrl": "../../",
+    "paths": {
+      "src/*": ["packages/data-model-firestore/src/*"],
+      "@quirk-a-bot/*": ["packages/*/src"]
+    }
+  },
+  "include": ["**/*", "**/*.eslintrc.js"],
   "exclude": [
-    "node_modules/**/*",
-    "dist/**/*",
-    "build/**/*",
-    "lib/**/*",
-    "public/**/*"
+    "**/node_modules/**/*",
+    "**/dist/**/*",
+    "**/build/**/*",
+    "**/lib/**/*",
+    "**/public/**/*"
   ]
 }
