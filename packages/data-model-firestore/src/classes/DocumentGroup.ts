@@ -8,12 +8,20 @@ import { GenericObject, iDocumentGroup, iSubDocument } from '../declarations/int
 import SubDocument from './SubDocument';
 
 export interface DocumentGroupLoaderProps<K extends string, V>
-  extends FirestoreDocumentObserverProps<GenericObject<K, V>> {}
+  extends FirestoreDocumentObserverProps {
+  firestore: Firestore;
+  handleChange: (newData: GenericObject<K, V>) => void;
+  keyPredicate: (key: any) => key is K;
+  path: string;
+  valuePredicate: (value: any) => value is K;
+}
 
 interface DocumentGroupProps<K extends string, V>
   extends DocumentGroupLoaderProps<K, V> {
   initialDocumentData: GenericObject<K, V>;
 }
+
+export interface FirestoreDocumentObserverProps<K extends string, V> {}
 
 export default class DocumentGroup<_K extends string, _V>
   implements iDocumentGroup<_K, _V> {
@@ -69,6 +77,29 @@ export default class DocumentGroup<_K extends string, _V>
 
   toArray(): iSubDocument<_V>[] {
     return Array.from(this.#private.subDocuments.values());
+  }
+
+  private documentDataSchemaIsValid(data: any): data is GenericObject<K, V> {
+    if (typeof data !== "object") return false;
+
+    if (!Object.keys(data).length) return true; // accept empty objects
+
+    // check each key value
+    for (const [key, value] of Object.entries(data)) {
+      if (!this.keyPredicate(key)) {
+        const error = `Key ${key} from a firestore document at path ${this.path} did not satisfy the provided predicate`;
+        console.error({ error, path: this.path, data, badKey: key, value });
+        throw Error(error);
+      }
+      if (!this.valuePredicate(value)) {
+        const error = `Value ${value} from a firestore document at path ${this.path} did not satisfy the provided predicate`;
+        console.error({ error, path: this.path, data, key, badValue: value });
+        throw Error(error);
+      }
+    }
+
+    // if no errors thrown then schema is valid
+    return true;
   }
 
   private async handleChange(newData: GenericObject<_K, _V>) {

@@ -26,7 +26,7 @@ describe("firestore", () => {
       .get();
 
     const dataOut = ref.data();
-    console.warn(__filename, { dataOut, arr1Elem1: data.arr1[1] });
+    // console.warn(__filename, { dataOut, arr1Elem1: data.arr1[1] });
 
     expect(data).toEqual(dataOut);
   });

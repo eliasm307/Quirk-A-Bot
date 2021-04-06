@@ -130,4 +130,8 @@ export interface FirestoreDocumentChange
 
 export interface FirestoreBatch extends firebase.firestore.WriteBatch {}
 
+export interface FirestoreDocumentSnapshot
+  extends firebase.firestore
+    .DocumentSnapshot<firebase.firestore.DocumentData> {}
+
 // export default firebase;
