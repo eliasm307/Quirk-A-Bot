@@ -1,32 +1,33 @@
-import { GenericObject, iDocumentGroup, iSubDocument } from 'src/declarations/interfaces';
 import objectsAreEqual from 'src/utils/objectsAreEqual';
 
 import {
   Firestore, FirestoreDocumentObserver, FirestoreDocumentObserverProps,
 } from '@quirk-a-bot/firebase-utils';
 
+import { GenericObject, iDocumentGroup, iSubDocument } from '../declarations/interfaces';
 import SubDocument from './SubDocument';
 
-export interface DocumentGroupProps<K extends string, V>
-  extends Omit<
-    FirestoreDocumentObserverProps<GenericObject<K, V>>,
-    "handler"
-  > {}
+export interface DocumentGroupLoaderProps<K extends string, V>
+  extends FirestoreDocumentObserverProps<GenericObject<K, V>> {}
 
-export default class DocumentGroup<K extends string, V extends any>
-  implements iDocumentGroup<K, V> {
+interface DocumentGroupProps<K extends string, V>
+  extends DocumentGroupLoaderProps<K, V> {
+  initialData: GenericObject<K, V>;
+}
+
+export default class DocumentGroup<_K extends string, _V>
+  implements iDocumentGroup<_K, _V> {
   readonly path: string;
 
   #private: {
     firestore: Firestore;
-    subDocuments: Map<K, iSubDocument<V>>;
-    data?: GenericObject<K, V>;
-    observer: FirestoreDocumentObserver<GenericObject<K, V>>;
+    subDocuments: Map<_K, iSubDocument<_V>>;
+    data?: GenericObject<_K, _V>;
+    observer: FirestoreDocumentObserver<GenericObject<_K, _V>>;
   };
-  data?: GenericObject<K, V> | undefined;
 
   // todo only return instance when data is loaded initially from firestore
-  constructor(props: DocumentGroupProps<K, V>) {
+  private constructor(props: DocumentGroupProps<_K, _V>) {
     const { firestore, path } = props;
     const observer = new FirestoreDocumentObserver({
       ...props,
@@ -36,24 +37,38 @@ export default class DocumentGroup<K extends string, V extends any>
     this.path = path;
     this.#private = {
       firestore,
-      subDocuments: new Map<K, iSubDocument<V>>(),
+      subDocuments: new Map<_K, iSubDocument<_V>>(),
       observer,
     };
+  }
+
+  static async load<K extends string, V>(
+    props: DocumentGroupLoaderProps<K, V>
+  ) {
+    const { firestore, groupSchemaPredicate: dataPredicate, path } = props;
+
+    const doc = await firestore.doc(path).get();
+
+    const initialData = doc.data();
+
+    if (!dataPredicate(initialData)) throw ``;
+
+    return new DocumentGroup({ ...props, initialData });
   }
 
   cleanUp(): void {
     this.#private.observer.unsubscribe();
   }
 
-  get(key: K): iSubDocument<V> | undefined {
+  get(key: _K): iSubDocument<_V> | undefined {
     return this.#private.subDocuments.get(key);
   }
 
-  toArray(): iSubDocument<V>[] {
+  toArray(): iSubDocument<_V>[] {
     return Array.from(this.#private.subDocuments.values());
   }
 
-  private async handleChange(newData: GenericObject<K, V>) {
+  private async handleChange(newData: GenericObject<_K, _V>) {
     if (!newData) console.warn(__filename, `newData was ${typeof newData}`);
 
     // update local data
@@ -89,10 +104,10 @@ export default class DocumentGroup<K extends string, V extends any>
     }
   }
 
-  private handleSubDocumentAddition(newData: GenericObject<K, V>) {
+  private handleSubDocumentAddition(newData: GenericObject<_K, _V>) {
     for (const [_key, _value] of Object.entries(newData)) {
-      const key = _key as K;
-      const data = _value as V;
+      const key = _key as _K;
+      const data = _value as _V;
       // add missing sub document and stop (assuming there is only 1)
       if (!this.#private.subDocuments.has(key))
         return this.#private.subDocuments.set(
@@ -102,7 +117,7 @@ export default class DocumentGroup<K extends string, V extends any>
             data,
             key,
             parentDocumentPath: this.path,
-            updateOnDataStorage: (newValue: V) =>
+            updateOnDataStorage: (newValue: _V) =>
               this.subDocumentUpdater(key, newValue),
             deleteFromDataStorage: () => this.subDocumentRemover(key),
           })
@@ -110,33 +125,33 @@ export default class DocumentGroup<K extends string, V extends any>
     }
   }
 
-  private handleSubDocumentChange(newData: GenericObject<K, V>): number {
+  private handleSubDocumentChange(newData: GenericObject<_K, _V>): number {
     let affectedDocuments = 0;
     for (const [key, value] of Object.entries(newData)) {
       // update changed documents only
-      const subDocument = this.#private.subDocuments.get(key as K);
+      const subDocument = this.#private.subDocuments.get(key as _K);
 
       if (!subDocument)
         throw Error(
           `Could not handleSubDocumentChange, document with key ${key} doesnt exist`
         );
 
-      if (!objectsAreEqual(subDocument.data, value as V)) {
-        subDocument.data = value as V;
+      if (!objectsAreEqual(subDocument.data, value as _V)) {
+        subDocument.data = value as _V;
         affectedDocuments++;
       }
     }
     return affectedDocuments;
   }
 
-  private handleSubDocumentRemoval(newData: GenericObject<K, V>) {
+  private handleSubDocumentRemoval(newData: GenericObject<_K, _V>) {
     for (const key of this.#private.subDocuments.keys()) {
       // remove extra sub document and stop (assuming there is only 1)
-      if (!newData[key as K]) return this.#private.subDocuments.delete(key);
+      if (!newData[key as _K]) return this.#private.subDocuments.delete(key);
     }
   }
 
-  private async subDocumentRemover(key: K) {
+  private async subDocumentRemover(key: _K) {
     // todo move to util
     if (!this.#private.data)
       return console.warn(
@@ -167,7 +182,7 @@ export default class DocumentGroup<K extends string, V extends any>
     }
   }
 
-  private async subDocumentUpdater(key: K, newValue: V) {
+  private async subDocumentUpdater(key: _K, newValue: _V) {
     // todo move to util
     try {
       await this.#private.firestore

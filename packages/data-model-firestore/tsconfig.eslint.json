@@ -6,7 +6,7 @@
       "@quirk-a-bot/*": ["packages/*/src"]
     }
   },
-  "include": ["**/*", "**/*.eslintrc.js"],
+  "include": ["**/*", ".eslintrc.js"],
   "exclude": [
     "**/node_modules/**/*",
     "**/dist/**/*",

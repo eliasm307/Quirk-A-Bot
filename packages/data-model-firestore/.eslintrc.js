@@ -2,8 +2,8 @@
 // const mainConfig = require("../../.eslintrc");
 const tsConfig = require("../../eslint.config.typescript");
 
+const { parserOptions: tsParserOptions, settings: tsSettings } = tsConfig;
 /*
-const { rules: tsRules, plugins: tsPlugins, settings: tsSettings } = tsConfig;
 const {
   parserOptions: mainParserOptions,
   rules: mainRules,
@@ -14,7 +14,14 @@ const {
 
 // console.log(__filename, `Resulting ESlint config`, tsConfig);
 
-module.exports = { ...tsConfig, root: true };
+module.exports = {
+  ...tsConfig,
+  parserOptions: {
+    ...tsParserOptions,
+    tsconfigRootDir: __dirname,
+  },
+  root: true,
+};
 /*
 module.exports = {
   root: true,

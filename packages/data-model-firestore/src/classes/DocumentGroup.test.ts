@@ -1,38 +1,41 @@
 import { firestoreEmulator } from '@quirk-a-bot/firebase-utils';
 
-import DocumentGroup, { DocumentGroupProps } from './DocumentGroup';
+import { GenericObject } from '../declarations/interfaces';
+import DocumentGroup, { DocumentGroupLoaderProps } from './DocumentGroup';
 
 const firestore = firestoreEmulator;
 
 const rootPath = `DocumentGroupTests`;
 
-type K = "a" | "b";
+type KEY = "a" | "b";
 
-interface V {
+interface VALUE {
   val1: string;
 }
 
-function dataPredicate(data: any): data is V {
+function groupSchemaPredicate(data: any): data is GenericObject<KEY, VALUE> {
   if (typeof data !== "object") return false;
 
-  const { val1 } = data as V;
+  const { val1 } = data as VALUE;
 
   return typeof val1 === "string";
 }
 
 describe("DocumentGroup", () => {
-  it("can delete sub documents from firestore", () => {
+  it("can delete sub documents from firestore", async () => {
     expect.hasAssertions();
 
-    const props: DocumentGroupProps<K, V> = {
+    const props: DocumentGroupLoaderProps<KEY, VALUE> = {
       path: `${rootPath}/CRUD`,
       firestore,
-      dataPredicate,
+dataPredicate,
       handleChange: (data) =>
         console.log(__filename, `Data change in document group`, { data }),
     };
 
-    const docGroup = new DocumentGroup<K, V>(props);
+    const docGroup =  DocumentGroup.load<KEY, VALUE>(props);
+
+    docGroup.
   });
   it("can write documents to firestore", () => {
     expect.hasAssertions();

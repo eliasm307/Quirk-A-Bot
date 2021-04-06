@@ -1,9 +1,14 @@
 {
-  "extends": "../../tsconfig.json",
-  "include": ["src/**/*", "*.js"],
+  "compilerOptions": {
+    "baseUrl": "../../",
+    "paths": {
+      "src/*": ["packages/firebase-utils/src/*"],
+      "@quirk-a-bot/*": ["packages/*/src"]
+    }
+  },
+  "include": ["**/*"],
   "exclude": [
     "**/node_modules/**/*",
-    "node_modules",
     "**/dist/**",
     "**/build/**",
     "**/lib/**",

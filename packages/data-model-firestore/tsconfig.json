@@ -6,5 +6,6 @@
       "src/*": ["packages/data-model-firestore/src/*"],
       "@quirk-a-bot/*": ["packages/*/src"]
     }
-  }
+  },
+  "include": ["**/*", ".eslintrc.js", "*"]
 }

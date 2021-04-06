@@ -2,7 +2,12 @@
   "extends": "../../tsconfig.build.json",
 
   "compilerOptions": {
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "baseUrl": "../../",
+    "paths": {
+      "src/*": ["packages/firebase-utils/src/*"],
+      "@quirk-a-bot/*": ["packages/*/src"]
+    }
   },
 
   "include": ["src/**/*"]

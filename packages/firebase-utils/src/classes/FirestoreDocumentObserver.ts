@@ -4,8 +4,8 @@ export interface iFirestoreDocumentObserver {
   unsubscribe(): void;
 }
 export interface FirestoreDocumentObserverProps<D> {
-  dataPredicate: (data: any) => data is D;
   firestore: Firestore;
+  groupSchemaPredicate: (data: any) => data is D;
   handleChange: (newData: D) => void;
   path: string;
 }
@@ -17,7 +17,7 @@ export default class FirestoreDocumentObserver<D>
   constructor({
     firestore,
     path,
-    dataPredicate,
+    groupSchemaPredicate: dataPredicate,
     handleChange,
   }: FirestoreDocumentObserverProps<D>) {
     this.unsub = firestore.doc(path).onSnapshot({
