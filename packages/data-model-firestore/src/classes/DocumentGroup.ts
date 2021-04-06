@@ -12,7 +12,7 @@ export interface DocumentGroupLoaderProps<K extends string, V>
 
 interface DocumentGroupProps<K extends string, V>
   extends DocumentGroupLoaderProps<K, V> {
-  initialData: GenericObject<K, V>;
+  initialDocumentData: GenericObject<K, V>;
 }
 
 export default class DocumentGroup<_K extends string, _V>
@@ -45,15 +45,18 @@ export default class DocumentGroup<_K extends string, _V>
   static async load<K extends string, V>(
     props: DocumentGroupLoaderProps<K, V>
   ) {
-    const { firestore, groupSchemaPredicate: dataPredicate, path } = props;
+    const { firestore, documentSchemaPredicate, path } = props;
 
     const doc = await firestore.doc(path).get();
 
-    const initialData = doc.data();
+    const initialDocumentData = doc.data();
 
-    if (!dataPredicate(initialData)) throw ``;
-
-    return new DocumentGroup({ ...props, initialData });
+    if (!documentSchemaPredicate(initialDocumentData)) {
+      const error = `initial data does not match provided predicate`;
+      console.error(error, { initialDocumentData, documentPath: path });
+      throw Error(error);
+    }
+    return new DocumentGroup({ ...props, initialDocumentData });
   }
 
   cleanUp(): void {

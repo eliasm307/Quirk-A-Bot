@@ -13,14 +13,6 @@ interface VALUE {
   val1: string;
 }
 
-function groupSchemaPredicate(data: any): data is GenericObject<KEY, VALUE> {
-  if (typeof data !== "object") return false;
-
-  const { val1 } = data as VALUE;
-
-  return typeof val1 === "string";
-}
-
 describe("DocumentGroup", () => {
   it("can delete sub documents from firestore", async () => {
     expect.hasAssertions();
@@ -28,14 +20,16 @@ describe("DocumentGroup", () => {
     const props: DocumentGroupLoaderProps<KEY, VALUE> = {
       path: `${rootPath}/CRUD`,
       firestore,
-dataPredicate,
+      documentSchemaPredicate,
       handleChange: (data) =>
         console.log(__filename, `Data change in document group`, { data }),
     };
 
-    const docGroup =  DocumentGroup.load<KEY, VALUE>(props);
+    const docGroup = await DocumentGroup.load<KEY, VALUE>(props);
 
-    docGroup.
+    docGroup.get("a");
+
+    docGroup.cleanUp();
   });
   it("can write documents to firestore", () => {
     expect.hasAssertions();
