@@ -148,19 +148,16 @@ describe("FirestoreDocumentObserver", () => {
     // 2 fires a change event for doc being set intially
     console.warn(`intial set`);
     await firestore.doc(path).set(goodData1);
-
-    await sleep(1000);
+    // await sleep(1000);
 
     // 3 fires a change event for doc being changed
     console.warn(`change`);
     await firestore.doc(path).set(goodData2);
-
     await sleep(1000);
 
     // 4 fires a change event for doc being deleted
     console.warn(`delete`);
     await firestore.doc(path).delete();
-
     await sleep(1000);
 
     // it should unsubsribe with no issues
