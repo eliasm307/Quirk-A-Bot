@@ -1,16 +1,15 @@
-import objectsAreEqual from 'src/utils/objectsAreEqual';
-
 import {
-  Firestore, FirestoreDocumentObserver, FirestoreDocumentObserverProps,
+  Firestore, FirestoreDocumentChangeData, FirestoreDocumentObserver, FirestoreDocumentObserverProps,
 } from '@quirk-a-bot/firebase-utils';
 
-import { GenericObject, iDocumentGroup, iSubDocument } from '../declarations/interfaces';
+import { iDocumentGroup, iSubDocument } from '../declarations/interfaces';
+import objectsAreEqual from '../utils/objectsAreEqual';
 import SubDocument from './SubDocument';
 
 export interface DocumentGroupLoaderProps<K extends string, V>
-  extends FirestoreDocumentObserverProps {
+  extends FirestoreDocumentObserverProps<V> {
   firestore: Firestore;
-  handleChange: (newData: GenericObject<K, V>) => void;
+  handleChange: (newData: FirestoreDocumentChangeData<V>) => void;
   keyPredicate: (key: any) => key is K;
   path: string;
   valuePredicate: (value: any) => value is K;
@@ -18,10 +17,10 @@ export interface DocumentGroupLoaderProps<K extends string, V>
 
 interface DocumentGroupProps<K extends string, V>
   extends DocumentGroupLoaderProps<K, V> {
-  initialDocumentData: GenericObject<K, V>;
+  initialDocumentData: Record<K, V>;
 }
 
-export interface FirestoreDocumentObserverProps<K extends string, V> {}
+// export interface FirestoreDocumentObserverProps<K extends string, V> {}
 
 export default class DocumentGroup<_K extends string, _V>
   implements iDocumentGroup<_K, _V> {
@@ -30,8 +29,8 @@ export default class DocumentGroup<_K extends string, _V>
   #private: {
     firestore: Firestore;
     subDocuments: Map<_K, iSubDocument<_V>>;
-    data?: GenericObject<_K, _V>;
-    observer: FirestoreDocumentObserver<GenericObject<_K, _V>>;
+    data?: Record<_K, _V>;
+    observer: FirestoreDocumentObserver<Record<_K, _V>>;
   };
 
   // todo only return instance when data is loaded initially from firestore
@@ -79,7 +78,7 @@ export default class DocumentGroup<_K extends string, _V>
     return Array.from(this.#private.subDocuments.values());
   }
 
-  private documentDataSchemaIsValid(data: any): data is GenericObject<K, V> {
+  private documentDataSchemaIsValid(data: any): data is Record<K, V> {
     if (typeof data !== "object") return false;
 
     if (!Object.keys(data).length) return true; // accept empty objects
@@ -102,7 +101,7 @@ export default class DocumentGroup<_K extends string, _V>
     return true;
   }
 
-  private async handleChange(newData: GenericObject<_K, _V>) {
+  private async handleChange(newData: Record<_K, _V>) {
     if (!newData) console.warn(__filename, `newData was ${typeof newData}`);
 
     // update local data
@@ -138,7 +137,7 @@ export default class DocumentGroup<_K extends string, _V>
     }
   }
 
-  private handleSubDocumentAddition(newData: GenericObject<_K, _V>) {
+  private handleSubDocumentAddition(newData: Record<_K, _V>) {
     for (const [_key, _value] of Object.entries(newData)) {
       const key = _key as _K;
       const data = _value as _V;
@@ -159,7 +158,7 @@ export default class DocumentGroup<_K extends string, _V>
     }
   }
 
-  private handleSubDocumentChange(newData: GenericObject<_K, _V>): number {
+  private handleSubDocumentChange(newData: Record<_K, _V>): number {
     let affectedDocuments = 0;
     for (const [key, value] of Object.entries(newData)) {
       // update changed documents only
@@ -178,7 +177,7 @@ export default class DocumentGroup<_K extends string, _V>
     return affectedDocuments;
   }
 
-  private handleSubDocumentRemoval(newData: GenericObject<_K, _V>) {
+  private handleSubDocumentRemoval(newData: Record<_K, _V>) {
     for (const key of this.#private.subDocuments.keys()) {
       // remove extra sub document and stop (assuming there is only 1)
       if (!newData[key as _K]) return this.#private.subDocuments.delete(key);

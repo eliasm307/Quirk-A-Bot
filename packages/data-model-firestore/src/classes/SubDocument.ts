@@ -1,6 +1,6 @@
-import { iSubDocument } from 'src/declarations/interfaces';
-
 import { Firestore } from '@quirk-a-bot/firebase-utils';
+
+import { iSubDocument } from '../declarations/interfaces';
 
 export interface SubDocumentProps<K extends string, V> {
   data: V;

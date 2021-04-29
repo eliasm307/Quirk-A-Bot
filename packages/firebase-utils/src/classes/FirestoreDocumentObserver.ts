@@ -40,11 +40,6 @@ export interface FirestoreDocumentObserverLoaderProps<D> {
   path: string;
 }
 
-// todo move tomore general location
-export type GenericObject<K extends string, V> = {
-  [key in K]: V;
-};
-
 /** Listens to changes to a Firestore document and creates events if there are updates */
 export default class FirestoreDocumentObserver<D>
   implements iFirestoreDocumentObserver {

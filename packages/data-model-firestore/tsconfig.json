@@ -1,10 +1,9 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "baseUrl": "../../",
+    "baseUrl": "../",
     "paths": {
-      "src/*": ["packages/data-model-firestore/src/*"],
-      "@quirk-a-bot/*": ["packages/*/src"]
+      "@quirk-a-bot/*": ["*/src"]
     }
   },
   "include": ["**/*", ".eslintrc.js", "*"]
