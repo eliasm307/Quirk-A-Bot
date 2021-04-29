@@ -11,4 +11,4 @@ export function isDisciplineName(name: string): name is DisciplineName {
 	const allowedKeys: string[] = [...DISCIPLINE_NAMES];
 	return allowedKeys.indexOf(name) !== -1;
 }*/
-export {};
+export default {};
