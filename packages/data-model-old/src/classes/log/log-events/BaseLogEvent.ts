@@ -1,5 +1,5 @@
+import newId from '../../../../../common/src/utils/newId';
 import { LogOperationUnion } from '../../../declarations/types';
-import newId from '../../../utils/newId';
 import { iAbstractLogEventProps, iLogEvent } from '../interfaces/log-interfaces';
 import { getDateWithNanoSecondTimeStamp } from '../utils/getNanoSecondTime';
 
