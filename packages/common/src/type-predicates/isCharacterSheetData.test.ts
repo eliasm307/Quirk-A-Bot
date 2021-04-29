@@ -1,6 +1,6 @@
 import {
   iCharacterSheetData,
-} from '../../classes/character-sheet/interfaces/character-sheet-interfaces';
+} from '../../../data-model/src/classes/character-sheet/interfaces/character-sheet-interfaces';
 import isCharacterSheetData from './isCharacterSheetData';
 
 test("Character sheet data predicate", () => {
