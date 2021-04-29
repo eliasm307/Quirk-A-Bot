@@ -36,10 +36,6 @@ export default class DocumentGroup<_K extends string, _V>
   // todo only return instance when data is loaded initially from firestore
   private constructor(props: DocumentGroupProps<_K, _V>) {
     const { firestore, path } = props;
-    const observer = new FirestoreDocumentObserver({
-      ...props,
-      handleChange: async (newData) => this.handleChange(newData),
-    });
 
     this.path = path;
     this.#private = {
@@ -52,17 +48,30 @@ export default class DocumentGroup<_K extends string, _V>
   static async load<K extends string, V>(
     props: DocumentGroupLoaderProps<K, V>
   ) {
-    const { firestore, documentSchemaPredicate, path } = props;
+    const { firestore, valuePredicate, path } = props;
 
     const doc = await firestore.doc(path).get();
 
     const initialDocumentData = doc.data();
 
-    if (!documentSchemaPredicate(initialDocumentData)) {
+    // check initial document schema
+
+    Object.entries(initi);
+
+    if (!valuePredicate(initialDocumentData)) {
       const error = `initial data does not match provided predicate`;
       console.error(error, { initialDocumentData, documentPath: path });
       throw Error(error);
     }
+
+    const createObserver = (
+      changeHandler: (changeData: FirestoreDocumentChangeData<V>) => void
+    ) =>
+      FirestoreDocumentObserver.load({
+        ...props,
+        handleChange: changeHandler,
+      });
+
     return new DocumentGroup({ ...props, initialDocumentData });
   }
 
