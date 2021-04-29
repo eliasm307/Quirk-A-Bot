@@ -1,6 +1,5 @@
-import { firestoreEmulator } from '@quirk-a-bot/firebase-utils';
+import { firestoreEmulator } from '@quirk-a-bot/common';
 
-import { Record } from '../declarations/interfaces';
 import DocumentGroup, { DocumentGroupLoaderProps } from './DocumentGroup';
 
 const firestore = firestoreEmulator;
