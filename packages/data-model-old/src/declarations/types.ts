@@ -1,7 +1,7 @@
 import {
   ATTRIBUTE_CATEGORIES, ATTRIBUTE_NAMES, CORE_NUMBER_TRAITS, CORE_STRING_TRAITS, DISCIPLINE_NAMES,
   SKILL_NAMES, TRAIT_TYPES,
-} from '../constants';
+} from '../../../common/src/constants';
 
 export type ClanName = "Caitiff" | string; // todo explicitly specify names
 export type AttributeCategory = typeof ATTRIBUTE_CATEGORIES[number];

@@ -22,17 +22,6 @@ export interface iHasCharacterSheetData {
   characterSheetData: iCharacterSheetData;
 }
 
-export interface iCharacterSheetLoaderProps
-  extends iHasId,
-    iHasDataStorageFactory,
-    iHasParentPath {}
-
-// todo move to character sheet file
-export interface iCharacterSheetProps
-  extends iCharacterSheetLoaderProps,
-    iHasParentPath,
-    iHasCharacterSheetDataStorage {}
-
 /** The basic shape of a charactersheet */
 export interface iCharacterSheetShape {
   readonly id: string;

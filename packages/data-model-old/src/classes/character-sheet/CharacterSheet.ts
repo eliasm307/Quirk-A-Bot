@@ -1,5 +1,5 @@
 // import saveCharacterSheetToFile from '../utils/saveCharacterSheetToFile';
-import { STRING_TRAIT_DEFAULT_VALUE } from '../../constants';
+import { STRING_TRAIT_DEFAULT_VALUE } from '../../../../common/src/constants';
 import { ClanName } from '../../declarations/types';
 import hasCleanUp from '../../utils/type-predicates/hasCleanUp';
 import { iHasId } from '../data-storage/interfaces/data-storage-interfaces';
