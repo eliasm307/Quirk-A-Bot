@@ -1,4 +1,4 @@
-import { Firestore, FirestoreDocumentSnapshot } from '../FirebaseExports';
+import { Firestore, FirestoreDocumentSnapshot } from "../FirebaseExports";
 
 export interface iFirestoreDocumentObserver {
   path: string;
