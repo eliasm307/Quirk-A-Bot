@@ -78,9 +78,7 @@ describe("ConsistentCompositeDocument", () => {
     expect(snapshot.data()).toEqual<Record<"a", ValueType>>({
       a: { val1: "a" },
     });
-    expect(compositeDocument.get("a")).toEqual<Record<"a", ValueType>>({
-      a: { val1: "a" },
-    });
+    expect(compositeDocument.get("a")?.data).toEqual<ValueType>({ val1: "a" });
 
     compositeDocument.cleanUp();
   });
