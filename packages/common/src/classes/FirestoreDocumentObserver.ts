@@ -1,4 +1,4 @@
-import { Firestore, FirestoreDocumentSnapshot } from "../FirebaseExports";
+import { Firestore, FirestoreDocumentSnapshot } from '../FirebaseExports';
 
 export interface iFirestoreDocumentObserver {
   path: string;
@@ -26,18 +26,18 @@ export interface FirestoreDocumentChangeData<D> {
 export interface FirestoreDocumentObserverProps<D>
   extends FirestoreDocumentObserverLoaderProps<D> {
   /** Initial internal data for the observer */
-  initialData: D;
+  initialData?: D;
 }
 
 export interface FirestoreDocumentObserverLoaderProps<D> {
-  /** Document schema validator, to allow the return data to be typed */
-  documentSchemaIsValid: (data: any) => data is D;
   /** Firestore instance to use */
   firestore: Firestore;
   /** Change handler function used to notify  */
   handleChange: (changeData: FirestoreDocumentChangeData<D>) => void;
   /** Firestore path for document, can be undefined if document didnt exist */
   path: string;
+  /** Document schema validator, to allow the return data to be typed */
+  schemaPredicate: (data: any) => data is D;
 }
 
 /** Listens to changes to a Firestore document and creates events if there are updates */
@@ -48,11 +48,11 @@ export default class FirestoreDocumentObserver<D>
   #data?: D;
   path: string;
 
-  private constructor({
+  constructor({
     firestore,
     path,
     handleChange,
-    documentSchemaIsValid,
+    schemaPredicate,
     initialData,
   }: FirestoreDocumentObserverProps<D>) {
     this.path = path;
@@ -72,8 +72,8 @@ export default class FirestoreDocumentObserver<D>
             hasPendingWrites: snapshot.metadata.hasPendingWrites,
           });
 
+          // ! includeMetadataChanges set to false so this shouldnt matter
           /*
-          includeMetadataChanges set to false so this shouldnt matter
           if (snapshot.metadata.hasPendingWrites) {
             // ignore local changes not yet commited to firestore
             // console.log('Modified document: ', { data });
@@ -82,10 +82,7 @@ export default class FirestoreDocumentObserver<D>
           */
 
           // ! always allow undefined values as these represent documents that dont exist
-          if (
-            typeof newData !== "undefined" &&
-            !documentSchemaIsValid(newData)
-          ) {
+          if (typeof newData !== "undefined" && !schemaPredicate(newData)) {
             const error = `New data for document at path "${path}" doesnt meet required schema predicate`;
             console.error({ error, path: this.path, newData });
             throw Error(error);
@@ -112,16 +109,21 @@ export default class FirestoreDocumentObserver<D>
     );
   }
 
-  static async load<D>(
+  // todo delete
+  // ! doesnt need load method as initial data is optional, this will be set when the listener is set anyway
+  /*
+  static   load<D>(
     props: FirestoreDocumentObserverLoaderProps<D>
-  ): Promise<FirestoreDocumentObserver<D>> {
-    const { documentSchemaIsValid, firestore, path } = props;
-
+  ):  FirestoreDocumentObserver<D>  {
+    const { schemaPredicate , firestore, path , } = props;
+/*
     const doc = await firestore.doc(path).get();
 
     const initialData = doc.data();
+    */
 
-    if (!documentSchemaIsValid(initialData)) {
+  /*
+    if (!schemaPredicate(initialData)) {
       const error = `Could not load document observer for document path "${path}", the initial data does not meet the provided predicate`;
       console.error({ error, path, initialData });
 
@@ -131,6 +133,7 @@ export default class FirestoreDocumentObserver<D>
     // todo instead of returning a new instance each time, this should keep track of instances and reuse them if an instance at the same path is requested, documents at the same path should have the same predicates etc, maybe different firestore objects?
     return new FirestoreDocumentObserver({ ...props, initialData });
   }
+  */
 
   /** Unsubscribe to Firestore document */
   unsubscribe(): void {

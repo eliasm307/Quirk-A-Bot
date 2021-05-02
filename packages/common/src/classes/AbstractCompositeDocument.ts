@@ -2,24 +2,17 @@ import { iCompositeDocument, iSubDocument } from '../declarations/interfaces';
 import { Firestore } from '../FirebaseExports';
 import objectsAreEqual from '../utils/objectsAreEqual';
 import FirestoreDocumentObserver, {
-  FirestoreDocumentChangeData, FirestoreDocumentObserverProps,
+  FirestoreDocumentChangeData, FirestoreDocumentObserverLoaderProps, FirestoreDocumentObserverProps,
 } from './FirestoreDocumentObserver';
 import SubDocument from './SubDocument';
 
-export interface CompositeDocumentLoaderProps<S extends Record<string, any>>
-  extends FirestoreDocumentObserverProps<S[keyof S]> {
-  firestore: Firestore;
-  handleChange: (newData: FirestoreDocumentChangeData<S[keyof S]>) => void;
-  // keyPredicate: (key: any) => key is keyof S;
-  path: string;
-  // valuePredicate: (value: any) => value is K;
-  schemaPredicate: (value: any) => value is S;
-}
+export interface AbstractCompositeDocumentLoaderProps<
+  S extends Record<string, any>
+> extends FirestoreDocumentObserverLoaderProps<S> {}
 
-interface DocumentGroupProps<S extends Record<string, any>>
-  extends CompositeDocumentLoaderProps<S> {
-  initialDocumentData: S;
-  observer: FirestoreDocumentObserver<S>;
+export interface AbstractCompositeDocumentProps<S extends Record<string, any>>
+  extends AbstractCompositeDocumentLoaderProps<S> {
+  initialData: S;
 }
 
 // export interface FirestoreDocumentObserverProps<K extends string, V> {}
@@ -36,51 +29,82 @@ export default abstract class AbstractCompositeDocument<
     observer: FirestoreDocumentObserver<S>;
   };
 
+  /*
   abstract load<C extends AbstractCompositeDocument<S>>(
     props: CompositeDocumentLoaderProps<S>
   ): C;
+  */
 
   // todo only return instance when data is loaded initially from firestore
-  private constructor(props: DocumentGroupProps<S>) {
-    const { firestore, path, observer } = props;
+  protected constructor(props: AbstractCompositeDocumentProps<S>) {
+    const { firestore, path, handleChange } = props;
 
     this.path = path;
     this.#private = {
       firestore,
       subDocuments: new Map(),
-      observer,
+      observer: new FirestoreDocumentObserver({
+        ...props,
+        handleChange: (newData) => {
+          // handle change internally first
+          this.handleChange(newData);
+          // then use custom change handler
+          handleChange(newData);
+        },
+      }),
     };
   }
 
-  /*
-  static async load<S extends Record<string, any>>(
-    props: CompositeDocumentLoaderProps<S>
-  ) {
-    const { firestore, schemaPredicate, path, handleChange } = props;
+  /** Loads an observer for the firestore document and returns the initial data also */
+  static async loadObserver<S extends Record<string, any>>(
+    props: AbstractCompositeDocumentLoaderProps<S>
+  ): Promise<{
+    observerCreator: (
+      handleChange: (changeData: FirestoreDocumentChangeData<S>) => void
+    ) => FirestoreDocumentObserver<S>;
+    initialData: S;
+  }> {
+    const { firestore, schemaPredicate, path } = props;
 
     const doc = await firestore.doc(path).get();
 
-    const initialDocumentData = doc.data() || {};
+    const initialData = doc.data() || {};
 
     // check initial document schema
-    if (!schemaPredicate(initialDocumentData)) {
+    if (!schemaPredicate(initialData)) {
       const error = "Initial data doesnt satisfy schema predicate";
-      console.error(__filename, error, { path, initialDocumentData });
+      console.error(__filename, error, {
+        path,
+        initialDocumentData: initialData,
+      });
       throw Error(error);
     }
 
-    const observer = await FirestoreDocumentObserver.load({
-      ...props,
-    });
+    /*
+    const observerCreator = (
+      handleChange
+    ) =>
+      */
 
+    /*
     return new AbstractCompositeDocument({
       ...props,
       initialDocumentData,
       observer,
     });
-  }
-  */
+    */
 
+    return {
+      initialData,
+      observerCreator: (handleChange) =>
+        new FirestoreDocumentObserver({
+          ...props,
+          handleChange,
+        }),
+    };
+  }
+
+  // todo delete
   // ! composite document schemas might not always be consistent records, so verifySchema needs to be a dependency, so the right validator is used for the provided schema
   /*
   static verifySchema<K extends string | number, V>(
@@ -129,14 +153,21 @@ export default abstract class AbstractCompositeDocument<
     return Array.from(this.#private.subDocuments.values());
   }
 
-  private async handleChange(newData: S) {
+  protected handleChange({ newData }: FirestoreDocumentChangeData<S>) {
     if (!newData) console.warn(__filename, `newData was ${typeof newData}`);
 
     // update local data
     this.#private.data = newData;
 
+    if (!newData) {
+      // remove all sub documents
+      return this.handleSubDocumentRemoval({} as S);
+    }
+
     const newSubDocumentCount = Object.keys(newData).length;
+
     const existingSubDocumentCount = this.#private.subDocuments.size;
+
     let affectedSubDocuments = Math.abs(
       newSubDocumentCount - existingSubDocumentCount
     );
@@ -244,7 +275,7 @@ export default abstract class AbstractCompositeDocument<
     }
   }
 
-  private async subDocumentUpdater(key: keyof S, newValue: S[keyof S]) {
+  private async subDocumentUpdater<K extends keyof S>(key: K, newValue: S[K]) {
     // todo move to util
     try {
       await this.#private.firestore
