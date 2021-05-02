@@ -151,7 +151,9 @@ export default abstract class AbstractCompositeDocument<
     value: S[K]
   ): Promise<iCompositeDocument<S>> {
     try {
+      // todo check if this updates local values immediately also
       await this.#private.documentRef.set({ [key]: value }, { merge: true });
+      // if()this.#private.data?[key] = value
     } catch (error) {
       console.error(__filename, `Error setting key ${key}`, {
         key,

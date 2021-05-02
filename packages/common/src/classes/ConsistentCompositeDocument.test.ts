@@ -56,6 +56,8 @@ describe("ConsistentCompositeDocument", () => {
     // assert document doesnt exist
     await deleteDocument(path);
 
+    const docRef = firestore.doc(path);
+
     const props: ConsistentCompositeDocumentLoaderProps<KeyType, ValueType> = {
       ...baseProps,
       path,
@@ -65,6 +67,20 @@ describe("ConsistentCompositeDocument", () => {
       KeyType,
       ValueType
     >(props);
+
+    await compositeDocument.set("a", { val1: "a" });
+
+    await pause(100);
+
+    let snapshot = await docRef.get();
+
+    expect(snapshot.exists).toBeTruthy();
+    expect(snapshot.data()).toEqual<Record<"a", ValueType>>({
+      a: { val1: "a" },
+    });
+    expect(compositeDocument.get("a")).toEqual<Record<"a", ValueType>>({
+      a: { val1: "a" },
+    });
 
     compositeDocument.cleanUp();
   });
