@@ -18,4 +18,4 @@ export default function isCoreGameData(data: any): data is iCoreGameData {
   );
 }
 */
-export {};
+export default {};

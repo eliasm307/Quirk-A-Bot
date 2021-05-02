@@ -1,5 +1,7 @@
 import { Firestore } from '@quirk-a-bot/common';
 
+// todo move this to common
+
 export interface iHasGetData<D> {
   readonly data: () => D;
 }

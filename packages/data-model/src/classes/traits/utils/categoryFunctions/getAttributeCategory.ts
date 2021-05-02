@@ -1,8 +1,23 @@
-import { AttributeCategory, AttributeName } from 'src/declarations/types';
+import { AttributeCategory, AttributeName } from '@quirk-a-bot/common';
 
 export default function getAttributeCategory(
   name: AttributeName
 ): AttributeCategory {
+  const attributeCategories: Record<AttributeName, AttributeCategory> = {
+    Strength: "Physical",
+    Dexterity: "Physical",
+    Stamina: "Physical",
+    Charisma: "Social",
+    Manipulation: "Social",
+    Composure: "Social",
+    Intelligence: "Mental",
+    Wits: "Mental",
+    Resolve: "Mental",
+  };
+
+  return attributeCategories[name];
+
+  /*
   switch (name) {
     case "Strength":
     case "Dexterity":
@@ -17,6 +32,9 @@ export default function getAttributeCategory(
     case "Resolve":
       return "Mental";
     default:
-      throw Error(`${__filename} ERROR: Unknown attribute name "${name}"`);
+      throw Error(
+        `${__filename} ERROR: Unknown attribute name "${name as string}"`
+      );
   }
+  */
 }

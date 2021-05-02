@@ -1,13 +1,12 @@
 // -------------------------------------------------------
 // TRAIT DATA STORAGE PROPS
 
-import { iHasParentPath } from 'src/declarations/interfaces';
-import { TraitNameUnionOrString, TraitValueTypeUnion } from 'src/declarations/types';
+import { iHasParentPath, TraitNameUnionOrString, TraitValueTypeUnion } from '@quirk-a-bot/common';
 
+import { iHasFirestore, iHasResolvedBasePath } from '../../../../declarations/interfaces';
 import { iHasCharacterSheet } from '../../../character-sheet/interfaces/character-sheet-interfaces';
 import { iTraitLogger } from '../../../log/interfaces/log-interfaces';
 import { iCanHaveLoggerCreator } from '../../../traits/interfaces/trait-interfaces';
-import { iHasFirestore, iHasResolvedBasePath } from '../data-storage-interfaces';
 
 export interface iBaseTraitDataStorageProps<
   N extends TraitNameUnionOrString,

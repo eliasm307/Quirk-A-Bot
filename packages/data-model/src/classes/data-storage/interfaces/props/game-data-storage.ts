@@ -1,6 +1,7 @@
-import { iHasParentPath } from 'src/declarations/interfaces';
+import { iHasParentPath } from '@quirk-a-bot/common';
 
-import { iHasDataStorageFactory, iHasFirestore, iHasId } from '../data-storage-interfaces';
+import { iHasFirestore, iHasId } from '../../../../declarations/interfaces';
+import { iHasDataStorageFactory } from '../data-storage-interfaces';
 
 export interface iBaseGameDataStorageProps
   extends iHasId,

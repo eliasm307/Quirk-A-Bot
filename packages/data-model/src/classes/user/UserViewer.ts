@@ -37,7 +37,7 @@ export default class UserViewer implements iUser {
 				return console.error(
 					`Could not load user with uid "${uid}", no data found on this user, need to sign up first`
 				); */
-        return UserViewer.initNewUser(props);
+        return await UserViewer.initNewUser(props);
       }
       const userData = userDoc.data();
       if (!isUserData(userData)) {
