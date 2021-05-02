@@ -1,6 +1,7 @@
-import { firestoreEmulator } from '@quirk-a-bot/common';
+import {
+  DISCIPLINE_COLLECTION_NAME, firestoreEmulator, pause, SKILL_COLLECTION_NAME,
+} from '@quirk-a-bot/common';
 
-import { DISCIPLINE_COLLECTION_NAME, SKILL_COLLECTION_NAME } from '../../../constants';
 import { AttributeName, DisciplineName, SkillName } from '../../../declarations/types';
 import isTraitData from '../../../utils/type-predicates/isTraitData';
 import FirestoreDataStorageFactory from '../../data-storage/Firestore/FirestoreDataStorageFactory';
@@ -27,7 +28,7 @@ const createtraitCollectionFactoryMethodProps = (
 
 const deleteExistingCollectionDataAsync = async (collectionPath: string) => {
   // delete any existing data in the collection
-  let collectionSnapshot = await firestore.collection(collectionPath).get();
+  const collectionSnapshot = await firestore.collection(collectionPath).get();
   // if (collectionSnapshot.size) {
   try {
     await Promise.all(
@@ -78,11 +79,11 @@ describe("TraitColleciton with Firestore data storage adding, and deleting", () 
       { name: "Resolve", value: 3 },
     ];
 
-    await new Promise((res) => setTimeout(res, 2000)); // wait for syncronisation
+    await pause(2000); // wait for syncronisation
 
     // get snapshot data
-    let collectionSnapshot = await firestore.collection(tc.path).get();
-    let collectionDocumentData = collectionSnapshot.docs.map((doc) =>
+    const collectionSnapshot = await firestore.collection(tc.path).get();
+    const collectionDocumentData = collectionSnapshot.docs.map((doc) =>
       doc.data()
     );
 
@@ -107,17 +108,17 @@ describe("TraitColleciton with Firestore data storage adding, and deleting", () 
     // run tests after deleting any existing data
     await deleteExistingCollectionDataAsync(tc.path);
 
-    await new Promise((res) => setTimeout(res, 200)); // wait for syncronisation
+    await pause(200); // wait for syncronisation
 
     // add some traits
     tc.set("Charisma", 1).set("Composure", 2).set("Resolve", 3);
 
-    await new Promise((res) => setTimeout(res, 200)); // wait for syncronisation
+    await pause(200); // wait for syncronisation
 
     // test deleting some items
     tc.delete("Charisma").delete("Composure");
 
-    await new Promise((res) => setTimeout(res, 200)); // wait for syncronisation
+    await pause(200); // wait for syncronisation
 
     // get snapshot data
     let collectionSnapshot = await firestore.collection(tc.path).get();
@@ -131,7 +132,7 @@ describe("TraitColleciton with Firestore data storage adding, and deleting", () 
 
     // delete the rest of the items
     tc.delete("Resolve");
-    await new Promise((res) => setTimeout(res, 200)); // wait for syncronisation
+    await pause(200); // wait for syncronisation
 
     // get snapshot data
     collectionSnapshot = await firestore.collection(tc.path).get();
@@ -183,11 +184,11 @@ describe("TraitColleciton with Firestore data storage", () => {
     // note uses different collection than other tests for different path
     const tc = TraitFactory.newSkillTraitCollection(props, ...initialData);
 
-    await new Promise((res) => setTimeout(res, 200)); // wait for syncronisation
+    await pause(200); // wait for syncronisation
 
     // get snapshot data
-    let collectionSnapshot = await firestore.collection(tc.path).get();
-    let collectionDocumentData = collectionSnapshot.docs.map((doc) =>
+    const collectionSnapshot = await firestore.collection(tc.path).get();
+    const collectionDocumentData = collectionSnapshot.docs.map((doc) =>
       doc.data()
     );
 
@@ -211,23 +212,23 @@ describe("TraitColleciton with Firestore data storage", () => {
     // delete any existing data
     await deleteExistingCollectionDataAsync(expectedPath);
 
-    await new Promise((res) => setTimeout(res, 200)); // wait for syncronisation
+    await pause(200); // wait for syncronisation
 
     // note uses different collection than other tests for different path
     const tc1 = TraitFactory.newDisciplineTraitCollection(props);
     const tc2 = TraitFactory.newDisciplineTraitCollection(props);
 
-    await new Promise((res) => setTimeout(res, 200)); // wait for syncronisation
+    await pause(200); // wait for syncronisation
 
     // expect empty collections
     expect(tc1.path).toEqual(expectedPath);
     expect(tc2.path).toEqual(expectedPath);
     expect(tc1.size).toBe(0);
-    expect(tc1.size == tc2.size).toBeTruthy();
+    expect(tc1.size).toEqual(tc2.size);
 
     // make changes to collection 1
     tc1.set("Animalism", 1).set("Blood Sorcery", 2).set("Celerity", 3);
-    await new Promise((res) => setTimeout(res, 200)); // wait for syncronisation
+    await pause(200); // wait for syncronisation
 
     tc1.set("Celerity", 5);
 
@@ -237,7 +238,7 @@ describe("TraitColleciton with Firestore data storage", () => {
       { name: "Celerity", value: 5 },
     ];
 
-    await new Promise((res) => setTimeout(res, 200)); // wait for syncronisation
+    await pause(200); // wait for syncronisation
 
     // expect collection 2 to have the changes
     expect(tc2.size).toEqual(3);

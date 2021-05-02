@@ -8,6 +8,10 @@
   "files": [
     "dist"
   ],
+  "nohoist": [
+    "**/*jest*",
+    "**/*jest*/**"
+  ],
   "scripts": {
     "test": "yarn build && jest --colors --logHeapUsage",
     "testf": "yarn build && jest --colors --logHeapUsage --onlyFailures",

@@ -1,9 +1,17 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "typeRoots": ["./node_modules/@types"],
     "baseUrl": "../",
     "paths": {
       "@quirk-a-bot/*": ["*/src"]
     }
-  }
+  },
+  "exclude": [
+    "**/node_modules/**/*",
+    "**/dist/**",
+    "**/build/**",
+    "**/lib/**",
+    "**/public/**"
+  ]
 }

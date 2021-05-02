@@ -1,8 +1,6 @@
 {
   "compilerOptions": {
-    "typeRoots": ["./node_modules/@types"],
     "lib": ["dom", "dom.iterable", "esnext"],
-    "types": ["@types/jest", "@types/node"],
     "module": "commonjs",
     "target": "es2015",
     "sourceMap": true,

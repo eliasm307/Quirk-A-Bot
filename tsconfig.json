@@ -5,8 +5,9 @@
     "paths": {
       "@quirk-a-bot/*": ["packages/*/src"]
     },
-    "typeRoots": ["./src/declarations", "./node_modules/@types"],
-
+    "typeRoots": ["./node_modules/@types"],
+    "types": ["@types/jest", "@types/node"],
+    "preserveSymlinks": true,
     "allowJs": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,

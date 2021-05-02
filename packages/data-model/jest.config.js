@@ -22,7 +22,7 @@ module.exports = {
     { ...compilerOptions.paths, ...compilerOptionsLocal.paths },
     {
       // This has to match the baseUrl defined in tsconfig.json.
-      prefix: "<rootDir>/../../",
+      prefix: "<rootDir>/../",
     }
   ),
 };

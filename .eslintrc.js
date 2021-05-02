@@ -41,6 +41,7 @@ module.exports = {
     "arrow-parens": 0,
     "class-methods-use-this": 0,
     "comma-dangle": 0,
+    "prefer-const": 1,
     "consistent-return": 0,
     "eol-last": 1,
     "no-restricted-syntax": 0,

@@ -96,11 +96,16 @@ export default class CharacterSheet implements iCharacterSheet {
     );
 
     // create core trait logger initialiser function
-    const traitLoggerCreator = (props: iChildLoggerCreatorProps) =>
-      this.logger.createChildTraitLogger(props);
+    const traitLoggerCreator = (
+      traitLoggerCreatorProps: iChildLoggerCreatorProps
+    ) => this.logger.createChildTraitLogger(traitLoggerCreatorProps);
 
-    const traitCollectionLoggerCreator = (props: iChildLoggerCreatorProps) =>
-      this.logger.createChildTraitCollectionLogger(props);
+    const traitCollectionLoggerCreator = (
+      traitCollectionLoggerCreatorProps: iChildLoggerCreatorProps
+    ) =>
+      this.logger.createChildTraitCollectionLogger(
+        traitCollectionLoggerCreatorProps
+      );
 
     // create partial trait factory method props
     const partialTraitFactoryProps = {

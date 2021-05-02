@@ -42,7 +42,7 @@ describe("Character sheet using Firestore", () => {
       parentPath,
     });
 
-    await new Promise((res) => setTimeout(res, 100)); // wait for syncronisation
+    await pause(100)); // wait for syncronisation
 
     // make sure document exists
     let doc = await firestore.doc(docPath).get();
@@ -101,7 +101,7 @@ describe("Character sheet using Firestore", () => {
       path: docPath,
       data: initialData,
     });
-    await new Promise((res) => setTimeout(res, 500)); // wait for syncronisation
+    await pause(500)); // wait for syncronisation
 
     // initialise cs
     const cs = await CharacterSheet.load({
