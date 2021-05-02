@@ -9,7 +9,6 @@ export interface SubDocumentProps<
   firestore: Firestore;
   getDataFromStorage: () => S[K] | undefined;
   key: K;
-  onChangeCallback?: (newData: S[K]) => void;
   parentDocumentPath: string;
   setOnDataStorage: (newData: S[K]) => Promise<any>;
 }
@@ -19,7 +18,9 @@ export default class SubDocument<
   S extends Record<string, any>,
   K extends keyof S
 > implements iSubDocument<S, K> {
-  #private: Omit<SubDocumentProps<S, K>, "parentDocumentPath">;
+  #private: Omit<SubDocumentProps<S, K>, "parentDocumentPath"> & {
+    onChangeCallback?: (newData: S[K]) => void;
+  };
   parentDocumentPath: string;
 
   constructor(props: SubDocumentProps<S, K>) {
@@ -39,6 +40,11 @@ export default class SubDocument<
   async delete(): Promise<iSubDocument<S, K>> {
     await this.#private.deleteFromDataStorage();
     return this;
+  }
+
+  /** Sets the callback to use when there is a change */
+  onChangeCallback(callback: (newData: S[K]) => void) {
+    this.#private.onChangeCallback = callback;
   }
 
   /** Sets data locally without applying the change to firestore */
