@@ -1,5 +1,7 @@
 import { iCompositeDocument, iSubDocument } from '../declarations/interfaces';
-import { Firestore } from '../FirebaseExports';
+import {
+  Firestore, FirestoreDocumentReference, FirestoreDocumentSnapshot,
+} from '../FirebaseExports';
 import objectsAreEqual from '../utils/objectsAreEqual';
 import FirestoreDocumentObserver, {
   FirestoreDocumentChangeData, FirestoreDocumentObserverLoaderProps, FirestoreDocumentObserverProps,
@@ -23,10 +25,11 @@ export default abstract class AbstractCompositeDocument<
   readonly path: string;
 
   #private: {
-    firestore: Firestore;
     subDocuments: Map<keyof S, iSubDocument<S[keyof S]>>;
     data?: S;
     observer: FirestoreDocumentObserver<S>;
+    documentRef: FirestoreDocumentReference;
+    firestore: Firestore;
   };
 
   /*
@@ -37,11 +40,12 @@ export default abstract class AbstractCompositeDocument<
 
   // todo only return instance when data is loaded initially from firestore
   protected constructor(props: AbstractCompositeDocumentProps<S>) {
-    const { firestore, path, handleChange } = props;
+    const { path, firestore, handleChange } = props;
 
     this.path = path;
     this.#private = {
       firestore,
+      documentRef: firestore.doc(path),
       subDocuments: new Map(),
       observer: new FirestoreDocumentObserver({
         ...props,
@@ -140,6 +144,22 @@ export default abstract class AbstractCompositeDocument<
 
   get(key: keyof S): iSubDocument<S[keyof S]> | undefined {
     return this.#private.subDocuments.get(key);
+  }
+
+  async set<K extends keyof S>(
+    key: K,
+    value: S[K]
+  ): Promise<iCompositeDocument<S>> {
+    try {
+      await this.#private.documentRef.set({ [key]: value }, { merge: true });
+    } catch (error) {
+      console.error(__filename, `Error setting key ${key}`, {
+        key,
+        value,
+        path: this.path,
+      });
+    }
+    return this;
   }
 
   toArray(): iSubDocument<S[keyof S]>[] {

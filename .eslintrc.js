@@ -26,8 +26,9 @@ module.exports = {
     "airbnb",
     "prettier",
     "prettier/react",
+    "plugin:promise/recommended",
   ],
-  plugins: ["@typescript-eslint", "react-hooks"],
+  plugins: ["react-hooks", "promise"],
   parserOptions: {
     ecmaVersion: 2019,
   },

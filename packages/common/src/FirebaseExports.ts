@@ -133,4 +133,8 @@ export interface FirestoreDocumentSnapshot
   extends firebase.firestore
     .DocumentSnapshot<firebase.firestore.DocumentData> {}
 
+export interface FirestoreDocumentReference
+  extends firebase.firestore
+    .DocumentReference<firebase.firestore.DocumentData> {}
+
 // export default firebase;
