@@ -1,8 +1,7 @@
-import { Firestore } from '@quirk-a-bot/firebase-utils';
-
 import { iSubDocument } from '../declarations/interfaces';
+import { Firestore } from '../FirebaseExports';
 
-export interface SubDocumentProps<K extends string, V> {
+export interface SubDocumentProps<K extends string | number | symbol, V> {
   data: V;
   deleteFromDataStorage: () => Promise<void>;
   firestore: Firestore;
@@ -13,7 +12,7 @@ export interface SubDocumentProps<K extends string, V> {
 }
 
 /** Provides an interface for viewing and mutating sub documents */
-export default class SubDocument<K extends string, V>
+export default class SubDocument<K extends string | number | symbol, V>
   implements iSubDocument<V> {
   #private: Omit<SubDocumentProps<K, V>, "parentDocumentPath">;
   parentDocumentPath: string;

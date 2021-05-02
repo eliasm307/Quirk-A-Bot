@@ -68,10 +68,11 @@ export interface iSubDocument<V> {
   setDataLocallyOnly(newValue: V): void;
 }
 
-export interface iDocumentGroup<K extends string, V> {
-  readonly data?: Record<K, V>;
+/** Represents a single Firestore document which comprises of multiple sub documents as a record */
+export interface iCompositeDocument<S extends Record<string, any>> {
+  readonly data?: S;
 
   cleanUp(): void;
-  get(key: K): iSubDocument<V> | undefined;
-  toArray(): iSubDocument<V>[];
+  get<K extends keyof S, V extends S[K]>(key: K): iSubDocument<V> | undefined;
+  toArray<V extends S[keyof S]>(): iSubDocument<V>[];
 }

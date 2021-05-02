@@ -1,116 +1,135 @@
-import {
-  Firestore, FirestoreDocumentChangeData, FirestoreDocumentObserver, FirestoreDocumentObserverProps,
-} from '@quirk-a-bot/common';
-
-import { iDocumentGroup, iSubDocument } from '../declarations/interfaces';
+import { iCompositeDocument, iSubDocument } from '../declarations/interfaces';
+import { Firestore } from '../FirebaseExports';
 import objectsAreEqual from '../utils/objectsAreEqual';
+import FirestoreDocumentObserver, {
+  FirestoreDocumentChangeData, FirestoreDocumentObserverProps,
+} from './FirestoreDocumentObserver';
 import SubDocument from './SubDocument';
 
-export interface DocumentGroupLoaderProps<K extends string, V>
-  extends FirestoreDocumentObserverProps<V> {
+export interface CompositeDocumentLoaderProps<S extends Record<string, any>>
+  extends FirestoreDocumentObserverProps<S[keyof S]> {
   firestore: Firestore;
-  handleChange: (newData: FirestoreDocumentChangeData<V>) => void;
-  keyPredicate: (key: any) => key is K;
+  handleChange: (newData: FirestoreDocumentChangeData<S[keyof S]>) => void;
+  // keyPredicate: (key: any) => key is keyof S;
   path: string;
-  valuePredicate: (value: any) => value is K;
+  // valuePredicate: (value: any) => value is K;
+  schemaPredicate: (value: any) => value is S;
 }
 
-interface DocumentGroupProps<K extends string, V>
-  extends DocumentGroupLoaderProps<K, V> {
-  initialDocumentData: Record<K, V>;
+interface DocumentGroupProps<S extends Record<string, any>>
+  extends CompositeDocumentLoaderProps<S> {
+  initialDocumentData: S;
+  observer: FirestoreDocumentObserver<S>;
 }
 
 // export interface FirestoreDocumentObserverProps<K extends string, V> {}
 
-export default class DocumentGroup<_K extends string, _V>
-  implements iDocumentGroup<_K, _V> {
+export default abstract class AbstractCompositeDocument<
+  S extends Record<string, any>
+> implements iCompositeDocument<S> {
   readonly path: string;
 
   #private: {
     firestore: Firestore;
-    subDocuments: Map<_K, iSubDocument<_V>>;
-    data?: Record<_K, _V>;
-    observer: FirestoreDocumentObserver<Record<_K, _V>>;
+    subDocuments: Map<keyof S, iSubDocument<S[keyof S]>>;
+    data?: S;
+    observer: FirestoreDocumentObserver<S>;
   };
 
+  abstract load<C extends AbstractCompositeDocument<S>>(
+    props: CompositeDocumentLoaderProps<S>
+  ): C;
+
   // todo only return instance when data is loaded initially from firestore
-  private constructor(props: DocumentGroupProps<_K, _V>) {
-    const { firestore, path } = props;
+  private constructor(props: DocumentGroupProps<S>) {
+    const { firestore, path, observer } = props;
 
     this.path = path;
     this.#private = {
       firestore,
-      subDocuments: new Map<_K, iSubDocument<_V>>(),
+      subDocuments: new Map(),
       observer,
     };
   }
 
-  static async load<K extends string, V>(
-    props: DocumentGroupLoaderProps<K, V>
+  /*
+  static async load<S extends Record<string, any>>(
+    props: CompositeDocumentLoaderProps<S>
   ) {
-    const { firestore, valuePredicate, path } = props;
+    const { firestore, schemaPredicate, path, handleChange } = props;
 
     const doc = await firestore.doc(path).get();
 
-    const initialDocumentData = doc.data();
+    const initialDocumentData = doc.data() || {};
 
     // check initial document schema
-
-    Object.entries(initi);
-
-    if (!valuePredicate(initialDocumentData)) {
-      const error = `initial data does not match provided predicate`;
-      console.error(error, { initialDocumentData, documentPath: path });
+    if (!schemaPredicate(initialDocumentData)) {
+      const error = "Initial data doesnt satisfy schema predicate";
+      console.error(__filename, error, { path, initialDocumentData });
       throw Error(error);
     }
 
-    const createObserver = (
-      changeHandler: (changeData: FirestoreDocumentChangeData<V>) => void
-    ) =>
-      FirestoreDocumentObserver.load({
-        ...props,
-        handleChange: changeHandler,
-      });
+    const observer = await FirestoreDocumentObserver.load({
+      ...props,
+    });
 
-    return new DocumentGroup({ ...props, initialDocumentData });
+    return new AbstractCompositeDocument({
+      ...props,
+      initialDocumentData,
+      observer,
+    });
   }
+  */
 
+  // ! composite document schemas might not always be consistent records, so verifySchema needs to be a dependency, so the right validator is used for the provided schema
+  /*
+  static verifySchema<K extends string | number, V>(
+    data: any,
+    keyPredicate: (key: any) => key is K,
+    valuePredicate: (value: any) => value is K
+  ): data is Record<K, V> {
+    if (typeof data !== "object") return false;
+
+    // accept empty objects
+    if (!Object.keys(data).length) return true;
+
+    for (const [key, value] of Object.entries(data)) {
+      if (!keyPredicate(key)) {
+        const error = `initial data key "${key}" does not match provided predicate`;
+        console.error(error, {
+          data,
+          key,
+          value,
+        });
+        throw Error(error);
+      }
+
+      if (!valuePredicate(value)) {
+        const error = `initial data value for key ${key} does not match provided predicate`;
+        console.error(error, {
+          data,
+          key,
+          value,
+        });
+        throw Error(error);
+      }
+    }
+    return true;
+  }
+  */
   cleanUp(): void {
     this.#private.observer.unsubscribe();
   }
 
-  get(key: _K): iSubDocument<_V> | undefined {
+  get(key: keyof S): iSubDocument<S[keyof S]> | undefined {
     return this.#private.subDocuments.get(key);
   }
 
-  toArray(): iSubDocument<_V>[] {
+  toArray(): iSubDocument<S[keyof S]>[] {
     return Array.from(this.#private.subDocuments.values());
   }
 
-  private documentDataSchemaIsValid(data: any): data is Record<K, V> {
-    if (typeof data !== "object") return false;
-
-    if (!Object.keys(data).length) return true; // accept empty objects
-
-    // check each key value
-    for (const [key, value] of Object.entries(data)) {
-      if (!this.keyPredicate(key)) {
-        const error = `Key ${key} from a firestore document at path ${this.path} did not satisfy the provided predicate`;
-        console.error({ error, path: this.path, data, badKey: key, value });
-        throw Error(error);
-      }
-      if (!this.valuePredicate(value)) {
-        const error = `Value ${value} from a firestore document at path ${this.path} did not satisfy the provided predicate`;
-        console.error({ error, path: this.path, data, key, badValue: value });
-        throw Error(error);
-      }
-    }
-
-    // if no errors thrown then schema is valid
-    return true;
-  }
-
-  private async handleChange(newData: Record<_K, _V>) {
+  private async handleChange(newData: S) {
     if (!newData) console.warn(__filename, `newData was ${typeof newData}`);
 
     // update local data
@@ -146,10 +165,10 @@ export default class DocumentGroup<_K extends string, _V>
     }
   }
 
-  private handleSubDocumentAddition(newData: Record<_K, _V>) {
+  private handleSubDocumentAddition(newData: S) {
     for (const [_key, _value] of Object.entries(newData)) {
-      const key = _key as _K;
-      const data = _value as _V;
+      const key = _key as keyof S;
+      const data = _value as S[keyof S];
       // add missing sub document and stop (assuming there is only 1)
       if (!this.#private.subDocuments.has(key))
         return this.#private.subDocuments.set(
@@ -159,7 +178,7 @@ export default class DocumentGroup<_K extends string, _V>
             data,
             key,
             parentDocumentPath: this.path,
-            updateOnDataStorage: (newValue: _V) =>
+            updateOnDataStorage: (newValue: S[keyof S]) =>
               this.subDocumentUpdater(key, newValue),
             deleteFromDataStorage: () => this.subDocumentRemover(key),
           })
@@ -167,33 +186,34 @@ export default class DocumentGroup<_K extends string, _V>
     }
   }
 
-  private handleSubDocumentChange(newData: Record<_K, _V>): number {
+  private handleSubDocumentChange(newData: S): number {
     let affectedDocuments = 0;
     for (const [key, value] of Object.entries(newData)) {
       // update changed documents only
-      const subDocument = this.#private.subDocuments.get(key as _K);
+      const subDocument = this.#private.subDocuments.get(key as keyof S);
 
       if (!subDocument)
         throw Error(
           `Could not handleSubDocumentChange, document with key ${key} doesnt exist`
         );
 
-      if (!objectsAreEqual(subDocument.data, value as _V)) {
-        subDocument.data = value as _V;
+      if (!objectsAreEqual(subDocument.data, value as S[keyof S])) {
+        subDocument.data = value as S[keyof S];
         affectedDocuments++;
       }
     }
     return affectedDocuments;
   }
 
-  private handleSubDocumentRemoval(newData: Record<_K, _V>) {
+  private handleSubDocumentRemoval(newData: S) {
     for (const key of this.#private.subDocuments.keys()) {
       // remove extra sub document and stop (assuming there is only 1)
-      if (!newData[key as _K]) return this.#private.subDocuments.delete(key);
+      if (!newData[key as keyof S])
+        return this.#private.subDocuments.delete(key);
     }
   }
 
-  private async subDocumentRemover(key: _K) {
+  private async subDocumentRemover(key: keyof S) {
     // todo move to util
     if (!this.#private.data)
       return console.warn(
@@ -224,7 +244,7 @@ export default class DocumentGroup<_K extends string, _V>
     }
   }
 
-  private async subDocumentUpdater(key: _K, newValue: _V) {
+  private async subDocumentUpdater(key: keyof S, newValue: S[keyof S]) {
     // todo move to util
     try {
       await this.#private.firestore
