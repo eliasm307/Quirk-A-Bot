@@ -16,7 +16,7 @@
     "test": "yarn build && jest --colors --logHeapUsage",
     "testf": "yarn build && jest --colors --logHeapUsage --onlyFailures",
     "build": "rm -rf dist && yarn && npx tsc -p tsconfig.build.json",
-    "firebase:start-emulators": "yarn --cwd ../firebase-utils start-emulators"
+    "firebase:start-emulators": "yarn --cwd ../../ start-emulators"
   },
   "author": "",
   "license": "ISC",

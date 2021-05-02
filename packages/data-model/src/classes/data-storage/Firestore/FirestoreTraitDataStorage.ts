@@ -27,9 +27,9 @@ export default class FirestoreTraitDataStorage<
     this.#firestore = firestore;
     this.path = this.createTraitPath(parentPath, name);
 
-    const timerName = `Time to initialise trait "${this.path}"`;
+    // const timerName = `Time to initialise trait "${this.path}"`;
 
-    console.time(timerName);
+    // console.time(timerName);
     // make sure trait exists, then set listeners on it
     this.initAsync()
       /*
@@ -37,9 +37,9 @@ export default class FirestoreTraitDataStorage<
         // console.warn(`Successfully initialised trait with path ${this.path} and value ${this.private.value}`);
         return null;
       })
-      */ .finally(
+      .finally(
         () => console.timeEnd(timerName)
-      )
+      )*/
       .catch(console.error);
   }
 
@@ -217,11 +217,13 @@ export default class FirestoreTraitDataStorage<
         value: this.private.value,
       });
     } catch (error) {
+      /*
       console.error(
         __filename,
         `Could not assert that trait with name ${this.name} exists in collection at path ${this.path}`,
         { error }
       );
+      */
     }
     const parentPath = pathModule.dirname(this.path);
 

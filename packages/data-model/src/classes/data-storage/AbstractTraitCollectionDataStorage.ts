@@ -137,10 +137,12 @@ export default abstract class AbstractTraitCollectionDataStorage<
 
   delete(name: N): iTraitCollectionDataStorage<N, V, D, T> {
     if (!this.map.has(name)) {
+      /*
       console.log(
         __filename,
         `Cannot delete property "${name}" from "${this.name}" trait collection as it doesnt exist in the collection`
       );
+      */
       return this; // return this instance for chaining
     }
 

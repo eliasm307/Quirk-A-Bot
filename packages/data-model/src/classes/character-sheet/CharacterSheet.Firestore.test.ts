@@ -1,6 +1,6 @@
 import {
-  ATTRIBUTE_COLLECTION_NAME, DISCIPLINE_COLLECTION_NAME, firestoreEmulator, SKILL_COLLECTION_NAME,
-  TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME,
+  ATTRIBUTE_COLLECTION_NAME, DISCIPLINE_COLLECTION_NAME, firestoreEmulator, pause,
+  SKILL_COLLECTION_NAME, TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME,
 } from '@quirk-a-bot/common';
 
 import isCharacterSheetData from '../../utils/type-predicates/isCharacterSheetData';
@@ -20,7 +20,7 @@ const deleteDoc = async (path: string) => {
   await new Promise((resolve) => setTimeout(resolve, 100)); // wait for syncronisation
 
   // make sure document doesnt exist
-  let doc = await firestore.doc(path).get();
+  const doc = await firestore.doc(path).get();
   expect(doc.exists).toEqual(false);
   expect(doc.data()).toEqual(undefined);
 };
@@ -42,10 +42,10 @@ describe("Character sheet using Firestore", () => {
       parentPath,
     });
 
-    await pause(100)); // wait for syncronisation
+    await pause(100); // wait for syncronisation
 
     // make sure document exists
-    let doc = await firestore.doc(docPath).get();
+    const doc = await firestore.doc(docPath).get();
     const docData = await readCharacterSheetDataFromFirestore({
       firestore,
       path: docPath,
@@ -101,7 +101,7 @@ describe("Character sheet using Firestore", () => {
       path: docPath,
       data: initialData,
     });
-    await pause(500)); // wait for syncronisation
+    await pause(500); // wait for syncronisation
 
     // initialise cs
     const cs = await CharacterSheet.load({
