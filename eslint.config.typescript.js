@@ -41,6 +41,7 @@ module.exports = {
   // for rules, 0 means ignore, 1 means warn, and 2 means error
   rules: {
     ...mainRules,
+    "no-use-before-define": 0,
     "@typescript-eslint/await-thenable": 1,
     "@typescript-eslint/comma-dangle": 0,
     "@typescript-eslint/dot-notation": 0,

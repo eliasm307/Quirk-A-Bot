@@ -2,7 +2,7 @@
 // DATA STORAGE INSTANTIATOR PROPS
 // Note the props should be the minimal required to instantiate the required object, they should be consistent for all factory classes as these are what the client will interact with
 
-import { iHasParentPath } from 'common/src/declarations';
+import { iHasParentPath } from '@quirk-a-bot/common';
 
 import { iHasId } from '../../../../declarations/interfaces';
 import { iHasCharacterSheet } from '../../../character-sheet/interfaces/character-sheet-interfaces';

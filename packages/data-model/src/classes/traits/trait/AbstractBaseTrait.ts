@@ -1,3 +1,5 @@
+import { hasCleanUp } from '@quirk-a-bot/common';
+
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
 import { iBaseTraitDataStorage } from '../../data-storage/interfaces/data-storage-interfaces';
 import { iTraitLogReporter } from '../../log/interfaces/log-interfaces';

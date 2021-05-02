@@ -1,6 +1,6 @@
 import pathModule from 'path';
 
-import { Firestore } from '@quirk-a-bot/firebase-utils';
+import { Firestore } from '@quirk-a-bot/common';
 
 import { CORE_TRAIT_COLLECTION_NAME } from '../../../../../common/src/constants';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
@@ -19,8 +19,6 @@ export default class FirestoreTraitDataStorage<
   extends AbstractTraitDataStorage<N, V>
   implements iBaseTraitDataStorage<N, V> {
   #firestore: Firestore;
-  #unsubscribeFromEventListeners: () => void = () => null;
-
   path: string;
 
   constructor(props: iFirestoreTraitDataStorageProps<N, V>) {
@@ -34,12 +32,18 @@ export default class FirestoreTraitDataStorage<
     console.time(timerName);
     // make sure trait exists, then set listeners on it
     this.initAsync()
+      /*
       .then(() => {
         // console.warn(`Successfully initialised trait with path ${this.path} and value ${this.private.value}`);
+        return null;
       })
-      .catch(console.error)
-      .finally(() => console.timeEnd(timerName));
+      */ .finally(
+        () => console.timeEnd(timerName)
+      )
+      .catch(console.error);
   }
+
+  #unsubscribeFromEventListeners: () => void = () => null;
 
   cleanUp(): boolean {
     try {
@@ -110,13 +114,15 @@ export default class FirestoreTraitDataStorage<
         .onSnapshot((querySnapshot) => {
           // ? delete
           // confirm query only returns 1 result
-          /*if (querySnapshot.size !== 1) {
+          /*
+          if (querySnapshot.size !== 1) {
 						console.error(
 							__filename,
 							`There should be exactly 1 trait named "${this.name}" in collection "${parentCollectionPath}", however ${querySnapshot.size} where found`,
 							{ traitName: this.name, traitPath: this.path, parentCollectionPath }
 						);*/
-          /*throw Error(
+          /*
+          throw Error(
 							`There should be exactly 1 trait named "${this.name}" in collection "${parentCollectionPath}", however ${querySnapshot.size} where found`
 						);*/
           //	}

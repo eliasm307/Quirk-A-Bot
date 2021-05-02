@@ -1,4 +1,4 @@
-import { iHasParentPath } from 'common/src/declarations';
+import { iHasParentPath } from '@quirk-a-bot/common';
 
 import { iHasFirestore, iHasId, iHasResolvedBasePath } from '../../../../declarations/interfaces';
 import { iHasDataStorageFactory } from '../data-storage-interfaces';

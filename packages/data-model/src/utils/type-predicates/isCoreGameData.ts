@@ -1,10 +1,11 @@
-/*
-import { iCoreGameData } from '../../classes/game/interfaces/game-interfaces';
+import { iGameShape } from '../../classes/game/interfaces/game-interfaces';
 
-export default function isCoreGameData(data: any): data is iCoreGameData {
+export default function isCoreGameData(data: any): data is iGameShape {
   if (typeof data !== "object") return false;
 
-  const { description, id } = data as iCoreGameData;
+  const { description, id } = data as iGameShape;
+
+  // todo add other fields
 
   const hasId = !!id && typeof id === "string"; // id must be non-empty
   const hasDescription = typeof description === "string";
@@ -17,5 +18,3 @@ export default function isCoreGameData(data: any): data is iCoreGameData {
     false
   );
 }
-*/
-export default {};

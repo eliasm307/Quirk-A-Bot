@@ -1,4 +1,4 @@
-import { firestoreEmulator } from '@quirk-a-bot/firebase-utils';
+import { firestoreEmulator } from '@quirk-a-bot/common';
 
 import isTraitData from '../../../utils/type-predicates/isTraitData';
 import FirestoreDataStorageFactory from '../../data-storage/Firestore/FirestoreDataStorageFactory';

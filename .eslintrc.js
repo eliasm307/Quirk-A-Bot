@@ -34,6 +34,7 @@ module.exports = {
   },
   // for rules, 0 means ignore, 1 means warn, and 2 means error
   rules: {
+    "promise/catch-or-return": 1,
     "lines-between-class-members": 0,
     "array-bracket-spacing": 0,
     "arrow-body-style": 0,

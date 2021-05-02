@@ -1,8 +1,8 @@
 // import saveCharacterSheetToFile from '../utils/saveCharacterSheetToFile';
 import { STRING_TRAIT_DEFAULT_VALUE } from '../../../../common/src/constants';
+import { iHasId } from '../../declarations/interfaces';
 import { ClanName } from '../../declarations/types';
 import hasCleanUp from '../../utils/type-predicates/hasCleanUp';
-import { iHasId } from '../data-storage/interfaces/data-storage-interfaces';
 import {
   iCharacterSheetLogger, iCharacterSheetLogReporter, iChildLoggerCreatorProps,
 } from '../log/interfaces/log-interfaces';
@@ -263,7 +263,7 @@ export default class CharacterSheet implements iCharacterSheet {
     let failCount = 0;
 
     // clean any cleanable properties
-    for (let [propName, prop] of Object.entries(this)) {
+    for (const [propName, prop] of Object.entries(this)) {
       if (hasCleanUp(prop)) {
         total++;
         if (prop.cleanUp()) {
@@ -279,7 +279,7 @@ export default class CharacterSheet implements iCharacterSheet {
     }
 
     // if there are failures
-    if (!!failCount)
+    if (failCount)
       console.warn(
         __filename,
         `Cleaned ${successCount} / ${total} items Successfully, but ${failCount} / ${total} were unsuccessful`

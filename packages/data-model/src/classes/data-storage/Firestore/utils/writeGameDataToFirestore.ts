@@ -1,7 +1,6 @@
-import { PLAYER_COLLECTION_NAME } from 'src/constants';
+import { PLAYER_COLLECTION_NAME } from '@quirk-a-bot/common';
 
 import { iGameData } from '../../../game/interfaces/game-interfaces';
-import { iHasFirestore } from '../../interfaces/data-storage-interfaces';
 import { DocumentDataWriterProps } from './assertDocumentExistsOnFirestore';
 
 export default async function writeGameDataToFirestore({

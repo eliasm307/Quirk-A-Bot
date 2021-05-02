@@ -1,19 +1,9 @@
-import { iHasPath } from 'src/declarations/interfaces';
-
-import { Firestore } from '@quirk-a-bot/firebase-utils';
-
-import { iHasFirestore, iHasId } from '../../interfaces/data-storage-interfaces';
-
 // todo move to firestore utils
 
-interface Props<D> extends iHasFirestore, iHasPath {
-  /** A function which returns a promise that resolves a Firestore document into the required data format  */
-  documentDataReader(props: DocumentDataReaderProps): Promise<D>;
-  /** A function which writes custom data to a firestore document and or sub collections in the correct manner  */
-  documentDataWriter(props: DocumentDataWriterProps<D>): Promise<void>;
-  /** A function to produce default data to use if the document doesnt exist */
-  newDefaultData(): D;
-}
+import { iHasPath } from '@quirk-a-bot/common';
+import { Firestore } from '@quirk-a-bot/common/dist';
+
+import { iHasFirestore } from '../../../../declarations/interfaces';
 
 export interface DocumentDataReaderProps {
   firestore: Firestore;
@@ -22,6 +12,15 @@ export interface DocumentDataReaderProps {
 
 export interface DocumentDataWriterProps<D> extends DocumentDataReaderProps {
   data: D;
+}
+
+interface Props<D> extends iHasFirestore, iHasPath {
+  /** A function which returns a promise that resolves a Firestore document into the required data format  */
+  documentDataReader(props: DocumentDataReaderProps): Promise<D>;
+  /** A function which writes custom data to a firestore document and or sub collections in the correct manner  */
+  documentDataWriter(props: DocumentDataWriterProps<D>): Promise<void>;
+  /** A function to produce default data to use if the document doesnt exist */
+  newDefaultData(): D;
 }
 
 export default async function assertDocumentExistsOnFirestore<D>({
@@ -54,8 +53,8 @@ export default async function assertDocumentExistsOnFirestore<D>({
       await documentDataWriter({ firestore, path, data });
 
       return data;
-    } catch (error) {
-      console.error(__filename, { error });
+    } catch (error2) {
+      console.error(__filename, { error2 });
       throw Error(`Could not initialise a new character sheet at path ${path}`);
     }
   }

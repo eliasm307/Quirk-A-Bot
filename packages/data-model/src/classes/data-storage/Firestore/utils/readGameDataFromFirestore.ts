@@ -1,10 +1,8 @@
-import { PLAYER_COLLECTION_NAME } from 'src/constants';
-import isCoreGameData from 'src/utils/type-predicates/isCoreGameData';
-import isGamePlayerData from 'src/utils/type-predicates/isGamePlayerData';
+import { PLAYER_COLLECTION_NAME } from '@quirk-a-bot/common';
 
-import { Firestore } from '@quirk-a-bot/firebase-utils';
-
-import { iGameData, iGamePlayerData } from '../../../game/interfaces/game-interfaces';
+import { isCoreGameData, isGamePlayerData } from '../../../../utils/type-predicates';
+import { iGameData } from '../../../game/interfaces/game-interfaces';
+import { iGamePlayerData } from '../../../game/interfaces/game-player-interfaces';
 import { createPath } from '../../utils/createPath';
 import { DocumentDataReaderProps } from './assertDocumentExistsOnFirestore';
 
@@ -25,14 +23,16 @@ export default async function readGameDataFromFirestore({
   // todo assert it is core game data
   if (!isCoreGameData(coreGameData)) {
     console.timeEnd(timerName);
-    return Promise.reject({
+    const error = `Core game data was read but format is invalid`;
+    console.error(__filename, error, {
       __filename,
-      message: `Core game data was read but format is invalid`,
+      error,
       coreGameData,
     });
+    return Promise.reject(Error(error));
   }
 
-  const { description, id } = coreGameData;
+  const { description, id, gameMasters } = coreGameData;
 
   // todo create path should be a dependency
   const playerCollection = await firestore
@@ -48,10 +48,11 @@ export default async function readGameDataFromFirestore({
     // todo assert player data is correct format
     if (!isGamePlayerData(playerData)) {
       console.timeEnd(timerName);
-      return Promise.reject({
-        error: `Data for player document with id ${snapshot.id} is not valid player data`,
+      const error = `Data for player document with id ${snapshot.id} is not valid player data`;
+      console.error(__filename, error, {
         playerData,
       });
+      return Promise.reject(Error(error));
     }
 
     players.push(playerData);
@@ -64,5 +65,6 @@ export default async function readGameDataFromFirestore({
     description,
     id,
     players,
+    gameMasters,
   };
 }
