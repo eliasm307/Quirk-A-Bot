@@ -21,9 +21,28 @@ export default class ConsistentCompositeDocument<
   ): Promise<AbstractCompositeDocument<S>> {
     const { valuePredicates } = props;
 
-    // schema predicate for a consistent composite tests if keys and values match a given predicate
     const schemaPredicate = (data: any): data is S => {
-      isRecord(data, keyPredicate, valuePredicate);
+      if (typeof data !== "object") return false;
+
+      for (const [key, value] of Object.entries(data)) {
+        const valuePredicate = valuePredicates[key];
+
+        // if no predicate exists, then it means key is invalid
+        if (!valuePredicate) {
+          console.warn(__filename, `key "${key}" does not meet predicate`);
+          return false;
+        }
+        // test value
+        if (!valuePredicate(value)) {
+          console.warn(
+            __filename,
+            `value for key "${key}" does not meet predicate`,
+            { key, value }
+          );
+          return false;
+        }
+      }
+      return true;
     };
 
     const { initialData } = await AbstractCompositeDocument.loadObserver({
