@@ -1,6 +1,6 @@
 import { DEFAULT_USER_NAME, USER_COLLECTION_NAME } from '../../../../common/src/constants';
+import { iHasFirestore } from '../../declarations/interfaces';
 import isUserData from '../../utils/type-predicates/isUserData';
-import { iHasFirestore } from '../data-storage/interfaces/data-storage-interfaces';
 import { iUser, iUserData, iUserGameParticipationData } from './interfaces';
 
 interface iLoadProps extends iHasFirestore {

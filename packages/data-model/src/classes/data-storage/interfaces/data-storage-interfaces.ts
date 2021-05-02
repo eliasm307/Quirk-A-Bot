@@ -1,5 +1,4 @@
-import { Firestore } from '@quirk-a-bot/firebase-utils';
-
+/* eslint-disable no-use-before-define */
 import {
   iBaseCollection, iHasCleanUp, iHasGetData, iHasPath,
 } from '../../../declarations/interfaces';
@@ -7,7 +6,7 @@ import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declaratio
 import {
   iCharacterSheet, iCharacterSheetData,
 } from '../../character-sheet/interfaces/character-sheet-interfaces';
-import { iGameData, iPlayerGame } from '../../game/interfaces/game-interfaces';
+import { iGameData } from '../../game/interfaces/game-interfaces';
 import {
   iHasTraitCollectionLogReporter, iHasTraitLogReporter,
 } from '../../log/interfaces/log-interfaces';
@@ -30,20 +29,6 @@ export interface iHasDataStorageFactory {
 
 export interface iHasCharacterSheetDataStorage {
   characterSheetDataStorage: iCharacterSheetDataStorage;
-}
-
-export interface iHasId {
-  id: string;
-}
-export interface iCanHaveId {
-  id?: string;
-}
-export interface iHasResolvedBasePath {
-  resolvedBasePath: string;
-}
-
-export interface iHasFirestore {
-  firestore: Firestore;
 }
 
 // -------------------------------------------------------
