@@ -1,3 +1,4 @@
+/*
 import { iCoreGameData } from '../../classes/game/interfaces/game-interfaces';
 
 export default function isCoreGameData(data: any): data is iCoreGameData {
@@ -16,3 +17,5 @@ export default function isCoreGameData(data: any): data is iCoreGameData {
     false
   );
 }
+*/
+export {};

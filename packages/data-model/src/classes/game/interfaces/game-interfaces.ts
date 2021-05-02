@@ -1,6 +1,5 @@
-import { iTraitCollection } from 'src/classes/traits/interfaces/trait-collection-interfaces';
-import { iStringTrait } from 'src/classes/traits/interfaces/trait-interfaces';
-
+import { iTraitCollection } from '../../../classes/traits/interfaces/trait-collection-interfaces';
+import { iStringTrait } from '../../../classes/traits/interfaces/trait-interfaces';
 import { iCharacterSheet } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import { iGamePlayerData } from './game-player-interfaces';
 
