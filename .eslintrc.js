@@ -33,44 +33,7 @@ module.exports = {
   },
   // for rules, 0 means ignore, 1 means warn, and 2 means error
   rules: {
-    /*
-    "@typescript-eslint/await-thenable": 0,
-    "@typescript-eslint/comma-dangle": 0,
-    "@typescript-eslint/dot-notation": 0,
-    "@typescript-eslint/explicit-function-return-type": 0,
-    "@typescript-eslint/explicit-module-boundary-types": 0,
-    "@typescript-eslint/indent": 0, // managed by code formatter
-    "@typescript-eslint/no-empty-interface": 0,
-    "@typescript-eslint/no-explicit-any": 0,
-    "@typescript-eslint/lines-between-class-members": 0,
-    "@typescript-eslint/no-extra-semi": 1,
-    "@typescript-eslint/no-floating-promises": 0,
-    "@typescript-eslint/no-non-null-assertion": 0,
-    "@typescript-eslint/no-unsafe-assignment": 1,
-    "@typescript-eslint/no-unsafe-call": 1,
-    "@typescript-eslint/no-unsafe-member-access": 1,
-    "@typescript-eslint/no-unsafe-return": 1,
-    "@typescript-eslint/no-unused-expressions": 1,
-    "@typescript-eslint/no-unused-vars": 0,
-    "@typescript-eslint/no-use-before-define": 1,
-    "@typescript-eslint/no-var-requires": 1,
-    "@typescript-eslint/quotes": 0,
-    "@typescript-eslint/restrict-plus-operands": 1,
-    "@typescript-eslint/restrict-template-expressions": 1,
-    "@typescript-eslint/semi": 0,
-    "@typescript-eslint/space-before-function-paren": 0,
-    "@typescript-eslint/naming-convention": [
-      1,
-      {
-        selector: "interface",
-        format: ["PascalCase", "strictCamelCase"],
-        custom: {
-          regex: "^i?[A-Z]",
-          match: true,
-        },
-      },
-    ],
-    */
+    "lines-between-class-members": 0,
     "array-bracket-spacing": 0,
     "arrow-body-style": 0,
     "arrow-parens": 0,

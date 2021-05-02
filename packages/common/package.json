@@ -1,5 +1,6 @@
 {
-  "name": "@quirk-a-bot/firebase-utils",
+  "name": "@quirk-a-bot/common",
+  "description": "Package with common items for quirk-a-bot",
   "version": "1.0.0",
   "private": true,
   "main": "dist/index.js",
@@ -11,7 +12,6 @@
   "files": [
     "dist"
   ],
-  "description": "",
   "scripts": {
     "test": "yarn build && jest --colors --logHeapUsage",
     "build": "npx tsc && rm -rf dist && yarn && npx tsc --build tsconfig.build.json",
