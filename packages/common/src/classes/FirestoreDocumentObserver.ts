@@ -89,8 +89,8 @@ export default class FirestoreDocumentObserver<D>
           }
 
           const changeData: FirestoreDocumentChangeData<D> = {
-            newData: newData ? { ...newData } : undefined,
-            oldData: this.#data ? { ...this.#data } : undefined,
+            newData: newData && { ...newData },
+            oldData: this.#data && { ...this.#data },
             path: this.path,
             time: new Date().getTime(),
             exists: snapshot.exists,

@@ -45,10 +45,7 @@ const deleteDocument = async (path: string) => {
 };
 
 describe("ConsistentCompositeDocument", () => {
-  it("can delete sub documents from firestore", async () => {
-    expect.hasAssertions();
-  });
-  it("can write and read new composite documents to firestore", async () => {
+  it("can create, read, update, and delete composite documents to firestore", async () => {
     expect.hasAssertions();
 
     const path = `${rootPath}/NewComposite`;
@@ -69,23 +66,54 @@ describe("ConsistentCompositeDocument", () => {
     >(props);
 
     await compositeDocument.set("a", { val1: "a" });
+    await pause(300);
 
-    await pause(100);
-
+    // test newly created
     let snapshot = await docRef.get();
-
     expect(snapshot.exists).toBeTruthy();
     expect(snapshot.data()).toEqual<Record<"a", ValueType>>({
       a: { val1: "a" },
     });
     expect(compositeDocument.get("a")?.data).toEqual<ValueType>({ val1: "a" });
 
+    // update in possible ways
+    await compositeDocument.set("a", { val1: "b" });
+    await compositeDocument.get("c")?.setValue({ val1: "c" });
+    await pause(300);
+
+    // test updated
+    snapshot = await docRef.get();
+    expect(snapshot.exists).toBeTruthy();
+    expect(snapshot.data()).toEqual<Record<"a" | "c", ValueType>>({
+      a: { val1: "b" },
+      c: { val1: "c" },
+    });
+    expect(compositeDocument.get("a")?.data).toEqual<ValueType>({ val1: "b" });
+    expect(compositeDocument.get("b")?.data).toEqual(undefined);
+    expect(compositeDocument.get("c")?.data).toEqual<ValueType>({ val1: "c" });
+
+    // delete in 2 ways
+    await compositeDocument.get("a")?.delete();
+    await compositeDocument.delete("b"); // can handle deleting item that doesnt exist
+    await compositeDocument.delete("c");
+    await pause(300);
+
+    // test deleted
+    snapshot = await docRef.get();
+    expect(snapshot.exists).toBeTruthy();
+    expect(snapshot.data()).toEqual({});
+    expect(compositeDocument.get("a")?.data).toBeUndefined();
+    expect(compositeDocument.get("b")?.data).toBeUndefined();
+    expect(compositeDocument.get("c")?.data).toBeUndefined();
+
     compositeDocument.cleanUp();
   });
+  /*
   it("can automatically load existing data from firestore", () => {
     expect.hasAssertions();
   });
   it("can accomodate sub documents with different schemas", () => {
     expect.hasAssertions();
   });
+  */
 });

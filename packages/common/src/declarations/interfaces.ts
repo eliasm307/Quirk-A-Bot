@@ -62,10 +62,11 @@ export interface iHasCleanUp {
 export interface iSubDocument<V> {
   readonly parentDocumentPath: string;
 
-  data: V;
+  data?: V;
 
-  delete(): void;
+  delete(): Promise<iSubDocument<V>>;
   setDataLocallyOnly(newValue: V): void;
+  setValue(newValue: V): Promise<iSubDocument<V>>;
 }
 
 /** Represents a single Firestore document which comprises of multiple sub documents as a record */

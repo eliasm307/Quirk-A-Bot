@@ -2,13 +2,13 @@ import { iSubDocument } from '../declarations/interfaces';
 import { Firestore } from '../FirebaseExports';
 
 export interface SubDocumentProps<K extends string | number | symbol, V> {
-  data: V;
-  deleteFromDataStorage: () => Promise<void>;
+  deleteFromDataStorage: () => Promise<any>;
   firestore: Firestore;
+  getDataFromStorage: () => V | undefined;
   key: K;
   onChangeCallback?: (newData: V) => void;
   parentDocumentPath: string;
-  updateOnDataStorage: (newData: V) => Promise<void>;
+  setOnDataStorage: (newData: V) => Promise<any>;
 }
 
 /** Provides an interface for viewing and mutating sub documents */
@@ -28,30 +28,33 @@ export default class SubDocument<K extends string | number | symbol, V>
   }
 
   get data() {
-    return this.#private.data;
+    return this.#private.getDataFromStorage();
   }
 
-  delete(): void {
-    this.#private.deleteFromDataStorage();
-  }
-
-  async setData(newValue: V) {
-    // save data locally
-    this.#private.data = newValue;
-
-    // apply change to firestore
-    await this.#private.updateOnDataStorage(newValue);
-
-    if (this.#private.onChangeCallback)
-      this.#private.onChangeCallback(newValue);
+  async delete(): Promise<iSubDocument<V>> {
+    await this.#private.deleteFromDataStorage();
+    return this;
   }
 
   /** Sets data locally without applying the change to firestore */
   setDataLocallyOnly(newValue: V): void {
+    // ? is this actually required?
     // save data locally
-    this.#private.data = newValue;
+    // this.#private.data = newValue;
 
     if (this.#private.onChangeCallback)
       this.#private.onChangeCallback(newValue);
+  }
+
+  async setValue(newValue: V): Promise<iSubDocument<V>> {
+    // save data locally
+    // this.#private.data = newValue;
+
+    // apply change to firestore
+    await this.#private.setOnDataStorage(newValue);
+
+    this.setDataLocallyOnly(newValue);
+
+    return this;
   }
 }

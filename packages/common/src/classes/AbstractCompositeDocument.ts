@@ -2,7 +2,7 @@ import { iCompositeDocument, iSubDocument } from '../declarations/interfaces';
 import {
   Firestore, FirestoreDocumentReference, FirestoreDocumentSnapshot,
 } from '../FirebaseExports';
-import objectsAreEqual from '../utils/objectsAreEqual';
+import valuesAreEqual from '../utils/valuesAreEqual';
 import FirestoreDocumentObserver, {
   FirestoreDocumentChangeData, FirestoreDocumentObserverLoaderProps, FirestoreDocumentObserverProps,
 } from './FirestoreDocumentObserver';
@@ -26,7 +26,7 @@ export default abstract class AbstractCompositeDocument<
 
   #private: {
     subDocuments: Map<keyof S, iSubDocument<S[keyof S]>>;
-    data?: S;
+    data: S;
     observer: FirestoreDocumentObserver<S>;
     documentRef: FirestoreDocumentReference;
     firestore: Firestore;
@@ -40,10 +40,11 @@ export default abstract class AbstractCompositeDocument<
 
   // todo only return instance when data is loaded initially from firestore
   protected constructor(props: AbstractCompositeDocumentProps<S>) {
-    const { path, firestore, handleChange } = props;
+    const { path, firestore, handleChange, initialData } = props;
 
     this.path = path;
     this.#private = {
+      data: { ...initialData },
       firestore,
       documentRef: firestore.doc(path),
       subDocuments: new Map(),
@@ -51,7 +52,7 @@ export default abstract class AbstractCompositeDocument<
         ...props,
         handleChange: (newData) => {
           // handle change internally first
-          this.handleChange(newData);
+          this.handleChangeSnapshot(newData);
           // then use custom change handler
           handleChange(newData);
         },
@@ -77,7 +78,7 @@ export default abstract class AbstractCompositeDocument<
       const error = "Initial data doesnt satisfy schema predicate";
       console.error(__filename, error, {
         path,
-        initialDocumentData: initialData,
+        initialData,
       });
       throw Error(error);
     }
@@ -142,25 +143,97 @@ export default abstract class AbstractCompositeDocument<
     this.#private.observer.unsubscribe();
   }
 
-  get(key: keyof S): iSubDocument<S[keyof S]> | undefined {
-    return this.#private.subDocuments.get(key);
+  /** Delete sub document */
+  async delete(key: keyof S): Promise<iCompositeDocument<S>> {
+    /*
+    const {
+      [key]: excludedSubDocument,
+      ...dataAfterDelete
+    } = this.#private.data;
+    */
+
+    // overwrite without deleted sub document
+    // await this.#private.documentRef.set(dataAfterDelete, { merge: false });
+
+    // todo move to util
+    if (!this.#private.data) {
+      console.warn(
+        __filename,
+        `Could not delete sub-document with key ${key} at document path ${
+          this.path
+        } because overall data is ${typeof this.#private.data}`
+      );
+      return this;
+    }
+
+    if (!this.#private.data[key]) {
+      console.warn(
+        __filename,
+        `Could not delete sub-document with key ${key} at document path ${
+          this.path
+        } because sub document data is ${typeof this.#private.data[
+          key
+        ]}, ie it doesnt exist`
+      );
+      return this;
+    }
+
+    const {
+      [key]: excludedSubDocument,
+      ...dataAfterDelete
+    } = this.#private.data;
+
+    /*
+    const dataAfterDelete: any = { ...this.#private.data };
+    delete dataAfterDelete[key];
+    */
+
+    console.warn(__filename, `Deleting key ${key}`, {
+      key,
+      dataBeforeDelete: this.#private.data,
+      dataAfterDelete,
+    });
+
+    try {
+      await this.#private.firestore.doc(this.path).set(dataAfterDelete);
+      this.handleSubDocumentRemoval(dataAfterDelete as S);
+    } catch (error) {
+      console.error(
+        __filename,
+        `Error setting new data with deleted sub-document`,
+        {
+          key,
+          parentDocumentPath: this.path,
+        }
+      );
+    }
+    return this;
+  }
+
+  get(key: keyof S): iSubDocument<S[keyof S]> {
+    return (
+      this.#private.subDocuments.get(key) || this.newSubDocument(key, undefined)
+    );
   }
 
   async set<K extends keyof S>(
     key: K,
-    value: S[K]
+    newValue: S[K]
   ): Promise<iCompositeDocument<S>> {
     try {
-      // todo check if this updates local values immediately also
-      await this.#private.documentRef.set({ [key]: value }, { merge: true });
-      // if()this.#private.data?[key] = value
+      await this.#private.firestore
+        .doc(this.path)
+        .set({ [key]: newValue }, { merge: true });
+
+      // update locally
+      this.#private.data[key] = newValue;
     } catch (error) {
-      console.error(__filename, `Error setting key ${key}`, {
+      console.error(__filename, `Error setting data to sub-document`, {
         key,
-        value,
-        path: this.path,
+        parentDocumentPath: this.path,
       });
     }
+
     return this;
   }
 
@@ -168,11 +241,16 @@ export default abstract class AbstractCompositeDocument<
     return Array.from(this.#private.subDocuments.values());
   }
 
-  protected handleChange({ newData }: FirestoreDocumentChangeData<S>) {
+  protected handleChangeSnapshot({
+    newData,
+    oldData,
+  }: FirestoreDocumentChangeData<S>) {
+    // ? should this just overwrite existing data with new data?
+
     if (!newData) console.warn(__filename, `newData was ${typeof newData}`);
 
     // update local data
-    this.#private.data = newData;
+    this.#private.data = newData || ({} as S);
 
     if (!newData) {
       // remove all sub documents
@@ -189,63 +267,83 @@ export default abstract class AbstractCompositeDocument<
 
     if (newSubDocumentCount > existingSubDocumentCount) {
       // sub documents added
-      this.handleSubDocumentAddition(newData);
+      this.handleSubDocumentAddition(oldData, newData);
     } else if (newSubDocumentCount < existingSubDocumentCount) {
       // sub documents removed
       this.handleSubDocumentRemoval(newData);
     } else {
       // sub documents changed
-      affectedSubDocuments = this.handleSubDocumentChange(newData);
+      affectedSubDocuments = this.handleSubDocumentChange(oldData, newData);
     }
 
     // just double check if assumption that multiple documents can be affected in a snapshot is true
+
     if (affectedSubDocuments > 1) {
+      // ! yes multiple sub docs can be affected in a single snapshot
+      /*
       console.error(
         __filename,
         `Multiple documents can be affected in a snapshot`,
-        { newSubDocumentCount, existingSubDocumentCount }
+        { newSubDocumentCount, existingSubDocumentCount, affectedSubDocuments }
       );
+
       throw Error(
         `Multiple documents can be affected in a snapshot, ${affectedSubDocuments} documents affected`
       );
+      */
     }
   }
 
-  private handleSubDocumentAddition(newData: S) {
-    for (const [_key, _value] of Object.entries(newData)) {
+  private assertSubDocument<K extends keyof S>(key: K): iSubDocument<S[K]> {
+    return (this.#private.subDocuments.get(key) ||
+      this.newSubDocument(key, undefined)) as iSubDocument<S[K]>;
+  }
+
+  private handleSubDocumentAddition(
+    oldData: S | undefined,
+    newData: S | undefined
+  ) {
+    for (const [_key, _value] of Object.entries(newData || {})) {
       const key = _key as keyof S;
-      const data = _value as S[keyof S];
-      // add missing sub document and stop (assuming there is only 1)
-      if (!this.#private.subDocuments.has(key))
-        return this.#private.subDocuments.set(
-          key,
-          new SubDocument({
-            firestore: this.#private.firestore,
-            data,
-            key,
-            parentDocumentPath: this.path,
-            updateOnDataStorage: (newValue: S[keyof S]) =>
-              this.subDocumentUpdater(key, newValue),
-            deleteFromDataStorage: () => this.subDocumentRemover(key),
-          })
-        );
+      const value = _value as S[typeof key];
+      if (!this.#private.subDocuments.has(key)) this.newSubDocument(key, value);
     }
   }
 
-  private handleSubDocumentChange(newData: S): number {
+  private handleSubDocumentChange(
+    oldData: S | undefined,
+    newData: S | undefined
+  ): number {
     let affectedDocuments = 0;
-    for (const [key, value] of Object.entries(newData)) {
+    for (const [key, newValue] of Object.entries(newData || {})) {
       // update changed documents only
-      const subDocument = this.#private.subDocuments.get(key as keyof S);
+      // const subDocument = this.#private.subDocuments.get(key as keyof S);
+      const oldValue = oldData && oldData[key];
 
-      if (!subDocument)
-        throw Error(
-          `Could not handleSubDocumentChange, document with key ${key} doesnt exist`
-        );
+      // todo delete?
+      /*
+      if (!oldValue) {
+        const error = `Could not handleSubDocumentChange, sub document with key ${key} doesnt exist`;
+        console.warn(__filename, error, { oldData, newData, key, newValue });
+        throw Error(error);
+      }
+      */
 
-      if (!objectsAreEqual(subDocument.data, value as S[keyof S])) {
-        subDocument.data = value as S[keyof S];
+      if (!valuesAreEqual(oldValue, newValue as S[keyof S])) {
+        // ? is this required
+        // subDocument.data = value as S[keyof S];
+
+        // (this.#private.data as Record<string, any>)[key] = newValue;
+
+        this.assertSubDocument(key).setDataLocallyOnly(newValue);
+
         affectedDocuments++;
+      } else {
+        console.log(
+          __filename,
+          `New data was the same as old data so no change made`,
+          { key, oldValue, newValue }
+        );
       }
     }
     return affectedDocuments;
@@ -253,54 +351,34 @@ export default abstract class AbstractCompositeDocument<
 
   private handleSubDocumentRemoval(newData: S) {
     for (const key of this.#private.subDocuments.keys()) {
-      // remove extra sub document and stop (assuming there is only 1)
-      if (!newData[key as keyof S])
-        return this.#private.subDocuments.delete(key);
+      // remove extra sub document
+      if (!newData[key as keyof S]) this.#private.subDocuments.delete(key);
     }
   }
 
-  private async subDocumentRemover(key: keyof S) {
-    // todo move to util
-    if (!this.#private.data)
-      return console.warn(
-        __filename,
-        `Could not delete sub-document with key ${key} at document path ${this.path}`
-      );
+  /** Adds a new sub document if one does not exist, otherwise returns an existing instance */
+  private newSubDocument<K extends keyof S>(
+    key: K,
+    value: S[K] | undefined
+  ): iSubDocument<S[K]> {
+    const existingSubDocument = this.#private.subDocuments.get(key);
 
-    const {
-      [key]: excludedSubDocument,
-      ...dataAfterDelete
-    } = this.#private.data;
-    /*
-    const dataAfterDelete: any = { ...this.#private.data };
-    delete dataAfterDelete[key];
-    */
-
-    try {
-      await this.#private.firestore.doc(this.path).set(dataAfterDelete);
-    } catch (error) {
-      console.error(
-        __filename,
-        `Error setting new data with deleted sub-document`,
-        {
-          key,
-          parentDocumentPath: this.path,
-        }
-      );
-    }
-  }
-
-  private async subDocumentUpdater<K extends keyof S>(key: K, newValue: S[K]) {
-    // todo move to util
-    try {
-      await this.#private.firestore
-        .doc(this.path)
-        .set({ [key]: newValue }, { merge: true });
-    } catch (error) {
-      console.error(__filename, `Error setting data to sub-document`, {
+    // add missing sub document
+    if (!existingSubDocument) {
+      const subDocument = new SubDocument({
+        firestore: this.#private.firestore,
+        getDataFromStorage: () => this.#private.data && this.#private.data[key],
         key,
         parentDocumentPath: this.path,
+        setOnDataStorage: (newValue: S[keyof S]) => this.set(key, newValue),
+        deleteFromDataStorage: () => this.delete(key),
       });
+
+      this.#private.subDocuments.set(key, subDocument);
+
+      return subDocument;
     }
+
+    return existingSubDocument as iSubDocument<S[K]>;
   }
 }
