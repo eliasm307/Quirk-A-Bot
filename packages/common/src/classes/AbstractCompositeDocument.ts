@@ -59,11 +59,9 @@ export default abstract class AbstractCompositeDocument<
   static async loadObserver<S extends Record<string, any>>(
     props: AbstractCompositeDocumentLoaderProps<S>
   ): Promise<{
-    observerCreator: (
-      handleChange: (changeData: FirestoreDocumentChangeData<S>) => void
-    ) => FirestoreDocumentObserver<S>;
     initialData: S;
   }> {
+    // ? is this required? this is just to load initial data but the observer will do that anyway. Only benefit of this is you can await data to be loaded
     const { firestore, schemaPredicate, path } = props;
 
     const doc = await firestore.doc(path).get();
@@ -96,11 +94,6 @@ export default abstract class AbstractCompositeDocument<
 
     return {
       initialData,
-      observerCreator: (handleChange) =>
-        new FirestoreDocumentObserver({
-          ...props,
-          handleChange,
-        }),
     };
   }
 
