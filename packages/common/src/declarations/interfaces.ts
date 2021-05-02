@@ -59,14 +59,17 @@ export interface iHasCleanUp {
   cleanUp(): boolean;
 }
 
-export interface iSubDocument<V> {
+export interface iSubDocument<
+  S extends Record<string, any>,
+  K extends keyof S
+> {
   readonly parentDocumentPath: string;
 
-  data?: V;
+  data?: S[K];
 
-  delete(): Promise<iSubDocument<V>>;
-  setDataLocallyOnly(newValue: V): void;
-  setValue(newValue: V): Promise<iSubDocument<V>>;
+  delete(): Promise<iSubDocument<S, K>>;
+  setDataLocallyOnly(newValue: S[K]): void;
+  setValue(newValue: S[K]): Promise<iSubDocument<S, K>>;
 }
 
 /** Represents a single Firestore document which comprises of multiple sub documents as a record */
@@ -74,6 +77,8 @@ export interface iCompositeDocument<S extends Record<string, any>> {
   readonly data?: S;
 
   cleanUp(): void;
-  get<K extends keyof S, V extends S[K]>(key: K): iSubDocument<V> | undefined;
-  toArray<V extends S[keyof S]>(): iSubDocument<V>[];
+  get<K extends keyof S, V extends S[K]>(
+    key: K
+  ): iSubDocument<S, K> | undefined;
+  toArray<V extends S[keyof S]>(): iSubDocument<S, keyof S>[];
 }

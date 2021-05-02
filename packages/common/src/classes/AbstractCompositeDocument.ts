@@ -25,7 +25,7 @@ export default abstract class AbstractCompositeDocument<
   readonly path: string;
 
   #private: {
-    subDocuments: Map<keyof S, iSubDocument<S[keyof S]>>;
+    subDocuments: Map<keyof S, iSubDocument<S, keyof S>>;
     data: S;
     observer: FirestoreDocumentObserver<S>;
     documentRef: FirestoreDocumentReference;
@@ -212,10 +212,9 @@ export default abstract class AbstractCompositeDocument<
     return this;
   }
 
-  get(key: keyof S): iSubDocument<S[keyof S]> {
-    return (
-      this.#private.subDocuments.get(key) || this.newSubDocument(key, undefined)
-    );
+  get<K extends keyof S>(key: K): iSubDocument<S, K> {
+    return (this.#private.subDocuments.get(key) ||
+      this.newSubDocument(key, undefined)) as iSubDocument<S, K>;
   }
 
   async set<K extends keyof S>(
@@ -239,7 +238,7 @@ export default abstract class AbstractCompositeDocument<
     return this;
   }
 
-  toArray(): iSubDocument<S[keyof S]>[] {
+  toArray(): iSubDocument<S, keyof S>[] {
     return Array.from(this.#private.subDocuments.values());
   }
 
@@ -296,9 +295,9 @@ export default abstract class AbstractCompositeDocument<
     }
   }
 
-  private assertSubDocument<K extends keyof S>(key: K): iSubDocument<S[K]> {
+  private assertSubDocument<K extends keyof S>(key: K): iSubDocument<S, K> {
     return (this.#private.subDocuments.get(key) ||
-      this.newSubDocument(key, undefined)) as iSubDocument<S[K]>;
+      this.newSubDocument(key, undefined)) as iSubDocument<S, K>;
   }
 
   private handleSubDocumentAddition(
@@ -362,7 +361,7 @@ export default abstract class AbstractCompositeDocument<
   private newSubDocument<K extends keyof S>(
     key: K,
     value: S[K] | undefined
-  ): iSubDocument<S[K]> {
+  ): iSubDocument<S, K> {
     const existingSubDocument = this.#private.subDocuments.get(key);
 
     // add missing sub document
@@ -381,6 +380,6 @@ export default abstract class AbstractCompositeDocument<
       return subDocument;
     }
 
-    return existingSubDocument as iSubDocument<S[K]>;
+    return existingSubDocument as iSubDocument<S, K>;
   }
 }

@@ -1,23 +1,28 @@
 import { iSubDocument } from '../declarations/interfaces';
 import { Firestore } from '../FirebaseExports';
 
-export interface SubDocumentProps<K extends string | number | symbol, V> {
+export interface SubDocumentProps<
+  S extends Record<string, any>,
+  K extends keyof S
+> {
   deleteFromDataStorage: () => Promise<any>;
   firestore: Firestore;
-  getDataFromStorage: () => V | undefined;
+  getDataFromStorage: () => S[K] | undefined;
   key: K;
-  onChangeCallback?: (newData: V) => void;
+  onChangeCallback?: (newData: S[K]) => void;
   parentDocumentPath: string;
-  setOnDataStorage: (newData: V) => Promise<any>;
+  setOnDataStorage: (newData: S[K]) => Promise<any>;
 }
 
 /** Provides an interface for viewing and mutating sub documents */
-export default class SubDocument<K extends string | number | symbol, V>
-  implements iSubDocument<V> {
-  #private: Omit<SubDocumentProps<K, V>, "parentDocumentPath">;
+export default class SubDocument<
+  S extends Record<string, any>,
+  K extends keyof S
+> implements iSubDocument<S, K> {
+  #private: Omit<SubDocumentProps<S, K>, "parentDocumentPath">;
   parentDocumentPath: string;
 
-  constructor(props: SubDocumentProps<K, V>) {
+  constructor(props: SubDocumentProps<S, K>) {
     const { parentDocumentPath, ...privateProps } = props;
 
     this.#private = {
@@ -31,13 +36,13 @@ export default class SubDocument<K extends string | number | symbol, V>
     return this.#private.getDataFromStorage();
   }
 
-  async delete(): Promise<iSubDocument<V>> {
+  async delete(): Promise<iSubDocument<S, K>> {
     await this.#private.deleteFromDataStorage();
     return this;
   }
 
   /** Sets data locally without applying the change to firestore */
-  setDataLocallyOnly(newValue: V): void {
+  setDataLocallyOnly(newValue: S[K]): void {
     // ? is this actually required?
     // save data locally
     // this.#private.data = newValue;
@@ -46,7 +51,7 @@ export default class SubDocument<K extends string | number | symbol, V>
       this.#private.onChangeCallback(newValue);
   }
 
-  async setValue(newValue: V): Promise<iSubDocument<V>> {
+  async setValue(newValue: S[K]): Promise<iSubDocument<S, K>> {
     // save data locally
     // this.#private.data = newValue;
 
