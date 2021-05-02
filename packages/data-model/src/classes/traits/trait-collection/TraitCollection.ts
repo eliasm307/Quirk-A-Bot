@@ -5,83 +5,84 @@ import { iTraitCollection } from '../interfaces/trait-collection-interfaces';
 import { iBaseTrait, iBaseTraitData, iTraitCollectionProps } from '../interfaces/trait-interfaces';
 
 export default class TraitCollection<
-	N extends TraitNameUnionOrString,
-	V extends TraitValueTypeUnion,
-	D extends iBaseTraitData<N, V>,
-	T extends iBaseTrait<N, V, D>
+  N extends TraitNameUnionOrString,
+  V extends TraitValueTypeUnion,
+  D extends iBaseTraitData<N, V>,
+  T extends iBaseTrait<N, V, D>
 > implements iTraitCollection<N, V, D, T> {
-	protected dataStorage: iTraitCollectionDataStorage<N, V, D, T>;
-	// #typeName: TraitTypeNameUnion | string = 'Trait Collection'; // ? is this required
-	/** Read only log reporter */
-	log: iTraitCollectionLogReporter;
-	name: string;
-	path: string;
+  protected dataStorage: iTraitCollectionDataStorage<N, V, D, T>;
 
-	constructor(
-		{
-			instanceCreator,
-			name,
-			traitDataStorageInitialiser,
-			traitCollectionDataStorageInitialiser,
-			parentPath,
-			loggerCreator: logger,
-		}: iTraitCollectionProps<N, V, D, T>,
-		...initialData: D[]
-	) {
-		this.name = name;
+  // #typeName: TraitTypeNameUnion | string = 'Trait Collection'; // ? is this required
+  /** Read only log reporter */
+  log: iTraitCollectionLogReporter;
+  name: string;
+  path: string;
 
-		this.dataStorage = traitCollectionDataStorageInitialiser({
-			instanceCreator,
-			name,
-			parentPath,
-			traitDataStorageInitialiser,
-			initialData,
-			// onAdd: (props: iAddLogEventProps<V>) => this.logger.log(new AddLogEvent(props)), // todo delete?
-			// onDelete: (props: iDeleteLogEventProps<V>) => this.logger.log(new DeleteLogEvent(props)),
-			loggerCreator: logger,
-		});
-		// expose logger reporter
-		this.log = this.dataStorage.log;
+  constructor(
+    {
+      instanceCreator,
+      name,
+      traitDataStorageInitialiser,
+      traitCollectionDataStorageInitialiser,
+      parentPath,
+      loggerCreator: logger,
+    }: iTraitCollectionProps<N, V, D, T>,
+    ...initialData: D[]
+  ) {
+    this.name = name;
 
-		this.path = this.dataStorage.path; // data storage defines path to use
-	}
+    this.dataStorage = traitCollectionDataStorageInitialiser({
+      instanceCreator,
+      name,
+      parentPath,
+      traitDataStorageInitialiser,
+      initialData,
+      // onAdd: (props: iAddLogEventProps<V>) => this.logger.log(new AddLogEvent(props)), // todo delete?
+      // onDelete: (props: iDeleteLogEventProps<V>) => this.logger.log(new DeleteLogEvent(props)),
+      loggerCreator: logger,
+    });
+    // expose logger reporter
+    this.log = this.dataStorage.log;
 
-	get size(): number {
-		return this.dataStorage.size;
-	}
+    this.path = this.dataStorage.path; // data storage defines path to use
+  }
 
-	cleanUp(): boolean {
-		return this.dataStorage.cleanUp();
-	}
+  get size(): number {
+    return this.dataStorage.size;
+  }
 
-	data(): D[] {
-		return this.toArray().map(e => e.data());
-	}
+  cleanUp(): boolean {
+    return this.dataStorage.cleanUp();
+  }
 
-	delete(name: N): iTraitCollection<N, V, D, T> {
-		this.dataStorage.delete(name);
-		return this;
-	}
+  data(): D[] {
+    return this.toArray().map((e) => e.data());
+  }
 
-	get(name: N): T | void {
-		return this.dataStorage.get(name);
-	}
+  delete(name: N): iTraitCollection<N, V, D, T> {
+    this.dataStorage.delete(name);
+    return this;
+  }
 
-	has(name: N): boolean {
-		return this.dataStorage.has(name);
-	}
+  get(name: N): T | void {
+    return this.dataStorage.get(name);
+  }
 
-	/**
-	 * Update trait value if it exists, otherwise add a new one
-	 * @param name name of trait to edit or create
-	 * @param newValue value to assign
-	 */
-	set(name: N, newValue: V): iTraitCollection<N, V, D, T> {
-		this.dataStorage.set(name, newValue);
-		return this;
-	}
+  has(name: N): boolean {
+    return this.dataStorage.has(name);
+  }
 
-	toArray(): T[] {
-		return this.dataStorage.toArray();
-	}
+  /**
+   * Update trait value if it exists, otherwise add a new one
+   * @param name name of trait to edit or create
+   * @param newValue value to assign
+   */
+  set(name: N, newValue: V): iTraitCollection<N, V, D, T> {
+    this.dataStorage.set(name, newValue);
+    return this;
+  }
+
+  toArray(): T[] {
+    return this.dataStorage.toArray();
+  }
 }

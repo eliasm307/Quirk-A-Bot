@@ -17,6 +17,8 @@ export interface AbstractCompositeDocumentProps<S extends Record<string, any>>
   initialData: S;
 }
 
+// todo break this into smaller pieces
+
 // export interface FirestoreDocumentObserverProps<K extends string, V> {}
 
 export default abstract class AbstractCompositeDocument<
@@ -377,7 +379,7 @@ export default abstract class AbstractCompositeDocument<
 
       this.#private.subDocuments.set(key, subDocument);
 
-      return subDocument;
+      return subDocument as iSubDocument<S, K>;
     }
 
     return existingSubDocument as iSubDocument<S, K>;

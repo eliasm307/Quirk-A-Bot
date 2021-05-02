@@ -3,7 +3,6 @@
   "compilerOptions": {
     "baseUrl": "../../",
     "paths": {
-      "src/*": ["packages/firebase-utils/src/*"],
       "@quirk-a-bot/*": ["packages/*/src"]
     }
   }

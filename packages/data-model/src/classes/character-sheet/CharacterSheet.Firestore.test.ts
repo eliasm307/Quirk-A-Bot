@@ -1,9 +1,8 @@
-import { firestoreEmulator } from '@quirk-a-bot/firebase-utils';
-
 import {
-  ATTRIBUTE_COLLECTION_NAME, DISCIPLINE_COLLECTION_NAME, SKILL_COLLECTION_NAME,
+  ATTRIBUTE_COLLECTION_NAME, DISCIPLINE_COLLECTION_NAME, firestoreEmulator, SKILL_COLLECTION_NAME,
   TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME,
-} from '../../constants';
+} from '@quirk-a-bot/common';
+
 import isCharacterSheetData from '../../utils/type-predicates/isCharacterSheetData';
 import FirestoreDataStorageFactory from '../data-storage/Firestore/FirestoreDataStorageFactory';
 import readCharacterSheetDataFromFirestore from '../data-storage/Firestore/utils/readCharacterSheetDataFromFirestore';
