@@ -1,6 +1,6 @@
 import {
   Firestore, FirestoreDocumentChangeData, FirestoreDocumentObserver, FirestoreDocumentObserverProps,
-} from '@quirk-a-bot/firebase-utils';
+} from '@quirk-a-bot/common';
 
 import { iDocumentGroup, iSubDocument } from '../declarations/interfaces';
 import objectsAreEqual from '../utils/objectsAreEqual';
