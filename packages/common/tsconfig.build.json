@@ -3,9 +3,9 @@
 
   "compilerOptions": {
     "outDir": "./dist",
-    "baseUrl": "../../",
+    "baseUrl": "../",
     "paths": {
-      "@quirk-a-bot/*": ["packages/*/src"]
+      "@quirk-a-bot/*": ["*/src"]
     }
   },
 

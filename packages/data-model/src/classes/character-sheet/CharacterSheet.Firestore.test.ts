@@ -17,7 +17,7 @@ const dataStorageFactory = new FirestoreDataStorageFactory({ firestore });
 
 const deleteDoc = async (path: string) => {
   await firestore.doc(path).delete();
-  await new Promise((res) => setTimeout(res, 100)); // wait for syncronisation
+  await new Promise((resolve) => setTimeout(resolve, 100)); // wait for syncronisation
 
   // make sure document doesnt exist
   let doc = await firestore.doc(path).get();

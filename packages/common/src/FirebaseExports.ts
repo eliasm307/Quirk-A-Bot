@@ -8,7 +8,7 @@ import 'firebase/firestore';
 import firebase from 'firebase/app';
 import urlExistSync from 'url-exist-sync';
 
-import config from '../../../private/firebase-config';
+import config from '../private/firebase-config';
 
 // const localDotenvPath = path.resolve(__dirname, '..', '.env');
 

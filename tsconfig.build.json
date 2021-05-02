@@ -14,7 +14,11 @@
     "strict": true,
     "alwaysStrict": true,
     "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "./packages",
+    "paths": {
+      "@quirk-a-bot/*": ["*/src"]
+    }
   },
   "exclude": [
     "**/node_modules/**",
