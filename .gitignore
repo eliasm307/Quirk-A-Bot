@@ -4,6 +4,9 @@ Blank
 
 **/private/**
 
+# Visual paradigm files
+*.vpp.bak_*
+
 # Firebase
 .idea
 **/.firebaserc
