@@ -46,7 +46,7 @@ export default abstract class AbstractCompositeDocument<
 
     this.path = path;
     this.#private = {
-      data: { ...initialData },
+      data: { ...initialData }, //
       firestore,
       documentRef: firestore.doc(path),
       subDocuments: new Map(),
@@ -60,6 +60,9 @@ export default abstract class AbstractCompositeDocument<
         },
       }),
     };
+
+    // instantiate initial sub documents
+    this.handleSubDocumentAddition(initialData);
   }
 
   /** Loads an observer for the firestore document and returns the initial data also */
@@ -270,7 +273,7 @@ export default abstract class AbstractCompositeDocument<
 
     if (newSubDocumentCount > existingSubDocumentCount) {
       // sub documents added
-      this.handleSubDocumentAddition(oldData, newData);
+      this.handleSubDocumentAddition(newData);
     } else if (newSubDocumentCount < existingSubDocumentCount) {
       // sub documents removed
       this.handleSubDocumentRemoval(newData);
@@ -302,10 +305,7 @@ export default abstract class AbstractCompositeDocument<
       this.newSubDocument(key, undefined)) as iSubDocument<S, K>;
   }
 
-  private handleSubDocumentAddition(
-    oldData: S | undefined,
-    newData: S | undefined
-  ) {
+  private handleSubDocumentAddition(newData: S | undefined) {
     for (const [_key, _value] of Object.entries(newData || {})) {
       const key = _key as keyof S;
       const value = _value as S[typeof key];

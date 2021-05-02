@@ -82,6 +82,7 @@ export default class CharacterSheet implements iCharacterSheet {
     // expose logger reporter
     this.log = this.logger.reporter;
 
+    // todo trait collections should decide how they want to instantiate traits,
     // create data storage initialisers
     const traitDataStorageInitialiser = dataStorageFactory.newTraitDataStorageInitialiser(
       {
