@@ -188,11 +188,13 @@ export default abstract class AbstractCompositeDocument<
     delete dataAfterDelete[key];
     */
 
+    /*
     console.warn(__filename, `Deleting key ${key}`, {
       key,
       dataBeforeDelete: this.#private.data,
       dataAfterDelete,
     });
+    */
 
     try {
       await this.#private.firestore.doc(this.path).set(dataAfterDelete);
