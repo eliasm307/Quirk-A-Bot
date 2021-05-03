@@ -45,3 +45,11 @@ export interface iFirestoreTraitCollectionDataStorageProps<
   T extends iBaseTrait<N, V, D>
 > extends iBaseTraitCollectionDataStorageProps<N, V, D, T>,
     iHasFirestore {}
+
+export interface iFirestoreCompositeTraitCollectionDataStorageProps<
+  N extends TraitNameUnionOrString,
+  V extends TraitValueTypeUnion,
+  D extends iBaseTraitData<N, V>,
+  T extends iBaseTrait<N, V, D>
+> extends iBaseTraitCollectionDataStorageProps<N, V, D, T>,
+    iHasFirestore {}

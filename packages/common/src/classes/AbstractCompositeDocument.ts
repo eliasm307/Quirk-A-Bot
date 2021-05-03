@@ -8,6 +8,24 @@ import FirestoreDocumentObserver, {
 } from './FirestoreDocumentObserver';
 import SubDocument from './SubDocument';
 
+type SubDocumentCreateDetails<S> = Record<keyof S, S[keyof S]>;
+
+type SubDocumentDeleteDetails<S> = Record<keyof S, S[keyof S]>;
+
+type SubDocumentUpdateDetails<S> = Record<
+  keyof S,
+  { before: S[keyof S]; after: S[keyof S] }
+>;
+
+interface SubDocumentChangeDetails<S> {
+  /** Record of items that were created and their initial state on creation */
+  creates?: SubDocumentCreateDetails<S>;
+  /** Record of items that were deleted and their state before delete */
+  deletes?: SubDocumentDeleteDetails<S>;
+  /** Record of items that were updated and their state before and after the update */
+  updates?: SubDocumentUpdateDetails<S>;
+}
+
 export interface AbstractCompositeDocumentLoaderProps<
   S extends Record<string, any>
 > extends FirestoreDocumentObserverLoaderProps<S> {}
@@ -21,15 +39,24 @@ export interface AbstractCompositeDocumentProps<S extends Record<string, any>>
 
 // export interface FirestoreDocumentObserverProps<K extends string, V> {}
 
+/** Firestore document change data including the detailed sub document change details */
+interface CompositeDocumentChangeData<S>
+  extends FirestoreDocumentChangeData<S> {
+  changes: SubDocumentChangeDetails<S>;
+}
+
 export default abstract class AbstractCompositeDocument<
-  S extends Record<string, any>
-> implements iCompositeDocument<S> {
+  SchemaType extends Record<string, any>
+> implements iCompositeDocument<SchemaType> {
   readonly path: string;
 
   #private: {
-    subDocuments: Map<keyof S, iSubDocument<S, keyof S>>;
-    data: S;
-    observer: FirestoreDocumentObserver<S>;
+    subDocuments: Map<
+      keyof SchemaType,
+      iSubDocument<SchemaType, keyof SchemaType>
+    >;
+    data: SchemaType;
+    observer: FirestoreDocumentObserver<SchemaType>;
     documentRef: FirestoreDocumentReference;
     firestore: Firestore;
   };
@@ -41,7 +68,7 @@ export default abstract class AbstractCompositeDocument<
   */
 
   // todo only return instance when data is loaded initially from firestore
-  protected constructor(props: AbstractCompositeDocumentProps<S>) {
+  protected constructor(props: AbstractCompositeDocumentProps<SchemaType>) {
     const { path, firestore, handleChange, initialData } = props;
 
     this.path = path;
@@ -149,7 +176,7 @@ export default abstract class AbstractCompositeDocument<
   }
 
   /** Delete sub document */
-  async delete(key: keyof S): Promise<iCompositeDocument<S>> {
+  async delete(key: keyof SchemaType): Promise<iCompositeDocument<SchemaType>> {
     /*
     const {
       [key]: excludedSubDocument,
@@ -203,7 +230,7 @@ export default abstract class AbstractCompositeDocument<
 
     try {
       await this.#private.firestore.doc(this.path).set(dataAfterDelete);
-      this.handleSubDocumentRemoval(dataAfterDelete as S);
+      this.handleSubDocumentRemoval(dataAfterDelete as SchemaType);
     } catch (error) {
       console.error(
         __filename,
@@ -217,15 +244,15 @@ export default abstract class AbstractCompositeDocument<
     return this;
   }
 
-  get<K extends keyof S>(key: K): iSubDocument<S, K> {
+  get<K extends keyof SchemaType>(key: K): iSubDocument<SchemaType, K> {
     return (this.#private.subDocuments.get(key) ||
-      this.newSubDocument(key, undefined)) as iSubDocument<S, K>;
+      this.newSubDocument(key, undefined)) as iSubDocument<SchemaType, K>;
   }
 
-  async set<K extends keyof S>(
+  async set<K extends keyof SchemaType>(
     key: K,
-    newValue: S[K]
-  ): Promise<iCompositeDocument<S>> {
+    newValue: SchemaType[K]
+  ): Promise<iCompositeDocument<SchemaType>> {
     try {
       await this.#private.firestore
         .doc(this.path)
@@ -243,24 +270,25 @@ export default abstract class AbstractCompositeDocument<
     return this;
   }
 
-  toArray(): iSubDocument<S, keyof S>[] {
+  toArray(): iSubDocument<SchemaType, keyof SchemaType>[] {
     return Array.from(this.#private.subDocuments.values());
   }
 
-  protected handleChangeSnapshot({
-    newData,
-    oldData,
-  }: FirestoreDocumentChangeData<S>) {
+  protected handleChangeSnapshot(
+    props: FirestoreDocumentChangeData<SchemaType>
+  ): CompositeDocumentChangeData<SchemaType> {
     // ? should this just overwrite existing data with new data?
+    const { newData, oldData } = props;
 
     if (!newData) console.warn(__filename, `newData was ${typeof newData}`);
 
     // update local data
-    this.#private.data = newData || ({} as S);
+    this.#private.data = newData || ({} as SchemaType);
 
     if (!newData) {
+      const deletes = this.handleSubDocumentRemoval({} as SchemaType);
       // remove all sub documents
-      return this.handleSubDocumentRemoval({} as S);
+      return { ...props, changes: { deletes } };
     }
 
     const newSubDocumentCount = Object.keys(newData).length;
@@ -283,10 +311,10 @@ export default abstract class AbstractCompositeDocument<
     }
 
     // just double check if assumption that multiple documents can be affected in a snapshot is true
-
+    /*
     if (affectedSubDocuments > 1) {
       // ! yes multiple sub docs can be affected in a single snapshot
-      /*
+
       console.error(
         __filename,
         `Multiple documents can be affected in a snapshot`,
@@ -296,26 +324,28 @@ export default abstract class AbstractCompositeDocument<
       throw Error(
         `Multiple documents can be affected in a snapshot, ${affectedSubDocuments} documents affected`
       );
-      */
     }
+    */
   }
 
-  private assertSubDocument<K extends keyof S>(key: K): iSubDocument<S, K> {
+  private assertSubDocument<K extends keyof SchemaType>(
+    key: K
+  ): iSubDocument<SchemaType, K> {
     return (this.#private.subDocuments.get(key) ||
-      this.newSubDocument(key, undefined)) as iSubDocument<S, K>;
+      this.newSubDocument(key, undefined)) as iSubDocument<SchemaType, K>;
   }
 
-  private handleSubDocumentAddition(newData: S | undefined) {
+  private handleSubDocumentAddition(newData: SchemaType | undefined) {
     for (const [_key, _value] of Object.entries(newData || {})) {
-      const key = _key as keyof S;
-      const value = _value as S[typeof key];
+      const key = _key as keyof SchemaType;
+      const value = _value as SchemaType[typeof key];
       if (!this.#private.subDocuments.has(key)) this.newSubDocument(key, value);
     }
   }
 
   private handleSubDocumentChange(
-    oldData: S | undefined,
-    newData: S | undefined
+    oldData: SchemaType | undefined,
+    newData: SchemaType | undefined
   ): number {
     let affectedDocuments = 0;
     for (const [key, newValue] of Object.entries(newData || {})) {
@@ -332,7 +362,7 @@ export default abstract class AbstractCompositeDocument<
       }
       */
 
-      if (!valuesAreEqual(oldValue, newValue as S[keyof S])) {
+      if (!valuesAreEqual(oldValue, newValue as SchemaType[keyof SchemaType])) {
         // ? is this required
         // subDocument.data = value as S[keyof S];
 
@@ -352,18 +382,30 @@ export default abstract class AbstractCompositeDocument<
     return affectedDocuments;
   }
 
-  private handleSubDocumentRemoval(newData: S) {
+  private handleSubDocumentRemoval(
+    newData: SchemaType
+  ): SubDocumentDeleteDetails<SchemaType> {
+    const deletes: SubDocumentDeleteDetails<SchemaType> = {} as SubDocumentDeleteDetails<SchemaType>;
     for (const key of this.#private.subDocuments.keys()) {
       // remove extra sub document
-      if (!newData[key as keyof S]) this.#private.subDocuments.delete(key);
+      if (!newData[key as keyof SchemaType]) {
+        // ? will data be deleted already at this point? is there a point in getting the data
+        // log state at delete
+        const oldSubDocument = this.#private.data[key];
+        if (oldSubDocument) deletes[key] = { ...oldSubDocument };
+
+        // remove sub document
+        this.#private.subDocuments.delete(key);
+      }
     }
+    return deletes;
   }
 
   /** Adds a new sub document if one does not exist, otherwise returns an existing instance */
-  private newSubDocument<K extends keyof S>(
+  private newSubDocument<K extends keyof SchemaType>(
     key: K,
-    value: S[K] | undefined
-  ): iSubDocument<S, K> {
+    value: SchemaType[K] | undefined
+  ): iSubDocument<SchemaType, K> {
     const existingSubDocument = this.#private.subDocuments.get(key);
 
     // add missing sub document
@@ -373,15 +415,16 @@ export default abstract class AbstractCompositeDocument<
         getDataFromStorage: () => this.#private.data && this.#private.data[key],
         key,
         parentDocumentPath: this.path,
-        setOnDataStorage: (newValue: S[keyof S]) => this.set(key, newValue),
+        setOnDataStorage: (newValue: SchemaType[keyof SchemaType]) =>
+          this.set(key, newValue),
         deleteFromDataStorage: () => this.delete(key),
       });
 
       this.#private.subDocuments.set(key, subDocument);
 
-      return subDocument as iSubDocument<S, K>;
+      return subDocument as iSubDocument<SchemaType, K>;
     }
 
-    return existingSubDocument as iSubDocument<S, K>;
+    return existingSubDocument as iSubDocument<SchemaType, K>;
   }
 }
