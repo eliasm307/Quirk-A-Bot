@@ -13,7 +13,10 @@ export interface SubDocumentProps<
   setOnDataStorage: (newData: S[K]) => Promise<any>;
 }
 
-/** Provides an interface for viewing and mutating sub documents */
+/** Provides an interface for viewing and mutating sub documents
+ * @generic `S` - this represents the overall schema of the composite document
+ * @generic `K` - this is the specific key of the composite that the sub document relates to, allows the type system to be more accurate if the schema is inconsistent
+ */
 export default class SubDocument<
   S extends Record<string, any>,
   K extends keyof S

@@ -18,6 +18,7 @@ import {
 import { iBaseTraitDataStorageProps } from '../interfaces/props/trait-data-storage';
 import FirestoreCompositeCharacterSheetDataStorage from './CharacterSheetDataStorage';
 import FirestoreCompositeTraitCollectionDataStorage from './TraitCollectionDataStorage';
+import FirestoreCompositeTraitDataStorage from './TraitDataStorage';
 
 export default class FirestoreCompositeDataStorageFactory
   implements iDataStorageFactory {
@@ -65,6 +66,7 @@ export default class FirestoreCompositeDataStorageFactory
       });
   }
 
+/*
   newTraitDataStorageInitialiser(): <
     N extends string,
     V extends TraitValueTypeUnion
@@ -75,7 +77,9 @@ export default class FirestoreCompositeDataStorageFactory
       new FirestoreCompositeTraitDataStorage({
         ...props,
         firestore: this.#firestore,
+        subDocument: new Sub(),
       });
   }
+  */
 }
 /**/
