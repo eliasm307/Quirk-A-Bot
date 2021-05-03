@@ -44,7 +44,7 @@ export interface iBaseCollection<
 > {
   readonly size: number;
 
-  delete(key: K): CollectionType;
+  delete(key: K): CollectionType | Promise<CollectionType>;
   get(key: K): ReturnValueType | void;
   has(key: K): boolean;
   /**
@@ -52,7 +52,7 @@ export interface iBaseCollection<
    * @param name name of trait to edit or create
    * @param newValue value to assign
    */
-  set(key: K, value: SetValueType): CollectionType;
+  set(key: K, value: SetValueType): CollectionType | Promise<CollectionType>;
   toArray(): ReturnValueType[];
 }
 

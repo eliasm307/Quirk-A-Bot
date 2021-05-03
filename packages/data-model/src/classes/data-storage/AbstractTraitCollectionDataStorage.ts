@@ -46,7 +46,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
   // ? is this required? if colleciton adds data to storage this means creating trait data and connecting data to trait instances would be done by 2 classes async, so it might be done in the wrong order. Opted to have these both on the trait side
   protected abstract afterAddInternal(name: N): void;
   protected abstract afterTraitCleanUp(): boolean;
-  protected abstract deleteTraitFromDataStorage(name: N): void;
+  protected abstract deleteTraitFromDataStorage(name: N): Promise<void>;
 
   constructor({
     instanceCreator,
@@ -135,7 +135,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
     return this.toArray().map((e) => e.data());
   }
 
-  delete(name: N): iTraitCollectionDataStorage<N, V, D, T> {
+  async delete(name: N): Promise<iTraitCollectionDataStorage<N, V, D, T>> {
     if (!this.map.has(name)) {
       /*
       console.log(
@@ -158,7 +158,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
       this.map.delete(name);
 
       // apply change to data storage
-      this.deleteTraitFromDataStorage(name);
+      await this.deleteTraitFromDataStorage(name);
 
       // log change
       this.logger.log(new DeleteLogEvent({ oldValue, property: name }));
@@ -169,7 +169,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
     } else {
       console.error(
         __filename,
-        `old value was "${oldValue}" when deleting property "${name}"`
+        `old value was "${oldValue as string}" when deleting property "${name}"`
       );
     }
 
@@ -184,7 +184,10 @@ export default abstract class AbstractTraitCollectionDataStorage<
     return this.map.has(name);
   }
 
-  set(name: N, newValue: V): iTraitCollectionDataStorage<N, V, D, T> {
+  async set(
+    name: N,
+    newValue: V
+  ): Promise<iTraitCollectionDataStorage<N, V, D, T>> {
     // if trait already exists then just update it
     if (this.map.has(name)) {
       const trait = this.map.get(name);
