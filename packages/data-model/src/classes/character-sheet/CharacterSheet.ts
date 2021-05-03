@@ -181,6 +181,12 @@ export default class CharacterSheet implements iCharacterSheet {
     });
 
     // create collections, with initial data where available
+
+    this.#coreNumberTraitCollection = TraitFactory.newC(
+      traitCollectionFactoryProps,
+      ...initialData.attributes
+    );
+
     this.attributes = TraitFactory.newAttributeTraitCollection(
       traitCollectionFactoryProps,
       ...initialData.attributes

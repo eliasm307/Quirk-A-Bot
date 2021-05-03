@@ -66,7 +66,7 @@ export const DISCIPLINE_NAMES = [
 
 export const ATTRIBUTE_CATEGORIES = ["Physical", "Social", "Mental"] as const;
 
-export const CORE_NUMBER_TRAITS = [
+export const CORE_NUMBER_TRAIT_NAMES = [
   "Health",
   "Willpower",
   "Hunger",
@@ -75,7 +75,7 @@ export const CORE_NUMBER_TRAITS = [
   "Sire",
 ] as const;
 
-export const CORE_STRING_TRAITS = ["Name", "Clan", "Sire"] as const;
+export const CORE_STRING_TRAIT_NAMES = ["Name", "Clan", "Sire"] as const;
 
 export const TRAIT_TYPES = [
   "Attribute",

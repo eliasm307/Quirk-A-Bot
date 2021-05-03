@@ -13,8 +13,9 @@ import {
   iTouchStoneOrConvictionCollection, iTraitCollectionFactoryMethodProps,
 } from './interfaces/trait-collection-interfaces';
 import {
-  iAttribute, iAttributeData, iBaseTraitProps, iDiscipline, iDisciplineData, iNumberTraitProps,
-  iSkill, iSkillData, iStringTraitProps, iTouchStoneOrConviction, iTouchStoneOrConvictionData,
+  iAttribute, iAttributeData, iBaseTraitProps, iCoreNumberTrait, iCoreNumberTraitData, iDiscipline,
+  iDisciplineData, iNumberTraitProps, iSkill, iSkillData, iStringTraitProps,
+  iTouchStoneOrConviction, iTouchStoneOrConvictionData,
 } from './interfaces/trait-interfaces';
 import TraitCollection from './trait-collection/TraitCollection';
 import NumberTrait from './trait/NumberTrait';
@@ -43,6 +44,31 @@ export default abstract class TraitFactory {
         instanceCreator: TraitFactory.newAttributeTrait,
         dataPredicate: isTraitData,
         namePredicate: isAttributeName,
+      },
+      ...initial
+    );
+  }
+
+  static newCoreNumberTraitCollection(
+    props: iTraitCollectionFactoryMethodProps<
+      CoreNumberTraitName,
+      number,
+      iCoreNumberTraitData
+    >,
+    ...initial: iCoreNumberTraitData[]
+  ): iAttributeTraitCollection {
+    return new TraitCollection<
+      CoreNumberTraitName,
+      number,
+      iCoreNumberTraitData,
+      iCoreNumberTrait
+    >(
+      {
+        ...props,
+        name: ATTRIBUTE_COLLECTION_NAME,
+        instanceCreator: TraitFactory.newCoreNumberTrait,
+        dataPredicate: isTraitData,
+        namePredicate: isCoreN,
       },
       ...initial
     );
