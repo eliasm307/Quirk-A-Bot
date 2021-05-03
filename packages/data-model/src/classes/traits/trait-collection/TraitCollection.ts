@@ -18,28 +18,15 @@ export default class TraitCollection<
   name: string;
   path: string;
 
-  constructor(
-    {
-      instanceCreator,
-      name,
-      traitDataStorageInitialiser,
-      traitCollectionDataStorageInitialiser,
-      parentPath,
-      loggerCreator: logger,
-    }: iTraitCollectionProps<N, V, D, T>,
-    ...initialData: D[]
-  ) {
+  constructor(props: iTraitCollectionProps<N, V, D, T>, ...initialData: D[]) {
+    const { name, traitCollectionDataStorageInitialiser } = props;
     this.name = name;
 
     this.dataStorage = traitCollectionDataStorageInitialiser({
-      instanceCreator,
-      name,
-      parentPath,
-      traitDataStorageInitialiser,
+      ...props,
       initialData,
-      // onAdd: (props: iAddLogEventProps<V>) => this.logger.log(new AddLogEvent(props)), // todo delete?
+      // onAdd: (props: iAddLogEventProps<V>) => this.logger.log(new AddLogEvent(props)), // todo delete? is this done in data storage now?
       // onDelete: (props: iDeleteLogEventProps<V>) => this.logger.log(new DeleteLogEvent(props)),
-      loggerCreator: logger,
     });
     // expose logger reporter
     this.log = this.dataStorage.log;

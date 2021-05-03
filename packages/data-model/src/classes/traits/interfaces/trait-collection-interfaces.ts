@@ -1,3 +1,5 @@
+import { CoreNumberTraitName, CoreStringTraitName } from '@quirk-a-bot/common';
+
 import {
   iBaseCollection, iHasCleanUp, iHasGetData, iHasParentPath, iHasPath,
 } from '../../../declarations/interfaces';
@@ -11,8 +13,9 @@ import {
   iHasTraitCollectionLogReporter, iTraitCollectionLogger,
 } from '../../log/interfaces/log-interfaces';
 import {
-  iAttribute, iAttributeData, iBaseTrait, iBaseTraitData, iCanHaveLoggerCreator, iDiscipline,
-  iDisciplineData, iGeneralTrait, iGeneralTraitData, iSkill, iSkillData, iTouchStoneOrConviction,
+  iAttribute, iAttributeData, iBaseTrait, iBaseTraitData, iCanHaveLoggerCreator, iCoreNumberTrait,
+  iCoreNumberTraitData, iCoreStringTrait, iCoreStringTraitData, iDiscipline, iDisciplineData,
+  iGeneralTrait, iGeneralTraitData, iSkill, iSkillData, iTouchStoneOrConviction,
   iTouchStoneOrConvictionData,
 } from './trait-interfaces';
 
@@ -20,14 +23,16 @@ import {
 // GENERAL
 
 export interface iTraitCollectionDataStorageInitialiserBundle
-  extends iHasTraitCollectionDataStorageInitialiser,
-    iHasTraitDataStorageInitialiser {}
+  extends iHasTraitCollectionDataStorageInitialiser {}
 
 // -------------------------------------------------------
 // FACTORY METHOD PROPS
 
-export interface iTraitCollectionFactoryMethodProps
-  extends iTraitCollectionDataStorageInitialiserBundle,
+export interface iTraitCollectionFactoryMethodProps<
+  N extends TraitNameUnionOrString,
+  V extends TraitValueTypeUnion,
+  D extends iBaseTraitData<N, V> = iBaseTraitData<N, V>
+> extends iTraitCollectionDataStorageInitialiserBundle,
     iHasParentPath,
     iCanHaveLoggerCreator<iTraitCollectionLogger> {}
 
@@ -61,6 +66,22 @@ export interface iGeneralTraitCollection
 
 export interface iAttributeTraitCollection
   extends iTraitCollection<AttributeName, number, iAttributeData, iAttribute> {}
+
+export interface iCoreNumberTraitCollection
+  extends iTraitCollection<
+    CoreNumberTraitName,
+    number,
+    iCoreNumberTraitData,
+    iCoreNumberTrait
+  > {}
+
+export interface iCoreStringTraitCollection
+  extends iTraitCollection<
+    CoreStringTraitName,
+    string,
+    iCoreStringTraitData<string>,
+    iCoreStringTrait<string>
+  > {}
 
 export interface iSkillTraitCollection
   extends iTraitCollection<SkillName, number, iSkillData, iSkill> {}

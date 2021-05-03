@@ -121,9 +121,12 @@ export interface iTraitCollectionProps<
   T extends iBaseTrait<N, V, D>
 > extends iHasTraitInstanceCreator<N, V, D, T>,
     iTraitCollectionDataStorageInitialiserBundle,
+    // iHasTraitDataStorageInitialiser,
     iHasParentPath,
     iCanHaveLoggerCreator<iTraitCollectionLogger> {
+  dataPredicate: (data: any) => data is D;
   name: string;
+  namePredicate: (name: any) => name is N;
 }
 // -------------------------------------------------------
 // GENERIC TRAIT DATA TYPES

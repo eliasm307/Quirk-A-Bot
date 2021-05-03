@@ -8,8 +8,9 @@ import {
 } from '../log/interfaces/log-interfaces';
 import CharacterSheetLogger from '../log/loggers/CharacterSheetLogger';
 import {
-  iAttributeTraitCollection, iDisciplineTraitCollection, iSkillTraitCollection,
-  iTouchStoneOrConvictionCollection, iTraitCollectionFactoryMethodProps,
+  iAttributeTraitCollection, iCoreNumberTraitCollection, iCoreStringTraitCollection,
+  iDisciplineTraitCollection, iSkillTraitCollection, iTouchStoneOrConvictionCollection,
+  iTraitCollectionFactoryMethodProps,
 } from '../traits/interfaces/trait-collection-interfaces';
 import {
   iCoreNumberTrait, iCoreStringTrait, iGeneralTrait,
@@ -28,10 +29,7 @@ import newCharacterSheetData from './utils/newCharacterSheetData';
 
 export default class CharacterSheet implements iCharacterSheet {
   /** Existing singleton-ish instances of this class */
-  protected static instances: Map<string, CharacterSheet> = new Map<
-    string,
-    CharacterSheet
-  >();
+  protected static instances: Map<string, CharacterSheet> = new Map();
 
   /** Internal logger */
   protected logger: iCharacterSheetLogger;
@@ -52,6 +50,8 @@ export default class CharacterSheet implements iCharacterSheet {
   readonly touchstonesAndConvictions: iTouchStoneOrConvictionCollection;
   readonly willpower: iCoreNumberTrait;
 
+  #coreNumberTraitCollection: iCoreNumberTraitCollection;
+  #coreStringTraitCollection: iCoreStringTraitCollection;
   log: iCharacterSheetLogReporter;
   parentPath: string;
   path: string;
@@ -84,11 +84,13 @@ export default class CharacterSheet implements iCharacterSheet {
 
     // todo trait collections should decide how they want to instantiate traits,
     // create data storage initialisers
+    /*
     const traitDataStorageInitialiser = dataStorageFactory.newTraitDataStorageInitialiser(
       {
         characterSheet: this,
       }
     );
+    */
 
     const traitCollectionDataStorageInitialiser = dataStorageFactory.newTraitCollectionDataStorageInitialiser(
       {
@@ -110,7 +112,7 @@ export default class CharacterSheet implements iCharacterSheet {
 
     // create partial trait factory method props
     const partialTraitFactoryProps = {
-      traitDataStorageInitialiser,
+      // traitDataStorageInitialiser,
       parentPath: this.path,
       loggerCreator: traitLoggerCreator,
     };
@@ -118,7 +120,7 @@ export default class CharacterSheet implements iCharacterSheet {
     // create traitCollection factory method props
     const traitCollectionFactoryProps: iTraitCollectionFactoryMethodProps = {
       traitCollectionDataStorageInitialiser,
-      traitDataStorageInitialiser,
+      // traitDataStorageInitialiser,
       parentPath: this.path,
       loggerCreator: traitCollectionLoggerCreator,
     };
