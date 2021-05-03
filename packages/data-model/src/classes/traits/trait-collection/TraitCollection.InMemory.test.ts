@@ -10,12 +10,14 @@ const rootCollectionPath = "traitCollectionTests";
 
 const traitCollectionFactoryMethodProps: iTraitCollectionFactoryMethodProps = {
   traitCollectionDataStorageInitialiser: dataStorageFactory.newTraitCollectionDataStorageInitialiser(),
-  traitDataStorageInitialiser: dataStorageFactory.newTraitDataStorageInitialiser(),
+  // traitDataStorageInitialiser: dataStorageFactory.newTraitDataStorageInitialiser(),
   parentPath: rootCollectionPath,
   loggerCreator: null,
 };
 
-test("TraitCollection CRUD functionality", () => {
+test("TraitCollection CRUD functionality", async () => {
+  expect.hasAssertions();
+
   const tc = TraitFactory.newAttributeTraitCollection(
     traitCollectionFactoryMethodProps
   );
@@ -27,7 +29,7 @@ test("TraitCollection CRUD functionality", () => {
   expect(tc.size).toEqual(0);
 
   // it('can add traits to itself and keep track', () => {
-  tc.set("Wits", 3);
+  await tc.set("Wits", 3);
   expect(tc.has("Wits")).toBeTruthy();
   expect(tc.has("Dexterity")).toBeFalsy();
   expect(tc.size).toEqual(1);
@@ -38,20 +40,23 @@ test("TraitCollection CRUD functionality", () => {
   );
 
   // it('can change existing trait values', () => {
-  tc.set("Wits", 2);
+  await tc.set("Wits", 2);
   expect((tc.get("Wits") as iGeneralTrait).value).toEqual(2);
 
   // it('can handle requests to delete traits that dont exist from itself', () => {
-  tc.delete("Dexterity");
+  await tc.delete("Dexterity");
   expect(tc.size).toEqual(1);
 
   // it('can delete existing traits from itself', () => {
-  tc.delete("Wits");
+  await tc.delete("Wits");
   expect(tc.size).toEqual(0);
   expect(tc.has("Wits")).toEqual(false);
 
   // it('can add or edit items using chaining', () => {
-  tc.set("Wits", 0).set("Dexterity", 0).set("Wits", 5);
+  await tc.set("Wits", 0);
+  await tc.set("Dexterity", 0);
+  await tc.set("Wits", 5);
+
   expect(tc.has("Wits")).toEqual(true);
   expect(tc.has("Dexterity")).toEqual(true);
   expect((tc.get("Wits") as iGeneralTrait).value).toEqual(5);
@@ -59,7 +64,9 @@ test("TraitCollection CRUD functionality", () => {
   expect(tc.size).toEqual(2);
 });
 
-test("TraitCollection logging functionality", () => {
+test("TraitCollection logging functionality", async () => {
+  expect.hasAssertions();
+
   // it('can produce log reports for all traits', () => {
   const tc = TraitFactory.newAttributeTraitCollection(
     traitCollectionFactoryMethodProps
@@ -67,16 +74,22 @@ test("TraitCollection logging functionality", () => {
 
   // create some log items
   // add items using chaining
-  tc.set("Wits", 3).set("Charisma", 4).set("Manipulation", 1).set("Wits", 1);
+  await tc.set("Wits", 3);
+  await tc.set("Charisma", 4);
+  await tc.set("Manipulation", 1);
+  await tc.set("Wits", 1);
+
   expect(tc.size).toEqual(3);
   expect(tc.log.report.traitLogReports.length).toEqual(3);
   expect(tc.log.events.length).toEqual(4);
 
   // delete an existing item
-  tc.delete("Wits");
+  await tc.delete("Wits");
 
   // delete non-existing items, should not generate log items
-  tc.delete("Wits").delete("Composure").delete("Dexterity");
+  await tc.delete("Wits");
+  await tc.delete("Composure");
+  await tc.delete("Dexterity");
 
   let logEventsSnapshot = tc.log.events;
 
@@ -93,7 +106,8 @@ test("TraitCollection logging functionality", () => {
   expect(logEventsSnapshot[4].operation).toEqual("DELETE" as LogOperationUnion);
 
   // delete the rest of the traits, 2 new log items
-  tc.delete("Charisma").delete("Manipulation");
+  await tc.delete("Charisma");
+  await tc.delete("Manipulation");
 
   logEventsSnapshot = tc.log.events;
 
@@ -108,6 +122,7 @@ describe("TraitCollection general functionality", () => {
   // separate instance of same character sheet, no inital data
 
   it("can export trait data", async () => {
+    expect.hasAssertions();
     const tc = TraitFactory.newAttributeTraitCollection(
       traitCollectionFactoryMethodProps
     );

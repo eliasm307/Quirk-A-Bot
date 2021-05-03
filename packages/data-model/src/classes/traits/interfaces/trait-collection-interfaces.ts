@@ -28,11 +28,8 @@ export interface iTraitCollectionDataStorageInitialiserBundle
 // -------------------------------------------------------
 // FACTORY METHOD PROPS
 
-export interface iTraitCollectionFactoryMethodProps<
-  N extends TraitNameUnionOrString,
-  V extends TraitValueTypeUnion,
-  D extends iBaseTraitData<N, V> = iBaseTraitData<N, V>
-> extends iTraitCollectionDataStorageInitialiserBundle,
+export interface iTraitCollectionFactoryMethodProps
+  extends iTraitCollectionDataStorageInitialiserBundle,
     iHasParentPath,
     iCanHaveLoggerCreator<iTraitCollectionLogger> {}
 
