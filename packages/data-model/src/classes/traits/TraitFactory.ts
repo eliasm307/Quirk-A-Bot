@@ -30,11 +30,7 @@ import { coreNumberTraitMax } from './utils/numberTraitLimits';
 
 export default abstract class TraitFactory {
   static newAttributeTraitCollection(
-    props: iTraitCollectionFactoryMethodProps<
-      AttributeName,
-      number,
-      iAttributeData
-    >,
+    props: iTraitCollectionFactoryMethodProps,
     ...initialData: iAttributeData[]
   ): iAttributeTraitCollection {
     return new TraitCollection<
@@ -55,11 +51,7 @@ export default abstract class TraitFactory {
   }
 
   static newCoreNumberTraitCollection(
-    props: iTraitCollectionFactoryMethodProps<
-      CoreNumberTraitName,
-      number,
-      iCoreNumberTraitData
-    >,
+    props: iTraitCollectionFactoryMethodProps,
     ...initialData: iCoreNumberTraitData[]
   ): iCoreNumberTraitCollection {
     return new TraitCollection<
@@ -80,11 +72,7 @@ export default abstract class TraitFactory {
   }
 
   static newCoreStringTraitCollection(
-    props: iTraitCollectionFactoryMethodProps<
-      CoreStringTraitName,
-      string,
-      iCoreStringTraitData
-    >,
+    props: iTraitCollectionFactoryMethodProps,
     ...initialData: iCoreStringTraitData[]
   ): iCoreStringTraitCollection {
     return new TraitCollection<
@@ -105,11 +93,7 @@ export default abstract class TraitFactory {
   }
 
   static newDisciplineTraitCollection(
-    props: iTraitCollectionFactoryMethodProps<
-      DisciplineName,
-      number,
-      iDisciplineData
-    >,
+    props: iTraitCollectionFactoryMethodProps,
     ...initialData: iDisciplineData[]
   ): iDisciplineTraitCollection {
     return new TraitCollection<
@@ -130,7 +114,7 @@ export default abstract class TraitFactory {
   }
 
   static newSkillTraitCollection(
-    props: iTraitCollectionFactoryMethodProps<SkillName, number, iSkillData>,
+    props: iTraitCollectionFactoryMethodProps,
     ...initialData: iSkillData[]
   ): iSkillTraitCollection {
     return new TraitCollection<SkillName, number, iSkillData, iSkill>(
@@ -146,11 +130,7 @@ export default abstract class TraitFactory {
   }
 
   static newTouchstonesAndConvictionTraitCollection(
-    props: iTraitCollectionFactoryMethodProps<
-      string,
-      string,
-      iTouchStoneOrConvictionData
-    >,
+    props: iTraitCollectionFactoryMethodProps,
     ...initialData: iTouchStoneOrConvictionData[]
   ): iTouchStoneOrConvictionCollection {
     return new TraitCollection<
