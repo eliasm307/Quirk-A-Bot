@@ -5,44 +5,44 @@ import { iCharacterSheet } from '../../character-sheet/interfaces/character-shee
 import { iBaseTrait, iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
 import AbstractTraitCollectionDataStorage from '../AbstractTraitCollectionDataStorage';
 import {
-  iLocalFileTraitCollectionDataStorageProps
+  iLocalFileTraitCollectionDataStorageProps,
 } from '../interfaces/props/trait-collection-data-storage';
 import saveCharacterSheetToFile from './utils/saveCharacterSheetToFile';
 
 export default class LocalFileTraitCollectionDataStorage<
-	N extends TraitNameUnionOrString,
-	V extends TraitValueTypeUnion,
-	D extends iBaseTraitData<N, V>,
-	T extends iBaseTrait<N, V, D>
+  N extends TraitNameUnionOrString,
+  V extends TraitValueTypeUnion,
+  D extends iBaseTraitData<N, V>,
+  T extends iBaseTrait<N, V, D>
 > extends AbstractTraitCollectionDataStorage<N, V, D, T> {
-	#characterSheet: iCharacterSheet;
-	#resolvedBasePath: string;
+  #characterSheet: iCharacterSheet;
+  #resolvedBasePath: string;
 
-	constructor(props: iLocalFileTraitCollectionDataStorageProps<N, V, D, T>) {
-		super(props);
-		const { characterSheet, resolvedBasePath } = props;
-		this.#characterSheet = characterSheet;
-		this.#resolvedBasePath = resolvedBasePath;
-	}
+  constructor(props: iLocalFileTraitCollectionDataStorageProps<N, V, D, T>) {
+    super(props);
+    const { characterSheet, resolvedBasePath } = props;
+    this.#characterSheet = characterSheet;
+    this.#resolvedBasePath = resolvedBasePath;
+  }
 
-	protected afterAddInternal(name: N): void {
-		this.save();
-	}
+  protected afterAddInternal(name: N): void {
+    this.save();
+  }
 
-	protected afterTraitCleanUp(): boolean {
-		// do nothing
-		return true;
-	}
+  protected afterTraitCleanUp(): boolean {
+    // do nothing
+    return true;
+  }
 
-	protected deleteTraitFromDataStorage(name: N): void {
-		this.save();
-	}
+  protected async deleteTraitFromDataStorage(name: N) {
+    this.save();
+  }
 
-	protected save(): boolean {
-		// save if available
-		return saveCharacterSheetToFile(
-			this.#characterSheet.data(),
-			path.resolve(this.#resolvedBasePath, `${this.#characterSheet.id}.json`)
-		);
-	}
+  protected save(): boolean {
+    // save if available
+    return saveCharacterSheetToFile(
+      this.#characterSheet.data(),
+      path.resolve(this.#resolvedBasePath, `${this.#characterSheet.id}.json`)
+    );
+  }
 }
