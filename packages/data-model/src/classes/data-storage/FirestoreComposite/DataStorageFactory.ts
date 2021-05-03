@@ -16,8 +16,8 @@ import {
   iBaseTraitCollectionDataStorageProps,
 } from '../interfaces/props/trait-collection-data-storage';
 import { iBaseTraitDataStorageProps } from '../interfaces/props/trait-data-storage';
+import FirestoreCompositeCharacterSheetDataStorage from './CharacterSheetDataStorage';
 
-/*
 export default class FirestoreCompositeDataStorageFactory
   implements iDataStorageFactory {
   #firestore: Firestore;
@@ -77,4 +77,4 @@ export default class FirestoreCompositeDataStorageFactory
       });
   }
 }
-*/
+/**/

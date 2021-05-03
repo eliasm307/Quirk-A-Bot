@@ -9,8 +9,8 @@ import isTraitData from '../../../../utils/type-predicates/isTraitData';
 import {
   iCharacterSheetData,
 } from '../../../character-sheet/interfaces/character-sheet-interfaces';
+import { DocumentDataReaderProps } from '../../Firestore/utils/assertDocumentExistsOnFirestore';
 import { createPath } from '../../utils/createPath';
-import { DocumentDataReaderProps } from './assertDocumentExistsOnFirestore';
 
 // todo test
 

@@ -10,8 +10,8 @@ import {
   iCharacterSheetData,
 } from '../../../character-sheet/interfaces/character-sheet-interfaces';
 import { iGeneralTraitData } from '../../../traits/interfaces/trait-interfaces';
+import { DocumentDataWriterProps } from '../../Firestore/utils/assertDocumentExistsOnFirestore';
 import { createPath } from '../../utils/createPath';
-import { DocumentDataWriterProps } from './assertDocumentExistsOnFirestore';
 
 function writeTraitCollectionCompositeAsBatch(
   firestore: Firestore,
