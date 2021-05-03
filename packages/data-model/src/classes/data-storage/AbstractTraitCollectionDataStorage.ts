@@ -45,6 +45,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
 
   // ? is this required? if colleciton adds data to storage this means creating trait data and connecting data to trait instances would be done by 2 classes async, so it might be done in the wrong order. Opted to have these both on the trait side
   protected abstract afterAddInternal(name: N): void;
+  /** Run after the child traits have been cleaned, this is for cleaning up trait collection itself */
   protected abstract afterTraitCleanUp(): boolean;
   protected abstract deleteTraitFromDataStorage(name: N): Promise<void>;
 
@@ -210,6 +211,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
       // log change
       this.logger.log(new AddLogEvent({ newValue, property: name }));
 
+      // ? is this required
       // post add event
       this.afterAddInternal(name);
 

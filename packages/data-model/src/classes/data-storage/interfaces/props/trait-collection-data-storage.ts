@@ -23,8 +23,10 @@ export interface iBaseTraitCollectionDataStorageProps<
     iHasTraitDataStorageInitialiser,
     iHasParentPath,
     iCanHaveLoggerCreator<iTraitCollectionLogger> {
+  dataPredicate: (data: any) => data is D;
   initialData?: D[];
   name: string;
+  namePredicate: (name: any) => name is N;
   onAdd?: (props: iAddLogEventProps<V>) => void;
   onDelete?: (props: iDeleteLogEventProps<V>) => void;
 }
