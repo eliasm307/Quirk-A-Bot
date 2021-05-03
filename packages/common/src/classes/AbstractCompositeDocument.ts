@@ -14,7 +14,7 @@ type SubDocumentDeleteDetails<S> = Record<keyof S, S[keyof S]>;
 
 type SubDocumentUpdateDetails<S> = Record<
   keyof S,
-  { before: S[keyof S]; after: S[keyof S] }
+  { before?: S[keyof S]; after?: S[keyof S] }
 >;
 
 interface SubDocumentChangeDetails<S> {
@@ -278,7 +278,7 @@ export default abstract class AbstractCompositeDocument<
     props: FirestoreDocumentChangeData<SchemaType>
   ): CompositeDocumentChangeData<SchemaType> {
     // ? should this just overwrite existing data with new data?
-    const { newData, oldData } = props;
+    const { newData, oldData, id, exists } = props;
 
     if (!newData) console.warn(__filename, `newData was ${typeof newData}`);
 
@@ -286,46 +286,42 @@ export default abstract class AbstractCompositeDocument<
     this.#private.data = newData || ({} as SchemaType);
 
     if (!newData) {
-      const deletes = this.handleSubDocumentRemoval({} as SchemaType);
       // remove all sub documents
+      const deletes = this.handleSubDocumentRemoval({} as SchemaType);
       return { ...props, changes: { deletes } };
     }
+
+    const changes: SubDocumentChangeDetails<SchemaType> = {};
 
     const newSubDocumentCount = Object.keys(newData).length;
 
     const existingSubDocumentCount = this.#private.subDocuments.size;
 
-    let affectedSubDocuments = Math.abs(
-      newSubDocumentCount - existingSubDocumentCount
-    );
+    // ! multiple sub docs can be affected in a single snapshot
 
     if (newSubDocumentCount > existingSubDocumentCount) {
       // sub documents added
-      this.handleSubDocumentAddition(newData);
+      const creates = this.handleSubDocumentAddition(newData);
+      changes.creates = creates;
     } else if (newSubDocumentCount < existingSubDocumentCount) {
       // sub documents removed
-      this.handleSubDocumentRemoval(newData);
+      const deletes = this.handleSubDocumentRemoval(newData);
+      changes.deletes = deletes;
     } else {
       // sub documents changed
-      affectedSubDocuments = this.handleSubDocumentChange(oldData, newData);
+      const updates = this.handleSubDocumentChange(oldData, newData);
+      changes.updates = updates;
     }
 
-    // just double check if assumption that multiple documents can be affected in a snapshot is true
-    /*
-    if (affectedSubDocuments > 1) {
-      // ! yes multiple sub docs can be affected in a single snapshot
+    console.log(__filename, `Detected snapshot changes`, {
+      changes,
+      newData,
+      oldData,
+      id,
+      exists,
+    });
 
-      console.error(
-        __filename,
-        `Multiple documents can be affected in a snapshot`,
-        { newSubDocumentCount, existingSubDocumentCount, affectedSubDocuments }
-      );
-
-      throw Error(
-        `Multiple documents can be affected in a snapshot, ${affectedSubDocuments} documents affected`
-      );
-    }
-    */
+    return { ...props, changes };
   }
 
   private assertSubDocument<K extends keyof SchemaType>(
@@ -335,42 +331,42 @@ export default abstract class AbstractCompositeDocument<
       this.newSubDocument(key, undefined)) as iSubDocument<SchemaType, K>;
   }
 
-  private handleSubDocumentAddition(newData: SchemaType | undefined) {
+  private handleSubDocumentAddition(
+    newData: SchemaType | undefined
+  ): SubDocumentCreateDetails<SchemaType> {
+    const creates: SubDocumentCreateDetails<SchemaType> = {} as SubDocumentCreateDetails<SchemaType>;
+
     for (const [_key, _value] of Object.entries(newData || {})) {
       const key = _key as keyof SchemaType;
       const value = _value as SchemaType[typeof key];
-      if (!this.#private.subDocuments.has(key)) this.newSubDocument(key, value);
+      if (!this.#private.subDocuments.has(key)) {
+        this.newSubDocument(key, value);
+
+        // log create
+        creates[key] = { ...value };
+      }
     }
+
+    return creates;
   }
 
   private handleSubDocumentChange(
     oldData: SchemaType | undefined,
     newData: SchemaType | undefined
-  ): number {
-    let affectedDocuments = 0;
-    for (const [key, newValue] of Object.entries(newData || {})) {
-      // update changed documents only
-      // const subDocument = this.#private.subDocuments.get(key as keyof S);
+  ): SubDocumentUpdateDetails<SchemaType> {
+    const updates: SubDocumentUpdateDetails<SchemaType> = {} as SubDocumentUpdateDetails<SchemaType>;
+
+    for (const [_key, newValue] of Object.entries(newData || {})) {
+      const key = _key as keyof SchemaType;
+
       const oldValue = oldData && oldData[key];
 
-      // todo delete?
-      /*
-      if (!oldValue) {
-        const error = `Could not handleSubDocumentChange, sub document with key ${key} doesnt exist`;
-        console.warn(__filename, error, { oldData, newData, key, newValue });
-        throw Error(error);
-      }
-      */
-
+      // update changed documents only
       if (!valuesAreEqual(oldValue, newValue as SchemaType[keyof SchemaType])) {
-        // ? is this required
-        // subDocument.data = value as S[keyof S];
-
-        // (this.#private.data as Record<string, any>)[key] = newValue;
-
         this.assertSubDocument(key).setDataLocallyOnly(newValue);
 
-        affectedDocuments++;
+        // log update
+        updates[key] = { after: newValue, before: oldValue };
       } else {
         console.log(
           __filename,
@@ -379,9 +375,10 @@ export default abstract class AbstractCompositeDocument<
         );
       }
     }
-    return affectedDocuments;
+    return updates;
   }
 
+  /** Handles when a snapshot says a sub document has been removed, this removes the sub document instance */
   private handleSubDocumentRemoval(
     newData: SchemaType
   ): SubDocumentDeleteDetails<SchemaType> {
