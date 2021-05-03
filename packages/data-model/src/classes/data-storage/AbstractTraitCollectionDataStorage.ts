@@ -30,14 +30,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
   // ? is this required
   protected logger: iTraitCollectionLogger;
   protected map: Map<N, T>;
-  protected abstract traitDataStorageInitialiser: <
-    _N extends TraitNameUnionOrString,
-    _V extends TraitValueTypeUnion
-  >(
-    props: iBaseTraitDataStorageProps<_N, _V>
-  ) => iBaseTraitDataStorage<_N, _V>;
 
-  // ? is this required
   instanceCreator: (props: iBaseTraitProps<N, V, D>) => T;
   log: iTraitCollectionLogReporter;
   name: string;
@@ -48,6 +41,9 @@ export default abstract class AbstractTraitCollectionDataStorage<
   /** Run after the child traits have been cleaned, this is for cleaning up trait collection itself */
   protected abstract afterTraitCleanUp(): boolean;
   protected abstract deleteTraitFromDataStorage(name: N): Promise<void>;
+  protected abstract traitDataStorageInitialiser(
+    props: iBaseTraitDataStorageProps<N, V>
+  ): iBaseTraitDataStorage<N, V>;
 
   constructor({
     instanceCreator,

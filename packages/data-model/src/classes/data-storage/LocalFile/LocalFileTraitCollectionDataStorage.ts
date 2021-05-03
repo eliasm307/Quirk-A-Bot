@@ -4,9 +4,11 @@ import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declaratio
 import { iCharacterSheet } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import { iBaseTrait, iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
 import AbstractTraitCollectionDataStorage from '../AbstractTraitCollectionDataStorage';
+import { iBaseTraitDataStorage } from '../interfaces/data-storage-interfaces';
 import {
   iLocalFileTraitCollectionDataStorageProps,
 } from '../interfaces/props/trait-collection-data-storage';
+import { iBaseTraitDataStorageProps } from '../interfaces/props/trait-data-storage';
 import saveCharacterSheetToFile from './utils/saveCharacterSheetToFile';
 
 export default class LocalFileTraitCollectionDataStorage<
@@ -15,9 +17,6 @@ export default class LocalFileTraitCollectionDataStorage<
   D extends iBaseTraitData<N, V>,
   T extends iBaseTrait<N, V, D>
 > extends AbstractTraitCollectionDataStorage<N, V, D, T> {
-  #characterSheet: iCharacterSheet;
-  #resolvedBasePath: string;
-
   constructor(props: iLocalFileTraitCollectionDataStorageProps<N, V, D, T>) {
     super(props);
     const { characterSheet, resolvedBasePath } = props;

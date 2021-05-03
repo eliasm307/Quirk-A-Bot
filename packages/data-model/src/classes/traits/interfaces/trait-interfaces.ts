@@ -51,7 +51,7 @@ export interface iBaseTraitProps<
   N extends TraitNameUnionOrString,
   V extends TraitValueTypeUnion,
   D extends iBaseTraitData<N, V>
-> extends iHasTraitDataStorageInitialiser,
+> extends iHasTraitDataStorageInitialiser<N, V>,
     iHasParentPath,
     iCanHaveLoggerCreator<iTraitLogger> {
   name: N;

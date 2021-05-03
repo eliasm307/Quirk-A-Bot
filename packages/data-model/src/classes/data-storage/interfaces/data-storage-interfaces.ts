@@ -93,7 +93,8 @@ export interface iDataStorageFactory {
   >(
     props: iBaseTraitCollectionDataStorageProps<N, V, D, T>
   ) => iTraitCollectionDataStorage<N, V, D, T>;
-  // NOTE the factory props just define what will be available, the specific factories dont need to require any of the given props
+
+// NOTE the factory props just define what will be available, the specific factories dont need to require any of the given props
   // ! traits will always be part of trait collections, so factory shouldnt have this method. Trait collections should instead
   /*
   newTraitDataStorageInitialiser(
@@ -108,11 +109,11 @@ export interface iDataStorageFactory {
 // -------------------------------------------------------
 // INITIALISERS
 
-export interface iHasTraitDataStorageInitialiser {
-  traitDataStorageInitialiser<
-    N extends TraitNameUnionOrString,
-    V extends TraitValueTypeUnion
-  >(
+export interface iHasTraitDataStorageInitialiser<
+  N extends TraitNameUnionOrString,
+  V extends TraitValueTypeUnion
+> {
+  traitDataStorageInitialiser(
     props: iBaseTraitDataStorageProps<N, V>
   ): iBaseTraitDataStorage<N, V>;
 }
