@@ -1,3 +1,5 @@
+import { CompositeDocumentChangeData } from 'packages/common/src/classes/AbstractCompositeDocument';
+
 import { ConsistentCompositeDocument, Firestore } from '@quirk-a-bot/common';
 
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
@@ -7,6 +9,7 @@ import AbstractTraitCollectionDataStorage from '../AbstractTraitCollectionDataSt
 import {
   iFirestoreCompositeTraitCollectionDataStorageProps, iFirestoreTraitCollectionDataStorageProps,
 } from '../interfaces/props/trait-collection-data-storage';
+import { createPath } from '../utils/createPath';
 
 export default class FirestoreCompositeTraitCollectionDataStorage<
   N extends TraitNameUnionOrString,
@@ -20,10 +23,37 @@ export default class FirestoreCompositeTraitCollectionDataStorage<
     props: iFirestoreCompositeTraitCollectionDataStorageProps<N, V, D, T>
   ) {
     super(props);
-    const { firestore } = props;
+    const {
+      firestore,
+      parentPath,
+      name,
+      onAdd,
+      onDelete,
+      initialData,
+      dataPredicate,
+      namePredicate,
+    } = props;
     this.#firestore = firestore;
 
-    ConsistentCompositeDocument.load({ firestore, handleChange });
+    const path = createPath(parentPath, name);
+
+    const handleChange: (
+      changeData: CompositeDocumentChangeData<Record<N, D>>
+    ) => void = ({ changes }) => {
+      const { creates, deletes } = changes;
+
+      const valuePropertyName: keyof D = "value";
+
+      // todo add calls to onAdd and onDelete
+    };
+
+    ConsistentCompositeDocument.load({
+      firestore,
+      handleChange,
+      keyPredicate: namePredicate,
+      path,
+      valuePredicate: dataPredicate,
+    });
 
     this.init();
   }

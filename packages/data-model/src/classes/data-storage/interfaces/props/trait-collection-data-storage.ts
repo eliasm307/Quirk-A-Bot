@@ -52,4 +52,7 @@ export interface iFirestoreCompositeTraitCollectionDataStorageProps<
   D extends iBaseTraitData<N, V>,
   T extends iBaseTrait<N, V, D>
 > extends iBaseTraitCollectionDataStorageProps<N, V, D, T>,
-    iHasFirestore {}
+    iHasFirestore {
+  dataPredicate: (data: any) => data is D;
+  namePredicate: (name: any) => name is N;
+}
