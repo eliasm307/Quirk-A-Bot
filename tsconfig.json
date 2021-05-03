@@ -16,5 +16,13 @@
     "isolatedModules": true,
     "checkJs": false,
     "noEmit": true
-  }
+  },
+  "include": ["**/*"],
+  "exclude": [
+    "**/node_modules/**/*",
+    "**/dist/**",
+    "**/build/**",
+    "**/lib/**",
+    "**/public/**"
+  ]
 }

@@ -18,3 +18,7 @@ export interface iLocalFileDataStorageFactoryProps
 export interface iFirestoreDataStorageFactoryProps
   extends iBaseDataStorageFactoryProps,
     iHasFirestore {}
+
+export interface iFirestoreCompositeDataStorageFactoryProps
+  extends iBaseDataStorageFactoryProps,
+    iHasFirestore {}

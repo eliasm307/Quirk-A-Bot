@@ -15,3 +15,7 @@ export interface iLocalFileCharacterSheetDataStorageProps
 export interface iFirestoreCharacterSheetDataStorageProps
   extends iBaseCharacterSheetDataStorageProps,
     iHasFirestore {}
+
+export interface iFirestoreCompositeCharacterSheetDataStorageProps
+  extends iBaseCharacterSheetDataStorageProps,
+    iHasFirestore {}
