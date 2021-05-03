@@ -1,9 +1,9 @@
 // todo test
 
 import {
-  ATTRIBUTE_COLLECTION_NAME, CHARACTER_SHEET_TRAIT_COMPOSITES_COLLECTION_NAME,
-  CORE_TRAIT_COLLECTION_NAME, DISCIPLINE_COLLECTION_NAME, Firestore, FirestoreBatch,
-  SKILL_COLLECTION_NAME, TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME,
+  arrayToRecord, ATTRIBUTE_COLLECTION_NAME, CHARACTER_SHEET_TRAIT_COMPOSITES_COLLECTION_NAME,
+  CORE_TRAIT_COLLECTION_NAME, DISCIPLINE_COLLECTION_NAME, displayNameToPropertyName, Firestore,
+  FirestoreBatch, SKILL_COLLECTION_NAME, TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME,
 } from '@quirk-a-bot/common';
 
 import {
@@ -20,6 +20,11 @@ function writeTraitCollectionCompositeAsBatch(
   traitCollectionName: string,
   batch: FirestoreBatch
 ) {
+  const dataRecord = arrayToRecord({
+    array: traitDataArray,
+    propertyNameReducer: (el) => displayNameToPropertyName(el.name),
+  });
+
   traitDataArray.forEach((traitData) => {
     const traitDoc = firestore.doc(
       `${characterSheetDocpath}/${traitCollectionName}/${traitData.name}`

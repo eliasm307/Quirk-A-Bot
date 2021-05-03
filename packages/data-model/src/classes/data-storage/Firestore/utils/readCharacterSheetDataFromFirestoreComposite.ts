@@ -14,19 +14,6 @@ import { DocumentDataReaderProps } from './assertDocumentExistsOnFirestore';
 
 // todo test
 
-/*
-function coreTraitDisplayNameToPropertyName(
-  displayName: CoreTraitName
-): string {
-  // remove all spaces
-
-  const noSpaces = displayName.replace(/\s/g, "");
-
-  // make first letter lower case
-  return noSpaces.charAt(0).toLowerCase() + noSpaces.slice(1);
-}
-*/
-
 // todo use unkown over any for tbc values
 
 async function readCompositeDocumentAsync(

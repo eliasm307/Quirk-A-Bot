@@ -1,9 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "baseUrl": "../../",
-    "paths": {
-      "@quirk-a-bot/*": ["packages/*/src"]
-    }
+    "baseUrl": ".",
+    "paths": {}
   }
 }

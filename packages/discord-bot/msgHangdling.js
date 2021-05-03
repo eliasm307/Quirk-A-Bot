@@ -6,8 +6,8 @@
 // Also this would allow a sheild against the bot responding to it's own messages at any point
 
 function gotMessage(msg) {
-	// if ("message sent by Quirk-A-bot") {return}
-	Module1.gotMessage(msg);
-	Module2.gotMessage(msg);
-	...
+  // if ("message sent by Quirk-A-bot") {return}
+  Module1.gotMessage(msg);
+  Module2.gotMessage(msg);
+  // ...
 }
