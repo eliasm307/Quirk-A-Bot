@@ -25,7 +25,7 @@ describe("Number trait with firestore data storage", () => {
       loggerCreator: null,
     });
 
-    await pause(500); // wait for syncronisation
+    await pause(1000); // wait for syncronisation
 
     const doc = await firestore.doc(trait1.path).get();
     const data = doc.data();
@@ -39,7 +39,7 @@ describe("Number trait with firestore data storage", () => {
 
     // can clean up
     expect(trait1.cleanUp()).toEqual(true);
-  }, 9999);
+  }, 19999);
 
   it("writes changes to firestore", async () => {
     const trait1Name = "trait1";

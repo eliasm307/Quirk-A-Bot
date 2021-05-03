@@ -1,15 +1,18 @@
-import { firestoreEmulator, pause } from '@quirk-a-bot/common';
+import { createObjectAlphabeticalSorter, firestoreEmulator, pause } from '@quirk-a-bot/common';
 
 import {
   iCharacterSheetData,
 } from '../../../character-sheet/interfaces/character-sheet-interfaces';
+import {
+  iAttributeData, iBaseTraitData, iGeneralTraitData,
+} from '../../../traits/interfaces/trait-interfaces';
 import { createPath } from '../../utils/createPath';
 import readCharacterSheetDataFromFirestoreComposite from './readCharacterSheetDataFromFirestoreComposite';
 import writeCharacterSheetDataToFirestoreComposite from './writeCharacterSheetDataToFirestoreComposite';
 
 const firestore = firestoreEmulator;
 
-describe("read/writeCharacterSheetDataToFirestoreComposite", () => {
+describe("firestoreCompositeCharacterSheetDataReadWrite.test", () => {
   it("can write and read complete character sheet data to firestore", async () => {
     const id = "compositeReadWriteTest";
 
@@ -52,11 +55,60 @@ describe("read/writeCharacterSheetDataToFirestoreComposite", () => {
 
     await pause(200);
 
-    await expect(
-      readCharacterSheetDataFromFirestoreComposite({
-        firestore,
-        path,
-      })
-    ).resolves.toEqual(characterSheetData);
+    const {
+      attributes,
+      bloodPotency,
+      clan,
+      disciplines,
+      health,
+      humanity,
+      hunger,
+      id: readId,
+      name,
+      sire,
+      skills,
+      touchstonesAndConvictions,
+      willpower,
+    } = await readCharacterSheetDataFromFirestoreComposite({
+      firestore,
+      path,
+    });
+
+    const sorter = createObjectAlphabeticalSorter<iGeneralTraitData>("name");
+
+    // compare individual values
+    expect({
+      bloodPotency,
+      clan,
+      health,
+      humanity,
+      hunger,
+      name,
+      sire,
+      willpower,
+      id,
+    }).toEqual({
+      id: readId,
+      bloodPotency: characterSheetData.bloodPotency,
+      clan: characterSheetData.clan,
+      health: characterSheetData.health,
+      humanity: characterSheetData.humanity,
+      hunger: characterSheetData.hunger,
+      name: characterSheetData.name,
+      sire: characterSheetData.sire,
+      willpower: characterSheetData.willpower,
+    });
+
+    // compare trait collections
+    expect(attributes.sort(sorter)).toEqual(
+      characterSheetData.attributes.sort(sorter)
+    );
+    expect(disciplines.sort(sorter)).toEqual(
+      characterSheetData.disciplines.sort(sorter)
+    );
+    expect(skills.sort(sorter)).toEqual(characterSheetData.skills.sort(sorter));
+    expect(touchstonesAndConvictions.sort(sorter)).toEqual(
+      characterSheetData.touchstonesAndConvictions.sort(sorter)
+    );
   });
 });
