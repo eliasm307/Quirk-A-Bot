@@ -21,7 +21,7 @@ const createtraitCollectionFactoryMethodProps = (
   groupName: string
 ): iTraitCollectionFactoryMethodProps => ({
   traitCollectionDataStorageInitialiser: dataStorageFactory.newTraitCollectionDataStorageInitialiser(),
-  traitDataStorageInitialiser: dataStorageFactory.newTraitDataStorageInitialiser(),
+  // traitDataStorageInitialiser: dataStorageFactory.newTraitDataStorageInitialiser(),
   parentPath: `${rootCollectionPath}/${groupName}`,
   loggerCreator: null,
 });
@@ -34,7 +34,6 @@ const deleteExistingCollectionDataAsync = async (collectionPath: string) => {
     await Promise.all(
       collectionSnapshot.docs.map((doc) => {
         const docId = doc.id;
-
         return doc.ref.delete();
         // .then(() => console.log(`Deleted a trait from collection at path ${collectionPath} with id ${docId}`));
       })
@@ -72,7 +71,9 @@ describe("TraitColleciton with Firestore data storage adding, and deleting", () 
     await deleteExistingCollectionDataAsync(tc.path);
 
     // test adding traits
-    tc.set("Charisma", 1).set("Composure", 2).set("Resolve", 3);
+    await tc.set("Charisma", 1);
+    await tc.set("Composure", 2);
+    await tc.set("Resolve", 3);
     const tcDataExpected: iBaseTraitData<AttributeName, number>[] = [
       { name: "Charisma", value: 1 },
       { name: "Composure", value: 2 },
@@ -111,12 +112,15 @@ describe("TraitColleciton with Firestore data storage adding, and deleting", () 
     await pause(200); // wait for syncronisation
 
     // add some traits
-    tc.set("Charisma", 1).set("Composure", 2).set("Resolve", 3);
+    await tc.set("Charisma", 1);
+    await tc.set("Composure", 2);
+    await tc.set("Resolve", 3);
 
     await pause(200); // wait for syncronisation
 
     // test deleting some items
-    tc.delete("Charisma").delete("Composure");
+    await tc.delete("Charisma");
+    await tc.delete("Composure");
 
     await pause(200); // wait for syncronisation
 
@@ -131,7 +135,7 @@ describe("TraitColleciton with Firestore data storage adding, and deleting", () 
     expect(collectionDocumentData).toEqual([{ name: "Resolve", value: 3 }]);
 
     // delete the rest of the items
-    tc.delete("Resolve");
+    await tc.delete("Resolve");
     await pause(200); // wait for syncronisation
 
     // get snapshot data
@@ -227,10 +231,12 @@ describe("TraitColleciton with Firestore data storage", () => {
     expect(tc1.size).toEqual(tc2.size);
 
     // make changes to collection 1
-    tc1.set("Animalism", 1).set("Blood Sorcery", 2).set("Celerity", 3);
+    await tc1.set("Animalism", 1);
+    await tc1.set("Blood Sorcery", 2);
+    await tc1.set("Celerity", 3);
     await pause(200); // wait for syncronisation
 
-    tc1.set("Celerity", 5);
+    await tc1.set("Celerity", 5);
 
     const resultingData: iBaseTraitData<DisciplineName, number>[] = [
       { name: "Animalism", value: 1 },
