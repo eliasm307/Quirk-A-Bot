@@ -9,16 +9,16 @@ import FirestoreDocumentObserver, {
 } from './FirestoreDocumentObserver';
 import SubDocument from './SubDocument';
 
-type SubDocumentCreateDetails<S> = Record<keyof S, S[keyof S]>;
+export type SubDocumentCreateDetails<S> = Record<keyof S, S[keyof S]>;
 
-type SubDocumentDeleteDetails<S> = Record<keyof S, S[keyof S]>;
+export type SubDocumentDeleteDetails<S> = Record<keyof S, S[keyof S]>;
 
-type SubDocumentUpdateDetails<S> = Record<
+export type SubDocumentUpdateDetails<S> = Record<
   keyof S,
   { before?: S[keyof S]; after?: S[keyof S] }
 >;
 
-interface SubDocumentChangeDetails<S> {
+export interface SubDocumentChangeDetails<S> {
   /** Record of items that were created and their initial state on creation */
   creates?: SubDocumentCreateDetails<S>;
   /** Record of items that were deleted and their state before delete */

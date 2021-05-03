@@ -1,4 +1,6 @@
-import { CompositeDocumentChangeData } from 'packages/common/src/classes/AbstractCompositeDocument';
+import {
+  CompositeDocumentChangeData, SubDocumentCreateDetails, SubDocumentDeleteDetails,
+} from 'packages/common/src/classes/AbstractCompositeDocument';
 
 import {
   AbstractCompositeDocument, arrayToRecord, ConsistentCompositeDocument, Firestore,
@@ -45,9 +47,26 @@ export default class FirestoreCompositeTraitCollectionDataStorage<
     ) => void = ({ changes }) => {
       const { creates, deletes } = changes;
 
-      const valuePropertyName: keyof D = "value";
+      const property: keyof D = "value";
 
-      // todo add calls to onAdd and onDelete
+      const getTraitValueFromData = (data: D): V => data.value;
+
+      // handle creations
+      if (creates)
+        Object.entries<SubDocumentCreateDetails<Record<N, D>>[N]>(
+          creates
+        ).forEach(([_key, { value }]) => {
+          if (onAdd) onAdd({ newValue: value, property: property as string });
+        });
+
+      // handle deletions
+      if (deletes)
+        Object.entries<SubDocumentDeleteDetails<Record<N, D>>[N]>(
+          deletes
+        ).forEach(([_key, { value }]) => {
+          if (onDelete)
+            onDelete({ oldValue: value, property: property as string });
+        });
     };
 
     const initialDataRecord: Record<N, D> = initialData
