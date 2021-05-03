@@ -4,6 +4,7 @@ import CharacterSheet from '../../character-sheet/CharacterSheet';
 import { iCharacterSheetData } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import assertDocumentExistsOnFirestore from '../Firestore/utils/assertDocumentExistsOnFirestore';
 import readCharacterSheetDataFromFirestore from '../Firestore/utils/readCharacterSheetDataFromFirestore';
+import readCharacterSheetDataFromFirestoreComposite from '../Firestore/utils/readCharacterSheetDataFromFirestoreComposite';
 import writeCharacterSheetDataToFirestore from '../Firestore/utils/writeCharacterSheetDataToFirestore';
 import {
   iCharacterSheetDataStorage, iDataStorageFactory,
@@ -40,7 +41,7 @@ export default class FirestoreCharacterSheetDataStorage
         firestore: this.firestore,
         path: this.path,
         newDefaultData: () => CharacterSheet.newDataObject({ id: this.id }),
-        documentDataReader: readCharacterSheetDataFromFirestore,
+        documentDataReader: readCharacterSheetDataFromFirestoreComposite,
         documentDataWriter: writeCharacterSheetDataToFirestore,
       }
     );
