@@ -1,4 +1,4 @@
-import { CoreNumberTraitName } from 'packages/common/src/declarations';
+import { CoreNumberTraitName } from '@quirk-a-bot/common';
 
 export function coreNumberTraitMax(name: CoreNumberTraitName): number {
   const limits: Record<CoreNumberTraitName, number> = {

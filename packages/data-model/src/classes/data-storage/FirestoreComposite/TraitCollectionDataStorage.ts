@@ -1,9 +1,6 @@
 import {
-  CompositeDocumentChangeData, SubDocumentCreateDetails, SubDocumentDeleteDetails,
-} from 'packages/common/src/classes/AbstractCompositeDocument';
-
-import {
-  AbstractCompositeDocument, arrayToRecord, ConsistentCompositeDocument, Firestore,
+  AbstractCompositeDocument, arrayToRecord, CompositeDocumentChangeData,
+  ConsistentCompositeDocument, Firestore, SubDocumentCreateDetails, SubDocumentDeleteDetails,
 } from '@quirk-a-bot/common';
 
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
@@ -27,7 +24,7 @@ export default class FirestoreCompositeTraitCollectionDataStorage<
   constructor(
     props: iFirestoreCompositeTraitCollectionDataStorageProps<N, V, D, T>
   ) {
-    super({ ...props, instanceCreator: ({}) => {} });
+    super({ ...props });
     const {
       firestore,
       parentPath,
