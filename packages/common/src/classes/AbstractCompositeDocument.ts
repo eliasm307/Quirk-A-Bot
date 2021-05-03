@@ -4,7 +4,8 @@ import {
 } from '../FirebaseExports';
 import valuesAreEqual from '../utils/valuesAreEqual';
 import FirestoreDocumentObserver, {
-  FirestoreDocumentChangeData, FirestoreDocumentObserverLoaderProps, FirestoreDocumentObserverProps,
+  BaseDocumentObserverLoaderProps, FirestoreDocumentChangeData,
+  FirestoreDocumentObserverLoaderProps, FirestoreDocumentObserverProps,
 } from './FirestoreDocumentObserver';
 import SubDocument from './SubDocument';
 
@@ -28,7 +29,9 @@ interface SubDocumentChangeDetails<S> {
 
 export interface AbstractCompositeDocumentLoaderProps<
   S extends Record<string, any>
-> extends FirestoreDocumentObserverLoaderProps<S> {}
+> extends BaseDocumentObserverLoaderProps<S> {
+  handleChange: (changeData: CompositeDocumentChangeData<S>) => void;
+}
 
 export interface AbstractCompositeDocumentProps<S extends Record<string, any>>
   extends AbstractCompositeDocumentLoaderProps<S> {
@@ -40,7 +43,7 @@ export interface AbstractCompositeDocumentProps<S extends Record<string, any>>
 // export interface FirestoreDocumentObserverProps<K extends string, V> {}
 
 /** Firestore document change data including the detailed sub document change details */
-interface CompositeDocumentChangeData<S>
+export interface CompositeDocumentChangeData<S>
   extends FirestoreDocumentChangeData<S> {
   changes: SubDocumentChangeDetails<S>;
 }
@@ -73,17 +76,19 @@ export default abstract class AbstractCompositeDocument<
 
     this.path = path;
     this.#private = {
-      data: { ...initialData }, //
+      data: { ...initialData },
       firestore,
       documentRef: firestore.doc(path),
       subDocuments: new Map(),
       observer: new FirestoreDocumentObserver({
         ...props,
-        handleChange: (newData) => {
-          // handle change internally first
-          this.handleChangeSnapshot(newData);
+        handleChange: (firestoreDocumentChangeData) => {
+          // handle change internally first, and log detailed changes
+          const compositeDocumentChangeData = this.handleChangeSnapshot(
+            firestoreDocumentChangeData
+          );
           // then use custom change handler
-          handleChange(newData);
+          handleChange(compositeDocumentChangeData);
         },
       }),
     };

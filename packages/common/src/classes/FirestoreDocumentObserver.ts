@@ -29,15 +29,21 @@ export interface FirestoreDocumentObserverProps<D>
   initialData?: D;
 }
 
-export interface FirestoreDocumentObserverLoaderProps<D> {
+export interface BaseDocumentObserverLoaderProps<D> {
   /** Firestore instance to use */
   firestore: Firestore;
   /** Change handler function used to notify  */
-  handleChange: (changeData: FirestoreDocumentChangeData<D>) => void;
+  handleChange: (changeData: any) => void;
   /** Firestore path for document, can be undefined if document didnt exist */
   path: string;
   /** Document schema validator, to allow the return data to be typed */
   schemaPredicate: (data: any) => data is D;
+}
+
+export interface FirestoreDocumentObserverLoaderProps<D>
+  extends BaseDocumentObserverLoaderProps<D> {
+  /** Change handler function used to notify  */
+  handleChange: (changeData: FirestoreDocumentChangeData<D>) => void;
 }
 
 /** Listens to changes to a Firestore document and creates events if there are updates */
