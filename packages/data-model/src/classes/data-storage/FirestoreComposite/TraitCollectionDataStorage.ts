@@ -1,6 +1,8 @@
 import { CompositeDocumentChangeData } from 'packages/common/src/classes/AbstractCompositeDocument';
 
-import { ConsistentCompositeDocument, Firestore } from '@quirk-a-bot/common';
+import {
+  AbstractCompositeDocument, arrayToRecord, ConsistentCompositeDocument, Firestore,
+} from '@quirk-a-bot/common';
 
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
 import isTraitData from '../../../utils/type-predicates/isTraitData';
@@ -17,6 +19,7 @@ export default class FirestoreCompositeTraitCollectionDataStorage<
   D extends iBaseTraitData<N, V>,
   T extends iBaseTrait<N, V, D>
 > extends AbstractTraitCollectionDataStorage<N, V, D, T> {
+  #compositeDocument: AbstractCompositeDocument<Record<N, D>>;
   #firestore: Firestore;
 
   constructor(
@@ -47,12 +50,20 @@ export default class FirestoreCompositeTraitCollectionDataStorage<
       // todo add calls to onAdd and onDelete
     };
 
-    ConsistentCompositeDocument.load({
+    const initialDataRecord: Record<N, D> = initialData
+      ? arrayToRecord({
+          array: initialData,
+          propertyNameReducer: (element) => element.name,
+        })
+      : ({} as Record<N, D>);
+
+    this.#compositeDocument = ConsistentCompositeDocument.load({
       firestore,
       handleChange,
       keyPredicate: namePredicate,
       path,
       valuePredicate: dataPredicate,
+      initialData: initialDataRecord,
     });
 
     this.init();

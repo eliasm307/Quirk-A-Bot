@@ -20,23 +20,24 @@ export default class ConsistentCompositeDocument<
     super(props);
   }
 
-  static async load<K extends string, V>(
+  static load<K extends string, V>(
     props: ConsistentCompositeDocumentLoaderProps<K, V>
-  ): Promise<AbstractCompositeDocument<Record<K, V>>> {
+  ): AbstractCompositeDocument<Record<K, V>> {
     const { keyPredicate, valuePredicate } = props;
 
     // schema predicate for a consistent composite tests if keys and values match a given predicate
     const schemaPredicate = (data: any): data is Record<K, V> =>
       isRecord(data, keyPredicate, valuePredicate);
 
+    /*
     const { initialData } = await AbstractCompositeDocument.loadObserver({
       ...props,
       schemaPredicate,
     });
+    */
 
     return new ConsistentCompositeDocument({
       ...props,
-      initialData,
       schemaPredicate,
     });
   }

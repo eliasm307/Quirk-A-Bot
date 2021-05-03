@@ -31,12 +31,11 @@ export interface AbstractCompositeDocumentLoaderProps<
   S extends Record<string, any>
 > extends BaseDocumentObserverLoaderProps<S> {
   handleChange: (changeData: CompositeDocumentChangeData<S>) => void;
+  initialData: S;
 }
 
 export interface AbstractCompositeDocumentProps<S extends Record<string, any>>
-  extends AbstractCompositeDocumentLoaderProps<S> {
-  initialData: S;
-}
+  extends AbstractCompositeDocumentLoaderProps<S> {}
 
 // todo break this into smaller pieces
 
@@ -97,7 +96,10 @@ export default abstract class AbstractCompositeDocument<
     this.handleSubDocumentAddition(initialData);
   }
 
+  // ! loading seems to only be for getting initial data, this shouldnt be necessary as observer gets initial data anyway,
+  // ! will add initial data as an optional dependency so client is responsible for getting this if required, but this gets overwritten by observer anyway
   /** Loads an observer for the firestore document and returns the initial data also */
+  /*
   static async loadObserver<S extends Record<string, any>>(
     props: AbstractCompositeDocumentLoaderProps<S>
   ): Promise<{
@@ -126,18 +128,18 @@ export default abstract class AbstractCompositeDocument<
     ) =>
       */
 
-    /*
+  /*
     return new AbstractCompositeDocument({
       ...props,
       initialDocumentData,
       observer,
     });
-    */
 
     return {
       initialData,
     };
   }
+  */
 
   // todo delete
   // ! composite document schemas might not always be consistent records, so verifySchema needs to be a dependency, so the right validator is used for the provided schema
