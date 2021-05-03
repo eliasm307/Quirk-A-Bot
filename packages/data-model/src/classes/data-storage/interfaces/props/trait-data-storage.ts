@@ -2,7 +2,7 @@
 // TRAIT DATA STORAGE PROPS
 
 import {
-  iHasParentPath, SubDocument, TraitNameUnionOrString, TraitValueTypeUnion,
+  iHasParentPath, iSubDocument, SubDocument, TraitNameUnionOrString, TraitValueTypeUnion,
 } from '@quirk-a-bot/common';
 
 import { iHasFirestore, iHasResolvedBasePath } from '../../../../declarations/interfaces';
@@ -43,5 +43,5 @@ export interface iFirestoreCompositeTraitDataStorageProps<
   V extends TraitValueTypeUnion
 > extends iBaseTraitDataStorageProps<N, V>,
     iHasParentPath {
-  subDocument: SubDocument<Record<N, iBaseTraitData<N, V>>, N>;
+  subDocument: iSubDocument<Record<N, iBaseTraitData<N, V>>, N>;
 }

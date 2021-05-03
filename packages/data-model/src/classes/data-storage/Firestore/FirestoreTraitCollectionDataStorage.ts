@@ -4,9 +4,12 @@ import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declaratio
 import isTraitData from '../../../utils/type-predicates/isTraitData';
 import { iBaseTrait, iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
 import AbstractTraitCollectionDataStorage from '../AbstractTraitCollectionDataStorage';
+import { iBaseTraitDataStorage } from '../interfaces/data-storage-interfaces';
 import {
   iFirestoreTraitCollectionDataStorageProps,
 } from '../interfaces/props/trait-collection-data-storage';
+import { iBaseTraitDataStorageProps } from '../interfaces/props/trait-data-storage';
+import FirestoreTraitDataStorage from './FirestoreTraitDataStorage';
 
 export default class FirestoreTraitCollectionDataStorage<
   N extends TraitNameUnionOrString,
@@ -66,6 +69,11 @@ export default class FirestoreTraitCollectionDataStorage<
       return Promise.reject(Error(error));
     }
   }
+
+  protected newTraitDataStorage: (
+    props: iBaseTraitDataStorageProps<N, V>
+  ) => iBaseTraitDataStorage<N, V> = (props) =>
+    new FirestoreTraitDataStorage({ ...props, firestore: this.#firestore });
 
   // todo extract this as a util
   /** Attaches change event listeners for this trait via its parent collection, and returns the unsubscribe function */

@@ -28,7 +28,7 @@ export default class LocalFileTraitCollectionDataStorage<
 
   constructor(props: iLocalFileTraitCollectionDataStorageProps<N, V, D, T>) {
     super(props);
-    const { characterSheet, resolvedBasePath, dataStorageFactory } = props;
+    const { characterSheet, resolvedBasePath } = props;
     this.#characterSheet = characterSheet;
     this.#resolvedBasePath = resolvedBasePath;
     this.newTraitDataStorage = (initialiserProps) => {
@@ -40,7 +40,7 @@ export default class LocalFileTraitCollectionDataStorage<
     };
   }
 
-  protected afterAddInternal(name: N): void {
+  protected afterAddInternal(_name: N): void {
     this.save();
   }
 

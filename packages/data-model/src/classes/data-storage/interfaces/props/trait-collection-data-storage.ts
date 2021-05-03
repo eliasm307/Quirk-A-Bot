@@ -24,8 +24,7 @@ export interface iBaseTraitCollectionDataStorageProps<
 > extends iHasTraitInstanceCreator<N, V, D, T>,
     // iHasTraitDataStorageInitialiser,
     iHasParentPath,
-    iCanHaveLoggerCreator<iTraitCollectionLogger>,
-    iHasDataStorageFactory {
+    iCanHaveLoggerCreator<iTraitCollectionLogger> {
   dataPredicate: (data: any) => data is D;
   initialData?: D[];
   name: string;

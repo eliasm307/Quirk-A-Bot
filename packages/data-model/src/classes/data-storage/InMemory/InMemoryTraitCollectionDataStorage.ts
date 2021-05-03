@@ -1,7 +1,11 @@
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
 import { iBaseTrait, iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
 import AbstractTraitCollectionDataStorage from '../AbstractTraitCollectionDataStorage';
-import { iTraitCollectionDataStorage } from '../interfaces/data-storage-interfaces';
+import {
+  iBaseTraitDataStorage, iTraitCollectionDataStorage,
+} from '../interfaces/data-storage-interfaces';
+import { iBaseTraitDataStorageProps } from '../interfaces/props/trait-data-storage';
+import InMemoryTraitDataStorage from './InMemoryTraitDataStorage';
 
 export default class InMemoryTraitCollectionDataStorage<
     N extends TraitNameUnionOrString,
@@ -24,4 +28,9 @@ export default class InMemoryTraitCollectionDataStorage<
   protected async deleteTraitFromDataStorage(name: N) {
     // do nothing
   }
+
+  protected newTraitDataStorage: (
+    props: iBaseTraitDataStorageProps<N, V>
+  ) => iBaseTraitDataStorage<N, V> = (props) =>
+    new InMemoryTraitDataStorage(props);
 }

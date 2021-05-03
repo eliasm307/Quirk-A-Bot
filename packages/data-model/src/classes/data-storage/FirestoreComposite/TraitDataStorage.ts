@@ -1,4 +1,4 @@
-import { Firestore, SubDocument } from '@quirk-a-bot/common';
+import { Firestore, iSubDocument, SubDocument } from '@quirk-a-bot/common';
 
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
 import { iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
@@ -12,7 +12,7 @@ export default class FirestoreCompositeTraitDataStorage<
   >
   extends AbstractTraitDataStorage<N, V>
   implements iBaseTraitDataStorage<N, V> {
-  #subDocument: SubDocument<Record<N, iBaseTraitData<N, V>>, N>;
+  #subDocument: iSubDocument<Record<N, iBaseTraitData<N, V>>, N>;
   path: string;
 
   constructor(props: iFirestoreCompositeTraitDataStorageProps<N, V>) {
@@ -25,6 +25,7 @@ export default class FirestoreCompositeTraitDataStorage<
 
     // console.time(timerName);
     // make sure trait exists, then set listeners on it
+    // todo find better solution than running async here
     this.initAsync()
       /*
       .then(() => {

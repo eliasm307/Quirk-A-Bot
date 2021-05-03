@@ -7,10 +7,13 @@ import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declaratio
 import isTraitData from '../../../utils/type-predicates/isTraitData';
 import { iBaseTrait, iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
 import AbstractTraitCollectionDataStorage from '../AbstractTraitCollectionDataStorage';
+import { iBaseTraitDataStorage } from '../interfaces/data-storage-interfaces';
 import {
   iFirestoreCompositeTraitCollectionDataStorageProps, iFirestoreTraitCollectionDataStorageProps,
 } from '../interfaces/props/trait-collection-data-storage';
+import { iBaseTraitDataStorageProps } from '../interfaces/props/trait-data-storage';
 import { createPath } from '../utils/createPath';
+import FirestoreCompositeTraitDataStorage from './TraitDataStorage';
 
 export default class FirestoreCompositeTraitCollectionDataStorage<
   N extends TraitNameUnionOrString,
@@ -106,4 +109,12 @@ export default class FirestoreCompositeTraitCollectionDataStorage<
       );
     }
   }
+
+  protected newTraitDataStorage: (
+    props: iBaseTraitDataStorageProps<N, V>
+  ) => iBaseTraitDataStorage<N, V> = (props) =>
+    new FirestoreCompositeTraitDataStorage<N, V>({
+      ...props,
+      subDocument: this.#compositeDocument.get(props.name),
+    });
 }
