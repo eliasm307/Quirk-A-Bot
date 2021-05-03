@@ -30,6 +30,9 @@ export default abstract class AbstractTraitCollectionDataStorage<
   // ? is this required
   protected logger: iTraitCollectionLogger;
   protected map: Map<N, T>;
+  protected abstract newTraitDataStorage: (
+    props: iBaseTraitDataStorageProps<N, V>
+  ) => iBaseTraitDataStorage<N, V>;
 
   instanceCreator: (props: iBaseTraitProps<N, V, D>) => T;
   log: iTraitCollectionLogReporter;
@@ -41,9 +44,6 @@ export default abstract class AbstractTraitCollectionDataStorage<
   /** Run after the child traits have been cleaned, this is for cleaning up trait collection itself */
   protected abstract afterTraitCleanUp(): boolean;
   protected abstract deleteTraitFromDataStorage(name: N): Promise<void>;
-  protected abstract traitDataStorageInitialiser(
-    props: iBaseTraitDataStorageProps<N, V>
-  ): iBaseTraitDataStorage<N, V>;
 
   constructor({
     instanceCreator,
@@ -223,8 +223,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
         name,
         value: defaultValue,
         parentPath: this.path,
-        traitDataStorageInitialiser: (props) =>
-          this.traitDataStorageInitialiser(props),
+        traitDataStorageInitialiser: (props) => this.newTraitDataStorage(props),
         loggerCreator: (props: iChildLoggerCreatorProps) =>
           this.logger.createChildTraitLogger(props), // NOTE this needs to be extracted into a function to create a closure such that the 'this' references are maintained
       })

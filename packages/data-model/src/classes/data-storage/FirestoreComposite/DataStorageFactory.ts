@@ -3,8 +3,7 @@ import { Firestore, TraitValueTypeUnion } from '@quirk-a-bot/common';
 import { iBaseTrait, iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
 import firestoreIdIsValid from '../Firestore/utils/firestoreIdIsValid';
 import {
-  iBaseTraitDataStorage, iCharacterSheetDataStorage, iDataStorageFactory, iGameDataStorage,
-  iTraitCollectionDataStorage,
+  iCharacterSheetDataStorage, iDataStorageFactory, iGameDataStorage, iTraitCollectionDataStorage,
 } from '../interfaces/data-storage-interfaces';
 import {
   iBaseCharacterSheetDataStorageFactoryMethodProps, iGameDataStorageFactoryProps,
@@ -15,11 +14,9 @@ import {
 import {
   iBaseTraitCollectionDataStorageProps,
 } from '../interfaces/props/trait-collection-data-storage';
-import { iBaseTraitDataStorageProps } from '../interfaces/props/trait-data-storage';
 import FirestoreCompositeCharacterSheetDataStorage from './CharacterSheetDataStorage';
 import FirestoreCompositeGameDataStorage from './GameDataStorage';
 import FirestoreCompositeTraitCollectionDataStorage from './TraitCollectionDataStorage';
-import FirestoreCompositeTraitDataStorage from './TraitDataStorage';
 
 export default class FirestoreCompositeDataStorageFactory
   implements iDataStorageFactory {

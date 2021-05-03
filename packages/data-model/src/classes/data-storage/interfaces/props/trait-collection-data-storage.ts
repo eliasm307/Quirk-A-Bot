@@ -11,7 +11,9 @@ import {
 import {
   iBaseTrait, iBaseTraitData, iCanHaveLoggerCreator, iHasTraitInstanceCreator,
 } from '../../../traits/interfaces/trait-interfaces';
-import { iHasTraitDataStorageInitialiser } from '../data-storage-interfaces';
+import {
+  iHasDataStorageFactory, iHasTraitDataStorageInitialiser,
+} from '../data-storage-interfaces';
 
 // TRAIT COLLECTION DATA STORAGE PROPS
 export interface iBaseTraitCollectionDataStorageProps<
@@ -22,7 +24,8 @@ export interface iBaseTraitCollectionDataStorageProps<
 > extends iHasTraitInstanceCreator<N, V, D, T>,
     // iHasTraitDataStorageInitialiser,
     iHasParentPath,
-    iCanHaveLoggerCreator<iTraitCollectionLogger> {
+    iCanHaveLoggerCreator<iTraitCollectionLogger>,
+    iHasDataStorageFactory {
   dataPredicate: (data: any) => data is D;
   initialData?: D[];
   name: string;

@@ -42,7 +42,6 @@ export interface iFirestoreCompositeTraitDataStorageProps<
   N extends TraitNameUnionOrString,
   V extends TraitValueTypeUnion
 > extends iBaseTraitDataStorageProps<N, V>,
-    iHasFirestore,
     iHasParentPath {
   subDocument: SubDocument<Record<N, iBaseTraitData<N, V>>, N>;
 }

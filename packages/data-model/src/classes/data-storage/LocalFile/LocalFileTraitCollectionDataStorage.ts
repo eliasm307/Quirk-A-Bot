@@ -1,5 +1,6 @@
 import path from 'path';
 
+import { CharacterSheet } from '../../..';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
 import { iCharacterSheet } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import { iBaseTrait, iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
@@ -9,6 +10,7 @@ import {
   iLocalFileTraitCollectionDataStorageProps,
 } from '../interfaces/props/trait-collection-data-storage';
 import { iBaseTraitDataStorageProps } from '../interfaces/props/trait-data-storage';
+import LocalFileTraitDataStorage from './LocalFileTraitDataStorage';
 import saveCharacterSheetToFile from './utils/saveCharacterSheetToFile';
 
 export default class LocalFileTraitCollectionDataStorage<
@@ -17,11 +19,25 @@ export default class LocalFileTraitCollectionDataStorage<
   D extends iBaseTraitData<N, V>,
   T extends iBaseTrait<N, V, D>
 > extends AbstractTraitCollectionDataStorage<N, V, D, T> {
+  protected newTraitDataStorage: (
+    props: iBaseTraitDataStorageProps<N, V>
+  ) => iBaseTraitDataStorage<N, V>;
+
+  #characterSheet: iCharacterSheet;
+  #resolvedBasePath: string;
+
   constructor(props: iLocalFileTraitCollectionDataStorageProps<N, V, D, T>) {
     super(props);
-    const { characterSheet, resolvedBasePath } = props;
+    const { characterSheet, resolvedBasePath, dataStorageFactory } = props;
     this.#characterSheet = characterSheet;
     this.#resolvedBasePath = resolvedBasePath;
+    this.newTraitDataStorage = (initialiserProps) => {
+      return new LocalFileTraitDataStorage({
+        ...initialiserProps,
+        characterSheet: this.#characterSheet,
+        resolvedBasePath: this.#resolvedBasePath,
+      });
+    };
   }
 
   protected afterAddInternal(name: N): void {

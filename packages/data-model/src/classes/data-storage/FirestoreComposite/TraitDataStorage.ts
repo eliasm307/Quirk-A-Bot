@@ -12,20 +12,12 @@ export default class FirestoreCompositeTraitDataStorage<
   >
   extends AbstractTraitDataStorage<N, V>
   implements iBaseTraitDataStorage<N, V> {
-  #firestore: Firestore;
   #subDocument: SubDocument<Record<N, iBaseTraitData<N, V>>, N>;
   path: string;
 
   constructor(props: iFirestoreCompositeTraitDataStorageProps<N, V>) {
     super(props);
-    const {
-      firestore,
-      parentPath,
-      defaultValueIfNotDefined,
-      name,
-      subDocument,
-    } = props;
-    this.#firestore = firestore;
+    const { parentPath, defaultValueIfNotDefined, name, subDocument } = props;
     this.#subDocument = subDocument;
     this.path = this.createTraitPath(parentPath, name);
 
