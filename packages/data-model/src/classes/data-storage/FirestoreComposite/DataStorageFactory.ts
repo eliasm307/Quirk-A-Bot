@@ -17,6 +17,7 @@ import {
 } from '../interfaces/props/trait-collection-data-storage';
 import { iBaseTraitDataStorageProps } from '../interfaces/props/trait-data-storage';
 import FirestoreCompositeCharacterSheetDataStorage from './CharacterSheetDataStorage';
+import FirestoreCompositeGameDataStorage from './GameDataStorage';
 import FirestoreCompositeTraitCollectionDataStorage from './TraitCollectionDataStorage';
 import FirestoreCompositeTraitDataStorage from './TraitDataStorage';
 
