@@ -202,7 +202,7 @@ describe("TraitColleciton with Firestore data storage", () => {
 
     // can clean up
     expect(tc.cleanUp()).toEqual(true);
-  }, 9999);
+  }, 19999);
 
   it("listens to firestore and propagates changes to all trait collection instances", async () => {
     expect.hasAssertions();

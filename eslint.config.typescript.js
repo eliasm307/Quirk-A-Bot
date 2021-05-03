@@ -52,7 +52,7 @@ module.exports = {
     "@typescript-eslint/no-explicit-any": 0,
     "@typescript-eslint/lines-between-class-members": 0,
     "@typescript-eslint/no-extra-semi": 1,
-    "@typescript-eslint/no-floating-promises": 1,
+    "@typescript-eslint/no-floating-promises": 2,
     "@typescript-eslint/no-non-null-assertion": 0,
     "@typescript-eslint/no-unsafe-assignment": 0,
     "@typescript-eslint/no-unsafe-call": 1,

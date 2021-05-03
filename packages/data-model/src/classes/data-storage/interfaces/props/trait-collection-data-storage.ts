@@ -12,8 +12,9 @@ import {
   iBaseTrait, iBaseTraitData, iCanHaveLoggerCreator, iHasTraitInstanceCreator,
 } from '../../../traits/interfaces/trait-interfaces';
 import {
-  iHasDataStorageFactory, iHasTraitDataStorageInitialiser,
+  iBaseTraitDataStorage, iHasDataStorageFactory, iHasTraitDataStorageInitialiser,
 } from '../data-storage-interfaces';
+import { iBaseTraitDataStorageProps } from './trait-data-storage';
 
 // TRAIT COLLECTION DATA STORAGE PROPS
 export interface iBaseTraitCollectionDataStorageProps<

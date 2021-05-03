@@ -13,8 +13,8 @@
     "**/*jest*/**"
   ],
   "scripts": {
-    "test": "yarn build && jest --colors --logHeapUsage",
-    "testf": "yarn build && jest --colors --logHeapUsage --onlyFailures",
+    "test": "npx tsc && yarn build && jest --colors --logHeapUsage",
+    "testf": "npx tsc && yarn build && jest --colors --logHeapUsage --onlyFailures",
     "build": "rm -rf dist && yarn && npx tsc -p tsconfig.build.json",
     "firebase:start-emulators": "yarn --cwd ../../ start-emulators"
   },

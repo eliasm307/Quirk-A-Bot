@@ -22,6 +22,7 @@ export default class TraitCollection<
     const { name, traitCollectionDataStorageInitialiser } = props;
     this.name = name;
 
+    // ? should this be async?
     this.dataStorage = traitCollectionDataStorageInitialiser({
       ...props,
       initialData,
@@ -30,6 +31,12 @@ export default class TraitCollection<
     });
     // expose logger reporter
     this.log = this.dataStorage.log;
+
+    // ? will data storage be ready? i think setup is async
+    // apply intial data
+    initialData.forEach(({ name: currentName, value }) =>
+      this.dataStorage.set(currentName, value)
+    );
 
     this.path = this.dataStorage.path; // data storage defines path to use
   }

@@ -19,10 +19,6 @@ export default class LocalFileTraitCollectionDataStorage<
   D extends iBaseTraitData<N, V>,
   T extends iBaseTrait<N, V, D>
 > extends AbstractTraitCollectionDataStorage<N, V, D, T> {
-  protected newTraitDataStorage: (
-    props: iBaseTraitDataStorageProps<N, V>
-  ) => iBaseTraitDataStorage<N, V>;
-
   #characterSheet: iCharacterSheet;
   #resolvedBasePath: string;
 
@@ -31,13 +27,6 @@ export default class LocalFileTraitCollectionDataStorage<
     const { characterSheet, resolvedBasePath } = props;
     this.#characterSheet = characterSheet;
     this.#resolvedBasePath = resolvedBasePath;
-    this.newTraitDataStorage = (initialiserProps) => {
-      return new LocalFileTraitDataStorage({
-        ...initialiserProps,
-        characterSheet: this.#characterSheet,
-        resolvedBasePath: this.#resolvedBasePath,
-      });
-    };
   }
 
   protected afterAddInternal(_name: N): void {
@@ -53,8 +42,16 @@ export default class LocalFileTraitCollectionDataStorage<
     this.save();
   }
 
+  protected newTraitDataStorage: (
+    props: iBaseTraitDataStorageProps<N, V>
+  ) => iBaseTraitDataStorage<N, V> = (initialiserProps) =>
+    new LocalFileTraitDataStorage({
+      ...initialiserProps,
+      characterSheet: this.#characterSheet,
+      resolvedBasePath: this.#resolvedBasePath,
+    });
+
   protected save(): boolean {
-    // save if available
     return saveCharacterSheetToFile(
       this.#characterSheet.data(),
       path.resolve(this.#resolvedBasePath, `${this.#characterSheet.id}.json`)
