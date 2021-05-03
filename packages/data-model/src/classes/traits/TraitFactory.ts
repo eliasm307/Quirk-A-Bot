@@ -1,27 +1,32 @@
-import { isAttributeName, isDisciplineName, isSkillName, isString } from '@quirk-a-bot/common';
+import {
+  isAttributeName, isCoreNumberTraitName, isCoreStringTraitName, isDisciplineName, isSkillName,
+  isString,
+} from '@quirk-a-bot/common';
 
 import {
-  ATTRIBUTE_COLLECTION_NAME, DISCIPLINE_COLLECTION_NAME, SKILL_COLLECTION_NAME,
-  TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME,
+  ATTRIBUTE_COLLECTION_NAME, CORE_TRAIT_COLLECTION_NAME, DISCIPLINE_COLLECTION_NAME,
+  SKILL_COLLECTION_NAME, TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME,
 } from '../../../../common/src/constants';
 import {
   AttributeName, CoreNumberTraitName, CoreStringTraitName, DisciplineName, SkillName,
 } from '../../declarations/types';
 import isTraitData from '../../utils/type-predicates/isTraitData';
 import {
-  iAttributeTraitCollection, iDisciplineTraitCollection, iSkillTraitCollection,
-  iTouchStoneOrConvictionCollection, iTraitCollectionFactoryMethodProps,
+  iAttributeTraitCollection, iCoreNumberTraitCollection, iCoreStringTraitCollection,
+  iDisciplineTraitCollection, iSkillTraitCollection, iTouchStoneOrConvictionCollection,
+  iTraitCollectionFactoryMethodProps,
 } from './interfaces/trait-collection-interfaces';
 import {
-  iAttribute, iAttributeData, iBaseTraitProps, iCoreNumberTrait, iCoreNumberTraitData, iDiscipline,
-  iDisciplineData, iNumberTraitProps, iSkill, iSkillData, iStringTraitProps,
-  iTouchStoneOrConviction, iTouchStoneOrConvictionData,
+  iAttribute, iAttributeData, iBaseTraitProps, iCoreNumberTrait, iCoreNumberTraitData,
+  iCoreStringTrait, iCoreStringTraitData, iDiscipline, iDisciplineData, iSkill, iSkillData,
+  iStringTraitProps, iTouchStoneOrConviction, iTouchStoneOrConvictionData,
 } from './interfaces/trait-interfaces';
 import TraitCollection from './trait-collection/TraitCollection';
 import NumberTrait from './trait/NumberTrait';
 import NumberTraitWithCategory from './trait/NumberTraitWithCategory';
 import StringTrait from './trait/StringTrait';
 import getAttributeCategory from './utils/categoryFunctions/getAttributeCategory';
+import { coreNumberTraitMax } from './utils/numberTraitLimits';
 
 export default abstract class TraitFactory {
   static newAttributeTraitCollection(
@@ -30,7 +35,7 @@ export default abstract class TraitFactory {
       number,
       iAttributeData
     >,
-    ...initial: iAttributeData[]
+    ...initialData: iAttributeData[]
   ): iAttributeTraitCollection {
     return new TraitCollection<
       AttributeName,
@@ -45,7 +50,7 @@ export default abstract class TraitFactory {
         dataPredicate: isTraitData,
         namePredicate: isAttributeName,
       },
-      ...initial
+      ...initialData
     );
   }
 
@@ -55,8 +60,8 @@ export default abstract class TraitFactory {
       number,
       iCoreNumberTraitData
     >,
-    ...initial: iCoreNumberTraitData[]
-  ): iAttributeTraitCollection {
+    ...initialData: iCoreNumberTraitData[]
+  ): iCoreNumberTraitCollection {
     return new TraitCollection<
       CoreNumberTraitName,
       number,
@@ -65,12 +70,37 @@ export default abstract class TraitFactory {
     >(
       {
         ...props,
-        name: ATTRIBUTE_COLLECTION_NAME,
+        name: CORE_TRAIT_COLLECTION_NAME,
         instanceCreator: TraitFactory.newCoreNumberTrait,
         dataPredicate: isTraitData,
-        namePredicate: isCoreN,
+        namePredicate: isCoreNumberTraitName,
       },
-      ...initial
+      ...initialData
+    );
+  }
+
+  static newCoreStringTraitCollection(
+    props: iTraitCollectionFactoryMethodProps<
+      CoreStringTraitName,
+      string,
+      iCoreStringTraitData
+    >,
+    ...initialData: iCoreStringTraitData[]
+  ): iCoreStringTraitCollection {
+    return new TraitCollection<
+      CoreStringTraitName,
+      string,
+      iCoreStringTraitData,
+      iCoreStringTrait
+    >(
+      {
+        ...props,
+        name: CORE_TRAIT_COLLECTION_NAME,
+        instanceCreator: TraitFactory.newCoreStringTrait,
+        dataPredicate: isTraitData,
+        namePredicate: isCoreStringTraitName,
+      },
+      ...initialData
     );
   }
 
@@ -80,7 +110,7 @@ export default abstract class TraitFactory {
       number,
       iDisciplineData
     >,
-    ...initial: iDisciplineData[]
+    ...initialData: iDisciplineData[]
   ): iDisciplineTraitCollection {
     return new TraitCollection<
       DisciplineName,
@@ -95,13 +125,13 @@ export default abstract class TraitFactory {
         dataPredicate: isTraitData,
         namePredicate: isDisciplineName,
       },
-      ...initial
+      ...initialData
     );
   }
 
   static newSkillTraitCollection(
     props: iTraitCollectionFactoryMethodProps<SkillName, number, iSkillData>,
-    ...initial: iSkillData[]
+    ...initialData: iSkillData[]
   ): iSkillTraitCollection {
     return new TraitCollection<SkillName, number, iSkillData, iSkill>(
       {
@@ -111,7 +141,7 @@ export default abstract class TraitFactory {
         dataPredicate: isTraitData,
         namePredicate: isSkillName,
       },
-      ...initial
+      ...initialData
     );
   }
 
@@ -121,7 +151,7 @@ export default abstract class TraitFactory {
       string,
       iTouchStoneOrConvictionData
     >,
-    ...initial: iTouchStoneOrConvictionData[]
+    ...initialData: iTouchStoneOrConvictionData[]
   ): iTouchStoneOrConvictionCollection {
     return new TraitCollection<
       string,
@@ -136,7 +166,7 @@ export default abstract class TraitFactory {
         dataPredicate: isTraitData,
         namePredicate: isString,
       },
-      ...initial
+      ...initialData
     );
   }
 
@@ -155,10 +185,11 @@ export default abstract class TraitFactory {
 
   protected static newCoreNumberTrait({
     value = 0,
-    min = 0,
+    name,
     ...restProps
-  }: iNumberTraitProps<CoreNumberTraitName>) {
-    return new NumberTrait({ ...restProps, value, min });
+  }: iBaseTraitProps<CoreNumberTraitName, number, iCoreNumberTraitData>) {
+    const max = coreNumberTraitMax(name);
+    return new NumberTrait({ ...restProps, name, value, min: 0, max });
   }
 
   protected static newCoreStringTrait<V extends string>(

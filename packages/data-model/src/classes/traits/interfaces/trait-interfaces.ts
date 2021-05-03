@@ -73,7 +73,9 @@ export interface iBaseNumberTraitProps<
   N extends TraitNameUnionOrString,
   D extends iNumberTraitData<N>
 > extends iBaseTraitProps<N, number, D> {
+  /** Maximum value of a number trait, optional where no limit as default */
   max: number;
+  /** Minimum value of a number trait, optional with 0 as default */
   min?: number;
 }
 
@@ -169,7 +171,7 @@ export interface iSkillData extends iNumberTraitData<SkillName> {}
 export interface iDisciplineData extends iNumberTraitData<DisciplineName> {
   // todo add "specialisation" / sub types?
 }
-export interface iCoreStringTraitData<V extends string>
+export interface iCoreStringTraitData<V extends string = string>
   extends iStringTraitData<CoreStringTraitName, V> {}
 export interface iCoreNumberTraitData
   extends iNumberTraitData<CoreNumberTraitName> {}
@@ -240,6 +242,6 @@ export interface iTouchStoneOrConviction
 export interface iCoreNumberTrait
   extends iNumberTraitData<CoreNumberTraitName>,
     iNumberTrait<CoreNumberTraitName> {}
-export interface iCoreStringTrait<V extends string>
+export interface iCoreStringTrait<V extends string = string>
   extends iBaseTraitData<CoreStringTraitName, V>,
     iBaseStringTrait<CoreStringTraitName, V> {}

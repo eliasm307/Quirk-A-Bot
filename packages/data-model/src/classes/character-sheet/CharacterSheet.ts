@@ -13,7 +13,7 @@ import {
   iTraitCollectionFactoryMethodProps,
 } from '../traits/interfaces/trait-collection-interfaces';
 import {
-  iCoreNumberTrait, iCoreStringTrait, iGeneralTrait,
+  iCoreNumberTrait, iCoreNumberTraitData, iCoreStringTrait, iCoreStringTraitData, iGeneralTrait,
 } from '../traits/interfaces/trait-interfaces';
 import TraitFactory from '../traits/TraitFactory';
 import {
@@ -125,66 +125,43 @@ export default class CharacterSheet implements iCharacterSheet {
       loggerCreator: traitCollectionLoggerCreator,
     };
 
+    const {
+      bloodPotency,
+      hunger,
+      humanity,
+      health,
+      willpower,
+      clan,
+      name,
+      sire,
+    } = initialData;
+
     // core number traits
-    this.bloodPotency = TraitFactory.newCoreNumberTrait({
-      ...partialTraitFactoryProps,
-      max: 10,
-      name: "Blood Potency",
-      value: initialData.bloodPotency.value || 0,
-    });
 
-    this.hunger = TraitFactory.newCoreNumberTrait({
-      ...partialTraitFactoryProps,
-      max: 5,
-      name: "Hunger",
-      value: initialData.hunger.value || 0,
-    });
+    const initialCoreNumberTraitData: iCoreNumberTraitData[] = [
+      bloodPotency,
+      hunger,
+      humanity,
+      health,
+      willpower,
+    ];
 
-    this.humanity = TraitFactory.newCoreNumberTrait({
-      ...partialTraitFactoryProps,
-      max: 10,
-      name: "Humanity",
-      value: initialData.humanity.value || 0,
-    });
-
-    this.health = TraitFactory.newCoreNumberTrait({
-      ...partialTraitFactoryProps,
-      max: 10,
-      name: "Health",
-      value: initialData.health.value || 0,
-    });
-
-    this.willpower = TraitFactory.newCoreNumberTrait({
-      ...partialTraitFactoryProps,
-      max: 10,
-      name: "Willpower",
-      value: initialData.willpower.value || 0,
-    });
-
-    // core string traits
-    this.name = TraitFactory.newCoreStringTrait<string>({
-      ...partialTraitFactoryProps,
-      name: "Name",
-      value: initialData.name.value || STRING_TRAIT_DEFAULT_VALUE,
-    });
-
-    this.sire = TraitFactory.newCoreStringTrait<string>({
-      ...partialTraitFactoryProps,
-      name: "Sire",
-      value: initialData.sire.value || STRING_TRAIT_DEFAULT_VALUE,
-    });
-
-    this.clan = TraitFactory.newCoreStringTrait<ClanName>({
-      ...partialTraitFactoryProps,
-      name: "Clan",
-      value: initialData.clan.value || STRING_TRAIT_DEFAULT_VALUE,
-    });
+    const initialCoreStringTraitData: iCoreStringTraitData<string>[] = [
+      clan,
+      name,
+      sire,
+    ];
 
     // create collections, with initial data where available
 
-    this.#coreNumberTraitCollection = TraitFactory.newC(
+    this.#coreNumberTraitCollection = TraitFactory.newCoreNumberTraitCollection(
       traitCollectionFactoryProps,
-      ...initialData.attributes
+      ...initialCoreNumberTraitData
+    );
+
+    this.#coreStringTraitCollection = TraitFactory.newCoreStringTraitCollection(
+      traitCollectionFactoryProps,
+      ...initialCoreStringTraitData
     );
 
     this.attributes = TraitFactory.newAttributeTraitCollection(

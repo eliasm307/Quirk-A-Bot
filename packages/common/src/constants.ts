@@ -72,7 +72,6 @@ export const CORE_NUMBER_TRAIT_NAMES = [
   "Hunger",
   "Humanity",
   "Blood Potency",
-  "Sire",
 ] as const;
 
 export const CORE_STRING_TRAIT_NAMES = ["Name", "Clan", "Sire"] as const;
