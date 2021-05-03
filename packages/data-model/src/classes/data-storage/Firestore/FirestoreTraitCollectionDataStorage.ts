@@ -110,8 +110,13 @@ export default class FirestoreTraitCollectionDataStorage<
                 // remove from internal collection
                 this.map.delete(name);
                 break;
+              case "modified":
+                break;
               default:
-                console.warn(__filename, `Unknown change type ${change.type}`);
+                console.warn(
+                  __filename,
+                  `Unknown change type ${change.type as string}`
+                );
             }
           });
         });

@@ -16,7 +16,7 @@ import { DocumentDataWriterProps } from './assertDocumentExistsOnFirestore';
 function writeTraitCollectionCompositeAsBatch(
   firestore: Firestore,
   traitDataArray: iGeneralTraitData[],
-  characterSheetDocpath: string,
+  parentCollectionPath: string,
   traitCollectionName: string,
   batch: FirestoreBatch
 ) {
@@ -25,15 +25,14 @@ function writeTraitCollectionCompositeAsBatch(
     propertyNameReducer: (el) => displayNameToPropertyName(el.name),
   });
 
-  traitDataArray.forEach((traitData) => {
-    const traitDoc = firestore.doc(
-      `${characterSheetDocpath}/${traitCollectionName}/${traitData.name}`
-    );
-    batch.set(traitDoc, traitData);
-  });
+  const path = createPath(parentCollectionPath, traitCollectionName);
+
+  const compositeDocumentRef = firestore.doc(path);
+
+  batch.set(compositeDocumentRef, dataRecord);
 }
 
-export default async function writeCharacterSheetDataToFirestore({
+export default async function writeCharacterSheetDataToFirestoreComposite({
   firestore,
   path,
   data,

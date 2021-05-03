@@ -1,6 +1,5 @@
-import { iHasId } from 'data-model/src/declarations/interfaces';
-
 import { STRING_TRAIT_DEFAULT_VALUE } from '../../../../../common/src/constants';
+import { iHasId } from '../../../declarations/interfaces';
 import { iCharacterSheetData } from '../interfaces/character-sheet-interfaces';
 
 export default function newCharacterSheetData({
