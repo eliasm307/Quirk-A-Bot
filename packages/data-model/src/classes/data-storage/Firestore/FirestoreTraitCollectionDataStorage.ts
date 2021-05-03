@@ -40,33 +40,31 @@ export default class FirestoreTraitCollectionDataStorage<
     }
   }
 
-  protected deleteTraitFromDataStorage(name: N): void {
-    this.#firestore
-      .collection(this.path)
-      .where("name", "==", name)
-      .get()
-      .then((queryDocs) => {
-        if (queryDocs.size === 0) {
-          throw Error(
-            `There should have been exactly 1 trait with name ${name} in collection at path ${this.path}, instead found none`
+  protected async deleteTraitFromDataStorage(name: N): Promise<void> {
+    try {
+      const queryDocs = await this.#firestore
+        .collection(this.path)
+        .where("name", "==", name)
+        .get();
+
+      if (queryDocs.size === 0) {
+        throw Error(
+          `There should have been exactly 1 trait with name ${name} in collection at path ${this.path}, instead found none`
+        );
+      }
+      queryDocs.forEach(async (doc) => {
+        await doc.ref.delete().catch((error) => {
+          console.error(
+            __filename,
+            `Could not delete trait with name ${name}`,
+            { error }
           );
-        }
-        queryDocs.forEach((doc) => {
-          doc.ref.delete().catch((error) => {
-            console.error(
-              __filename,
-              `Could not delete trait with name ${name}`,
-              { error }
-            );
-          });
-        });
-        return null;
-      })
-      .catch((error) => {
-        return setTimeout(() => {
-          throw Error(error);
         });
       });
+      return;
+    } catch (error) {
+      return Promise.reject(Error(error));
+    }
   }
 
   // todo extract this as a util
