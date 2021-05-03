@@ -1,5 +1,4 @@
 // import saveCharacterSheetToFile from '../utils/saveCharacterSheetToFile';
-import { STRING_TRAIT_DEFAULT_VALUE } from '../../../../common/src/constants';
 import { iHasId } from '../../declarations/interfaces';
 import { ClanName } from '../../declarations/types';
 import hasCleanUp from '../../utils/type-predicates/hasCleanUp';
@@ -10,7 +9,6 @@ import CharacterSheetLogger from '../log/loggers/CharacterSheetLogger';
 import {
   iAttributeTraitCollection, iCoreNumberTraitCollection, iCoreStringTraitCollection,
   iDisciplineTraitCollection, iSkillTraitCollection, iTouchStoneOrConvictionCollection,
-  iTraitCollectionFactoryMethodProps,
 } from '../traits/interfaces/trait-collection-interfaces';
 import {
   iCoreNumberTrait, iCoreNumberTraitData, iCoreStringTrait, iCoreStringTraitData, iGeneralTrait,
@@ -111,14 +109,16 @@ export default class CharacterSheet implements iCharacterSheet {
       );
 
     // create partial trait factory method props
+    /*
     const partialTraitFactoryProps = {
       // traitDataStorageInitialiser,
       parentPath: this.path,
       loggerCreator: traitLoggerCreator,
     };
+    */
 
     // create traitCollection factory method props
-    const traitCollectionFactoryProps: iTraitCollectionFactoryMethodProps = {
+    const traitCollectionFactoryProps = {
       traitCollectionDataStorageInitialiser,
       // traitDataStorageInitialiser,
       parentPath: this.path,
@@ -184,6 +184,30 @@ export default class CharacterSheet implements iCharacterSheet {
       ...initialData.touchstonesAndConvictions
     );
 
+    // core number traits
+    this.bloodPotency = this.#coreNumberTraitCollection.get(
+      "Blood Potency"
+    ) as iCoreNumberTrait;
+    this.hunger = this.#coreNumberTraitCollection.get(
+      "Hunger"
+    ) as iCoreNumberTrait;
+    this.humanity = this.#coreNumberTraitCollection.get(
+      "Humanity"
+    ) as iCoreNumberTrait;
+    this.health = this.#coreNumberTraitCollection.get(
+      "Health"
+    ) as iCoreNumberTrait;
+    this.willpower = this.#coreNumberTraitCollection.get(
+      "Willpower"
+    ) as iCoreNumberTrait;
+
+    // core string traits
+    this.name = this.#coreStringTraitCollection.get("Name") as iCoreStringTrait;
+    this.sire = this.#coreStringTraitCollection.get("Sire") as iCoreStringTrait;
+    this.clan = this.#coreStringTraitCollection.get(
+      "Clan"
+    ) as iCoreStringTrait<ClanName>;
+
     // record this instance using id and path as keys
     CharacterSheet.instances.set(this.id, this);
     CharacterSheet.instances.set(this.path, this);
@@ -222,7 +246,9 @@ export default class CharacterSheet implements iCharacterSheet {
     } catch (error) {
       console.error(__filename, { error });
       throw Error(
-        `Could not create character sheet instance with id "${id}", Message: ${error}`
+        `Could not create character sheet instance with id "${id}", Message: ${JSON.stringify(
+          error
+        )}`
       );
     }
   }
@@ -233,6 +259,7 @@ export default class CharacterSheet implements iCharacterSheet {
   }
 
   cleanUp(): boolean {
+    /*
     const coreTraits: iCharacterSheetShape = {
       attributes: this.attributes,
       bloodPotency: this.bloodPotency,
@@ -248,6 +275,7 @@ export default class CharacterSheet implements iCharacterSheet {
       touchstonesAndConvictions: this.touchstonesAndConvictions,
       willpower: this.willpower,
     };
+    */
 
     let total = 0;
     let successCount = 0;
