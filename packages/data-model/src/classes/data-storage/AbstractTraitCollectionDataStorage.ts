@@ -30,18 +30,18 @@ export default abstract class AbstractTraitCollectionDataStorage<
   // ? is this required
   protected logger: iTraitCollectionLogger;
   protected map: Map<N, T>;
+  protected abstract traitDataStorageInitialiser: <
+    _N extends TraitNameUnionOrString,
+    _V extends TraitValueTypeUnion
+  >(
+    props: iBaseTraitDataStorageProps<_N, _V>
+  ) => iBaseTraitDataStorage<_N, _V>;
 
   // ? is this required
   instanceCreator: (props: iBaseTraitProps<N, V, D>) => T;
   log: iTraitCollectionLogReporter;
   name: string;
   path: string;
-  traitDataStorageInitialiser: <
-    _N extends TraitNameUnionOrString,
-    _V extends TraitValueTypeUnion
-  >(
-    props: iBaseTraitDataStorageProps<_N, _V>
-  ) => iBaseTraitDataStorage<_N, _V>;
 
   // ? is this required? if colleciton adds data to storage this means creating trait data and connecting data to trait instances would be done by 2 classes async, so it might be done in the wrong order. Opted to have these both on the trait side
   protected abstract afterAddInternal(name: N): void;
@@ -51,7 +51,6 @@ export default abstract class AbstractTraitCollectionDataStorage<
 
   constructor({
     instanceCreator,
-    traitDataStorageInitialiser,
     name: collectionName,
     onAdd,
     onDelete,
@@ -64,7 +63,6 @@ export default abstract class AbstractTraitCollectionDataStorage<
     this.afterDeleteCustom = onDelete;
     this.name = collectionName;
     this.instanceCreator = instanceCreator;
-    this.traitDataStorageInitialiser = traitDataStorageInitialiser;
 
     // create path // ? should this be done by the concrete implementations?
     this.path = createPath(parentPath, collectionName);
@@ -83,21 +81,16 @@ export default abstract class AbstractTraitCollectionDataStorage<
     const traitLoggerCreator = (props: iChildLoggerCreatorProps) =>
       this.logger.createChildTraitLogger(props);
 
-    // add intial data, if any
-    this.map = new Map<N, T>(
-      initialData
-        ? initialData.map(({ name, value }) => [
-            name,
-            instanceCreator({
-              name,
-              value,
-              traitDataStorageInitialiser,
-              parentPath: this.path,
-              loggerCreator: traitLoggerCreator,
-            }),
-          ])
-        : []
-    );
+    // initial data as key value pairs
+    const initialDataKeyValues: [N, T][] = initialData
+      ? initialData.map(({ name, value }) => [
+          name,
+          this.createTraitInstance(name, value),
+        ])
+      : [];
+
+    // aassign initial data and initialise map
+    this.map = new Map<N, T>(initialDataKeyValues);
   }
 
   get size(): number {
@@ -234,7 +227,8 @@ export default abstract class AbstractTraitCollectionDataStorage<
         name,
         value: defaultValue,
         parentPath: this.path,
-        traitDataStorageInitialiser: this.traitDataStorageInitialiser,
+        traitDataStorageInitialiser: (props) =>
+          this.traitDataStorageInitialiser(props),
         loggerCreator: (props: iChildLoggerCreatorProps) =>
           this.logger.createChildTraitLogger(props), // NOTE this needs to be extracted into a function to create a closure such that the 'this' references are maintained
       })

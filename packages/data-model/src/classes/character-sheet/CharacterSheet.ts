@@ -80,16 +80,6 @@ export default class CharacterSheet implements iCharacterSheet {
     // expose logger reporter
     this.log = this.logger.reporter;
 
-    // todo trait collections should decide how they want to instantiate traits,
-    // create data storage initialisers
-    /*
-    const traitDataStorageInitialiser = dataStorageFactory.newTraitDataStorageInitialiser(
-      {
-        characterSheet: this,
-      }
-    );
-    */
-
     const traitCollectionDataStorageInitialiser = dataStorageFactory.newTraitCollectionDataStorageInitialiser(
       {
         characterSheet: this,
@@ -108,19 +98,9 @@ export default class CharacterSheet implements iCharacterSheet {
         traitCollectionLoggerCreatorProps
       );
 
-    // create partial trait factory method props
-    /*
-    const partialTraitFactoryProps = {
-      // traitDataStorageInitialiser,
-      parentPath: this.path,
-      loggerCreator: traitLoggerCreator,
-    };
-    */
-
     // create traitCollection factory method props
     const traitCollectionFactoryProps = {
       traitCollectionDataStorageInitialiser,
-      // traitDataStorageInitialiser,
       parentPath: this.path,
       loggerCreator: traitCollectionLoggerCreator,
     };

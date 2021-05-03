@@ -1,7 +1,6 @@
 // todo move to firestore utils
 
-import { iHasPath } from '@quirk-a-bot/common';
-import { Firestore } from '@quirk-a-bot/common/dist';
+import { Firestore, iHasPath } from '@quirk-a-bot/common';
 
 import { iHasFirestore } from '../../../../declarations/interfaces';
 
