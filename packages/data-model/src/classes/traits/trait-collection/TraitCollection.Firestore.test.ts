@@ -88,6 +88,8 @@ describe("TraitColleciton with Firestore data storage adding, and deleting", () 
       doc.data()
     );
 
+    console.log({ tcDataExpected, tcDataActual: collectionDocumentData });
+
     expect(collectionDocumentData.length).toEqual(3);
     expect(collectionSnapshot.size).toEqual(3);
     expect(collectionDocumentData.every(isTraitData)).toBe(true);

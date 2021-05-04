@@ -29,7 +29,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
   protected afterDeleteCustom?: (props: iDeleteLogEventProps<V>) => void;
   // ? is this required
   protected logger: iTraitCollectionLogger;
-  protected abstract map: Map<N, T>;
+  protected map: Map<N, T> = new Map();
   protected abstract newTraitDataStorage: (
     props: iBaseTraitDataStorageProps<N, V>
   ) => iBaseTraitDataStorage<N, V>;
@@ -219,15 +219,13 @@ export default abstract class AbstractTraitCollectionDataStorage<
     );
   }
 
-  /** produces an initialised map, must be run after all other setup is complete */
-  protected initMap(initialData?: D[]): Map<N, T> {
-    const map = new Map<N, T>();
+  /** Produces an initialised map, with initial instances if initial data exists  */
+  protected initMap(initialData?: D[]) {
+    // ! make sure this is run in sub classes, or add tests
     // assign initial data
     if (initialData)
       initialData.forEach(({ name, value }) =>
         this.map.set(name, this.createTraitInstance(name, value))
       );
-
-    return map;
   }
 }

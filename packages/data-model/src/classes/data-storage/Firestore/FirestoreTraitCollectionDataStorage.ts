@@ -17,8 +17,6 @@ export default class FirestoreTraitCollectionDataStorage<
   D extends iBaseTraitData<N, V>,
   T extends iBaseTrait<N, V, D>
 > extends AbstractTraitCollectionDataStorage<N, V, D, T> {
-  protected map: Map<N, T>;
-
   #firestore: Firestore;
 
   constructor(props: iFirestoreTraitCollectionDataStorageProps<N, V, D, T>) {
@@ -27,7 +25,7 @@ export default class FirestoreTraitCollectionDataStorage<
     });
     const { firestore, initialData } = props;
     this.#firestore = firestore;
-    this.map = this.initMap(initialData);
+    this.initMap(initialData);
     this.init();
   }
 
