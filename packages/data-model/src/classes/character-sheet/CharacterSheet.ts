@@ -50,6 +50,7 @@ export default class CharacterSheet implements iCharacterSheet {
 
   #coreNumberTraitCollection: iCoreNumberTraitCollection;
   #coreStringTraitCollection: iCoreStringTraitCollection;
+  #isFullyInitialised: boolean;
   log: iCharacterSheetLogReporter;
   parentPath: string;
   path: string;
@@ -191,6 +192,9 @@ export default class CharacterSheet implements iCharacterSheet {
     // record this instance using id and path as keys
     CharacterSheet.instances.set(this.id, this);
     CharacterSheet.instances.set(this.path, this);
+
+    // flag to mark that initialisation was completed
+    this.#isFullyInitialised = true;
   }
 
   /** SINGLETON CONSTRUCTOR **/
@@ -289,7 +293,10 @@ export default class CharacterSheet implements iCharacterSheet {
   }
 
   public data(): iCharacterSheetData {
-    return characterSheetToData(this);
+    // ? is this a good way to do it? The issue is trait collections need to populate initially, and some data storages e.g. local files auto save and call this method before the method is ready
+    return this.#isFullyInitialised
+      ? characterSheetToData(this)
+      : CharacterSheet.newDataObject({ id: this.id });
   }
 
   // ? should this be public?

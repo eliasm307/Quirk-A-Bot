@@ -78,10 +78,12 @@ export default abstract class AbstractTraitCollectionDataStorage<
       this.logger.createChildTraitLogger(props);
 
     // assign initial data
+    /*
     if (initialData)
       initialData.forEach(({ name, value }) =>
         this.map.set(name, this.createTraitInstance(name, value))
       );
+      */
   }
 
   get size(): number {

@@ -137,6 +137,10 @@ test(testName, async () => {
   expect(cs.log.report).toBeTruthy();
   expect(csLoaded.health.log.report.events.length).toEqual(1);
   expect(csLoaded.health.log.events.length).toEqual(1);
+
+  console.log(__filename, { logEvents: cs.log.events });
+
+  // this doesnt work because when
   expect(cs.log.events.length).toEqual(3);
   expect(cs.log.events[0]?.property).toEqual("Health");
   expect(cs.log.events[1]?.property).toEqual("Blood Potency");
@@ -184,7 +188,8 @@ test(testName, async () => {
 
   // test changes to values with random values, some logs should generate
   [cs.health, cs.bloodPotency, cs.hunger].forEach((trait) => {
-    trait.value = randVal(trait.min, trait.max);
+    const newVal = randVal(trait.min, trait.max);
+    trait.value = newVal;
   });
 
   const csLoaded: CharacterSheet = await CharacterSheet.load({
@@ -223,13 +228,13 @@ test(testName, async () => {
   });
 
   // console.log(`setting strength`);
-  cs.attributes.set("Strength", 5);
+  await cs.attributes.set("Strength", 5);
 
   // console.log(`setting Athletics`);
-  cs.skills.set("Athletics", 3);
+  await cs.skills.set("Athletics", 3);
 
   // console.log(`setting touchstones/Conviction`);
-  cs.touchstonesAndConvictions.set(
+  await cs.touchstonesAndConvictions.set(
     "a custom one",
     "something, something, something"
   );
