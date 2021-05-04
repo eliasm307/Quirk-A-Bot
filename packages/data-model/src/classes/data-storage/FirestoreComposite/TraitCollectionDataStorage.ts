@@ -1,15 +1,15 @@
 import {
   AbstractCompositeDocument, arrayToRecord, CompositeDocumentChangeData,
-  ConsistentCompositeDocument, Firestore, SubDocumentCreateDetails, SubDocumentDeleteDetails,
+  ConsistentCompositeDocument, SubDocumentCreateDetails, SubDocumentDeleteDetails,
+  TRAIT_COMPOSITE_DOCUMENT_COLLECTION_NAME,
 } from '@quirk-a-bot/common';
 
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
-import isTraitData from '../../../utils/type-predicates/isTraitData';
 import { iBaseTrait, iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
 import AbstractTraitCollectionDataStorage from '../AbstractTraitCollectionDataStorage';
 import { iBaseTraitDataStorage } from '../interfaces/data-storage-interfaces';
 import {
-  iFirestoreCompositeTraitCollectionDataStorageProps, iFirestoreTraitCollectionDataStorageProps,
+  iFirestoreCompositeTraitCollectionDataStorageProps,
 } from '../interfaces/props/trait-collection-data-storage';
 import { iBaseTraitDataStorageProps } from '../interfaces/props/trait-data-storage';
 import { createPath } from '../utils/createPath';
@@ -22,7 +22,8 @@ export default class FirestoreCompositeTraitCollectionDataStorage<
   T extends iBaseTrait<N, V, D>
 > extends AbstractTraitCollectionDataStorage<N, V, D, T> {
   #compositeDocument: AbstractCompositeDocument<Record<N, D>>;
-  #firestore: Firestore;
+  /** Path to the composite document */
+  path: string;
 
   constructor(
     props: iFirestoreCompositeTraitCollectionDataStorageProps<N, V, D, T>
@@ -40,11 +41,18 @@ export default class FirestoreCompositeTraitCollectionDataStorage<
       dataPredicate,
       namePredicate,
     } = props;
-    this.#firestore = firestore;
-
-    const path = createPath(parentPath, name);
+    // this.#firestore = firestore;
 
     this.initMap(initialData);
+
+    const pathToCompositeDocumentCollection = createPath(
+      parentPath,
+      TRAIT_COMPOSITE_DOCUMENT_COLLECTION_NAME
+    );
+
+    // path to the composite document
+    const path = createPath(pathToCompositeDocumentCollection, name);
+    this.path = path;
 
     const handleChange: (
       changeData: CompositeDocumentChangeData<Record<N, D>>
@@ -88,7 +96,7 @@ export default class FirestoreCompositeTraitCollectionDataStorage<
     });
   }
 
-  protected afterAddInternal(name: N): void {
+  protected afterAddInternal(_name: N): void {
     // do nothing, traits are added in trait instance creator
   }
 

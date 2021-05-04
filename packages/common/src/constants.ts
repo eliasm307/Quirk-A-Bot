@@ -41,13 +41,14 @@ export const SKILL_NAMES = [
   "Technology",
 ] as const;
 
+// todo double check spellings
 export const DISCIPLINE_NAMES = [
   "Animalism",
   "Auspex",
   "Prescence",
   "Blood Sorcery",
   "Celerity",
-  "Chimerstry",
+  "Chemistry",
   "Dementation",
   "Dominate",
   "Fortitude",
@@ -86,7 +87,7 @@ export const TRAIT_TYPES = [
 
 // todo move these to a firestore constants file?
 // values
-export const CHARACTER_SHEET_TRAIT_COMPOSITES_COLLECTION_NAME = `traits`;
+export const TRAIT_COMPOSITE_DOCUMENT_COLLECTION_NAME = `traits`;
 export const CORE_TRAIT_COLLECTION_NAME = `CoreTraits`;
 export const ATTRIBUTE_COLLECTION_NAME = `Attributes`;
 export const SKILL_COLLECTION_NAME = `Skills`;

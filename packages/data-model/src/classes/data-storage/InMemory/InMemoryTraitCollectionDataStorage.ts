@@ -8,6 +8,7 @@ import {
   iBaseTraitCollectionDataStorageProps,
 } from '../interfaces/props/trait-collection-data-storage';
 import { iBaseTraitDataStorageProps } from '../interfaces/props/trait-data-storage';
+import { createPath } from '../utils/createPath';
 import InMemoryTraitDataStorage from './InMemoryTraitDataStorage';
 
 export default class InMemoryTraitCollectionDataStorage<
@@ -18,10 +19,15 @@ export default class InMemoryTraitCollectionDataStorage<
   >
   extends AbstractTraitCollectionDataStorage<N, V, D, T>
   implements iTraitCollectionDataStorage<N, V, D, T> {
+  path: string;
+
   constructor(props: iBaseTraitCollectionDataStorageProps<N, V, D, T>) {
     super(props);
 
-    const { initialData } = props;
+    const { initialData, parentPath, name } = props;
+
+    this.path = createPath(parentPath, name);
+
     this.initMap(initialData);
   }
 

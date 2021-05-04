@@ -9,6 +9,7 @@ import {
   iFirestoreTraitCollectionDataStorageProps,
 } from '../interfaces/props/trait-collection-data-storage';
 import { iBaseTraitDataStorageProps } from '../interfaces/props/trait-data-storage';
+import { createPath } from '../utils/createPath';
 import FirestoreTraitDataStorage from './FirestoreTraitDataStorage';
 
 export default class FirestoreTraitCollectionDataStorage<
@@ -18,12 +19,14 @@ export default class FirestoreTraitCollectionDataStorage<
   T extends iBaseTrait<N, V, D>
 > extends AbstractTraitCollectionDataStorage<N, V, D, T> {
   #firestore: Firestore;
+  path: string;
 
   constructor(props: iFirestoreTraitCollectionDataStorageProps<N, V, D, T>) {
     super({
       ...props,
     });
-    const { firestore, initialData } = props;
+    const { firestore, initialData, name, parentPath } = props;
+    this.path = createPath(parentPath, name);
     this.#firestore = firestore;
     this.initMap(initialData);
     this.init();

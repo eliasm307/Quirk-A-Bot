@@ -5,17 +5,19 @@ import {
 import { AttributeName, DisciplineName, SkillName } from '../../../declarations/types';
 import isTraitData from '../../../utils/type-predicates/isTraitData';
 import FirestoreDataStorageFactory from '../../data-storage/Firestore/FirestoreDataStorageFactory';
+import FirestoreCompositeDataStorageFactory from '../../data-storage/FirestoreComposite/DataStorageFactory';
 import { iTraitCollectionFactoryMethodProps } from '../interfaces/trait-collection-interfaces';
-import { iBaseTraitData } from '../interfaces/trait-interfaces';
+import { iBaseTraitData, iGeneralTraitData } from '../interfaces/trait-interfaces';
 import TraitFactory from '../TraitFactory';
-
-// todo make these tests relevant
 
 const firestore = firestoreEmulator;
 
-const dataStorageFactory = new FirestoreDataStorageFactory({ firestore });
+const dataStorageFactory = new FirestoreCompositeDataStorageFactory({
+  firestore,
+});
 
-const rootCollectionPath = "FirestoreDataStorageFactory-traitCollectionTests";
+const rootCollectionPath =
+  "FirestoreCompositeDataStorageFactory-traitCollectionTests";
 
 const createTraitCollectionFactoryMethodProps = (
   groupName: string
@@ -26,34 +28,27 @@ const createTraitCollectionFactoryMethodProps = (
   loggerCreator: null,
 });
 
+const readTraitCollectionInFirestore = async <D extends iGeneralTraitData>(
+  collectionPath: string
+): Promise<D[]> => {
+  const collectionSnapshot = await firestore.doc(collectionPath).get();
+  return Object.values(collectionSnapshot) as D[];
+};
+
 const deleteExistingCollectionDataAsync = async (collectionPath: string) => {
   // delete any existing data in the collection
-  const collectionSnapshot = await firestore.collection(collectionPath).get();
-  // if (collectionSnapshot.size) {
+
   try {
-    await Promise.all(
-      collectionSnapshot.docs.map((doc) => {
-        // const docId = doc.id;
-        return doc.ref.delete();
-        // .then(() => console.log(`Deleted a trait from collection at path ${collectionPath} with id ${docId}`));
-      })
-    );
+    await firestore.doc(collectionPath).delete();
     return;
   } catch (error) {
     return Promise.reject(
       console.error(
-        `Trait collection at path ${collectionPath} had some initial data, an error occurred while deleting it`,
-        {
-          path: collectionPath,
-          existingFirestoreData: collectionSnapshot.docs.map((doc) =>
-            doc.data()
-          ),
-          error,
-        }
+        `Trait collection at path ${collectionPath} had an error occurred while deleting it`,
+        { error }
       )
     );
   }
-  //	}
 };
 
 describe("Trait collection with Firestore data storage adding, and deleting", () => {
@@ -84,21 +79,19 @@ describe("Trait collection with Firestore data storage adding, and deleting", ()
     await pause(4000); // wait for synchronisation
 
     // get snapshot data
-    const collectionSnapshot = await firestore.collection(tc.path).get();
-    const collectionDocumentData = collectionSnapshot.docs.map((doc) =>
-      doc.data()
+    const collectionDocumentData = await readTraitCollectionInFirestore(
+      tc.path
     );
 
     console.log({ tcDataExpected, tcDataActual: collectionDocumentData });
 
+    expect.assertions(4);
     expect(collectionDocumentData.length).toEqual(3);
-    expect(collectionSnapshot.size).toEqual(3);
     expect(collectionDocumentData.every(isTraitData)).toBe(true);
     expect(collectionDocumentData).toEqual(tcDataExpected);
-
-    // can clean up
-    expect(tc.cleanUp()).toEqual(true);
+    expect(tc.cleanUp()).toEqual(true); // can clean up
   }, 19999);
+
   it("deletes traits from firestore collection", async () => {
     expect.hasAssertions();
 
@@ -128,12 +121,9 @@ describe("Trait collection with Firestore data storage adding, and deleting", ()
     await pause(200); // wait for synchronisation
 
     // get snapshot data
-    let collectionSnapshot = await firestore.collection(tc.path).get();
-    let collectionDocumentData = collectionSnapshot.docs.map((doc) =>
-      doc.data()
-    );
+    // get snapshot data
+    let collectionDocumentData = await readTraitCollectionInFirestore(tc.path);
 
-    expect(collectionSnapshot.size).toEqual(1);
     expect(collectionDocumentData.length).toEqual(1);
     expect(collectionDocumentData).toEqual([{ name: "Resolve", value: 3 }]);
 
@@ -142,10 +132,8 @@ describe("Trait collection with Firestore data storage adding, and deleting", ()
     await pause(200); // wait for synchronisation
 
     // get snapshot data
-    collectionSnapshot = await firestore.collection(tc.path).get();
-    collectionDocumentData = collectionSnapshot.docs.map((doc) => doc.data());
+    collectionDocumentData = await readTraitCollectionInFirestore(tc.path);
 
-    expect(collectionSnapshot.size).toEqual(0);
     expect(collectionDocumentData.length).toEqual(0);
     expect(collectionDocumentData).toEqual([]);
 
@@ -194,12 +182,10 @@ describe("Trait collection with Firestore data storage", () => {
     await pause(200); // wait for synchronisation
 
     // get snapshot data
-    const collectionSnapshot = await firestore.collection(tc.path).get();
-    const collectionDocumentData = collectionSnapshot.docs.map((doc) =>
-      doc.data()
+    const collectionDocumentData = await readTraitCollectionInFirestore(
+      tc.path
     );
 
-    expect(collectionSnapshot.size).toEqual(3);
     expect(collectionDocumentData.length).toEqual(3);
     expect(collectionDocumentData).toEqual(initialData);
 

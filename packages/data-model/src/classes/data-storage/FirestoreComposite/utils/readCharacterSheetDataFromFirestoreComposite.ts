@@ -1,7 +1,7 @@
 import {
-  ATTRIBUTE_COLLECTION_NAME, CHARACTER_SHEET_TRAIT_COMPOSITES_COLLECTION_NAME,
-  CORE_TRAIT_COLLECTION_NAME, CoreTraitName, DISCIPLINE_COLLECTION_NAME, Firestore,
+  ATTRIBUTE_COLLECTION_NAME, CORE_TRAIT_COLLECTION_NAME, DISCIPLINE_COLLECTION_NAME, Firestore,
   SKILL_COLLECTION_NAME, TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME,
+  TRAIT_COMPOSITE_DOCUMENT_COLLECTION_NAME,
 } from '@quirk-a-bot/common';
 
 import { isCharacterSheetData } from '../../../../utils/type-predicates';
@@ -14,7 +14,7 @@ import { createPath } from '../../utils/createPath';
 
 // todo test
 
-// todo use unkown over any for tbc values
+// todo use unknown over any for tbc values
 
 async function readCompositeDocumentAsync(
   firestore: Firestore,
@@ -38,10 +38,10 @@ export default async function readCharacterSheetDataFromFirestoreComposite({
       `Cannot read document at path ${path} because it doesn't  exist`
     );
 
-  // create the path to the subcollection of the character sheet where the composite documents with traits are contained
+  // create the path to the sub-collection of the character sheet where the composite documents with traits are contained
   const characterSheetTraitCompositesPath = createPath(
     path,
-    CHARACTER_SHEET_TRAIT_COMPOSITES_COLLECTION_NAME
+    TRAIT_COMPOSITE_DOCUMENT_COLLECTION_NAME
   );
 
   // read trait collection data as firestore collections
@@ -71,7 +71,7 @@ export default async function readCharacterSheetDataFromFirestoreComposite({
     TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME
   );
 
-  // fullfill promises as a batch
+  // fulfil promises as a batch
   const [
     coreTraitsCollection,
     attributesCollection,

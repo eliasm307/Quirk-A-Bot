@@ -37,7 +37,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
   instanceCreator: (props: iBaseTraitProps<N, V, D>) => T;
   log: iTraitCollectionLogReporter;
   name: string;
-  path: string;
+  abstract path: string;
 
   // ? is this required? if collection adds data to storage this means creating trait data and connecting data to trait instances would be done by 2 classes async, so it might be done in the wrong order. Opted to have these both on the trait side
   protected abstract afterAddInternal(name: N): void;
@@ -59,9 +59,6 @@ export default abstract class AbstractTraitCollectionDataStorage<
     this.afterDeleteCustom = onDelete;
     this.name = collectionName;
     this.instanceCreator = instanceCreator;
-
-    // create path // ? should this be done by the concrete implementations?
-    this.path = createPath(parentPath, collectionName);
 
     // use logger if provided, otherwise create a local one
     this.logger = logger

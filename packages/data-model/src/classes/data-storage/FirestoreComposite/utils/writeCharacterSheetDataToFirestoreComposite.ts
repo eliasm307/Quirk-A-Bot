@@ -1,9 +1,9 @@
 // todo test
 
 import {
-  arrayToRecord, ATTRIBUTE_COLLECTION_NAME, CHARACTER_SHEET_TRAIT_COMPOSITES_COLLECTION_NAME,
-  CORE_TRAIT_COLLECTION_NAME, DISCIPLINE_COLLECTION_NAME, displayNameToPropertyName, Firestore,
-  FirestoreBatch, SKILL_COLLECTION_NAME, TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME,
+  arrayToRecord, ATTRIBUTE_COLLECTION_NAME, CORE_TRAIT_COLLECTION_NAME, DISCIPLINE_COLLECTION_NAME,
+  displayNameToPropertyName, Firestore, FirestoreBatch, SKILL_COLLECTION_NAME,
+  TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME, TRAIT_COMPOSITE_DOCUMENT_COLLECTION_NAME,
 } from '@quirk-a-bot/common';
 
 import {
@@ -85,7 +85,7 @@ export default async function writeCharacterSheetDataToFirestoreComposite({
     // create the path to the subcollection of the character sheet where the composite documents with traits are contained
     const characterSheetTraitCompositesPath = createPath(
       path,
-      CHARACTER_SHEET_TRAIT_COMPOSITES_COLLECTION_NAME
+      TRAIT_COMPOSITE_DOCUMENT_COLLECTION_NAME
     );
 
     // write trait collection data as firestore collections
