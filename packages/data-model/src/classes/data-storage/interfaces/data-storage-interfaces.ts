@@ -37,12 +37,10 @@ export interface iHasCharacterSheetDataStorage {
 export interface iBaseTraitDataStorage<
   N extends TraitNameUnionOrString,
   V extends TraitValueTypeUnion
-> extends iBaseTraitData<N, V>,
+> extends iBaseTrait<N, V>,
     iHasPath,
     iHasTraitLogReporter,
-    iHasCleanUp {
-  setValue(newValue: V): Promise<void>;
-}
+    iHasCleanUp {}
 
 export interface iTraitCollectionDataStorage<
   N extends TraitNameUnionOrString,
@@ -96,8 +94,8 @@ export interface iDataStorageFactory {
     props: iBaseTraitCollectionDataStorageProps<N, V, D, T>
   ) => iTraitCollectionDataStorage<N, V, D, T>;
 
-// NOTE the factory props just define what will be available, the specific factories dont need to require any of the given props
-  // ! traits will always be part of trait collections, so factory shouldnt have this method. Trait collections should instead
+// NOTE the factory props just define what will be available, the specific factories don't need to require any of the given props
+  // ! traits will always be part of trait collections, so factory shouldn't have this method. Trait collections should instead
   /*
   newTraitDataStorageInitialiser(
     props: iTraitDataStorageInitialiserFactoryProps
