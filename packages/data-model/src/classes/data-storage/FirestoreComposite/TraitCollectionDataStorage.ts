@@ -21,13 +21,17 @@ export default class FirestoreCompositeTraitCollectionDataStorage<
   D extends iBaseTraitData<N, V>,
   T extends iBaseTrait<N, V, D>
 > extends AbstractTraitCollectionDataStorage<N, V, D, T> {
+  protected map: Map<N, T>;
+
   #compositeDocument: AbstractCompositeDocument<Record<N, D>>;
   #firestore: Firestore;
 
   constructor(
     props: iFirestoreCompositeTraitCollectionDataStorageProps<N, V, D, T>
   ) {
-    super({ ...props });
+    super({
+      ...props,
+    });
     const {
       firestore,
       parentPath,
@@ -41,6 +45,8 @@ export default class FirestoreCompositeTraitCollectionDataStorage<
     this.#firestore = firestore;
 
     const path = createPath(parentPath, name);
+
+    this.map = this.initMap(initialData);
 
     const handleChange: (
       changeData: CompositeDocumentChangeData<Record<N, D>>

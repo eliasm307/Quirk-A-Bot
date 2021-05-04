@@ -29,7 +29,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
   protected afterDeleteCustom?: (props: iDeleteLogEventProps<V>) => void;
   // ? is this required
   protected logger: iTraitCollectionLogger;
-  protected map: Map<N, T> = new Map<N, T>();
+  protected abstract map: Map<N, T>;
   protected abstract newTraitDataStorage: (
     props: iBaseTraitDataStorageProps<N, V>
   ) => iBaseTraitDataStorage<N, V>;
@@ -76,14 +76,6 @@ export default abstract class AbstractTraitCollectionDataStorage<
 
     const traitLoggerCreator = (props: iChildLoggerCreatorProps) =>
       this.logger.createChildTraitLogger(props);
-
-    // assign initial data
-    /*
-    if (initialData)
-      initialData.forEach(({ name, value }) =>
-        this.map.set(name, this.createTraitInstance(name, value))
-      );
-      */
   }
 
   get size(): number {
@@ -225,5 +217,17 @@ export default abstract class AbstractTraitCollectionDataStorage<
           this.logger.createChildTraitLogger(props), // NOTE this needs to be extracted into a function to create a closure such that the 'this' references are maintained
       })
     );
+  }
+
+  /** produces an initialised map, must be run after all other setup is complete */
+  protected initMap(initialData?: D[]): Map<N, T> {
+    const map = new Map<N, T>();
+    // assign initial data
+    if (initialData)
+      initialData.forEach(({ name, value }) =>
+        this.map.set(name, this.createTraitInstance(name, value))
+      );
+
+    return map;
   }
 }

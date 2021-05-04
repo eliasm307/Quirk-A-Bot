@@ -19,14 +19,17 @@ export default class LocalFileTraitCollectionDataStorage<
   D extends iBaseTraitData<N, V>,
   T extends iBaseTrait<N, V, D>
 > extends AbstractTraitCollectionDataStorage<N, V, D, T> {
+  protected map: Map<N, T>;
+
   #characterSheet: iCharacterSheet;
   #resolvedBasePath: string;
 
   constructor(props: iLocalFileTraitCollectionDataStorageProps<N, V, D, T>) {
     super(props);
-    const { characterSheet, resolvedBasePath } = props;
+    const { characterSheet, resolvedBasePath, initialData } = props;
     this.#characterSheet = characterSheet;
     this.#resolvedBasePath = resolvedBasePath;
+    this.map = this.initMap(initialData);
   }
 
   protected afterAddInternal(_name: N): void {

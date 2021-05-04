@@ -99,13 +99,6 @@ export default class CharacterSheet implements iCharacterSheet {
         traitCollectionLoggerCreatorProps
       );
 
-    // create traitCollection factory method props
-    const traitCollectionFactoryProps = {
-      traitCollectionDataStorageInitialiser,
-      parentPath: this.path,
-      loggerCreator: traitCollectionLoggerCreator,
-    };
-
     const {
       bloodPotency,
       hunger,
@@ -132,6 +125,13 @@ export default class CharacterSheet implements iCharacterSheet {
       name,
       sire,
     ];
+
+    // create traitCollection factory method props
+    const traitCollectionFactoryProps = {
+      traitCollectionDataStorageInitialiser,
+      parentPath: this.path,
+      loggerCreator: traitCollectionLoggerCreator,
+    };
 
     // create collections, with initial data where available
 

@@ -7,8 +7,11 @@ import {
   AttributeName, DisciplineName, SkillName, TraitNameUnionOrString, TraitValueTypeUnion,
 } from '../../../declarations/types';
 import {
-  iHasTraitCollectionDataStorageInitialiser, iHasTraitDataStorageInitialiser,
+  iHasTraitDataStorageInitialiser, iTraitCollectionDataStorage,
 } from '../../data-storage/interfaces/data-storage-interfaces';
+import {
+  iBaseTraitCollectionDataStorageProps,
+} from '../../data-storage/interfaces/props/trait-collection-data-storage';
 import {
   iHasTraitCollectionLogReporter, iTraitCollectionLogger,
 } from '../../log/interfaces/log-interfaces';
@@ -22,8 +25,19 @@ import {
 // -------------------------------------------------------
 // GENERAL
 
-export interface iTraitCollectionDataStorageInitialiserBundle
-  extends iHasTraitCollectionDataStorageInitialiser {}
+export interface iTraitCollectionDataStorageInitialiserBundle {
+  traitCollectionDataStorageInitialiser<
+    N extends TraitNameUnionOrString,
+    V extends TraitValueTypeUnion,
+    D extends iBaseTraitData<N, V>,
+    T extends iBaseTrait<N, V, D>
+  >(
+    props: Omit<
+      iBaseTraitCollectionDataStorageProps<N, V, D, T>,
+      "newTraitDataStorage"
+    >
+  ): iTraitCollectionDataStorage<N, V, D, T>;
+}
 
 // -------------------------------------------------------
 // FACTORY METHOD PROPS
