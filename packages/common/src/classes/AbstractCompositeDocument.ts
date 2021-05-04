@@ -394,9 +394,14 @@ export default abstract class AbstractCompositeDocument<
       // remove extra sub document
       if (!newData[key as keyof SchemaType]) {
         // ? will data be deleted already at this point? is there a point in getting the data
-        // log state at delete
-        const oldSubDocument = this.#private.data[key];
-        if (oldSubDocument) deletes[key] = { ...oldSubDocument };
+        // log state before delete
+        const oldSubDocument = this.#private.subDocuments.get(key);
+        if (oldSubDocument) {
+          const oldData = oldSubDocument.data;
+
+          // add data to log if defined
+          if (oldData) deletes[key] = { ...oldData };
+        }
 
         // remove sub document
         this.#private.subDocuments.delete(key);
