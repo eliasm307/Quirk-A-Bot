@@ -40,7 +40,9 @@ export interface iBaseTraitDataStorage<
 > extends iBaseTraitData<N, V>,
     iHasPath,
     iHasTraitLogReporter,
-    iHasCleanUp {}
+    iHasCleanUp {
+  setValue(newValue: V): Promise<void>;
+}
 
 export interface iTraitCollectionDataStorage<
   N extends TraitNameUnionOrString,

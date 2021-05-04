@@ -53,7 +53,13 @@ export default abstract class AbstractBaseTrait<
     return this.dataStorage.value;
   }
 
-  public set value(newValRaw: V) {
+  cleanUp(): boolean {
+    // if the data storage has a cleanup function then call it and return the result,
+    // otherwise return true if no cleanup required
+    return hasCleanUp(this.dataStorage) ? this.dataStorage.cleanUp() : true;
+  }
+
+  public async setValue(newValRaw: V) {
     // todo delete? data storage should handle actually changing the value
     /*
 
@@ -75,11 +81,5 @@ export default abstract class AbstractBaseTrait<
 
     // implement property change on data storage
     this.dataStorage.value = newValueProcessed;
-  }
-
-  cleanUp(): boolean {
-    // if the data storage has a cleanup function then call it and return the result,
-    // otherwise return true if no cleanup required
-    return hasCleanUp(this.dataStorage) ? this.dataStorage.cleanUp() : true;
   }
 }
