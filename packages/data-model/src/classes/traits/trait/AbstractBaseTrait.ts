@@ -59,15 +59,12 @@ export default abstract class AbstractBaseTrait<
     return hasCleanUp(this.dataStorage) ? this.dataStorage.cleanUp() : true;
   }
 
-  public async setValue(newValRaw: V) {
+  public async setValue(newValRaw: V | ((oldValue: V) => V)) {
     // todo delete? data storage should handle actually changing the value
     /*
 
 		// justification should be done in newValueIsValid function
 		if (!this.newValueIsValid(newValue)) return;
-
-		// get current value as old value
-		const oldValue: V = this.dataStorage.value;
 
 		// if old value is the same as new value do nothing
 		if (oldValue === newValue) {
@@ -75,11 +72,17 @@ export default abstract class AbstractBaseTrait<
 			return;
     }
     */
+    // get current value as old value
+    const oldValue: V = this.dataStorage.value;
 
-    const newValueProcessed = this.preProcessValue(newValRaw);
-    if (!this.newValueIsValid(newValueProcessed)) return;
+    const resolvedNewValue =
+      typeof newValRaw === "function" ? newValRaw(oldValue) : newValRaw;
+
+    const processedNewValue = this.preProcessValue(resolvedNewValue);
+
+    if (!this.newValueIsValid(processedNewValue)) return;
 
     // implement property change on data storage
-    this.dataStorage.value = newValueProcessed;
+    this.dataStorage.value = processedNewValue;
   }
 }
