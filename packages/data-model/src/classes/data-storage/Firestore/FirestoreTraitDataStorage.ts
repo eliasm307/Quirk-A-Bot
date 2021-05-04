@@ -71,7 +71,7 @@ export default class FirestoreTraitDataStorage<
 
     // assert document exists
     if (!doc || !doc.exists) {
-      // if the document doesnt exist then try adding it
+      // if the document doesn't  exist then try adding it
       // console.log(__filename, `Trait does not exist at path ${this.path}, adding this now`);
       try {
         await this.#firestore.doc(this.path).set(traitData);
@@ -134,7 +134,7 @@ export default class FirestoreTraitDataStorage<
               throw Error(
                 `Change on trait named ${
                   this.name
-                } in collection ${parentCollectionPath}, resulted in data that doesnt satisfy the trait data shape. Data: ${JSON.stringify(
+                } in collection ${parentCollectionPath}, resulted in data that doesn't  satisfy the trait data shape. Data: ${JSON.stringify(
                   data
                 )}`
               );
@@ -177,7 +177,7 @@ export default class FirestoreTraitDataStorage<
       // ? is this right? does doc.exists actually mean the document doesn exist?
       // check document exists
       if (!doc.exists) {
-        // if it doesnt exist, it might be a left over from an old delete, delete it again just incase
+        // if it doesn't  exist, it might be a left over from an old delete, delete it again just incase
         // console.log(__filename, `Attempting to delete trait document ${this.#path}, it is shown as not existing`);
         // await doc.ref.delete();
 

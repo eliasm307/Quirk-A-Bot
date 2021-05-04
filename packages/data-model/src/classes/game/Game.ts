@@ -70,7 +70,7 @@ export default class Game implements iGame {
     // if an instance has already been created with this id then use that instance
     if (preExistingInstance) return preExistingInstance;
 
-    // check if a character sheet with this id doesnt exist in the data storage, initialise a blank character sheet if not
+    // check if a character sheet with this id doesn't  exist in the data storage, initialise a blank character sheet if not
     const gameDataStorage = dataStorageFactory.newGameDataStorage(props);
 
     try {
@@ -78,7 +78,7 @@ export default class Game implements iGame {
       await gameDataStorage.assertDataExistsOnDataStorage();
 
       // return a new character sheet instance as requested
-      // Note a character sheet instance only creates an object that is connected to a character sheet on the data source, it doesnt initialise a new character sheet on the data source
+      // Note a character sheet instance only creates an object that is connected to a character sheet on the data source, it doesn't  initialise a new character sheet on the data source
       return new Game({ ...props, gameDataStorage, dataStorageFactory });
     } catch (error) {
       console.error(__filename, { error });

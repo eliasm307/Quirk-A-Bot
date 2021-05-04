@@ -18,7 +18,7 @@ interface Props<D> extends iHasFirestore, iHasPath {
   documentDataReader(props: DocumentDataReaderProps): Promise<D>;
   /** A function which writes custom data to a firestore document and or sub collections in the correct manner  */
   documentDataWriter(props: DocumentDataWriterProps<D>): Promise<void>;
-  /** A function to produce default data to use if the document doesnt exist */
+  /** A function to produce default data to use if the document doesn't  exist */
   newDefaultData(): D;
 }
 
@@ -45,7 +45,7 @@ export default async function assertDocumentExistsOnFirestore<D>({
       `Could not read character sheet data from path ${path}, initialising a new character sheet...`,
       { error }
     );
-    // if it doesnt exist or data is bad, initialise it as a blank character sheet if not
+    // if it doesn't  exist or data is bad, initialise it as a blank character sheet if not
     try {
       const data = defaultData(); // use default data and save data locally
 

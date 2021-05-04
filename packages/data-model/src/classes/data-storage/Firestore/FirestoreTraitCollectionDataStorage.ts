@@ -99,7 +99,7 @@ export default class FirestoreTraitCollectionDataStorage<
               throw Error(
                 `Change on trait collection named ${
                   this.name
-                }, resulted in data that doesnt satisfy the trait data shape. Data: ${JSON.stringify(
+                }, resulted in data that doesn't  satisfy the trait data shape. Data: ${JSON.stringify(
                   data
                 )}`
               );

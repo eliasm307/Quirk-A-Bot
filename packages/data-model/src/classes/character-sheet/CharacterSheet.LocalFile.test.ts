@@ -35,7 +35,7 @@ const dataStorageFactory = new LocalFileDataStorageFactory({
 
 let testName: string;
 /*
-testName = 'loading from file that doesnt exist';
+testName = 'loading from file that doesn't  exist';
 test(testName, () => {
 	expect(() =>
 		CharacterSheet.loadFromFile({

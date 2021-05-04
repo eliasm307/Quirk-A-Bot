@@ -215,7 +215,7 @@ export default class CharacterSheet implements iCharacterSheet {
     // if an instance has already been created with this id then use that instance
     if (preExistingInstance) return preExistingInstance;
 
-    // check if a character sheet with this id doesnt exist in the data storage, initialise a blank character sheet if not
+    // check if a character sheet with this id doesn't  exist in the data storage, initialise a blank character sheet if not
     const characterSheetDataStorage = dataStorageFactory.newCharacterSheetDataStorage(
       props
     );
@@ -225,7 +225,7 @@ export default class CharacterSheet implements iCharacterSheet {
       await characterSheetDataStorage.assertDataExistsOnDataStorage();
 
       // return a new character sheet instance as requested
-      // Note a character sheet instance only creates an object that is connected to a character sheet on the data source, it doesnt initialise a new character sheet on the data source
+      // Note a character sheet instance only creates an object that is connected to a character sheet on the data source, it doesn't initialise a new character sheet on the data source
       return new CharacterSheet({ ...props, characterSheetDataStorage });
     } catch (error) {
       console.error(__filename, { error });
@@ -299,7 +299,8 @@ export default class CharacterSheet implements iCharacterSheet {
       : CharacterSheet.newDataObject({ id: this.id });
   }
 
-  // ? should this be public?
+// ? is this required
+  /*
   private getAllTraits(): iGeneralTrait[] {
     // todo make this automatic and dynamic
     return [
@@ -317,4 +318,5 @@ export default class CharacterSheet implements iCharacterSheet {
       this.willpower,
     ];
   }
+  */
 }

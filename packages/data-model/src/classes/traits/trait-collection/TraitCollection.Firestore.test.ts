@@ -64,7 +64,7 @@ describe("TraitColleciton with Firestore data storage adding, and deleting", () 
       "testingCollectionFromBlankAdding"
     );
 
-    // NOTE firestore doesnt hold empty collecitons, no need to test when empty
+    // NOTE firestore doesn't  hold empty collecitons, no need to test when empty
     const tc = TraitFactory.newAttributeTraitCollection(props);
 
     // run tests after deleting any existing data
@@ -106,7 +106,7 @@ describe("TraitColleciton with Firestore data storage adding, and deleting", () 
       "testingCollectionFromBlankDeleting"
     );
 
-    // NOTE firestore doesnt hold empty collecitons, no need to test when empty
+    // NOTE firestore doesn't  hold empty collecitons, no need to test when empty
     const tc = TraitFactory.newAttributeTraitCollection(props);
 
     // run tests after deleting any existing data
@@ -160,7 +160,7 @@ describe("TraitColleciton with Firestore data storage adding, and deleting", () 
       "testingCollectionFromBlankCleanup"
     );
 
-    // NOTE firestore doesnt hold empty collecitons, no need to test when empty
+    // NOTE firestore doesn't  hold empty collecitons, no need to test when empty
     const tc = TraitFactory.newAttributeTraitCollection(props);
 
     // test cleanup

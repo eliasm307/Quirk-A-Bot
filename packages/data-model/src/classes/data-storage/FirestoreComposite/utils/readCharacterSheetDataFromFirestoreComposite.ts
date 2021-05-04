@@ -34,7 +34,9 @@ export default async function readCharacterSheetDataFromFirestoreComposite({
   // read core data first and confirm document exists
   const coreDataDocument = await firestore.doc(path).get();
   if (!coreDataDocument.exists)
-    throw Error(`Cannot read document at path ${path} because it doesnt exist`);
+    throw Error(
+      `Cannot read document at path ${path} because it doesn't  exist`
+    );
 
   // create the path to the subcollection of the character sheet where the composite documents with traits are contained
   const characterSheetTraitCompositesPath = createPath(

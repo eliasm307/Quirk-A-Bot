@@ -197,11 +197,7 @@ export interface iBaseTrait<
 }
 
 export interface iGeneralTrait
-  extends iBaseTrait<
-    TraitNameUnionOrString,
-    TraitValueTypeUnion,
-    iGeneralTraitData
-  > {}
+  extends iBaseTrait<TraitNameUnionOrString, TraitValueTypeUnion> {}
 
 export interface iBaseNumberTrait<
   N extends TraitNameUnionOrString,

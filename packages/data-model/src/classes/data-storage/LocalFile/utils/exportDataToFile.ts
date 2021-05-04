@@ -29,7 +29,7 @@ export default function exportDataToFile(
 
   try {
     // fs.ensureFileSync(resolvedOutputFilePath); // ensure file path exists
-    fs.outputJSONSync(resolvedOutputFilePath, data, writeOptions); // write JSON to file path, create it if it doesnt exist // todo replace with https://github.com/jprichardson/node-fs-extra/blob/master/docs/outputJson-sync.md
+    fs.outputJSONSync(resolvedOutputFilePath, data, writeOptions); // write JSON to file path, create it if it doesn't  exist // todo replace with https://github.com/jprichardson/node-fs-extra/blob/master/docs/outputJson-sync.md
 
     // check file path exists
     if (fs.pathExistsSync(resolvedOutputFilePath)) {

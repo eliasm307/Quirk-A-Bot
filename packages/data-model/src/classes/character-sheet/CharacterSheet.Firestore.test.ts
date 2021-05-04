@@ -19,7 +19,7 @@ const deleteDoc = async (path: string) => {
   await firestore.doc(path).delete();
   await new Promise((resolve) => setTimeout(resolve, 100)); // wait for syncronisation
 
-  // make sure document doesnt exist
+  // make sure document doesn't  exist
   const doc = await firestore.doc(path).get();
   expect(doc.exists).toEqual(false);
   expect(doc.data()).toEqual(undefined);

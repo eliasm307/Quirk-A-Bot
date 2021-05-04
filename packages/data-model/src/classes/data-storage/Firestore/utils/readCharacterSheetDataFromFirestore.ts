@@ -41,7 +41,9 @@ export default async function readCharacterSheetDataFromFirestore({
   // read core data first and confirm document exists
   const coreDataDocument = await firestore.doc(path).get();
   if (!coreDataDocument.exists)
-    throw Error(`Cannot read document at path ${path} because it doesnt exist`);
+    throw Error(
+      `Cannot read document at path ${path} because it doesn't  exist`
+    );
 
   // read trait collection data as firestore collections
   const coreTraitsPromise = readTraitCollectionPromise(
