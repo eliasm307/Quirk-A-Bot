@@ -31,8 +31,8 @@ export interface iHasNumberValue {
   value: number;
 }
 export interface iHasNumberLimits {
-  max: number;
-  min: number;
+  readonly max: number;
+  readonly min: number;
 }
 export interface iHasTraitInstanceCreator<
   N extends TraitNameUnionOrString,
@@ -207,7 +207,6 @@ export interface iBaseNumberTrait<
   N extends TraitNameUnionOrString,
   D extends iNumberTraitData<N>
 > extends iBaseTrait<N, number, D>,
-    iHasNumberValue,
     iHasNumberLimits {}
 
 export interface iNumberTrait<N extends TraitNameUnionOrString>
@@ -233,19 +232,11 @@ export interface iNumberTraitWithCategory<
 // SPECIFIC TRAIT OBJECTS
 
 export interface iAttribute
-  extends iAttributeData,
-    iNumberTrait<AttributeName>,
+  extends iNumberTrait<AttributeName>,
     iHasCategory<AttributeCategory> {}
-export interface iDiscipline
-  extends iDisciplineData,
-    iNumberTrait<DisciplineName> {}
-export interface iSkill extends iSkillData, iNumberTrait<SkillName> {}
-export interface iTouchStoneOrConviction
-  extends iTouchStoneOrConvictionData,
-    iStringTrait<string> {}
-export interface iCoreNumberTrait
-  extends iNumberTraitData<CoreNumberTraitName>,
-    iNumberTrait<CoreNumberTraitName> {}
+export interface iDiscipline extends iNumberTrait<DisciplineName> {}
+export interface iSkill extends iNumberTrait<SkillName> {}
+export interface iTouchStoneOrConviction extends iStringTrait<string> {}
+export interface iCoreNumberTrait extends iNumberTrait<CoreNumberTraitName> {}
 export interface iCoreStringTrait<V extends string = string>
-  extends iBaseTraitData<CoreStringTraitName, V>,
-    iBaseStringTrait<CoreStringTraitName, V> {}
+  extends iBaseStringTrait<CoreStringTraitName, V> {}

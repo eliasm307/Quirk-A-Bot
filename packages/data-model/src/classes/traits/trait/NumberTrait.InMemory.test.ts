@@ -62,7 +62,7 @@ describe("Number trait with in memory data storage", () => {
     expect(trait1.value).toEqual(0);
   });
 
-  it("does not accept any value modifications above or belows the defined limit", async () => {
+  it("does not accept any value modifications above or below the defined limit", async () => {
     expect.assertions(3);
 
     const trait1 = new NumberTrait<string>({
