@@ -2,6 +2,7 @@ import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../declarations/
 import { iTraitLogger, iTraitLogReporter } from '../log/interfaces/log-interfaces';
 import UpdateLogEvent from '../log/log-events/UpdateLogEvent';
 import TraitLogger from '../log/loggers/TraitLogger';
+import { iBaseTraitData } from '../traits/interfaces/trait-interfaces';
 import { iBaseTraitDataStorage } from './interfaces/data-storage-interfaces';
 import { iBaseTraitDataStorageProps } from './interfaces/props/trait-data-storage';
 
@@ -50,11 +51,22 @@ export default abstract class AbstractTraitDataStorage<
     return this.private.value;
   }
 
-  async setValue(newValue: V) {
+  data: () => iBaseTraitData<N, V> = () => ({
+    name: this.name,
+    value: this.value,
+  });
+
+  async setValue(newValueResolver: V | ((oldValue: V) => V)) {
     // get current value as old value
     const oldValue = this.private.value;
 
-    // do nothing if value hasnt changed
+    // resolve new value
+    const newValue =
+      typeof newValueResolver === "function"
+        ? newValueResolver(oldValue)
+        : newValueResolver;
+
+    // do nothing if value hasn't changed
     if (newValue === oldValue) return;
 
     // update internal value
