@@ -17,7 +17,7 @@ const dataStorageFactory = new FirestoreDataStorageFactory({ firestore });
 
 const deleteDoc = async (path: string) => {
   await firestore.doc(path).delete();
-  await new Promise((resolve) => setTimeout(resolve, 100)); // wait for syncronisation
+  await new Promise((resolve) => setTimeout(resolve, 100)); // wait for synchronisation
 
   // make sure document doesn't  exist
   const doc = await firestore.doc(path).get();
@@ -42,7 +42,7 @@ describe("Character sheet using Firestore", () => {
       parentPath,
     });
 
-    await pause(100); // wait for syncronisation
+    await pause(100); // wait for synchronisation
 
     // make sure document exists
     const doc = await firestore.doc(docPath).get();
@@ -101,7 +101,7 @@ describe("Character sheet using Firestore", () => {
       path: docPath,
       data: initialData,
     });
-    await pause(500); // wait for syncronisation
+    await pause(500); // wait for synchronisation
 
     // initialise cs
     const cs = await CharacterSheet.load({

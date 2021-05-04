@@ -17,7 +17,7 @@ const dataStorageFactory = new FirestoreDataStorageFactory({ firestore });
 
 const rootCollectionPath = "traitCollectionTests";
 
-const createtraitCollectionFactoryMethodProps = (
+const createTraitCollectionFactoryMethodProps = (
   groupName: string
 ): iTraitCollectionFactoryMethodProps => ({
   traitCollectionDataStorageInitialiser: dataStorageFactory.newTraitCollectionDataStorageInitialiser(),
@@ -33,7 +33,7 @@ const deleteExistingCollectionDataAsync = async (collectionPath: string) => {
   try {
     await Promise.all(
       collectionSnapshot.docs.map((doc) => {
-        const docId = doc.id;
+        // const docId = doc.id;
         return doc.ref.delete();
         // .then(() => console.log(`Deleted a trait from collection at path ${collectionPath} with id ${docId}`));
       })
@@ -42,7 +42,7 @@ const deleteExistingCollectionDataAsync = async (collectionPath: string) => {
   } catch (error) {
     return Promise.reject(
       console.error(
-        `Trait collection at path ${collectionPath} had some initial data, an error occured while deleting it`,
+        `Trait collection at path ${collectionPath} had some initial data, an error occurred while deleting it`,
         {
           path: collectionPath,
           existingFirestoreData: collectionSnapshot.docs.map((doc) =>
@@ -56,15 +56,15 @@ const deleteExistingCollectionDataAsync = async (collectionPath: string) => {
   //	}
 };
 
-describe("TraitColleciton with Firestore data storage adding, and deleting", () => {
+describe("Trait collection with Firestore data storage adding, and deleting", () => {
   it("adds traits to firestore collection", async () => {
     expect.hasAssertions();
 
-    const props = createtraitCollectionFactoryMethodProps(
+    const props = createTraitCollectionFactoryMethodProps(
       "testingCollectionFromBlankAdding"
     );
 
-    // NOTE firestore doesn't  hold empty collecitons, no need to test when empty
+    // NOTE firestore doesn't  hold empty collections, no need to test when empty
     const tc = TraitFactory.newAttributeTraitCollection(props);
 
     // run tests after deleting any existing data
@@ -81,7 +81,7 @@ describe("TraitColleciton with Firestore data storage adding, and deleting", () 
       { name: "Resolve", value: 3 },
     ];
 
-    await pause(4000); // wait for syncronisation
+    await pause(4000); // wait for synchronisation
 
     // get snapshot data
     const collectionSnapshot = await firestore.collection(tc.path).get();
@@ -102,30 +102,30 @@ describe("TraitColleciton with Firestore data storage adding, and deleting", () 
   it("deletes traits from firestore collection", async () => {
     expect.hasAssertions();
 
-    const props = createtraitCollectionFactoryMethodProps(
+    const props = createTraitCollectionFactoryMethodProps(
       "testingCollectionFromBlankDeleting"
     );
 
-    // NOTE firestore doesn't  hold empty collecitons, no need to test when empty
+    // NOTE firestore doesn't  hold empty collections, no need to test when empty
     const tc = TraitFactory.newAttributeTraitCollection(props);
 
     // run tests after deleting any existing data
     await deleteExistingCollectionDataAsync(tc.path);
 
-    await pause(200); // wait for syncronisation
+    await pause(200); // wait for synchronisation
 
     // add some traits
     await tc.set("Charisma", 1);
     await tc.set("Composure", 2);
     await tc.set("Resolve", 3);
 
-    await pause(200); // wait for syncronisation
+    await pause(200); // wait for synchronisation
 
     // test deleting some items
     await tc.delete("Charisma");
     await tc.delete("Composure");
 
-    await pause(200); // wait for syncronisation
+    await pause(200); // wait for synchronisation
 
     // get snapshot data
     let collectionSnapshot = await firestore.collection(tc.path).get();
@@ -139,7 +139,7 @@ describe("TraitColleciton with Firestore data storage adding, and deleting", () 
 
     // delete the rest of the items
     await tc.delete("Resolve");
-    await pause(200); // wait for syncronisation
+    await pause(200); // wait for synchronisation
 
     // get snapshot data
     collectionSnapshot = await firestore.collection(tc.path).get();
@@ -156,11 +156,11 @@ describe("TraitColleciton with Firestore data storage adding, and deleting", () 
   it("cleans up", () => {
     expect.hasAssertions();
 
-    const props = createtraitCollectionFactoryMethodProps(
+    const props = createTraitCollectionFactoryMethodProps(
       "testingCollectionFromBlankCleanup"
     );
 
-    // NOTE firestore doesn't  hold empty collecitons, no need to test when empty
+    // NOTE firestore doesn't  hold empty collections, no need to test when empty
     const tc = TraitFactory.newAttributeTraitCollection(props);
 
     // test cleanup
@@ -168,12 +168,12 @@ describe("TraitColleciton with Firestore data storage adding, and deleting", () 
   });
 });
 
-describe("TraitColleciton with Firestore data storage", () => {
-  it("can initialise a firestore colleciton from initial trait data", async () => {
+describe("Trait collection with Firestore data storage", () => {
+  it("can initialise a firestore collection from initial trait data", async () => {
     expect.hasAssertions();
 
     // name this test group path
-    const props = createtraitCollectionFactoryMethodProps(
+    const props = createTraitCollectionFactoryMethodProps(
       "testingCollectionFromExistingData"
     );
 
@@ -191,7 +191,7 @@ describe("TraitColleciton with Firestore data storage", () => {
     // note uses different collection than other tests for different path
     const tc = TraitFactory.newSkillTraitCollection(props, ...initialData);
 
-    await pause(200); // wait for syncronisation
+    await pause(200); // wait for synchronisation
 
     // get snapshot data
     const collectionSnapshot = await firestore.collection(tc.path).get();
@@ -211,7 +211,7 @@ describe("TraitColleciton with Firestore data storage", () => {
     expect.hasAssertions();
 
     // name this test group path
-    const props = createtraitCollectionFactoryMethodProps(
+    const props = createTraitCollectionFactoryMethodProps(
       "testingEventListeners"
     );
     const expectedPath = `${props.parentPath}/${DISCIPLINE_COLLECTION_NAME}`;
@@ -219,13 +219,13 @@ describe("TraitColleciton with Firestore data storage", () => {
     // delete any existing data
     await deleteExistingCollectionDataAsync(expectedPath);
 
-    await pause(200); // wait for syncronisation
+    await pause(200); // wait for synchronisation
 
     // note uses different collection than other tests for different path
     const tc1 = TraitFactory.newDisciplineTraitCollection(props);
     const tc2 = TraitFactory.newDisciplineTraitCollection(props);
 
-    await pause(200); // wait for syncronisation
+    await pause(200); // wait for synchronisation
 
     // expect empty collections
     expect(tc1.path).toEqual(expectedPath);
@@ -237,7 +237,7 @@ describe("TraitColleciton with Firestore data storage", () => {
     await tc1.set("Animalism", 1);
     await tc1.set("Blood Sorcery", 2);
     await tc1.set("Celerity", 3);
-    await pause(200); // wait for syncronisation
+    await pause(200); // wait for synchronisation
 
     await tc1.set("Celerity", 5);
 
@@ -247,7 +247,7 @@ describe("TraitColleciton with Firestore data storage", () => {
       { name: "Celerity", value: 5 },
     ];
 
-    await pause(200); // wait for syncronisation
+    await pause(200); // wait for synchronisation
 
     // expect collection 2 to have the changes
     expect(tc2.size).toEqual(3);
