@@ -74,13 +74,14 @@ describe("TraitColleciton with Firestore data storage adding, and deleting", () 
     await tc.set("Charisma", 1);
     await tc.set("Composure", 2);
     await tc.set("Resolve", 3);
+
     const tcDataExpected: iBaseTraitData<AttributeName, number>[] = [
       { name: "Charisma", value: 1 },
       { name: "Composure", value: 2 },
       { name: "Resolve", value: 3 },
     ];
 
-    await pause(2000); // wait for syncronisation
+    await pause(4000); // wait for syncronisation
 
     // get snapshot data
     const collectionSnapshot = await firestore.collection(tc.path).get();
@@ -97,7 +98,7 @@ describe("TraitColleciton with Firestore data storage adding, and deleting", () 
 
     // can clean up
     expect(tc.cleanUp()).toEqual(true);
-  }, 9999);
+  }, 19999);
   it("deletes traits from firestore collection", async () => {
     expect.hasAssertions();
 

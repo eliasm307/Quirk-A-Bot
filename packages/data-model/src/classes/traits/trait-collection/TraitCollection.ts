@@ -53,8 +53,8 @@ export default class TraitCollection<
     return this.toArray().map((e) => e.data());
   }
 
-  delete(name: N): iTraitCollection<N, V, D, T> {
-    this.dataStorage.delete(name);
+  async delete(name: N): Promise<iTraitCollection<N, V, D, T>> {
+    await this.dataStorage.delete(name);
     return this;
   }
 
@@ -71,8 +71,8 @@ export default class TraitCollection<
    * @param name name of trait to edit or create
    * @param newValue value to assign
    */
-  set(name: N, newValue: V): iTraitCollection<N, V, D, T> {
-    this.dataStorage.set(name, newValue);
+  async set(name: N, newValue: V): Promise<iTraitCollection<N, V, D, T>> {
+    await this.dataStorage.set(name, newValue);
     return this;
   }
 

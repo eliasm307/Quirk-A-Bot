@@ -137,10 +137,6 @@ test(testName, async () => {
   expect(cs.log.report).toBeTruthy();
   expect(csLoaded.health.log.report.events.length).toEqual(1);
   expect(csLoaded.health.log.events.length).toEqual(1);
-
-  console.log(__filename, { logEvents: cs.log.events });
-
-  // this doesnt work because when
   expect(cs.log.events.length).toEqual(3);
   expect(cs.log.events[0]?.property).toEqual("Health");
   expect(cs.log.events[1]?.property).toEqual("Blood Potency");

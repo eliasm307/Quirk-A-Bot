@@ -6,55 +6,66 @@ import { iBaseTraitDataStorage } from './interfaces/data-storage-interfaces';
 import { iBaseTraitDataStorageProps } from './interfaces/props/trait-data-storage';
 
 interface iPrivateModifiableProperties<V extends TraitValueTypeUnion> {
-	value: V;
+  value: V;
 }
 
-export default abstract class AbstractTraitDataStorage<N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>
-	implements iBaseTraitDataStorage<N, V> {
-	protected logger: iTraitLogger;
-	protected private: iPrivateModifiableProperties<V>;
+export default abstract class AbstractTraitDataStorage<
+  N extends TraitNameUnionOrString,
+  V extends TraitValueTypeUnion
+> implements iBaseTraitDataStorage<N, V> {
+  protected logger: iTraitLogger;
+  protected private: iPrivateModifiableProperties<V>;
 
-	log: iTraitLogReporter;
-	name: N;
-	// the specific data storage defines this
-	abstract path: string;
+  log: iTraitLogReporter;
+  name: N;
+  // the specific data storage defines this
+  abstract path: string;
 
-	abstract cleanUp(): boolean;
+  abstract cleanUp(): boolean;
 
-	protected abstract afterValueChange(oldValue: V, newValue: V): void;
+  protected abstract afterValueChange(oldValue: V, newValue: V): Promise<void>;
 
-	constructor(props: iBaseTraitDataStorageProps<N, V>) {
-		const { name, defaultValueIfNotDefined, parentPath, loggerCreator: logger } = props;
-		this.name = name;
-		this.private = {
-			value: defaultValueIfNotDefined, // assign initial value
-		};
+  constructor(props: iBaseTraitDataStorageProps<N, V>) {
+    const {
+      name,
+      defaultValueIfNotDefined,
+      parentPath,
+      loggerCreator: logger,
+    } = props;
+    this.name = name;
+    this.private = {
+      value: defaultValueIfNotDefined, // assign initial value
+    };
 
-		// initialise logger
-		this.logger = logger ? logger({ sourceName: name }) : new TraitLogger({ sourceName: name, parentLogHandler: null });
+    // initialise logger
+    this.logger = logger
+      ? logger({ sourceName: name })
+      : new TraitLogger({ sourceName: name, parentLogHandler: null });
 
-		// expose logger reporter
-		this.log = this.logger.reporter;
-	}
+    // expose logger reporter
+    this.log = this.logger.reporter;
+  }
 
-	get value(): V {
-		return this.private.value;
-	}
+  get value(): V {
+    return this.private.value;
+  }
 
-	set value(newValue: V) {
-		// get current value as old value
-		const oldValue = this.private.value;
+  async setValue(newValue: V) {
+    // get current value as old value
+    const oldValue = this.private.value;
 
-		// do nothing if value hasnt changed
-		if (newValue === oldValue) return;
+    // do nothing if value hasnt changed
+    if (newValue === oldValue) return;
 
-		// update internal value
-		this.private.value = newValue;
+    // update internal value
+    this.private.value = newValue;
 
-		// log change
-		this.logger.log(new UpdateLogEvent({ property: this.name, oldValue, newValue }));
+    // log change
+    this.logger.log(
+      new UpdateLogEvent({ property: this.name, oldValue, newValue })
+    );
 
-		// run any custom logic after internal value is changed
-		this.afterValueChange(oldValue, newValue);
-	}
+    // run any custom logic after internal value is changed
+    await this.afterValueChange(oldValue, newValue);
+  }
 }

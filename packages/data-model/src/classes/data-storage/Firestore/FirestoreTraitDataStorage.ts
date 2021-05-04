@@ -59,8 +59,8 @@ export default class FirestoreTraitDataStorage<
   }
 
   /** Function to be called after the local value is changed, to signal that the data storage value should also be changed */
-  protected afterValueChange(oldValue: V, newValue: V): void {
-    this.handleChangeAsync(oldValue, newValue);
+  protected async afterValueChange(oldValue: V, newValue: V): Promise<void> {
+    await this.handleChangeAsync(oldValue, newValue);
   }
 
   protected async assertTraitExistsOnDataStorage(
