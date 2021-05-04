@@ -91,9 +91,9 @@ test(testName, async () => {
   const testHungerValue = 3;
 
   // test changes with auto save
-  cs.health.value = testHealthValue;
-  cs.bloodPotency.value = testBloodPotencyValue;
-  cs.hunger.value = testHungerValue;
+  await cs.health.setValue(testHealthValue);
+  await cs.bloodPotency.setValue(testBloodPotencyValue);
+  await cs.hunger.setValue(testHungerValue);
 
   const csLoaded: CharacterSheet = await CharacterSheet.load({
     dataStorageFactory,
@@ -143,17 +143,17 @@ test(testName, async () => {
   expect(cs.log.events[2]?.property).toEqual("Hunger");
 
   // Changing values to same values should not generate more log items
-  cs.health.value = testHealthValue;
-  cs.bloodPotency.value = testBloodPotencyValue;
-  cs.hunger.value = testHungerValue;
+  await cs.health.setValue(testHealthValue);
+  await cs.bloodPotency.setValue(testBloodPotencyValue);
+  await cs.hunger.setValue(testHungerValue);
 
   expect(csLoaded.health.log.events.length).toEqual(1);
   expect(cs.log.events.length).toEqual(3);
 
-  // add more log items
-  csLoaded.health.value += 3;
-  csLoaded.bloodPotency.value += 3;
-  csLoaded.hunger.value += 3;
+  // add more log items, and test function updater
+  await csLoaded.health.setValue((old) => old + 3);
+  await csLoaded.bloodPotency.setValue((old) => old + 3);
+  await csLoaded.hunger.setValue((old) => old + 3);
   /*
 	console.log({
 		testName,
@@ -183,9 +183,9 @@ test(testName, async () => {
   const randVal = (min: number, max: number) => Math.random() * max + min;
 
   // test changes to values with random values, some logs should generate
-  [cs.health, cs.bloodPotency, cs.hunger].forEach((trait) => {
-    const newVal = randVal(trait.min, trait.max);
-    trait.value = newVal;
+  [cs.health, cs.bloodPotency, cs.hunger].forEach(async (trait) => {
+    const newRandomVal = randVal(trait.min, trait.max);
+    await trait.setValue(newRandomVal);
   });
 
   const csLoaded: CharacterSheet = await CharacterSheet.load({

@@ -11,12 +11,11 @@ import {
   iDisciplineTraitCollection, iSkillTraitCollection, iTouchStoneOrConvictionCollection,
 } from '../traits/interfaces/trait-collection-interfaces';
 import {
-  iCoreNumberTrait, iCoreNumberTraitData, iCoreStringTrait, iCoreStringTraitData, iGeneralTrait,
+  iCoreNumberTrait, iCoreNumberTraitData, iCoreStringTrait, iCoreStringTraitData,
 } from '../traits/interfaces/trait-interfaces';
 import TraitFactory from '../traits/TraitFactory';
 import {
   iCharacterSheet, iCharacterSheetData, iCharacterSheetLoaderProps, iCharacterSheetProps,
-  iCharacterSheetShape,
 } from './interfaces/character-sheet-interfaces';
 import characterSheetToData from './utils/characterSheetToData';
 import newCharacterSheetData from './utils/newCharacterSheetData';
@@ -87,6 +86,7 @@ export default class CharacterSheet implements iCharacterSheet {
       }
     );
 
+    // ? is this required?
     // create core trait logger initialiser function
     const traitLoggerCreator = (
       traitLoggerCreatorProps: iChildLoggerCreatorProps
