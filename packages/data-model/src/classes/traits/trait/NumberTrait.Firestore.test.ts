@@ -25,7 +25,7 @@ describe("Number trait with firestore data storage", () => {
       loggerCreator: null,
     });
 
-    await pause(1000); // wait for syncronisation
+    await pause(1000); // wait for synchronisation
 
     const doc = await firestore.doc(trait1.path).get();
     const data = doc.data();
@@ -54,12 +54,12 @@ describe("Number trait with firestore data storage", () => {
       loggerCreator: null,
     });
 
-    await pause(100); // wait for syncronisation
+    await pause(100); // wait for synchronisation
 
-    trait1.value = 0;
-    trait1.value = 1;
+    await trait1.setValue(0);
+    await trait1.setValue(1);
 
-    await pause(100); // wait for syncronisation
+    await pause(100); // wait for synchronisation
 
     const doc = await firestore.doc(trait1.path).get();
     const data = doc.data() as iBaseTraitData<string, number>;
@@ -84,7 +84,7 @@ describe("Number trait with firestore data storage", () => {
       parentPath: testParentPath,
       loggerCreator: null,
     });
-    await pause(100); // wait for syncronisation
+    await pause(100); // wait for synchronisation
 
     const trait2 = new NumberTrait<string>({
       max: 10,
@@ -95,14 +95,14 @@ describe("Number trait with firestore data storage", () => {
       loggerCreator: null,
     });
 
-    await pause(100); // wait for syncronisation
+    await pause(100); // wait for synchronisation
 
     const knownValue = 0;
 
     // set trait to a known value
-    trait1.value = knownValue;
+    await trait1.setValue(knownValue);
 
-    await pause(100); // wait for syncronisation
+    await pause(100); // wait for synchronisation
 
     const doc1 = await firestore.doc(trait1.path).get();
     const doc2 = await firestore.doc(trait2.path).get();
@@ -134,7 +134,7 @@ describe("Number trait with firestore data storage", () => {
       loggerCreator: null,
     });
 
-    await pause(100); // wait for syncronisation
+    await pause(100); // wait for synchronisation
 
     const trait2 = new NumberTrait<string>({
       max: 10,
@@ -145,24 +145,24 @@ describe("Number trait with firestore data storage", () => {
       loggerCreator: null,
     });
 
-    await pause(100); // wait for syncronisation
+    await pause(100); // wait for synchronisation
 
     // set initial values
-    trait1.value = initialValue;
+    await trait1.setValue(initialValue);
 
-    await pause(100); // wait for syncronisation
+    await pause(100); // wait for synchronisation
 
-    trait2.value = initialValue;
+    await trait2.setValue(initialValue);
 
-    await pause(100); // wait for syncronisation
+    await pause(100); // wait for synchronisation
 
     // change one trait
-    trait1.value = changeValue;
+    await trait1.setValue(changeValue);
 
-    await pause(100); // wait for syncronisation
+    await pause(100); // wait for synchronisation
 
     expect.assertions(3);
-    // check if other trait syncronised
+    // check if other trait synchronised
     expect(trait2.value).toEqual(changeValue);
 
     // can clean up
