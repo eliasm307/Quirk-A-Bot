@@ -63,7 +63,7 @@ describe("Number trait with in memory data storage", () => {
   });
 
   it("does not accept any value modifications above or below the defined limit", async () => {
-    expect.assertions(3);
+    expect.assertions(1);
 
     const trait1 = new NumberTrait<string>({
       max: 10,
@@ -77,6 +77,7 @@ describe("Number trait with in memory data storage", () => {
     await trait1.setValue(5);
     await trait1.setValue(11);
     await trait1.setValue(-1);
+
     expect(trait1.value).toEqual(5);
   });
 

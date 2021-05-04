@@ -190,7 +190,7 @@ export interface iBaseTrait<
     iHasCleanUp {
   readonly value: V;
 
-  /** Method to update value directly or a function that does a relative update using the old value */
+  /** Method to update value directly with a new value or a function that does a relative update using the old value */
   setValue: (newValue: V | ((oldValue: V) => V)) => Promise<void>;
 
 // todo add explain method to give a summary what this trait is for

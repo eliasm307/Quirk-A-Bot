@@ -1,6 +1,5 @@
 import path from 'path';
 
-import { CharacterSheet } from '../../..';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
 import { iCharacterSheet } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import { iBaseTrait, iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
@@ -39,7 +38,7 @@ export default class LocalFileTraitCollectionDataStorage<
     return true;
   }
 
-  protected async deleteTraitFromDataStorage(name: N) {
+  protected async deleteTraitFromDataStorage(_name: N) {
     this.save();
   }
 
