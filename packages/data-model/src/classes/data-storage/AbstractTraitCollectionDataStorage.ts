@@ -5,7 +5,7 @@ import {
 } from '../log/interfaces/log-interfaces';
 import AddLogEvent from '../log/log-events/AddLogEvent';
 import DeleteLogEvent from '../log/log-events/DeleteLogEvent';
-import TraitCollecitonLogger from '../log/loggers/TraitCollectionLogger';
+import TraitCollectionLogger from '../log/loggers/TraitCollectionLogger';
 import { iBaseTrait, iBaseTraitData, iBaseTraitProps } from '../traits/interfaces/trait-interfaces';
 import {
   iBaseTraitDataStorage, iTraitCollectionDataStorage,
@@ -39,7 +39,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
   name: string;
   path: string;
 
-  // ? is this required? if colleciton adds data to storage this means creating trait data and connecting data to trait instances would be done by 2 classes async, so it might be done in the wrong order. Opted to have these both on the trait side
+  // ? is this required? if collection adds data to storage this means creating trait data and connecting data to trait instances would be done by 2 classes async, so it might be done in the wrong order. Opted to have these both on the trait side
   protected abstract afterAddInternal(name: N): void;
   /** Run after the child traits have been cleaned, this is for cleaning up trait collection itself */
   protected abstract afterTraitCleanUp(): boolean;
@@ -66,7 +66,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
     // use logger if provided, otherwise create a local one
     this.logger = logger
       ? logger({ sourceName: collectionName })
-      : new TraitCollecitonLogger({
+      : new TraitCollectionLogger({
           sourceName: collectionName,
           parentLogHandler: null,
         });
@@ -74,8 +74,11 @@ export default abstract class AbstractTraitCollectionDataStorage<
     // expose logger reporter
     this.log = this.logger.reporter;
 
+    // ? is this required
+    /*
     const traitLoggerCreator = (props: iChildLoggerCreatorProps) =>
       this.logger.createChildTraitLogger(props);
+      */
   }
 
   get size(): number {
@@ -95,7 +98,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
       }
     });
 
-    // try cleaning this colleciton instance
+    // try cleaning this collection instance
     if (!this.afterTraitCleanUp()) {
       console.warn(
         `Issue cleaning up collection "${
@@ -119,7 +122,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
       /*
       console.log(
         __filename,
-        `Cannot delete property "${name}" from "${this.name}" trait collection as it doesnt exist in the collection`
+        `Cannot delete property "${name}" from "${this.name}" trait collection as it doesn't exist in the collection`
       );
       */
       return this; // return this instance for chaining
@@ -130,8 +133,8 @@ export default abstract class AbstractTraitCollectionDataStorage<
     if (typeof oldValue !== "undefined") {
       // ? do this as an abstract beforeDelete method, so specific classes can do what they want? Whats the difference?
       // do any cleanup on the trait before deleting
-      const deatTraitWalking = this.map.get(name);
-      if (deatTraitWalking) deatTraitWalking.cleanUp();
+      const deadTraitWalking = this.map.get(name);
+      if (deadTraitWalking) deadTraitWalking.cleanUp();
 
       // apply change locally
       this.map.delete(name);
@@ -181,7 +184,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
 
       // apply change
       // NOTE traits will handle changes internally, no need to do anything here
-      trait.value = newValue;
+      await trait.setValue(newValue);
     } else {
       // add new trait instance locally, instantiating new trait will assert that it exists
       this.map.set(name, this.createTraitInstance(name, newValue));
