@@ -78,11 +78,19 @@ export default abstract class AbstractBaseTrait<
     const resolvedNewValue =
       typeof newValRaw === "function" ? newValRaw(oldValue) : newValRaw;
 
+    // apply any pre processing
     const processedNewValue = this.preProcessValue(resolvedNewValue);
 
-    if (!this.newValueIsValid(processedNewValue)) return;
+    // only apply update if value passes validation
+    if (!this.newValueIsValid(processedNewValue)) {
+      console.warn(
+        __filename,
+        `Could not update value of trait "${this.name}" from "${oldValue}" to "${processedNewValue}" because new value did not pass validation`
+      );
+      return;
+    }
 
     // implement property change on data storage
-    this.dataStorage.value = processedNewValue;
+    await this.dataStorage.setValue(processedNewValue);
   }
 }
