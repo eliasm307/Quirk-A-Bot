@@ -27,10 +27,10 @@ export default class LocalFileTraitCollectionDataStorage<
     const { characterSheet, resolvedBasePath, initialData } = props;
     this.#characterSheet = characterSheet;
     this.path = resolvedBasePath;
-    this.initMap(initialData);
+    this.setInitialData(initialData);
   }
 
-  protected afterAddInternal(_name: N): void {
+  protected addTraitToDataStorage(_name: N): void {
     this.save();
   }
 

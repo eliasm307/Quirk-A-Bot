@@ -1,10 +1,12 @@
 import {
-  DISCIPLINE_COLLECTION_NAME, firestoreEmulator, pause, SKILL_COLLECTION_NAME,
+  ATTRIBUTE_COLLECTION_NAME, DISCIPLINE_COLLECTION_NAME, firestoreEmulator, pause,
+  SKILL_COLLECTION_NAME,
 } from '@quirk-a-bot/common';
 
 import { AttributeName, DisciplineName, SkillName } from '../../../declarations/types';
 import isTraitData from '../../../utils/type-predicates/isTraitData';
 import FirestoreDataStorageFactory from '../../data-storage/Firestore/FirestoreDataStorageFactory';
+import { createPath } from '../../data-storage/utils/createPath';
 import { iTraitCollectionFactoryMethodProps } from '../interfaces/trait-collection-interfaces';
 import { iBaseTraitData } from '../interfaces/trait-interfaces';
 import TraitFactory from '../TraitFactory';
@@ -64,11 +66,16 @@ describe("Trait collection with Firestore data storage adding, and deleting", ()
       "testingCollectionFromBlankAdding"
     );
 
-    // NOTE firestore doesn't  hold empty collections, no need to test when empty
-    const tc = TraitFactory.newAttributeTraitCollection(props);
+    const expectedPath = createPath(
+      props.parentPath,
+      ATTRIBUTE_COLLECTION_NAME
+    );
 
     // run tests after deleting any existing data
-    await deleteExistingCollectionDataAsync(tc.path);
+    await deleteExistingCollectionDataAsync(expectedPath);
+
+    // NOTE firestore doesn't  hold empty collections, no need to test when empty
+    const tc = TraitFactory.newAttributeTraitCollection(props);
 
     // test adding traits
     await tc.set("Charisma", 1);
@@ -106,11 +113,16 @@ describe("Trait collection with Firestore data storage adding, and deleting", ()
       "testingCollectionFromBlankDeleting"
     );
 
-    // NOTE firestore doesn't  hold empty collections, no need to test when empty
-    const tc = TraitFactory.newAttributeTraitCollection(props);
+    const expectedPath = createPath(
+      props.parentPath,
+      ATTRIBUTE_COLLECTION_NAME
+    );
 
     // run tests after deleting any existing data
-    await deleteExistingCollectionDataAsync(tc.path);
+    await deleteExistingCollectionDataAsync(expectedPath);
+
+    // NOTE firestore doesn't  hold empty collections, no need to test when empty
+    const tc = TraitFactory.newAttributeTraitCollection(props);
 
     await pause(200); // wait for synchronisation
 
@@ -214,7 +226,10 @@ describe("Trait collection with Firestore data storage", () => {
     const props = createTraitCollectionFactoryMethodProps(
       "testingEventListeners"
     );
-    const expectedPath = `${props.parentPath}/${DISCIPLINE_COLLECTION_NAME}`;
+    const expectedPath = createPath(
+      props.parentPath,
+      DISCIPLINE_COLLECTION_NAME
+    );
 
     // delete any existing data
     await deleteExistingCollectionDataAsync(expectedPath);

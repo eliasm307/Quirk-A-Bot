@@ -1,10 +1,10 @@
 import {
-  DISCIPLINE_COLLECTION_NAME, firestoreEmulator, pause, SKILL_COLLECTION_NAME,
+  ATTRIBUTE_COLLECTION_NAME, DISCIPLINE_COLLECTION_NAME, firestoreEmulator, pause,
+  SKILL_COLLECTION_NAME, TRAIT_COMPOSITE_DOCUMENT_COLLECTION_NAME,
 } from '@quirk-a-bot/common';
 
 import { AttributeName, DisciplineName, SkillName } from '../../../declarations/types';
 import isTraitData from '../../../utils/type-predicates/isTraitData';
-import FirestoreDataStorageFactory from '../../data-storage/Firestore/FirestoreDataStorageFactory';
 import FirestoreCompositeDataStorageFactory from '../../data-storage/FirestoreComposite/DataStorageFactory';
 import { iTraitCollectionFactoryMethodProps } from '../interfaces/trait-collection-interfaces';
 import { iBaseTraitData, iGeneralTraitData } from '../interfaces/trait-interfaces';
@@ -19,6 +19,12 @@ const dataStorageFactory = new FirestoreCompositeDataStorageFactory({
 const rootCollectionPath =
   "FirestoreCompositeDataStorageFactory-traitCollectionTests";
 
+const getTraitCollectionPath = (
+  parentPath: string,
+  traitCollectionName: string
+) =>
+  `${parentPath}/${TRAIT_COMPOSITE_DOCUMENT_COLLECTION_NAME}/${traitCollectionName}`;
+
 const createTraitCollectionFactoryMethodProps = (
   groupName: string
 ): iTraitCollectionFactoryMethodProps => ({
@@ -32,7 +38,8 @@ const readTraitCollectionInFirestore = async <D extends iGeneralTraitData>(
   collectionPath: string
 ): Promise<D[]> => {
   const collectionSnapshot = await firestore.doc(collectionPath).get();
-  return Object.values(collectionSnapshot) as D[];
+  const data = collectionSnapshot.data();
+  return (data ? Object.values(data) : []) as D[];
 };
 
 const deleteExistingCollectionDataAsync = async (collectionPath: string) => {
@@ -58,12 +65,16 @@ describe("Trait collection with Firestore data storage adding, and deleting", ()
     const props = createTraitCollectionFactoryMethodProps(
       "testingCollectionFromBlankAdding"
     );
+    const expectedCollectionPath = getTraitCollectionPath(
+      props.parentPath,
+      ATTRIBUTE_COLLECTION_NAME
+    );
+
+    // run tests after deleting any existing data
+    await deleteExistingCollectionDataAsync(expectedCollectionPath);
 
     // NOTE firestore doesn't  hold empty collections, no need to test when empty
     const tc = TraitFactory.newAttributeTraitCollection(props);
-
-    // run tests after deleting any existing data
-    await deleteExistingCollectionDataAsync(tc.path);
 
     // test adding traits
     await tc.set("Charisma", 1);
@@ -99,11 +110,16 @@ describe("Trait collection with Firestore data storage adding, and deleting", ()
       "testingCollectionFromBlankDeleting"
     );
 
-    // NOTE firestore doesn't  hold empty collections, no need to test when empty
-    const tc = TraitFactory.newAttributeTraitCollection(props);
+    const expectedCollectionPath = getTraitCollectionPath(
+      props.parentPath,
+      ATTRIBUTE_COLLECTION_NAME
+    );
 
     // run tests after deleting any existing data
-    await deleteExistingCollectionDataAsync(tc.path);
+    await deleteExistingCollectionDataAsync(expectedCollectionPath);
+
+    // NOTE firestore doesn't  hold empty collections, no need to test when empty
+    const tc = TraitFactory.newAttributeTraitCollection(props);
 
     await pause(200); // wait for synchronisation
 
@@ -165,10 +181,13 @@ describe("Trait collection with Firestore data storage", () => {
       "testingCollectionFromExistingData"
     );
 
-    // delete any existing data
-    await deleteExistingCollectionDataAsync(
-      `${props.parentPath}/${SKILL_COLLECTION_NAME}`
+    const expectedPath = getTraitCollectionPath(
+      props.parentPath,
+      SKILL_COLLECTION_NAME
     );
+
+    // delete any existing data
+    await deleteExistingCollectionDataAsync(expectedPath);
 
     const initialData: iBaseTraitData<SkillName, number>[] = [
       { name: "Academics", value: 1 },
@@ -179,7 +198,7 @@ describe("Trait collection with Firestore data storage", () => {
     // note uses different collection than other tests for different path
     const tc = TraitFactory.newSkillTraitCollection(props, ...initialData);
 
-    await pause(200); // wait for synchronisation
+    await pause(500); // wait for synchronisation
 
     // get snapshot data
     const collectionDocumentData = await readTraitCollectionInFirestore(
@@ -200,10 +219,13 @@ describe("Trait collection with Firestore data storage", () => {
     const props = createTraitCollectionFactoryMethodProps(
       "testingEventListeners"
     );
-    const expectedPath = `${props.parentPath}/${DISCIPLINE_COLLECTION_NAME}`;
+    const expectedCollectionPath = getTraitCollectionPath(
+      props.parentPath,
+      DISCIPLINE_COLLECTION_NAME
+    );
 
     // delete any existing data
-    await deleteExistingCollectionDataAsync(expectedPath);
+    await deleteExistingCollectionDataAsync(expectedCollectionPath);
 
     await pause(200); // wait for synchronisation
 
@@ -214,8 +236,8 @@ describe("Trait collection with Firestore data storage", () => {
     await pause(200); // wait for synchronisation
 
     // expect empty collections
-    expect(tc1.path).toEqual(expectedPath);
-    expect(tc2.path).toEqual(expectedPath);
+    expect(tc1.path).toEqual(expectedCollectionPath);
+    expect(tc2.path).toEqual(expectedCollectionPath);
     expect(tc1.size).toBe(0);
     expect(tc1.size).toEqual(tc2.size);
 

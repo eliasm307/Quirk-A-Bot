@@ -28,13 +28,13 @@ export default class FirestoreTraitCollectionDataStorage<
     const { firestore, initialData, name, parentPath } = props;
     this.path = createPath(parentPath, name);
     this.#firestore = firestore;
-    this.initMap(initialData);
+    this.setInitialData(initialData);
     this.init();
   }
 
   #unsubscribeFromEventListeners: () => void = () => {};
 
-  protected afterAddInternal(name: N): void {
+  protected addTraitToDataStorage(name: N): void {
     // do nothing, traits add themselves to firestore
   }
 
@@ -162,7 +162,7 @@ export default class FirestoreTraitCollectionDataStorage<
 		}
 		*/
 
-    // add event liseners
+    // add event listeners
     try {
       this.#unsubscribeFromEventListeners = this.attachFirestoreEventListeners(
         this.path

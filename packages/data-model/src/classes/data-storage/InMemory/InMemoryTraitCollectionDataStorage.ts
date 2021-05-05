@@ -28,11 +28,11 @@ export default class InMemoryTraitCollectionDataStorage<
 
     this.path = createPath(parentPath, name);
 
-    this.initMap(initialData);
+    this.setInitialData(initialData);
   }
 
   // todo these methods should be optional arguments for the base class, use strategy pattern
-  protected afterAddInternal(name: N): void {
+  protected addTraitToDataStorage(name: N): void {
     // do nothing
   }
 

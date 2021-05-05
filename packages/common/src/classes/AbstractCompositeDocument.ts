@@ -256,6 +256,7 @@ export default abstract class AbstractCompositeDocument<
       this.newSubDocument(key, undefined)) as iSubDocument<SchemaType, K>;
   }
 
+  /** Set the value of a sub document, merges change into overall composite document */
   async set<K extends keyof SchemaType>(
     key: K,
     newValue: SchemaType[K]
@@ -287,7 +288,7 @@ export default abstract class AbstractCompositeDocument<
     // ? should this just overwrite existing data with new data?
     const { newData, oldData, id, exists } = props;
 
-    if (!newData) console.warn(__filename, `newData was ${typeof newData}`);
+    // if (!newData) console.warn(__filename, `newData was ${typeof newData}`);
 
     // update local data
     this.#private.data = newData || ({} as SchemaType);
@@ -326,6 +327,8 @@ export default abstract class AbstractCompositeDocument<
       oldData,
       id,
       exists,
+      newSubDocumentCount,
+      existingSubDocumentCount,
     });
 
     return { ...props, changes };
@@ -400,7 +403,21 @@ export default abstract class AbstractCompositeDocument<
           const oldData = oldSubDocument.data;
 
           // add data to log if defined
-          if (oldData) deletes[key] = { ...oldData };
+          if (oldData) {
+            deletes[key] = { ...oldData };
+          } else {
+            console.warn(`oldData for document with key ${key} was falsy`, {
+              oldSubDocument,
+              oldData,
+            });
+          }
+        } else {
+          console.warn(
+            `oldSubDocument for document with key ${key} was falsy`,
+            {
+              oldSubDocument,
+            }
+          );
         }
 
         // remove sub document

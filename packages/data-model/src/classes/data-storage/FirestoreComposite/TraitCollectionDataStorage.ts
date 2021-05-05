@@ -43,8 +43,6 @@ export default class FirestoreCompositeTraitCollectionDataStorage<
     } = props;
     // this.#firestore = firestore;
 
-    this.initMap(initialData);
-
     const pathToCompositeDocumentCollection = createPath(
       parentPath,
       TRAIT_COMPOSITE_DOCUMENT_COLLECTION_NAME
@@ -94,10 +92,12 @@ export default class FirestoreCompositeTraitCollectionDataStorage<
       valuePredicate: dataPredicate,
       initialData: initialDataRecord,
     });
+
+    this.setInitialData(initialData);
   }
 
-  protected afterAddInternal(_name: N): void {
-    // do nothing, traits are added in trait instance creator
+  protected async addTraitToDataStorage(name: N, value: V) {
+    await this.#compositeDocument.set(name, { name, value } as D);
   }
 
   protected afterTraitCleanUp(): boolean {

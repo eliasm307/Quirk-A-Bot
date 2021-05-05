@@ -40,7 +40,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
   abstract path: string;
 
   // ? is this required? if collection adds data to storage this means creating trait data and connecting data to trait instances would be done by 2 classes async, so it might be done in the wrong order. Opted to have these both on the trait side
-  protected abstract afterAddInternal(name: N): void;
+  protected abstract addTraitToDataStorage(name: N, value: V): void;
   /** Run after the child traits have been cleaned, this is for cleaning up trait collection itself */
   protected abstract afterTraitCleanUp(): boolean;
   protected abstract deleteTraitFromDataStorage(name: N): Promise<void>;
@@ -189,10 +189,10 @@ export default abstract class AbstractTraitCollectionDataStorage<
       // log change
       this.logger.log(new AddLogEvent({ newValue, property: name }));
 
-      // ? is this required
-      // post add event
-      this.afterAddInternal(name);
+      // apply change to data storage
+      this.addTraitToDataStorage(name, newValue);
 
+      // run custom change handler if defined
       if (this.afterAddCustom)
         this.afterAddCustom({ newValue, property: name }); // ? is this required
     }
@@ -219,13 +219,26 @@ export default abstract class AbstractTraitCollectionDataStorage<
     );
   }
 
-  /** Produces an initialised map, with initial instances if initial data exists  */
-  protected initMap(initialData?: D[]) {
+  /** Produces an initialised map, with initial instances if initial data exists.
+   // ! MUST RUN AT THE END OF CONCRETE CONSTRUCTOR
+   */
+  protected setInitialData(initialData?: D[]) {
     // ! make sure this is run in sub classes, or add tests
+    if (!initialData) return;
+
     // assign initial data
-    if (initialData)
-      initialData.forEach(({ name, value }) =>
-        this.map.set(name, this.createTraitInstance(name, value))
-      );
+    try {
+      initialData.forEach(({ name, value }) => {
+        // set internal instance
+        this.map.set(name, this.createTraitInstance(name, value));
+        // add to data storage, no need to await
+        this.addTraitToDataStorage(name, value);
+      });
+    } catch (error) {
+      const errorMessage = `Initialising trait collection data storage initial data failed, was this method called after concrete class is setup in constructor, ie at the end?`;
+      console.error(__filename, { error: errorMessage });
+
+      throw Error(errorMessage);
+    }
   }
 }
