@@ -54,7 +54,7 @@ export default function isCharacterSheetData(
     return false;
   }
 
-  // check primitve values
+  // check primitive values
   if (typeof id !== "number" && typeof id !== "string") {
     console.warn(
       `isCharacterSheetData, id is not a number or string, it is ${typeof id}`,
@@ -62,6 +62,7 @@ export default function isCharacterSheetData(
         id,
       }
     );
+
     return false;
   }
 

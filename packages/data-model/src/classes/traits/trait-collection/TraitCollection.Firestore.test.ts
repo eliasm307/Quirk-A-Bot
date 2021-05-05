@@ -272,5 +272,5 @@ describe("Trait collection with Firestore data storage", () => {
     // can clean up
     expect(tc1.cleanUp()).toEqual(true);
     expect(tc2.cleanUp()).toEqual(true);
-  }, 9999);
+  }, 19999);
 });
