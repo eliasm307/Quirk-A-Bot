@@ -155,7 +155,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
     return this; // return this instance for chaining
   }
 
-  get(key: N): T | void {
+  get(key: N): T | undefined {
     return this.map.get(key);
   }
 

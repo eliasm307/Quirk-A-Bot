@@ -1,7 +1,7 @@
 import {
   AbstractCompositeDocument, arrayToRecord, CompositeDocumentChangeData,
   ConsistentCompositeDocument, SubDocumentCreateDetails, SubDocumentDeleteDetails,
-  TRAIT_COMPOSITE_DOCUMENT_COLLECTION_NAME,
+  SubDocumentUpdateDetails, TRAIT_COMPOSITE_DOCUMENT_COLLECTION_NAME,
 } from '@quirk-a-bot/common';
 
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
@@ -35,8 +35,8 @@ export default class FirestoreCompositeTraitCollectionDataStorage<
       firestore,
       parentPath,
       name,
-      onAdd,
-      onDelete,
+      // onAdd,
+      // onDelete,
       initialData,
       dataPredicate,
       namePredicate,
@@ -54,27 +54,74 @@ export default class FirestoreCompositeTraitCollectionDataStorage<
 
     const handleChange: (
       changeData: CompositeDocumentChangeData<Record<N, D>>
-    ) => void = ({ changes }) => {
-      const { creates, deletes } = changes;
+    ) => Promise<void> = async ({ changes }) => {
+      const { creates, deletes, updates } = changes;
 
-      const property: keyof D = "value";
+      // const property: keyof D = "value";
+
+      // ? should these change handlers log changes?
+
+      // handle updates
+      if (updates) {
+        const changePromises = Object.entries<
+          SubDocumentUpdateDetails<Record<N, D>>[N]
+        >(updates).map(([key, { after, before }]) => {
+          console.warn(`Update handler`, { key, before, after });
+
+          const traitName = key as N;
+
+          // internal handler
+          /*
+          this.map.set(
+            key as N,
+            this.createTraitInstance(key as N, after.value)
+          );
+          */
+          return this.set(traitName, after.value);
+
+          // external handler
+          // ? should there be a separate change handler or should they all be the same handler?
+        });
+        await Promise.all(changePromises);
+      }
 
       // handle creations
-      if (creates)
-        Object.entries<SubDocumentCreateDetails<Record<N, D>>[N]>(
-          creates
-        ).forEach(([_key, { value }]) => {
-          if (onAdd) onAdd({ newValue: value, property: property as string });
+      if (creates) {
+        const changePromises = Object.entries<
+          SubDocumentCreateDetails<Record<N, D>>[N]
+        >(creates).map(([key, { value }]) => {
+          console.warn(`Create handler`, { key, value });
+
+          const traitName = key as N;
+
+          // internal handler
+          // this.map.set(key as N, this.createTraitInstance(key as N, value));
+          return this.set(traitName, value);
+
+          // external handler // ! this is called in this.set also
+          // if (onAdd) onAdd({ newValue: value, property: property as string });
         });
+        await Promise.all(changePromises);
+      }
 
       // handle deletions
-      if (deletes)
-        Object.entries<SubDocumentDeleteDetails<Record<N, D>>[N]>(
-          deletes
-        ).forEach(([_key, { value }]) => {
-          if (onDelete)
-            onDelete({ oldValue: value, property: property as string });
+      if (deletes) {
+        const changePromises = Object.entries<
+          SubDocumentDeleteDetails<Record<N, D>>[N]
+        >(deletes).map(async ([key, { value }]) => {
+          console.warn(`Delete handler`, { key, value });
+
+          const traitName = key as N;
+
+          // internal handler
+          // this.map.delete(key as N);
+          return this.delete(traitName);
+
+          // external handler // ! this is called in this.set also
+          // if (onDelete) onDelete({ oldValue: value, property: property as string });
         });
+        await Promise.all(changePromises);
+      }
     };
 
     const initialDataRecord: Record<N, D> = initialData

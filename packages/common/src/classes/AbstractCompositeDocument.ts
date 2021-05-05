@@ -13,9 +13,10 @@ export type SubDocumentCreateDetails<S> = Record<keyof S, S[keyof S]>;
 
 export type SubDocumentDeleteDetails<S> = Record<keyof S, S[keyof S]>;
 
+/** For an update there must be a before and after state */
 export type SubDocumentUpdateDetails<S> = Record<
   keyof S,
-  { before?: S[keyof S]; after?: S[keyof S] }
+  { before: S[keyof S]; after: S[keyof S] }
 >;
 
 export interface SubDocumentChangeDetails<S> {
@@ -315,10 +316,23 @@ export default abstract class AbstractCompositeDocument<
       // sub documents removed
       const deletes = this.handleSubDocumentRemoval(newData);
       changes.deletes = deletes;
-    } else {
+    } else if (newSubDocumentCount === existingSubDocumentCount && oldData) {
       // sub documents changed
       const updates = this.handleSubDocumentChange(oldData, newData);
       changes.updates = updates;
+    } else {
+      const error = `Unknown change type`;
+      console.error(__filename, error, {
+        changes,
+        newData,
+        oldData,
+        id,
+        exists,
+        newSubDocumentCount,
+        existingSubDocumentCount,
+      });
+
+      throw Error(error);
     }
 
     console.log(__filename, `Detected snapshot changes`, {
@@ -361,8 +375,8 @@ export default abstract class AbstractCompositeDocument<
   }
 
   private handleSubDocumentChange(
-    oldData: SchemaType | undefined,
-    newData: SchemaType | undefined
+    oldData: SchemaType,
+    newData: SchemaType
   ): SubDocumentUpdateDetails<SchemaType> {
     const updates: SubDocumentUpdateDetails<SchemaType> = {} as SubDocumentUpdateDetails<SchemaType>;
 
