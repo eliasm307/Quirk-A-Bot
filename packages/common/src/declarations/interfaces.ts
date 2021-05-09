@@ -1,3 +1,5 @@
+import { FirestoreDocumentReference } from '../FirebaseExports';
+
 export interface iHasGetData<D> {
   readonly data: () => D;
 }
@@ -74,7 +76,7 @@ export interface iSubDocument<
 
 /** Represents a single Firestore document which comprises of multiple sub documents as a record */
 export interface iCompositeDocument<S extends Record<string, any>> {
-  readonly data?: S;
+  readonly data?: Readonly<S>;
 
   cleanUp(): void;
   get<K extends keyof S, V extends S[K]>(

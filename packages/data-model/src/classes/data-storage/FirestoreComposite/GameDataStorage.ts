@@ -33,7 +33,9 @@ export default class FirestoreCompositeGameDataStorage
     this.firestore = firestore;
   }
 
-  addCharacter(id: string): Promise<void> {}
+  addCharacter(id: string): Promise<void> {
+    const characterIds =  this.getCharacterIds()
+  }
 
   // todo replace this with a load method instead?
   async assertDataExistsOnDataStorage(): Promise<void> {
@@ -59,7 +61,10 @@ export default class FirestoreCompositeGameDataStorage
     };
   }
 
-  getCharacterIds(): string[] {}
+  getCharacterIds(): string[] {
+    this.#compositeDocument.
+
+  }
 
   getCharacterSheets(): Promise<iCharacterSheet[]> {}
 

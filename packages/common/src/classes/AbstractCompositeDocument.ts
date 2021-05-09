@@ -58,11 +58,11 @@ export default abstract class AbstractCompositeDocument<
       keyof SchemaType,
       iSubDocument<SchemaType, keyof SchemaType>
     >;
-    data: SchemaType;
     observer: FirestoreDocumentObserver<SchemaType>;
-    documentRef: FirestoreDocumentReference;
     firestore: Firestore;
   };
+  #ref: FirestoreDocumentReference;
+  data: SchemaType;
 
   /*
   abstract load<C extends AbstractCompositeDocument<S>>(
@@ -75,10 +75,13 @@ export default abstract class AbstractCompositeDocument<
     const { path, firestore, handleChange, initialData } = props;
 
     this.path = path;
+
+    this.#ref = firestore.doc(path);
+
+    this.data = { ...initialData };
+
     this.#private = {
-      data: { ...initialData },
       firestore,
-      documentRef: firestore.doc(path),
       subDocuments: new Map(),
       observer: new FirestoreDocumentObserver({
         ...props,
@@ -97,147 +100,47 @@ export default abstract class AbstractCompositeDocument<
     this.handleSubDocumentAddition(initialData);
   }
 
-  // ! loading seems to only be for getting initial data, this shouldnt be necessary as observer gets initial data anyway,
-  // ! will add initial data as an optional dependency so client is responsible for getting this if required, but this gets overwritten by observer anyway
-  /** Loads an observer for the firestore document and returns the initial data also */
-  /*
-  static async loadObserver<S extends Record<string, any>>(
-    props: AbstractCompositeDocumentLoaderProps<S>
-  ): Promise<{
-    initialData: S;
-  }> {
-    // ? is this required? this is just to load initial data but the observer will do that anyway. Only benefit of this is you can await data to be loaded
-    const { firestore, schemaPredicate, path } = props;
-
-    const doc = await firestore.doc(path).get();
-
-    const initialData = doc.data() || {};
-
-    // check initial document schema
-    if (!schemaPredicate(initialData)) {
-      const error = "Initial data doesnt satisfy schema predicate";
-      console.error(__filename, error, {
-        path,
-        initialData,
-      });
-      throw Error(error);
-    }
-
-    /*
-    const observerCreator = (
-      handleChange
-    ) =>
-      */
-
-  /*
-    return new AbstractCompositeDocument({
-      ...props,
-      initialDocumentData,
-      observer,
-    });
-
-    return {
-      initialData,
-    };
-  }
-  */
-
-  // todo delete
-  // ! composite document schemas might not always be consistent records, so verifySchema needs to be a dependency, so the right validator is used for the provided schema
-  /*
-  static verifySchema<K extends string | number, V>(
-    data: any,
-    keyPredicate: (key: any) => key is K,
-    valuePredicate: (value: any) => value is K
-  ): data is Record<K, V> {
-    if (typeof data !== "object") return false;
-
-    // accept empty objects
-    if (!Object.keys(data).length) return true;
-
-    for (const [key, value] of Object.entries(data)) {
-      if (!keyPredicate(key)) {
-        const error = `initial data key "${key}" does not match provided predicate`;
-        console.error(error, {
-          data,
-          key,
-          value,
-        });
-        throw Error(error);
-      }
-
-      if (!valuePredicate(value)) {
-        const error = `initial data value for key ${key} does not match provided predicate`;
-        console.error(error, {
-          data,
-          key,
-          value,
-        });
-        throw Error(error);
-      }
-    }
-    return true;
-  }
-  */
   cleanUp(): void {
     this.#private.observer.unsubscribe();
   }
 
   /** Delete sub document */
   async delete(key: keyof SchemaType): Promise<iCompositeDocument<SchemaType>> {
-    /*
-    const {
-      [key]: excludedSubDocument,
-      ...dataAfterDelete
-    } = this.#private.data;
-    */
-
-    // overwrite without deleted sub document
-    // await this.#private.documentRef.set(dataAfterDelete, { merge: false });
-
     // todo move to util
-    if (!this.#private.data) {
+    if (!this.data) {
       console.warn(
         __filename,
         `Could not delete sub-document with key ${key} at document path ${
           this.path
-        } because overall data is ${typeof this.#private.data}`
+        } because overall data is ${typeof this.data}`
       );
       return this;
     }
 
-    if (!this.#private.data[key]) {
+    if (!this.data[key]) {
       console.warn(
         __filename,
         `Could not delete sub-document with key ${key} at document path ${
           this.path
-        } because sub document data is ${typeof this.#private.data[
+        } because sub document data is ${typeof this.data[
           key
-        ]}, ie it doesnt exist`
+        ]}, ie it doesn't exist`
       );
       return this;
     }
 
-    const {
-      [key]: excludedSubDocument,
-      ...dataAfterDelete
-    } = this.#private.data;
-
-    /*
-    const dataAfterDelete: any = { ...this.#private.data };
-    delete dataAfterDelete[key];
-    */
+    const { [key]: excludedSubDocument, ...dataAfterDelete } = this.data;
 
     /*
     console.warn(__filename, `Deleting key ${key}`, {
       key,
-      dataBeforeDelete: this.#private.data,
+      dataBeforeDelete: this.data,
       dataAfterDelete,
     });
     */
 
     try {
-      await this.#private.firestore.doc(this.path).set(dataAfterDelete);
+      await this.#ref.set(dataAfterDelete);
       this.handleSubDocumentRemoval(dataAfterDelete as SchemaType);
     } catch (error) {
       console.error(
@@ -268,7 +171,7 @@ export default abstract class AbstractCompositeDocument<
         .set({ [key]: newValue }, { merge: true });
 
       // update locally
-      this.#private.data[key] = newValue;
+      this.data[key] = newValue;
     } catch (error) {
       console.error(__filename, `Error setting data to sub-document`, {
         key,
@@ -292,7 +195,7 @@ export default abstract class AbstractCompositeDocument<
     // if (!newData) console.warn(__filename, `newData was ${typeof newData}`);
 
     // update local data
-    this.#private.data = newData || ({} as SchemaType);
+    this.data = newData || ({} as SchemaType);
 
     if (!newData) {
       // remove all sub documents
@@ -452,7 +355,7 @@ export default abstract class AbstractCompositeDocument<
     if (!existingSubDocument) {
       const subDocument = new SubDocument({
         firestore: this.#private.firestore,
-        getDataFromStorage: () => this.#private.data && this.#private.data[key],
+        getDataFromStorage: () => this.data && this.data[key],
         key,
         parentDocumentPath: this.path,
         setOnDataStorage: (newValue: SchemaType[keyof SchemaType]) =>
