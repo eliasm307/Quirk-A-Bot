@@ -1,4 +1,6 @@
 /* eslint-disable no-use-before-define */
+import { UID } from '@quirk-a-bot/common';
+
 import {
   iBaseCollection, iHasCleanUp, iHasGetData, iHasPath,
 } from '../../../declarations/interfaces';
@@ -65,19 +67,27 @@ export interface iCharacterSheetDataStorage extends iHasPath {
 
 /** Represents all game data in a data store, access control to be handled by proxies */
 export interface iGameDataStorage extends iHasPath {
+  readonly description: string;
+
+  /** If a character doesn't already exist, this sets-up a character with default details */
+  addCharacter(id: string): Promise<void>;
   /** Makes sure that a game with the given id actually exists in the given data storage, otherwise it creates it with default values */
   assertDataExistsOnDataStorage(): Promise<void>;
+  getCharacterIds(): UID[];
   /** Returns instantiated character sheet objects for the game */
-  getCharacterSheets(): Map<string, iCharacterSheet>;
+  getCharacterSheets(): Promise<iCharacterSheet[]>;
   /** Returns the game data */
   getData(): iGameData;
+  setDescription(description: string): Promise<void>;
 }
 
 // -------------------------------------------------------
 // DATA STORAGE FACTORY
 
 export interface iDataStorageFactory {
-  /** Data storage specific id validator */
+  /** Validates an id, throws an error if not valid */
+  assertIdIsValid(id: string): void;
+  /** Validates an id and returns a boolean to indicate validity */
   idIsValid(id: string): boolean;
   newCharacterSheetDataStorage(
     props: iCharacterSheetDataStorageFactoryProps

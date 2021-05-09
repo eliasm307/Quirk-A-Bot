@@ -33,9 +33,14 @@ export interface iGameData extends iGameShape {
 /** Represents a VTM game in firestore */
 export interface iGame extends iGameShape {
   /** ids from characters sub collection  */
-  readonly characters: Set<UID>;
+  readonly characterIds: Set<UID>;
+  readonly description: string;
 
   gameMasters: Set<UID>;
+
+  /** Loads character sheets defined in the game */
+  loadCharacterSheets(): Promise<Map<UID, iCharacterSheet>>;
+  setDescription(description: string): Promise<void>;
 
 // players: Map<UID, iGamePlayerData>;
 
