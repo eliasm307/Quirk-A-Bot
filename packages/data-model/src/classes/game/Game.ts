@@ -6,14 +6,14 @@ import {
   iDataStorageFactory, iGameDataStorage, iHasDataStorageFactory,
 } from '../data-storage/interfaces/data-storage-interfaces';
 import { iGame, iGameData } from './interfaces/game-interfaces';
-import { iGameCharacterData } from './interfaces/game-player-interfaces';
+import { iCharacterData } from './interfaces/game-player-interfaces';
 
 // ? similar to characterSheetDataStorage loader, should these be the same?
 interface iLoaderProps extends iHasId, iHasDataStorageFactory, iHasParentPath {}
 
 export interface iGameProps extends iLoaderProps {
   gameDataStorage: iGameDataStorage;
-  initialCharacterData: iGameCharacterData[];
+  initialCharacterData: iCharacterData[];
   initialData: iGameData;
 }
 
@@ -23,7 +23,7 @@ export default class Game implements iGame {
 
   #dataStorageFactory: iDataStorageFactory;
   #gameDataStorage: iGameDataStorage;
-  characters: Map<string, iGameCharacterData>;
+  characters: Map<string, iCharacterData>;
   description: string;
   discordBotWebSocketServer?: string;
   gameMasters: Set<string>;

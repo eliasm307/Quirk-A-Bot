@@ -2,8 +2,9 @@ import { iGeneralTraitData } from '../../classes/traits/interfaces/trait-interfa
 
 export default function isTraitData<
   T extends iGeneralTraitData = iGeneralTraitData
->(data: any): data is T {
+>(data: unknown): data is T {
   if (typeof data !== "object") return false;
+  if (!data) return false;
 
   const { name, value } = data as iGeneralTraitData;
 

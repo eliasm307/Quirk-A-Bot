@@ -1,9 +1,15 @@
+import path from 'node:path';
+
 /* eslint-disable no-unreachable */
-import { AbstractCompositeDocument, Firestore } from '@quirk-a-bot/common';
+import {
+  AbstractCompositeDocument, CHARACTER_COLLECTION_NAME, ConsistentCompositeDocument, Firestore,
+  FirestoreCollectionReference, FirestoreDocumentReference, InconsistentCompositeDocument, isString,
+} from '@quirk-a-bot/common';
 
 import { CharacterSheet } from '../../..';
 import { iCharacterSheet } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import { iGameData } from '../../game/interfaces/game-interfaces';
+import { iCharacterData } from '../../game/interfaces/game-player-interfaces';
 import assertDocumentExistsOnFirestore from '../Firestore/utils/assertDocumentExistsOnFirestore';
 import { iDataStorageFactory, iGameDataStorage } from '../interfaces/data-storage-interfaces';
 import {
@@ -18,12 +24,14 @@ export default class FirestoreCompositeGameDataStorage
   protected characterSheets?: Map<string, iCharacterSheet>;
   protected dataStorageFactory: iDataStorageFactory;
   protected firestore: Firestore;
+  // this will be loaded when listener returns first results
   protected gameData?: iGameData;
   protected id: string;
 
-  #characterData: iCharacterData[];
+  #characterCollectionRef: FirestoreCollectionReference;
+  // this will be loaded when listener returns first results
+  #characterData?: iCharacterData[];
   #compositeDocument: AbstractCompositeDocument<iGameData>;
-  description: string;
   path: string;
 
   constructor(props: iFirestoreCompositeCharacterSheetDataStorageProps) {
@@ -32,10 +40,54 @@ export default class FirestoreCompositeGameDataStorage
     this.path = createPath(parentPath, id);
     this.dataStorageFactory = dataStorageFactory;
     this.firestore = firestore;
+    const characterCollectionPath = createPath(
+      this.path,
+      CHARACTER_COLLECTION_NAME
+    );
+    this.#characterCollectionRef = firestore.collection(
+      characterCollectionPath
+    );
+
+    this.#characterCollectionRef.onSnapshot({
+      next: (snapshot) => {
+        const data = snapshot.docs.map((snapshot) => snapshot.data());
+
+        const characters = data.filter(isCharacterData);
+      },
+    });
+
+    this.#compositeDocument = InconsistentCompositeDocument.load<iGameData>({
+      firestore,
+      handleChange: ({ newData }) => {
+        this.gameData = newData && { ...newData };
+      },
+      path: this.path,
+      valuePredicates: {
+        description: isString,
+        discordBotWebSocketServer: (value): value is string | undefined =>
+          typeof value === "undefined" || isString(value),
+        gameMasters: Array.isArray,
+        id: isString,
+      },
+    });
   }
 
-  addCharacter(id: string): Promise<void> {
-    const characterIds = this.getCharacterIds();
+  async addCharacter(id: string): Promise<void> {
+    const charactersData = await this.getCharacters();
+
+    if (charactersData.some((character) => character.id === id))
+      return console.warn(
+        "Cannot add character to game as they are already in the game"
+      );
+
+    const newCharacterData: iCharacterData = {
+      id,
+      img,
+      name: DEFAUL,
+    };
+
+    // todo add default character data here
+    this.#characterCollectionRef.doc(id).set(data, options);
   }
 
   // todo replace this with a load method instead?
@@ -62,15 +114,24 @@ export default class FirestoreCompositeGameDataStorage
     };
   }
 
-  getCharacterIds(): string[] {
-    return this.firestore.collection(
-      createPath(this.#compositeDocument.path, CHARACTER_COLLECTION_NAME)
+  async getCharacterSheets(): Promise<iCharacterSheet[]> {
+    const characterSheetPromises = (await this.getCharacters()).map(
+      (character) =>
+        CharacterSheet.load({
+          dataStorageFactory: this.dataStorageFactory,
+          id: character.id,
+          parentPath: this.path,
+        })
     );
+
+    return Promise.all(characterSheetPromises);
   }
 
-  getCharacterSheets(): Promise<iCharacterSheet[]> {}
+  async getCharacters(): Promise<iCharacterData[]> {
+    return this.#characterData;
+  }
 
-  getData(): iGameData {
+  async getData(): Promise<iGameData> {
     if (!this.gameData)
       throw Error(
         `Game data not loaded, please call assertDataExistsOnDataStorage before using this method`

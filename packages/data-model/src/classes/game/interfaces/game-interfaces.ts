@@ -3,7 +3,7 @@ import { UID, WebURL } from '@quirk-a-bot/common';
 import { iTraitCollection } from '../../../classes/traits/interfaces/trait-collection-interfaces';
 import { iStringTrait } from '../../../classes/traits/interfaces/trait-interfaces';
 import { iCharacterSheet } from '../../character-sheet/interfaces/character-sheet-interfaces';
-import { iGameCharacterData } from './game-player-interfaces';
+import { iCharacterData } from './game-player-interfaces';
 
 /** Game data including data from sub-collections */
 export interface iGameShape {
@@ -33,7 +33,7 @@ export interface iGameData extends iGameShape {
 /** Represents a VTM game in firestore */
 export interface iGame extends iGameShape {
   /** ids from characters sub collection  */
-  readonly characters: Map<UID, iGameCharacterData>;
+  readonly characters: Map<UID, iCharacterData>;
   readonly description: string;
 
   gameMasters: Set<UID>;

@@ -5,7 +5,7 @@ import {
 import isTraitData from './isTraitData';
 
 export default function isCharacterSheetData(
-  data: any
+  data: unknown
 ): data is iCharacterSheetData {
   // todo test
   if (typeof data !== "object") {
@@ -16,6 +16,7 @@ export default function isCharacterSheetData(
     */
     return false;
   }
+  if (!data) return false;
 
   const exampleCorrectData = CharacterSheet.newDataObject({ id: "" });
 
@@ -33,7 +34,9 @@ export default function isCharacterSheetData(
     skills,
     touchstonesAndConvictions,
     willpower,
-  } = data;
+  } = data as iCharacterSheetData;
+
+  // todo add property  check
 
   const receivedNumberOfProperties = Object.keys(data).length;
   const correctNumberOfProperties = Object.keys(exampleCorrectData).length;

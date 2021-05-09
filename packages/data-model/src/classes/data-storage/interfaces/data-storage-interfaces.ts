@@ -9,7 +9,7 @@ import {
   iCharacterSheet, iCharacterSheetData,
 } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import { iGameData } from '../../game/interfaces/game-interfaces';
-import { iGameCharacterData } from '../../game/interfaces/game-player-interfaces';
+import { iCharacterData } from '../../game/interfaces/game-player-interfaces';
 import {
   iHasTraitCollectionLogReporter, iHasTraitLogReporter,
 } from '../../log/interfaces/log-interfaces';
@@ -68,15 +68,13 @@ export interface iCharacterSheetDataStorage extends iHasPath {
 
 /** Represents all game data in a data store, access control to be handled by proxies */
 export interface iGameDataStorage extends iHasPath {
-  readonly description: string;
-
   /** If a character doesn't already exist, this sets-up a character with default details */
   addCharacter(id: string): Promise<void>;
   /** Makes sure that a game with the given id actually exists in the given data storage, otherwise it creates it with default values */
   assertDataExistsOnDataStorage(): Promise<void>;
   /** Returns instantiated character sheet objects for the game */
   getCharacterSheets(): Promise<iCharacterSheet[]>;
-  getCharacters(): Promise<iGameCharacterData[]>;
+  getCharacters(): Promise<iCharacterData[]>;
   /** Returns the game data */
   getData(): Promise<iGameData>;
   setDescription(description: string): Promise<void>;

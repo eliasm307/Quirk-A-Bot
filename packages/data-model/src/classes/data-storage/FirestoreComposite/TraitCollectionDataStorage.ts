@@ -70,17 +70,7 @@ export default class FirestoreCompositeTraitCollectionDataStorage<
 
           const traitName = key as N;
 
-          // internal handler
-          /*
-          this.map.set(
-            key as N,
-            this.createTraitInstance(key as N, after.value)
-          );
-          */
           return this.set(traitName, after.value);
-
-          // external handler
-          // ? should there be a separate change handler or should they all be the same handler?
         });
         await Promise.all(changePromises);
       }
@@ -94,8 +84,6 @@ export default class FirestoreCompositeTraitCollectionDataStorage<
 
           const traitName = key as N;
 
-          // internal handler
-          // this.map.set(key as N, this.createTraitInstance(key as N, value));
           return this.set(traitName, value);
 
           // external handler // ! this is called in this.set also

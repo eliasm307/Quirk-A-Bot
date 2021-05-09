@@ -122,19 +122,17 @@ async function deleteQueryBatch(query: firebase.firestore.Query, resolve: (value
 }
 */
 
-// firebase types
-export interface Firestore extends firebase.firestore.Firestore {}
-export interface FirestoreDocumentChange
-  extends firebase.firestore.DocumentChange<firebase.firestore.DocumentData> {}
+// firebase type aliases
+export type Firestore = firebase.firestore.Firestore;
 
-export interface FirestoreBatch extends firebase.firestore.WriteBatch {}
+export type FirestoreDocumentChange = firebase.firestore.DocumentChange<firebase.firestore.DocumentData>;
 
-export interface FirestoreDocumentSnapshot
-  extends firebase.firestore
-    .DocumentSnapshot<firebase.firestore.DocumentData> {}
+export type FirestoreBatch = firebase.firestore.WriteBatch;
 
-export interface FirestoreDocumentReference
-  extends firebase.firestore
-    .DocumentReference<firebase.firestore.DocumentData> {}
+export type FirestoreDocumentSnapshot = firebase.firestore.DocumentSnapshot<firebase.firestore.DocumentData>;
+
+export type FirestoreDocumentReference = firebase.firestore.DocumentReference<firebase.firestore.DocumentData>;
+
+export type FirestoreCollectionReference = firebase.firestore.CollectionReference<firebase.firestore.DocumentData>;
 
 // export default firebase;

@@ -2,7 +2,7 @@ import { PLAYER_COLLECTION_NAME } from '@quirk-a-bot/common';
 
 import { isCoreGameData, isGamePlayerData } from '../../../../utils/type-predicates';
 import { iGameData } from '../../../game/interfaces/game-interfaces';
-import { iGameCharacterData } from '../../../game/interfaces/game-player-interfaces';
+import { iCharacterData } from '../../../game/interfaces/game-player-interfaces';
 import { createPath } from '../../utils/createPath';
 import { DocumentDataReaderProps } from './assertDocumentExistsOnFirestore';
 
@@ -41,7 +41,7 @@ export default async function readGameDataFromFirestore({
     .collection(createPath(path, PLAYER_COLLECTION_NAME))
     .get();
 
-  const players = [] as iGameCharacterData[];
+  const players = [] as iCharacterData[];
   const characterSheetIds = [] as string[];
 
   playerCollection.forEach((snapshot) => {

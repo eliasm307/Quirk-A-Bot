@@ -28,7 +28,7 @@ export interface iGameCharacter extends iGameCharacterShape {
 
 // todo not required for now, but will be for tracking game users/players
 /** Represents user character details specific to a game */
-export interface iGameCharacterData extends iGameCharacterShape {
+export interface iCharacterData extends iGameCharacterShape {
   /** How the player would like to be addressed as in this game, defaults to User.name */
   name: string;
 
