@@ -1,9 +1,22 @@
 {
   "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "esnext"],
     "module": "commonjs",
-    "target": "es5",
+    "target": "es2015",
     "sourceMap": true,
-    "noEmitOnError": true
+    "noEmit": false,
+    "noEmitOnError": true,
+    "esModuleInterop": true,
+    "declaration": true,
+    "downlevelIteration": true,
+    "strict": true,
+    "alwaysStrict": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "./packages",
+    "paths": {
+      "@quirk-a-bot/*": ["*/src"]
+    }
   },
   "exclude": [
     "**/node_modules/**",

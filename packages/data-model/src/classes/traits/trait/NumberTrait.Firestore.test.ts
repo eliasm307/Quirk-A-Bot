@@ -1,7 +1,8 @@
-import { firestoreEmulator } from '@quirk-a-bot/firebase-utils';
+import { firestoreEmulator, pause } from '@quirk-a-bot/common';
 
 import isTraitData from '../../../utils/type-predicates/isTraitData';
 import FirestoreDataStorageFactory from '../../data-storage/Firestore/FirestoreDataStorageFactory';
+import { iBaseTraitData, iGeneralTraitData } from '../interfaces/trait-interfaces';
 import NumberTrait from './NumberTrait';
 
 const firestore = firestoreEmulator;
@@ -13,7 +14,7 @@ const testSuiteParentPath = "numberTrait-firestore";
 describe("Number trait with firestore data storage", () => {
   it("asserts trait exists in firestore in the right format", async () => {
     const trait1Name = "trait1";
-    const testParentPath = testSuiteParentPath + "-trait-exists";
+    const testParentPath = `${testSuiteParentPath}-trait-exists`;
 
     const trait1 = new NumberTrait<string>({
       max: 10,
@@ -24,7 +25,7 @@ describe("Number trait with firestore data storage", () => {
       loggerCreator: null,
     });
 
-    await new Promise((res) => setTimeout(res, 500)); // wait for syncronisation
+    await pause(1000); // wait for synchronisation
 
     const doc = await firestore.doc(trait1.path).get();
     const data = doc.data();
@@ -38,11 +39,11 @@ describe("Number trait with firestore data storage", () => {
 
     // can clean up
     expect(trait1.cleanUp()).toEqual(true);
-  }, 9999);
+  }, 19999);
 
   it("writes changes to firestore", async () => {
     const trait1Name = "trait1";
-    const testParentPath = testSuiteParentPath + "-trait-writes";
+    const testParentPath = `${testSuiteParentPath}-trait-writes`;
 
     const trait1 = new NumberTrait<string>({
       max: 10,
@@ -53,15 +54,15 @@ describe("Number trait with firestore data storage", () => {
       loggerCreator: null,
     });
 
-    await new Promise((res) => setTimeout(res, 100)); // wait for syncronisation
+    await pause(100); // wait for synchronisation
 
-    trait1.value = 0;
-    trait1.value = 1;
+    await trait1.setValue(0);
+    await trait1.setValue(1);
 
-    await new Promise((res) => setTimeout(res, 100)); // wait for syncronisation
+    await pause(100); // wait for synchronisation
 
     const doc = await firestore.doc(trait1.path).get();
-    const data: any = doc.data();
+    const data = doc.data() as iBaseTraitData<string, number>;
 
     expect.assertions(2);
 
@@ -73,7 +74,7 @@ describe("Number trait with firestore data storage", () => {
 
   test("uses any existing value in firestore over the instance value", async () => {
     const trait1Name = "trait1";
-    const testParentPath = testSuiteParentPath + "-trait-init";
+    const testParentPath = `${testSuiteParentPath}-trait-init`;
 
     const trait1 = new NumberTrait<string>({
       max: 10,
@@ -83,7 +84,7 @@ describe("Number trait with firestore data storage", () => {
       parentPath: testParentPath,
       loggerCreator: null,
     });
-    await new Promise((res) => setTimeout(res, 100)); // wait for syncronisation
+    await pause(100); // wait for synchronisation
 
     const trait2 = new NumberTrait<string>({
       max: 10,
@@ -94,20 +95,20 @@ describe("Number trait with firestore data storage", () => {
       loggerCreator: null,
     });
 
-    await new Promise((res) => setTimeout(res, 100)); // wait for syncronisation
+    await pause(100); // wait for synchronisation
 
     const knownValue = 0;
 
     // set trait to a known value
-    trait1.value = knownValue;
+    await trait1.setValue(knownValue);
 
-    await new Promise((res) => setTimeout(res, 100)); // wait for syncronisation
+    await pause(100); // wait for synchronisation
 
     const doc1 = await firestore.doc(trait1.path).get();
     const doc2 = await firestore.doc(trait2.path).get();
 
     const doc1Data: any = doc1.data();
-    const doc2Data: any = doc2.data();
+    const doc2Data = doc2.data() as iGeneralTraitData;
 
     expect.assertions(4);
 
@@ -120,7 +121,7 @@ describe("Number trait with firestore data storage", () => {
   });
   it("listens to firestore and propagates changes to all trait instances", async () => {
     const trait1Name = "trait1";
-    const testParentPath = testSuiteParentPath + "-trait-listeners";
+    const testParentPath = `${testSuiteParentPath}-trait-listeners`;
 
     const initialValue = 0;
     const changeValue = 0;
@@ -133,7 +134,7 @@ describe("Number trait with firestore data storage", () => {
       loggerCreator: null,
     });
 
-    await new Promise((res) => setTimeout(res, 100)); // wait for syncronisation
+    await pause(100); // wait for synchronisation
 
     const trait2 = new NumberTrait<string>({
       max: 10,
@@ -144,24 +145,24 @@ describe("Number trait with firestore data storage", () => {
       loggerCreator: null,
     });
 
-    await new Promise((res) => setTimeout(res, 100)); // wait for syncronisation
+    await pause(100); // wait for synchronisation
 
     // set initial values
-    trait1.value = initialValue;
+    await trait1.setValue(initialValue);
 
-    await new Promise((res) => setTimeout(res, 100)); // wait for syncronisation
+    await pause(100); // wait for synchronisation
 
-    trait2.value = initialValue;
+    await trait2.setValue(initialValue);
 
-    await new Promise((res) => setTimeout(res, 100)); // wait for syncronisation
+    await pause(100); // wait for synchronisation
 
     // change one trait
-    trait1.value = changeValue;
+    await trait1.setValue(changeValue);
 
-    await new Promise((res) => setTimeout(res, 100)); // wait for syncronisation
+    await pause(100); // wait for synchronisation
 
     expect.assertions(3);
-    // check if other trait syncronised
+    // check if other trait synchronised
     expect(trait2.value).toEqual(changeValue);
 
     // can clean up

@@ -1,7 +1,6 @@
-import CharacterSheet from 'src/classes/character-sheet/CharacterSheet';
+import { Firestore } from '@quirk-a-bot/common';
 
-import { Firestore } from '@quirk-a-bot/firebase-utils';
-
+import { CharacterSheet } from '../../..';
 import { iCharacterSheet } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import { iGameData } from '../../game/interfaces/game-interfaces';
 import { iDataStorageFactory, iGameDataStorage } from '../interfaces/data-storage-interfaces';
@@ -33,11 +32,13 @@ export default class FirestoreGameDataStorage implements iGameDataStorage {
     this.gameData = await assertDocumentExistsOnFirestore<iGameData>({
       firestore: this.firestore,
       path: this.path,
+      // todo extract this to a static method or util
       newDefaultData: () => ({
         id: this.id,
         characterSheetIds: [],
         description: "",
         players: [],
+        gameMasters: [],
       }),
       documentDataReader: readGameDataFromFirestore,
       documentDataWriter: writeGameDataToFirestore,

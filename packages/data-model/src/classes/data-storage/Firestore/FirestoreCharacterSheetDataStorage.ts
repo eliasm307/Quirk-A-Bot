@@ -1,4 +1,4 @@
-import { Firestore } from '@quirk-a-bot/firebase-utils';
+import { Firestore } from '@quirk-a-bot/common';
 
 import CharacterSheet from '../../character-sheet/CharacterSheet';
 import { iCharacterSheetData } from '../../character-sheet/interfaces/character-sheet-interfaces';

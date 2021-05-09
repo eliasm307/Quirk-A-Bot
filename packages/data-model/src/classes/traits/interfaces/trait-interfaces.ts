@@ -31,8 +31,8 @@ export interface iHasNumberValue {
   value: number;
 }
 export interface iHasNumberLimits {
-  max: number;
-  min: number;
+  readonly max: number;
+  readonly min: number;
 }
 export interface iHasTraitInstanceCreator<
   N extends TraitNameUnionOrString,
@@ -51,7 +51,7 @@ export interface iBaseTraitProps<
   N extends TraitNameUnionOrString,
   V extends TraitValueTypeUnion,
   D extends iBaseTraitData<N, V>
-> extends iHasTraitDataStorageInitialiser,
+> extends iHasTraitDataStorageInitialiser<N, V>,
     iHasParentPath,
     iCanHaveLoggerCreator<iTraitLogger> {
   name: N;
@@ -73,7 +73,9 @@ export interface iBaseNumberTraitProps<
   N extends TraitNameUnionOrString,
   D extends iNumberTraitData<N>
 > extends iBaseTraitProps<N, number, D> {
+  /** Maximum value of a number trait, optional where no limit as default */
   max: number;
+  /** Minimum value of a number trait, optional with 0 as default */
   min?: number;
 }
 
@@ -121,9 +123,12 @@ export interface iTraitCollectionProps<
   T extends iBaseTrait<N, V, D>
 > extends iHasTraitInstanceCreator<N, V, D, T>,
     iTraitCollectionDataStorageInitialiserBundle,
+    // iHasTraitDataStorageInitialiser,
     iHasParentPath,
     iCanHaveLoggerCreator<iTraitCollectionLogger> {
+  dataPredicate: (data: any) => data is D;
   name: string;
+  namePredicate: (name: any) => name is N;
 }
 // -------------------------------------------------------
 // GENERIC TRAIT DATA TYPES
@@ -166,7 +171,7 @@ export interface iSkillData extends iNumberTraitData<SkillName> {}
 export interface iDisciplineData extends iNumberTraitData<DisciplineName> {
   // todo add "specialisation" / sub types?
 }
-export interface iCoreStringTraitData<V extends string>
+export interface iCoreStringTraitData<V extends string = string>
   extends iStringTraitData<CoreStringTraitName, V> {}
 export interface iCoreNumberTraitData
   extends iNumberTraitData<CoreNumberTraitName> {}
@@ -183,22 +188,22 @@ export interface iBaseTrait<
     iHasLogReporter<iTraitLogReporter>,
     iHasPath,
     iHasCleanUp {
-  // todo add explain method to give a summary what this trait is for
+  readonly value: V;
+
+  /** Method to update value directly with a new value or a function that does a relative update using the old value */
+  setValue: (newValue: V | ((oldValue: V) => V)) => Promise<void>;
+
+// todo add explain method to give a summary what this trait is for
   // todo add explainValue method to describe the current value of the attribute, ie add description getter to describe the meaning of a value
 }
 
 export interface iGeneralTrait
-  extends iBaseTrait<
-    TraitNameUnionOrString,
-    TraitValueTypeUnion,
-    iGeneralTraitData
-  > {}
+  extends iBaseTrait<TraitNameUnionOrString, TraitValueTypeUnion> {}
 
 export interface iBaseNumberTrait<
   N extends TraitNameUnionOrString,
   D extends iNumberTraitData<N>
 > extends iBaseTrait<N, number, D>,
-    iHasNumberValue,
     iHasNumberLimits {}
 
 export interface iNumberTrait<N extends TraitNameUnionOrString>
@@ -224,19 +229,11 @@ export interface iNumberTraitWithCategory<
 // SPECIFIC TRAIT OBJECTS
 
 export interface iAttribute
-  extends iAttributeData,
-    iNumberTrait<AttributeName>,
+  extends iNumberTrait<AttributeName>,
     iHasCategory<AttributeCategory> {}
-export interface iDiscipline
-  extends iDisciplineData,
-    iNumberTrait<DisciplineName> {}
-export interface iSkill extends iSkillData, iNumberTrait<SkillName> {}
-export interface iTouchStoneOrConviction
-  extends iTouchStoneOrConvictionData,
-    iStringTrait<string> {}
-export interface iCoreNumberTrait
-  extends iNumberTraitData<CoreNumberTraitName>,
-    iNumberTrait<CoreNumberTraitName> {}
-export interface iCoreStringTrait<V extends string>
-  extends iBaseTraitData<CoreStringTraitName, V>,
-    iBaseStringTrait<CoreStringTraitName, V> {}
+export interface iDiscipline extends iNumberTrait<DisciplineName> {}
+export interface iSkill extends iNumberTrait<SkillName> {}
+export interface iTouchStoneOrConviction extends iStringTrait<string> {}
+export interface iCoreNumberTrait extends iNumberTrait<CoreNumberTraitName> {}
+export interface iCoreStringTrait<V extends string = string>
+  extends iBaseStringTrait<CoreStringTraitName, V> {}

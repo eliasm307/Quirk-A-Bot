@@ -1,23 +1,21 @@
 // import saveCharacterSheetToFile from '../utils/saveCharacterSheetToFile';
-import { STRING_TRAIT_DEFAULT_VALUE } from '../../constants';
+import { iHasId } from '../../declarations/interfaces';
 import { ClanName } from '../../declarations/types';
 import hasCleanUp from '../../utils/type-predicates/hasCleanUp';
-import { iHasId } from '../data-storage/interfaces/data-storage-interfaces';
 import {
   iCharacterSheetLogger, iCharacterSheetLogReporter, iChildLoggerCreatorProps,
 } from '../log/interfaces/log-interfaces';
 import CharacterSheetLogger from '../log/loggers/CharacterSheetLogger';
 import {
-  iAttributeTraitCollection, iDisciplineTraitCollection, iSkillTraitCollection,
-  iTouchStoneOrConvictionCollection, iTraitCollectionFactoryMethodProps,
+  iAttributeTraitCollection, iCoreNumberTraitCollection, iCoreStringTraitCollection,
+  iDisciplineTraitCollection, iSkillTraitCollection, iTouchStoneOrConvictionCollection,
 } from '../traits/interfaces/trait-collection-interfaces';
 import {
-  iCoreNumberTrait, iCoreStringTrait, iGeneralTrait,
+  iCoreNumberTrait, iCoreNumberTraitData, iCoreStringTrait, iCoreStringTraitData,
 } from '../traits/interfaces/trait-interfaces';
 import TraitFactory from '../traits/TraitFactory';
 import {
   iCharacterSheet, iCharacterSheetData, iCharacterSheetLoaderProps, iCharacterSheetProps,
-  iCharacterSheetShape,
 } from './interfaces/character-sheet-interfaces';
 import characterSheetToData from './utils/characterSheetToData';
 import newCharacterSheetData from './utils/newCharacterSheetData';
@@ -28,10 +26,7 @@ import newCharacterSheetData from './utils/newCharacterSheetData';
 
 export default class CharacterSheet implements iCharacterSheet {
   /** Existing singleton-ish instances of this class */
-  protected static instances: Map<string, CharacterSheet> = new Map<
-    string,
-    CharacterSheet
-  >();
+  protected static instances: Map<string, CharacterSheet> = new Map();
 
   /** Internal logger */
   protected logger: iCharacterSheetLogger;
@@ -52,6 +47,9 @@ export default class CharacterSheet implements iCharacterSheet {
   readonly touchstonesAndConvictions: iTouchStoneOrConvictionCollection;
   readonly willpower: iCoreNumberTrait;
 
+  #coreNumberTraitCollection: iCoreNumberTraitCollection;
+  #coreStringTraitCollection: iCoreStringTraitCollection;
+  #isFullyInitialised: boolean;
   log: iCharacterSheetLogReporter;
   parentPath: string;
   path: string;
@@ -82,97 +80,71 @@ export default class CharacterSheet implements iCharacterSheet {
     // expose logger reporter
     this.log = this.logger.reporter;
 
-    // create data storage initialisers
-    const traitDataStorageInitialiser = dataStorageFactory.newTraitDataStorageInitialiser(
-      {
-        characterSheet: this,
-      }
-    );
-
     const traitCollectionDataStorageInitialiser = dataStorageFactory.newTraitCollectionDataStorageInitialiser(
       {
         characterSheet: this,
       }
     );
 
+    // ? is this required?
     // create core trait logger initialiser function
-    const traitLoggerCreator = (props: iChildLoggerCreatorProps) =>
-      this.logger.createChildTraitLogger(props);
+    const traitLoggerCreator = (
+      traitLoggerCreatorProps: iChildLoggerCreatorProps
+    ) => this.logger.createChildTraitLogger(traitLoggerCreatorProps);
 
-    const traitCollectionLoggerCreator = (props: iChildLoggerCreatorProps) =>
-      this.logger.createChildTraitCollectionLogger(props);
+    const traitCollectionLoggerCreator = (
+      traitCollectionLoggerCreatorProps: iChildLoggerCreatorProps
+    ) =>
+      this.logger.createChildTraitCollectionLogger(
+        traitCollectionLoggerCreatorProps
+      );
 
-    // create partial trait factory method props
-    const partialTraitFactoryProps = {
-      traitDataStorageInitialiser,
-      parentPath: this.path,
-      loggerCreator: traitLoggerCreator,
-    };
+    const {
+      bloodPotency,
+      hunger,
+      humanity,
+      health,
+      willpower,
+      clan,
+      name,
+      sire,
+    } = initialData;
+
+    // core number traits
+
+    const initialCoreNumberTraitData: iCoreNumberTraitData[] = [
+      bloodPotency,
+      hunger,
+      humanity,
+      health,
+      willpower,
+    ];
+
+    const initialCoreStringTraitData: iCoreStringTraitData<string>[] = [
+      clan,
+      name,
+      sire,
+    ];
 
     // create traitCollection factory method props
-    const traitCollectionFactoryProps: iTraitCollectionFactoryMethodProps = {
+    const traitCollectionFactoryProps = {
       traitCollectionDataStorageInitialiser,
-      traitDataStorageInitialiser,
       parentPath: this.path,
       loggerCreator: traitCollectionLoggerCreator,
     };
 
-    // core number traits
-    this.bloodPotency = TraitFactory.newCoreNumberTrait({
-      ...partialTraitFactoryProps,
-      max: 10,
-      name: "Blood Potency",
-      value: initialData.bloodPotency.value || 0,
-    });
-
-    this.hunger = TraitFactory.newCoreNumberTrait({
-      ...partialTraitFactoryProps,
-      max: 5,
-      name: "Hunger",
-      value: initialData.hunger.value || 0,
-    });
-
-    this.humanity = TraitFactory.newCoreNumberTrait({
-      ...partialTraitFactoryProps,
-      max: 10,
-      name: "Humanity",
-      value: initialData.humanity.value || 0,
-    });
-
-    this.health = TraitFactory.newCoreNumberTrait({
-      ...partialTraitFactoryProps,
-      max: 10,
-      name: "Health",
-      value: initialData.health.value || 0,
-    });
-
-    this.willpower = TraitFactory.newCoreNumberTrait({
-      ...partialTraitFactoryProps,
-      max: 10,
-      name: "Willpower",
-      value: initialData.willpower.value || 0,
-    });
-
-    // core string traits
-    this.name = TraitFactory.newCoreStringTrait<string>({
-      ...partialTraitFactoryProps,
-      name: "Name",
-      value: initialData.name.value || STRING_TRAIT_DEFAULT_VALUE,
-    });
-
-    this.sire = TraitFactory.newCoreStringTrait<string>({
-      ...partialTraitFactoryProps,
-      name: "Sire",
-      value: initialData.sire.value || STRING_TRAIT_DEFAULT_VALUE,
-    });
-
-    this.clan = TraitFactory.newCoreStringTrait<ClanName>({
-      ...partialTraitFactoryProps,
-      name: "Clan",
-      value: initialData.clan.value || STRING_TRAIT_DEFAULT_VALUE,
-    });
-
     // create collections, with initial data where available
+
+    this.#coreNumberTraitCollection = TraitFactory.newCoreNumberTraitCollection(
+      traitCollectionFactoryProps,
+      ...initialCoreNumberTraitData
+    );
+
+    this.#coreStringTraitCollection = TraitFactory.newCoreStringTraitCollection(
+      traitCollectionFactoryProps,
+      ...initialCoreStringTraitData
+    );
+
     this.attributes = TraitFactory.newAttributeTraitCollection(
       traitCollectionFactoryProps,
       ...initialData.attributes
@@ -193,9 +165,36 @@ export default class CharacterSheet implements iCharacterSheet {
       ...initialData.touchstonesAndConvictions
     );
 
+    // core number traits
+    this.bloodPotency = this.#coreNumberTraitCollection.get(
+      "Blood Potency"
+    ) as iCoreNumberTrait;
+    this.hunger = this.#coreNumberTraitCollection.get(
+      "Hunger"
+    ) as iCoreNumberTrait;
+    this.humanity = this.#coreNumberTraitCollection.get(
+      "Humanity"
+    ) as iCoreNumberTrait;
+    this.health = this.#coreNumberTraitCollection.get(
+      "Health"
+    ) as iCoreNumberTrait;
+    this.willpower = this.#coreNumberTraitCollection.get(
+      "Willpower"
+    ) as iCoreNumberTrait;
+
+    // core string traits
+    this.name = this.#coreStringTraitCollection.get("Name") as iCoreStringTrait;
+    this.sire = this.#coreStringTraitCollection.get("Sire") as iCoreStringTrait;
+    this.clan = this.#coreStringTraitCollection.get(
+      "Clan"
+    ) as iCoreStringTrait<ClanName>;
+
     // record this instance using id and path as keys
     CharacterSheet.instances.set(this.id, this);
     CharacterSheet.instances.set(this.path, this);
+
+    // flag to mark that initialisation was completed
+    this.#isFullyInitialised = true;
   }
 
   /** SINGLETON CONSTRUCTOR **/
@@ -216,7 +215,7 @@ export default class CharacterSheet implements iCharacterSheet {
     // if an instance has already been created with this id then use that instance
     if (preExistingInstance) return preExistingInstance;
 
-    // check if a character sheet with this id doesnt exist in the data storage, initialise a blank character sheet if not
+    // check if a character sheet with this id doesn't  exist in the data storage, initialise a blank character sheet if not
     const characterSheetDataStorage = dataStorageFactory.newCharacterSheetDataStorage(
       props
     );
@@ -226,12 +225,14 @@ export default class CharacterSheet implements iCharacterSheet {
       await characterSheetDataStorage.assertDataExistsOnDataStorage();
 
       // return a new character sheet instance as requested
-      // Note a character sheet instance only creates an object that is connected to a character sheet on the data source, it doesnt initialise a new character sheet on the data source
+      // Note a character sheet instance only creates an object that is connected to a character sheet on the data source, it doesn't initialise a new character sheet on the data source
       return new CharacterSheet({ ...props, characterSheetDataStorage });
     } catch (error) {
       console.error(__filename, { error });
       throw Error(
-        `Could not create character sheet instance with id "${id}", Message: ${error}`
+        `Could not create character sheet instance with id "${id}", Message: ${JSON.stringify(
+          error
+        )}`
       );
     }
   }
@@ -242,6 +243,7 @@ export default class CharacterSheet implements iCharacterSheet {
   }
 
   cleanUp(): boolean {
+    /*
     const coreTraits: iCharacterSheetShape = {
       attributes: this.attributes,
       bloodPotency: this.bloodPotency,
@@ -257,13 +259,14 @@ export default class CharacterSheet implements iCharacterSheet {
       touchstonesAndConvictions: this.touchstonesAndConvictions,
       willpower: this.willpower,
     };
+    */
 
     let total = 0;
     let successCount = 0;
     let failCount = 0;
 
     // clean any cleanable properties
-    for (let [propName, prop] of Object.entries(this)) {
+    for (const [propName, prop] of Object.entries(this)) {
       if (hasCleanUp(prop)) {
         total++;
         if (prop.cleanUp()) {
@@ -279,7 +282,7 @@ export default class CharacterSheet implements iCharacterSheet {
     }
 
     // if there are failures
-    if (!!failCount)
+    if (failCount)
       console.warn(
         __filename,
         `Cleaned ${successCount} / ${total} items Successfully, but ${failCount} / ${total} were unsuccessful`
@@ -290,10 +293,14 @@ export default class CharacterSheet implements iCharacterSheet {
   }
 
   public data(): iCharacterSheetData {
-    return characterSheetToData(this);
+    // ? is this a good way to do it? The issue is trait collections need to populate initially, and some data storages e.g. local files auto save and call this method before the method is ready
+    return this.#isFullyInitialised
+      ? characterSheetToData(this)
+      : CharacterSheet.newDataObject({ id: this.id });
   }
 
-  // ? should this be public?
+// ? is this required
+  /*
   private getAllTraits(): iGeneralTrait[] {
     // todo make this automatic and dynamic
     return [
@@ -311,4 +318,5 @@ export default class CharacterSheet implements iCharacterSheet {
       this.willpower,
     ];
   }
+  */
 }

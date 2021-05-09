@@ -1,7 +1,6 @@
-import { PLAYER_COLLECTION_NAME } from 'src/constants';
+import { PLAYER_COLLECTION_NAME } from '@quirk-a-bot/common';
 
 import { iGameData } from '../../../game/interfaces/game-interfaces';
-import { iHasFirestore } from '../../interfaces/data-storage-interfaces';
 import { DocumentDataWriterProps } from './assertDocumentExistsOnFirestore';
 
 export default async function writeGameDataToFirestore({
@@ -12,7 +11,7 @@ export default async function writeGameDataToFirestore({
   const timerName = `Time to write game data at path ${path}`;
   console.time(timerName);
 
-  const { players, characterSheetIds, ...coreData } = data;
+  const { players: players, characterSheetIds, ...coreData } = data;
 
   try {
     const gameDocRef = firestore.doc(path);

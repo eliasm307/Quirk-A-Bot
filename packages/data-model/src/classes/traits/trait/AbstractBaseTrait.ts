@@ -1,6 +1,6 @@
-import { TraitNameUnionOrString, TraitValueTypeUnion } from 'src/declarations/types';
-import hasCleanUp from 'src/utils/type-predicates/hasCleanUp';
+import { hasCleanUp } from '@quirk-a-bot/common';
 
+import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
 import { iBaseTraitDataStorage } from '../../data-storage/interfaces/data-storage-interfaces';
 import { iTraitLogReporter } from '../../log/interfaces/log-interfaces';
 import {
@@ -53,15 +53,18 @@ export default abstract class AbstractBaseTrait<
     return this.dataStorage.value;
   }
 
-  public set value(newValRaw: V) {
+  cleanUp(): boolean {
+    // if the data storage has a cleanup function then call it and return the result,
+    // otherwise return true if no cleanup required
+    return hasCleanUp(this.dataStorage) ? this.dataStorage.cleanUp() : true;
+  }
+
+  public async setValue(newValRaw: V | ((oldValue: V) => V)) {
     // todo delete? data storage should handle actually changing the value
     /*
 
 		// justification should be done in newValueIsValid function
 		if (!this.newValueIsValid(newValue)) return;
-
-		// get current value as old value
-		const oldValue: V = this.dataStorage.value;
 
 		// if old value is the same as new value do nothing
 		if (oldValue === newValue) {
@@ -69,17 +72,25 @@ export default abstract class AbstractBaseTrait<
 			return;
     }
     */
+    // get current value as old value
+    const oldValue: V = this.dataStorage.value;
 
-    const newValueProcessed = this.preProcessValue(newValRaw);
-    if (!this.newValueIsValid(newValueProcessed)) return;
+    const resolvedNewValue =
+      typeof newValRaw === "function" ? newValRaw(oldValue) : newValRaw;
+
+    // apply any pre processing
+    const processedNewValue = this.preProcessValue(resolvedNewValue);
+
+    // only apply update if value passes validation
+    if (!this.newValueIsValid(processedNewValue)) {
+      console.warn(
+        __filename,
+        `Could not update value of trait "${this.name}" from "${oldValue}" to "${processedNewValue}" because new value did not pass validation`
+      );
+      return;
+    }
 
     // implement property change on data storage
-    this.dataStorage.value = newValueProcessed;
-  }
-
-  cleanUp(): boolean {
-    // if the data storage has a cleanup function then call it and return the result,
-    // otherwise return true if no cleanup required
-    return hasCleanUp(this.dataStorage) ? this.dataStorage.cleanUp() : true;
+    await this.dataStorage.setValue(processedNewValue);
   }
 }

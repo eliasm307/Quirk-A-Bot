@@ -2,8 +2,13 @@ example message
 notes
 Blank
 
+**/private/**
+
+# Visual paradigm files
+*.vpp.bak_*
+
 # Firebase
-.idea 
+.idea
 **/.firebaserc
 
 # Firebase Patch
@@ -32,7 +37,7 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 node_modules/
 **/node_modules/**
 
-# Logs 
+# Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -91,7 +96,7 @@ bower_components
 .lock-wscript
 
 # Compiled binary addons (http://nodejs.org/api/addons.html)
-build/Release 
+build/Release
 
 # Optional npm cache directory
 .npm

@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "baseUrl": "../../",
+    "paths": {
+      "@quirk-a-bot/*": ["packages/*/src"]
+    }
+  },
+  "include": ["**/*"],
+  "exclude": [
+    "**/node_modules/**/*",
+    "**/dist/**",
+    "**/build/**",
+    "**/lib/**",
+    "**/public/**"
+  ]
+}

@@ -1,3 +1,5 @@
+import { CoreNumberTraitName, CoreStringTraitName } from '@quirk-a-bot/common';
+
 import {
   iBaseCollection, iHasCleanUp, iHasGetData, iHasParentPath, iHasPath,
 } from '../../../declarations/interfaces';
@@ -5,23 +7,37 @@ import {
   AttributeName, DisciplineName, SkillName, TraitNameUnionOrString, TraitValueTypeUnion,
 } from '../../../declarations/types';
 import {
-  iHasTraitCollectionDataStorageInitialiser, iHasTraitDataStorageInitialiser,
+  iHasTraitDataStorageInitialiser, iTraitCollectionDataStorage,
 } from '../../data-storage/interfaces/data-storage-interfaces';
+import {
+  iBaseTraitCollectionDataStorageProps,
+} from '../../data-storage/interfaces/props/trait-collection-data-storage';
 import {
   iHasTraitCollectionLogReporter, iTraitCollectionLogger,
 } from '../../log/interfaces/log-interfaces';
 import {
-  iAttribute, iAttributeData, iBaseTrait, iBaseTraitData, iCanHaveLoggerCreator, iDiscipline,
-  iDisciplineData, iGeneralTrait, iGeneralTraitData, iSkill, iSkillData, iTouchStoneOrConviction,
+  iAttribute, iAttributeData, iBaseTrait, iBaseTraitData, iCanHaveLoggerCreator, iCoreNumberTrait,
+  iCoreNumberTraitData, iCoreStringTrait, iCoreStringTraitData, iDiscipline, iDisciplineData,
+  iGeneralTrait, iGeneralTraitData, iSkill, iSkillData, iTouchStoneOrConviction,
   iTouchStoneOrConvictionData,
 } from './trait-interfaces';
 
 // -------------------------------------------------------
 // GENERAL
 
-export interface iTraitCollectionDataStorageInitialiserBundle
-  extends iHasTraitCollectionDataStorageInitialiser,
-    iHasTraitDataStorageInitialiser {}
+export interface iTraitCollectionDataStorageInitialiserBundle {
+  traitCollectionDataStorageInitialiser<
+    N extends TraitNameUnionOrString,
+    V extends TraitValueTypeUnion,
+    D extends iBaseTraitData<N, V>,
+    T extends iBaseTrait<N, V, D>
+  >(
+    props: Omit<
+      iBaseTraitCollectionDataStorageProps<N, V, D, T>,
+      "newTraitDataStorage"
+    >
+  ): iTraitCollectionDataStorage<N, V, D, T>;
+}
 
 // -------------------------------------------------------
 // FACTORY METHOD PROPS
@@ -61,6 +77,22 @@ export interface iGeneralTraitCollection
 
 export interface iAttributeTraitCollection
   extends iTraitCollection<AttributeName, number, iAttributeData, iAttribute> {}
+
+export interface iCoreNumberTraitCollection
+  extends iTraitCollection<
+    CoreNumberTraitName,
+    number,
+    iCoreNumberTraitData,
+    iCoreNumberTrait
+  > {}
+
+export interface iCoreStringTraitCollection
+  extends iTraitCollection<
+    CoreStringTraitName,
+    string,
+    iCoreStringTraitData<string>,
+    iCoreStringTrait<string>
+  > {}
 
 export interface iSkillTraitCollection
   extends iTraitCollection<SkillName, number, iSkillData, iSkill> {}

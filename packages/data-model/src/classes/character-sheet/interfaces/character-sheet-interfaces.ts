@@ -1,7 +1,8 @@
-import { iHasCleanUp, iHasGetData, iHasParentPath } from '../../../declarations/interfaces';
+/* eslint-disable no-use-before-define */
+import { iHasCleanUp, iHasGetData, iHasId, iHasParentPath } from '../../../declarations/interfaces';
 import { ClanName } from '../../../declarations/types';
 import {
-  iHasCharacterSheetDataStorage, iHasDataStorageFactory, iHasId,
+  iHasCharacterSheetDataStorage, iHasDataStorageFactory,
 } from '../../data-storage/interfaces/data-storage-interfaces';
 import { iHasCharacterSheetLogReporter } from '../../log/interfaces/log-interfaces';
 import {

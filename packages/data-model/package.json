@@ -8,16 +8,20 @@
   "files": [
     "dist"
   ],
+  "nohoist": [
+    "**/*jest*",
+    "**/*jest*/**"
+  ],
   "scripts": {
-    "test": "yarn build && jest --colors --logHeapUsage",
-    "testf": "yarn build && jest --colors --logHeapUsage --onlyFailures",
-    "build": "rm -rf dist && yarn && npx tsc --build",
-    "firebase:start-emulators": "yarn --cwd ../firebase-utils start-emulators"
+    "test": "npx tsc && yarn build && jest --colors --logHeapUsage",
+    "testf": "npx tsc && yarn build && jest --colors --logHeapUsage --onlyFailures",
+    "build": "rm -rf dist && yarn && npx tsc -p tsconfig.build.json",
+    "firebase:start-emulators": "yarn --cwd ../../ start-emulators"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@quirk-a-bot/firebase-utils": "*"
+    "@quirk-a-bot/common": "*"
   },
   "devDependencies": {
     "@babel/cli": "^7.13.10",

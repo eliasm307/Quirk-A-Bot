@@ -19,7 +19,7 @@ module.exports = {
 
   // transformIgnorePatterns: ['packages/shared-utils/(?!(dist)/)'],
   moduleNameMapper: pathsToModuleNameMapper(
-    { ...compilerOptions.paths, ...compilerOptionsLocal.paths },
+    { ...compilerOptions.paths },
     {
       // This has to match the baseUrl defined in tsconfig.json.
       prefix: "<rootDir>/../../",

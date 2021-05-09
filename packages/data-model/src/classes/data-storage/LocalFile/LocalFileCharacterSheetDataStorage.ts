@@ -43,9 +43,9 @@ export default class LocalFileCharacterSheetDataStorage
     // check file path exists
     const exists = await fs.pathExists(this.resolvedFilePath);
 
-    // if it doesnt exist initialise it as a blank character sheet
+    // if it doesn't  exist initialise it as a blank character sheet
     if (!exists)
-      await saveCharacterSheetToFile(
+      saveCharacterSheetToFile(
         CharacterSheet.newDataObject({ id: this.id }),
         this.resolvedFilePath
       );

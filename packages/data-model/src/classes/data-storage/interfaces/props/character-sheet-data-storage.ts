@@ -1,8 +1,12 @@
-import { iHasParentPath } from 'src/declarations/interfaces';
+import { iHasParentPath } from '@quirk-a-bot/common';
 
-import {
-  iHasDataStorageFactory, iHasFirestore, iHasId, iHasResolvedBasePath,
-} from '../data-storage-interfaces';
+import { iHasFirestore, iHasId, iHasResolvedBasePath } from '../../../../declarations/interfaces';
+import { iHasDataStorageFactory } from '../data-storage-interfaces';
+
+export interface iBaseCharacterSheetDataStorageProps
+  extends iHasId,
+    iHasParentPath,
+    iHasDataStorageFactory {}
 
 export interface iLocalFileCharacterSheetDataStorageProps
   extends iBaseCharacterSheetDataStorageProps,
@@ -12,7 +16,6 @@ export interface iFirestoreCharacterSheetDataStorageProps
   extends iBaseCharacterSheetDataStorageProps,
     iHasFirestore {}
 
-export interface iBaseCharacterSheetDataStorageProps
-  extends iHasId,
-    iHasParentPath,
-    iHasDataStorageFactory {}
+export interface iFirestoreCompositeCharacterSheetDataStorageProps
+  extends iBaseCharacterSheetDataStorageProps,
+    iHasFirestore {}

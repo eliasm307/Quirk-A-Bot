@@ -1,9 +1,8 @@
-import { firestoreEmulator } from '@quirk-a-bot/firebase-utils';
-
 import {
-  ATTRIBUTE_COLLECTION_NAME, DISCIPLINE_COLLECTION_NAME, SKILL_COLLECTION_NAME,
-  TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME,
-} from '../../constants';
+  ATTRIBUTE_COLLECTION_NAME, DISCIPLINE_COLLECTION_NAME, firestoreEmulator, pause,
+  SKILL_COLLECTION_NAME, TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME,
+} from '@quirk-a-bot/common';
+
 import isCharacterSheetData from '../../utils/type-predicates/isCharacterSheetData';
 import FirestoreDataStorageFactory from '../data-storage/Firestore/FirestoreDataStorageFactory';
 import readCharacterSheetDataFromFirestore from '../data-storage/Firestore/utils/readCharacterSheetDataFromFirestore';
@@ -18,10 +17,10 @@ const dataStorageFactory = new FirestoreDataStorageFactory({ firestore });
 
 const deleteDoc = async (path: string) => {
   await firestore.doc(path).delete();
-  await new Promise((res) => setTimeout(res, 100)); // wait for syncronisation
+  await new Promise((resolve) => setTimeout(resolve, 100)); // wait for synchronisation
 
-  // make sure document doesnt exist
-  let doc = await firestore.doc(path).get();
+  // make sure document doesn't  exist
+  const doc = await firestore.doc(path).get();
   expect(doc.exists).toEqual(false);
   expect(doc.data()).toEqual(undefined);
 };
@@ -43,10 +42,10 @@ describe("Character sheet using Firestore", () => {
       parentPath,
     });
 
-    await new Promise((res) => setTimeout(res, 100)); // wait for syncronisation
+    await pause(100); // wait for synchronisation
 
     // make sure document exists
-    let doc = await firestore.doc(docPath).get();
+    const doc = await firestore.doc(docPath).get();
     const docData = await readCharacterSheetDataFromFirestore({
       firestore,
       path: docPath,
@@ -102,7 +101,7 @@ describe("Character sheet using Firestore", () => {
       path: docPath,
       data: initialData,
     });
-    await new Promise((res) => setTimeout(res, 500)); // wait for syncronisation
+    await pause(500); // wait for synchronisation
 
     // initialise cs
     const cs = await CharacterSheet.load({

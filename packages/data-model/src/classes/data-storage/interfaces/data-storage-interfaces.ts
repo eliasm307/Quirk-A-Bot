@@ -1,5 +1,4 @@
-import { Firestore } from '@quirk-a-bot/firebase-utils';
-
+/* eslint-disable no-use-before-define */
 import {
   iBaseCollection, iHasCleanUp, iHasGetData, iHasPath,
 } from '../../../declarations/interfaces';
@@ -7,7 +6,7 @@ import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declaratio
 import {
   iCharacterSheet, iCharacterSheetData,
 } from '../../character-sheet/interfaces/character-sheet-interfaces';
-import { iGameData, iPlayerGame } from '../../game/interfaces/game-interfaces';
+import { iGameData } from '../../game/interfaces/game-interfaces';
 import {
   iHasTraitCollectionLogReporter, iHasTraitLogReporter,
 } from '../../log/interfaces/log-interfaces';
@@ -32,27 +31,13 @@ export interface iHasCharacterSheetDataStorage {
   characterSheetDataStorage: iCharacterSheetDataStorage;
 }
 
-export interface iHasId {
-  id: string;
-}
-export interface iCanHaveId {
-  id?: string;
-}
-export interface iHasResolvedBasePath {
-  resolvedBasePath: string;
-}
-
-export interface iHasFirestore {
-  firestore: Firestore;
-}
-
 // -------------------------------------------------------
 // DATA STORAGE OBJECTS
 
 export interface iBaseTraitDataStorage<
   N extends TraitNameUnionOrString,
   V extends TraitValueTypeUnion
-> extends iBaseTraitData<N, V>,
+> extends iBaseTrait<N, V>,
     iHasPath,
     iHasTraitLogReporter,
     iHasCleanUp {}
@@ -108,34 +93,27 @@ export interface iDataStorageFactory {
   >(
     props: iBaseTraitCollectionDataStorageProps<N, V, D, T>
   ) => iTraitCollectionDataStorage<N, V, D, T>;
-  // NOTE the factory props just define what will be available, the specific factories dont need to require any of the given props
+
+// NOTE the factory props just define what will be available, the specific factories don't need to require any of the given props
+  // ! traits will always be part of trait collections, so factory shouldn't have this method. Trait collections should instead
+  /*
   newTraitDataStorageInitialiser(
     props: iTraitDataStorageInitialiserFactoryProps
   ): <N extends TraitNameUnionOrString, V extends TraitValueTypeUnion>(
     props: iBaseTraitDataStorageProps<N, V>
   ) => iBaseTraitDataStorage<N, V>;
+  */
 }
 
 // todo move to standalone file?
 // -------------------------------------------------------
 // INITIALISERS
 
-export interface iHasTraitDataStorageInitialiser {
-  traitDataStorageInitialiser<
-    N extends TraitNameUnionOrString,
-    V extends TraitValueTypeUnion
-  >(
+export interface iHasTraitDataStorageInitialiser<
+  N extends TraitNameUnionOrString,
+  V extends TraitValueTypeUnion
+> {
+  traitDataStorageInitialiser(
     props: iBaseTraitDataStorageProps<N, V>
   ): iBaseTraitDataStorage<N, V>;
-}
-
-export interface iHasTraitCollectionDataStorageInitialiser {
-  traitCollectionDataStorageInitialiser<
-    N extends TraitNameUnionOrString,
-    V extends TraitValueTypeUnion,
-    D extends iBaseTraitData<N, V>,
-    T extends iBaseTrait<N, V, D>
-  >(
-    props: iBaseTraitCollectionDataStorageProps<N, V, D, T>
-  ): iTraitCollectionDataStorage<N, V, D, T>;
 }

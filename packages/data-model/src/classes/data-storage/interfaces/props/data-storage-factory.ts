@@ -2,14 +2,23 @@
 // DATA STORAGE FACTORY PROPS
 // Note the props should be for initialising the data storage
 
-import { iHasFirestore, iHasResolvedBasePath } from '../data-storage-interfaces';
+import { iHasFirestore, iHasResolvedBasePath } from '../../../../declarations/interfaces';
 
 export interface iBaseDataStorageFactoryProps {
-	// logger: iCharacterSheetLogger | null;
+  // logger: iCharacterSheetLogger | null;
 }
 
-export interface iInMemoryFileDataStorageFactoryProps extends iBaseDataStorageFactoryProps {}
+export interface iInMemoryFileDataStorageFactoryProps
+  extends iBaseDataStorageFactoryProps {}
 
-export interface iLocalFileDataStorageFactoryProps extends iBaseDataStorageFactoryProps, iHasResolvedBasePath {}
+export interface iLocalFileDataStorageFactoryProps
+  extends iBaseDataStorageFactoryProps,
+    iHasResolvedBasePath {}
 
-export interface iFirestoreDataStorageFactoryProps extends iBaseDataStorageFactoryProps, iHasFirestore { }
+export interface iFirestoreDataStorageFactoryProps
+  extends iBaseDataStorageFactoryProps,
+    iHasFirestore {}
+
+export interface iFirestoreCompositeDataStorageFactoryProps
+  extends iBaseDataStorageFactoryProps,
+    iHasFirestore {}

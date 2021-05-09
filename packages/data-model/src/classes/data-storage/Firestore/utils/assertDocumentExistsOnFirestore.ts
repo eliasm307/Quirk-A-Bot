@@ -1,19 +1,8 @@
-import { iHasPath } from 'src/declarations/interfaces';
-
-import { Firestore } from '@quirk-a-bot/firebase-utils';
-
-import { iHasFirestore, iHasId } from '../../interfaces/data-storage-interfaces';
-
 // todo move to firestore utils
 
-interface Props<D> extends iHasFirestore, iHasPath {
-  /** A function which returns a promise that resolves a Firestore document into the required data format  */
-  documentDataReader(props: DocumentDataReaderProps): Promise<D>;
-  /** A function which writes custom data to a firestore document and or sub collections in the correct manner  */
-  documentDataWriter(props: DocumentDataWriterProps<D>): Promise<void>;
-  /** A function to produce default data to use if the document doesnt exist */
-  newDefaultData(): D;
-}
+import { Firestore, iHasPath } from '@quirk-a-bot/common';
+
+import { iHasFirestore } from '../../../../declarations/interfaces';
 
 export interface DocumentDataReaderProps {
   firestore: Firestore;
@@ -22,6 +11,15 @@ export interface DocumentDataReaderProps {
 
 export interface DocumentDataWriterProps<D> extends DocumentDataReaderProps {
   data: D;
+}
+
+interface Props<D> extends iHasFirestore, iHasPath {
+  /** A function which returns a promise that resolves a Firestore document into the required data format  */
+  documentDataReader(props: DocumentDataReaderProps): Promise<D>;
+  /** A function which writes custom data to a firestore document and or sub collections in the correct manner  */
+  documentDataWriter(props: DocumentDataWriterProps<D>): Promise<void>;
+  /** A function to produce default data to use if the document doesn't  exist */
+  newDefaultData(): D;
 }
 
 export default async function assertDocumentExistsOnFirestore<D>({
@@ -47,15 +45,15 @@ export default async function assertDocumentExistsOnFirestore<D>({
       `Could not read character sheet data from path ${path}, initialising a new character sheet...`,
       { error }
     );
-    // if it doesnt exist or data is bad, initialise it as a blank character sheet if not
+    // if it doesn't  exist or data is bad, initialise it as a blank character sheet if not
     try {
       const data = defaultData(); // use default data and save data locally
 
       await documentDataWriter({ firestore, path, data });
 
       return data;
-    } catch (error) {
-      console.error(__filename, { error });
+    } catch (error2) {
+      console.error(__filename, { error2 });
       throw Error(`Could not initialise a new character sheet at path ${path}`);
     }
   }

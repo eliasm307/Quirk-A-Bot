@@ -7,8 +7,7 @@
       {
         "root": ["./"],
         "alias": {
-          "^@quirk-a-bot/(.+)": "../../packages/\\1/src",
-          "^src": "./src"
+          "^@quirk-a-bot/(.+)": "../../packages/\\1/src"
         }
       }
     ]

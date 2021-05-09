@@ -1,11 +1,9 @@
 // todo test
 
 import {
-  ATTRIBUTE_COLLECTION_NAME, CORE_TRAIT_COLLECTION_NAME, DISCIPLINE_COLLECTION_NAME,
-  SKILL_COLLECTION_NAME, TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME,
-} from 'src/constants';
-
-import { Firestore, FirestoreBatch } from '@quirk-a-bot/firebase-utils';
+  ATTRIBUTE_COLLECTION_NAME, CORE_TRAIT_COLLECTION_NAME, DISCIPLINE_COLLECTION_NAME, Firestore,
+  FirestoreBatch, SKILL_COLLECTION_NAME, TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME,
+} from '@quirk-a-bot/common';
 
 import {
   iCharacterSheetData,

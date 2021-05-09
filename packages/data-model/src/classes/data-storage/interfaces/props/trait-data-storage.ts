@@ -1,13 +1,14 @@
 // -------------------------------------------------------
 // TRAIT DATA STORAGE PROPS
 
-import { iHasParentPath } from 'src/declarations/interfaces';
-import { TraitNameUnionOrString, TraitValueTypeUnion } from 'src/declarations/types';
+import {
+  iHasParentPath, iSubDocument, SubDocument, TraitNameUnionOrString, TraitValueTypeUnion,
+} from '@quirk-a-bot/common';
 
+import { iHasFirestore, iHasResolvedBasePath } from '../../../../declarations/interfaces';
 import { iHasCharacterSheet } from '../../../character-sheet/interfaces/character-sheet-interfaces';
 import { iTraitLogger } from '../../../log/interfaces/log-interfaces';
-import { iCanHaveLoggerCreator } from '../../../traits/interfaces/trait-interfaces';
-import { iHasFirestore, iHasResolvedBasePath } from '../data-storage-interfaces';
+import { iBaseTraitData, iCanHaveLoggerCreator } from '../../../traits/interfaces/trait-interfaces';
 
 export interface iBaseTraitDataStorageProps<
   N extends TraitNameUnionOrString,
@@ -36,3 +37,11 @@ export interface iFirestoreTraitDataStorageProps<
 > extends iBaseTraitDataStorageProps<N, V>,
     iHasFirestore,
     iHasParentPath {}
+
+export interface iFirestoreCompositeTraitDataStorageProps<
+  N extends TraitNameUnionOrString,
+  V extends TraitValueTypeUnion
+> extends iBaseTraitDataStorageProps<N, V>,
+    iHasParentPath {
+  subDocument: iSubDocument<Record<N, iBaseTraitData<N, V>>, N>;
+}

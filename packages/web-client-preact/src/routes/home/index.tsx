@@ -1,7 +1,6 @@
 import { FunctionalComponent, h } from "preact";
 import { CharacterSheet } from "@quirk-a-bot/data-model";
 import { useContext } from "preact/hooks";
-import Router, { Link } from "preact-router";
 import { FireBaseUser } from "@quirk-a-bot/firebase-utils/src";
 import { UserContext } from "../../providers/UserProvider";
 import style from "./style.css";

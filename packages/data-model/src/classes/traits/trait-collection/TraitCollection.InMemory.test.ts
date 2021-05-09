@@ -6,135 +6,167 @@ import TraitFactory from '../TraitFactory';
 
 const dataStorageFactory = new InMemoryDataStorageFactory();
 
-const rootCollectionPath = 'traitCollectionTests';
+const rootCollectionPath = "traitCollectionTests";
 
 const traitCollectionFactoryMethodProps: iTraitCollectionFactoryMethodProps = {
-	traitCollectionDataStorageInitialiser: dataStorageFactory.newTraitCollectionDataStorageInitialiser(),
-	traitDataStorageInitialiser: dataStorageFactory.newTraitDataStorageInitialiser(),
-	parentPath: rootCollectionPath,
-	loggerCreator: null,
+  traitCollectionDataStorageInitialiser: dataStorageFactory.newTraitCollectionDataStorageInitialiser(),
+  // traitDataStorageInitialiser: dataStorageFactory.newTraitDataStorageInitialiser(),
+  parentPath: rootCollectionPath,
+  loggerCreator: null,
 };
 
-test('TraitCollection CRUD functionality', () => {
-	const tc = TraitFactory.newAttributeTraitCollection(traitCollectionFactoryMethodProps);
+test("TraitCollection CRUD functionality", async () => {
+  expect.hasAssertions();
 
-	// it('creates a path', () => {
-	expect(tc.path).toEqual(`${rootCollectionPath}/Attributes`);
+  const tc = TraitFactory.newAttributeTraitCollection(
+    traitCollectionFactoryMethodProps
+  );
 
-	// it('has initial size of 0', () => {
-	expect(tc.size).toEqual(0);
+  // it('creates a path', () => {
+  expect(tc.path).toEqual(`${rootCollectionPath}/Attributes`);
 
-	// it('can add traits to itself and keep track', () => {
-	tc.set('Wits', 3);
-	expect(tc.has('Wits')).toBeTruthy();
-	expect(tc.has('Dexterity')).toBeFalsy();
-	expect(tc.size).toEqual(1);
+  // it('has initial size of 0', () => {
+  expect(tc.size).toEqual(0);
 
-	// 	it('adds its name to the trait path', () => {
-	expect((tc.get('Wits') as iGeneralTrait).path).toEqual(`${rootCollectionPath}/Attributes/Wits`);
+  // it('can add traits to itself and keep track', () => {
+  await tc.set("Wits", 3);
+  expect(tc.has("Wits")).toBeTruthy();
+  expect(tc.has("Dexterity")).toBeFalsy();
+  expect(tc.size).toEqual(1);
 
-	// it('can change existing trait values', () => {
-	tc.set('Wits', 2);
-	expect((tc.get('Wits') as iGeneralTrait).value).toEqual(2);
+  // 	it('adds its name to the trait path', () => {
+  expect((tc.get("Wits") as iGeneralTrait).path).toEqual(
+    `${rootCollectionPath}/Attributes/Wits`
+  );
 
-	// it('can handle requests to delete traits that dont exist from itself', () => {
-	tc.delete('Dexterity');
-	expect(tc.size).toEqual(1);
+  // it('can change existing trait values', () => {
+  await tc.set("Wits", 2);
+  expect((tc.get("Wits") as iGeneralTrait).value).toEqual(2);
 
-	// it('can delete existing traits from itself', () => {
-	tc.delete('Wits');
-	expect(tc.size).toEqual(0);
-	expect(tc.has('Wits')).toEqual(false);
+  // it('can handle requests to delete traits that dont exist from itself', () => {
+  await tc.delete("Dexterity");
+  expect(tc.size).toEqual(1);
 
-	// it('can add or edit items using chaining', () => {
-	tc.set('Wits', 0).set('Dexterity', 0).set('Wits', 5);
-	expect(tc.has('Wits')).toEqual(true);
-	expect(tc.has('Dexterity')).toEqual(true);
-	expect((tc.get('Wits') as iGeneralTrait).value).toEqual(5);
-	expect((tc.get('Dexterity') as iGeneralTrait).value).toEqual(0);
-	expect(tc.size).toEqual(2);
+  // it('can delete existing traits from itself', () => {
+  await tc.delete("Wits");
+  expect(tc.size).toEqual(0);
+  expect(tc.has("Wits")).toEqual(false);
+
+  // it('can add or edit items using chaining', () => {
+  await tc.set("Wits", 0);
+  await tc.set("Dexterity", 0);
+  await tc.set("Wits", 5);
+
+  expect(tc.has("Wits")).toEqual(true);
+  expect(tc.has("Dexterity")).toEqual(true);
+  expect((tc.get("Wits") as iGeneralTrait).value).toEqual(5);
+  expect((tc.get("Dexterity") as iGeneralTrait).value).toEqual(0);
+  expect(tc.size).toEqual(2);
 });
 
-test('TraitCollection logging functionality', () => {
-	// it('can produce log reports for all traits', () => {
-	const tc = TraitFactory.newAttributeTraitCollection(traitCollectionFactoryMethodProps);
+test("TraitCollection logging functionality", async () => {
+  expect.hasAssertions();
 
-	// create some log items
-	// add items using chaining
-	tc.set('Wits', 3).set('Charisma', 4).set('Manipulation', 1).set('Wits', 1);
-	expect(tc.size).toEqual(3);
-	expect(tc.log.report.traitLogReports.length).toEqual(3);
-	expect(tc.log.events.length).toEqual(4);
+  // it('can produce log reports for all traits', () => {
+  const tc = TraitFactory.newAttributeTraitCollection(
+    traitCollectionFactoryMethodProps
+  );
 
-	// delete an existing item
-	tc.delete('Wits');
+  // create some log items
+  // add items using chaining
+  await tc.set("Wits", 3);
+  await tc.set("Charisma", 4);
+  await tc.set("Manipulation", 1);
+  await tc.set("Wits", 1);
 
-	// delete non-existing items, should not generate log items
-	tc.delete('Wits').delete('Composure').delete('Dexterity');
+  expect(tc.size).toEqual(3);
+  expect(tc.log.report.traitLogReports.length).toEqual(3);
+  expect(tc.log.events.length).toEqual(4);
 
-	let logEventsSnapshot = tc.log.events;
+  // delete an existing item
+  await tc.delete("Wits");
 
-	// console.warn(__filename, { log: logEventsSnapshot });
+  // delete non-existing items, should not generate log items
+  await tc.delete("Wits");
+  await tc.delete("Composure");
+  await tc.delete("Dexterity");
 
-	// it('can count log items', () => {
-	expect(logEventsSnapshot.length).toEqual(5);
+  let logEventsSnapshot = tc.log.events;
 
-	// it('produces log event details in order of time', () => {
-	expect(logEventsSnapshot[0].operation).toEqual('ADD' as LogOperationUnion);
-	expect(logEventsSnapshot[1].operation).toEqual('ADD' as LogOperationUnion);
-	expect(logEventsSnapshot[2].operation).toEqual('ADD' as LogOperationUnion);
-	expect(logEventsSnapshot[3].operation).toEqual('UPDATE' as LogOperationUnion);
-	expect(logEventsSnapshot[4].operation).toEqual('DELETE' as LogOperationUnion);
+  // console.warn(__filename, { log: logEventsSnapshot });
 
-	// delete the rest of the traits, 2 new log items
-	tc.delete('Charisma').delete('Manipulation');
+  // it('can count log items', () => {
+  expect(logEventsSnapshot.length).toEqual(5);
 
-	logEventsSnapshot = tc.log.events;
+  // it('produces log event details in order of time', () => {
+  expect(logEventsSnapshot[0].operation).toEqual("ADD" as LogOperationUnion);
+  expect(logEventsSnapshot[1].operation).toEqual("ADD" as LogOperationUnion);
+  expect(logEventsSnapshot[2].operation).toEqual("ADD" as LogOperationUnion);
+  expect(logEventsSnapshot[3].operation).toEqual("UPDATE" as LogOperationUnion);
+  expect(logEventsSnapshot[4].operation).toEqual("DELETE" as LogOperationUnion);
 
-	// it('keeps logs after items are deleted', () => {
-	expect(tc.size).toEqual(0); // all items deleted
-	expect(logEventsSnapshot.length).toEqual(7); // 2 new delete logs
-	expect(logEventsSnapshot[5].operation).toEqual('DELETE' as LogOperationUnion);
-	expect(logEventsSnapshot[6].operation).toEqual('DELETE' as LogOperationUnion);
+  // delete the rest of the traits, 2 new log items
+  await tc.delete("Charisma");
+  await tc.delete("Manipulation");
+
+  logEventsSnapshot = tc.log.events;
+
+  // it('keeps logs after items are deleted', () => {
+  expect(tc.size).toEqual(0); // all items deleted
+  expect(logEventsSnapshot.length).toEqual(7); // 2 new delete logs
+  expect(logEventsSnapshot[5].operation).toEqual("DELETE" as LogOperationUnion);
+  expect(logEventsSnapshot[6].operation).toEqual("DELETE" as LogOperationUnion);
 });
 
-describe('TraitCollection general functionality', () => {
-	// separate instance of same character sheet, no inital data
+describe("TraitCollection general functionality", () => {
+  // separate instance of same character sheet, no inital data
 
-	it('can export trait data', () => {
-		const tc = TraitFactory.newAttributeTraitCollection(traitCollectionFactoryMethodProps);
+  it("can export trait data", async () => {
+    expect.hasAssertions();
+    const tc = TraitFactory.newAttributeTraitCollection(
+      traitCollectionFactoryMethodProps
+    );
 
-		// create initial tc data
-		const tcData = tc.set('Charisma', 1).set('Composure', 2).set('Dexterity', 3).set('Stamina', 4).data();
-		const tCDataExpected: iBaseTraitData<AttributeName, number>[] = [
-			{ name: 'Charisma', value: 1 },
-			{ name: 'Composure', value: 2 },
-			{ name: 'Dexterity', value: 3 },
-			{ name: 'Stamina', value: 4 },
-		];
-		expect(Array.isArray(tcData)).toEqual(true);
-		expect(tcData.length).toEqual(4);
-		expect(tcData).toEqual(tCDataExpected);
-	});
+    // create initial tc data
+    await tc.set("Charisma", 1);
+    await tc.set("Composure", 2);
+    await tc.set("Dexterity", 3);
+    await tc.set("Stamina", 4);
 
-	it('can be instantiated with existing data', () => {
-		// create initial tc data
-		const initialData: iBaseTraitData<AttributeName, number>[] = [
-			{ name: 'Charisma', value: 1 },
-			{ name: 'Composure', value: 2 },
-			{ name: 'Dexterity', value: 3 },
-			{ name: 'Stamina', value: 4 },
-		];
+    const tcData = tc.data();
 
-		// separate instance of same character sheet, with inital data
-		const tc2 = TraitFactory.newAttributeTraitCollection(traitCollectionFactoryMethodProps, ...initialData);
-		expect(tc2.size).toEqual(4);
-		expect((tc2.get('Charisma') as iGeneralTrait).value).toEqual(1);
-		expect((tc2.get('Composure') as iGeneralTrait).value).toEqual(2);
-		expect((tc2.get('Dexterity') as iGeneralTrait).value).toEqual(3);
-		expect((tc2.get('Stamina') as iGeneralTrait).value).toEqual(4);
-		expect(tc2.data()).toEqual(initialData);
-	});
+    const tCDataExpected: iBaseTraitData<AttributeName, number>[] = [
+      { name: "Charisma", value: 1 },
+      { name: "Composure", value: 2 },
+      { name: "Dexterity", value: 3 },
+      { name: "Stamina", value: 4 },
+    ];
+    expect(Array.isArray(tcData)).toEqual(true);
+    expect(tcData.length).toEqual(4);
+    expect(tcData).toEqual(tCDataExpected);
+  });
+
+  it("can be instantiated with existing data", () => {
+    // create initial tc data
+    const initialData: iBaseTraitData<AttributeName, number>[] = [
+      { name: "Charisma", value: 1 },
+      { name: "Composure", value: 2 },
+      { name: "Dexterity", value: 3 },
+      { name: "Stamina", value: 4 },
+    ];
+
+    // separate instance of same character sheet, with inital data
+    const tc2 = TraitFactory.newAttributeTraitCollection(
+      traitCollectionFactoryMethodProps,
+      ...initialData
+    );
+    expect(tc2.size).toEqual(4);
+    expect((tc2.get("Charisma") as iGeneralTrait).value).toEqual(1);
+    expect((tc2.get("Composure") as iGeneralTrait).value).toEqual(2);
+    expect((tc2.get("Dexterity") as iGeneralTrait).value).toEqual(3);
+    expect((tc2.get("Stamina") as iGeneralTrait).value).toEqual(4);
+    expect(tc2.data()).toEqual(initialData);
+  });
 });
 /*
 testName = 'trait test with toJson and log data';

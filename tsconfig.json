@@ -1,36 +1,27 @@
 {
   "extends": "./tsconfig.build.json",
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": "./",
     "paths": {
-      "@quirk-a-bot/*": [
-        "packages/*/src"
-      ]
+      "@quirk-a-bot/*": ["packages/*/src"]
     },
-    "types": [
-      "@types/jest",
-      "@types/node"
-    ],
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "downlevelIteration": true,
+    "typeRoots": ["./node_modules/@types"],
+    "types": ["@types/jest", "@types/node"],
+    "preserveSymlinks": true,
     "allowJs": true,
     "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "alwaysStrict": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-    "module": "CommonJS",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
     "jsx": "react",
     "isolatedModules": true,
-    "declaration": true,
-    "checkJs": false
-  }
+    "checkJs": false,
+    "noEmit": true
+  },
+  "exclude": [
+    "**/node_modules/**/*",
+    "**/dist/**",
+    "**/build/**",
+    "**/lib/**",
+    "**/public/**"
+  ]
 }

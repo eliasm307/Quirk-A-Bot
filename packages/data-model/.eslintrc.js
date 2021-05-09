@@ -1,12 +1,18 @@
 // extend top level eslint config
-const mainConfig = require("../../.eslintrc");
+const tsConfig = require("../../eslint.config.typescript");
+
+const { parserOptions: tsParserOptions, settings: tsSettings } = tsConfig;
 
 module.exports = {
-  ...mainConfig,
+  ...tsConfig,
   parserOptions: {
+    ...tsParserOptions,
     project: "./tsconfig.eslint.json",
+    tsconfigRootDir: __dirname,
   },
   settings: {
+    ...tsSettings,
+    /*
     "import/resolver": {
       node: {
         extensions: [".js", ".jsx", ".ts", ".tsx"],
@@ -16,5 +22,7 @@ module.exports = {
       },
       typescript: {}, // this loads <rootdir>/tsconfig.json to eslint
     },
+    */
   },
+  root: true,
 };

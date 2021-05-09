@@ -5,83 +5,78 @@ import { iTraitCollection } from '../interfaces/trait-collection-interfaces';
 import { iBaseTrait, iBaseTraitData, iTraitCollectionProps } from '../interfaces/trait-interfaces';
 
 export default class TraitCollection<
-	N extends TraitNameUnionOrString,
-	V extends TraitValueTypeUnion,
-	D extends iBaseTraitData<N, V>,
-	T extends iBaseTrait<N, V, D>
+  N extends TraitNameUnionOrString,
+  V extends TraitValueTypeUnion,
+  D extends iBaseTraitData<N, V>,
+  T extends iBaseTrait<N, V, D>
 > implements iTraitCollection<N, V, D, T> {
-	protected dataStorage: iTraitCollectionDataStorage<N, V, D, T>;
-	// #typeName: TraitTypeNameUnion | string = 'Trait Collection'; // ? is this required
-	/** Read only log reporter */
-	log: iTraitCollectionLogReporter;
-	name: string;
-	path: string;
+  protected dataStorage: iTraitCollectionDataStorage<N, V, D, T>;
 
-	constructor(
-		{
-			instanceCreator,
-			name,
-			traitDataStorageInitialiser,
-			traitCollectionDataStorageInitialiser,
-			parentPath,
-			loggerCreator: logger,
-		}: iTraitCollectionProps<N, V, D, T>,
-		...initialData: D[]
-	) {
-		this.name = name;
+  // #typeName: TraitTypeNameUnion | string = 'Trait Collection'; // ? is this required
+  /** Read only log reporter */
+  log: iTraitCollectionLogReporter;
+  name: string;
+  path: string;
 
-		this.dataStorage = traitCollectionDataStorageInitialiser({
-			instanceCreator,
-			name,
-			parentPath,
-			traitDataStorageInitialiser,
-			initialData,
-			// onAdd: (props: iAddLogEventProps<V>) => this.logger.log(new AddLogEvent(props)), // todo delete?
-			// onDelete: (props: iDeleteLogEventProps<V>) => this.logger.log(new DeleteLogEvent(props)),
-			loggerCreator: logger,
-		});
-		// expose logger reporter
-		this.log = this.dataStorage.log;
+  constructor(props: iTraitCollectionProps<N, V, D, T>, ...initialData: D[]) {
+    const { name, traitCollectionDataStorageInitialiser } = props;
+    this.name = name;
 
-		this.path = this.dataStorage.path; // data storage defines path to use
-	}
+    // ? should this be async?
+    this.dataStorage = traitCollectionDataStorageInitialiser({
+      ...props,
+      initialData,
+      // onAdd: (props: iAddLogEventProps<V>) => this.logger.log(new AddLogEvent(props)), // todo delete? is this done in data storage now?
+      // onDelete: (props: iDeleteLogEventProps<V>) => this.logger.log(new DeleteLogEvent(props)),
+    });
+    // expose logger reporter
+    this.log = this.dataStorage.log;
 
-	get size(): number {
-		return this.dataStorage.size;
-	}
+    // ? will data storage be ready? i think setup is async
+    // apply intial data
+    initialData.forEach(({ name: currentName, value }) =>
+      this.dataStorage.set(currentName, value)
+    );
 
-	cleanUp(): boolean {
-		return this.dataStorage.cleanUp();
-	}
+    this.path = this.dataStorage.path; // data storage defines path to use
+  }
 
-	data(): D[] {
-		return this.toArray().map(e => e.data());
-	}
+  get size(): number {
+    return this.dataStorage.size;
+  }
 
-	delete(name: N): iTraitCollection<N, V, D, T> {
-		this.dataStorage.delete(name);
-		return this;
-	}
+  cleanUp(): boolean {
+    return this.dataStorage.cleanUp();
+  }
 
-	get(name: N): T | void {
-		return this.dataStorage.get(name);
-	}
+  data(): D[] {
+    return this.toArray().map((e) => e.data());
+  }
 
-	has(name: N): boolean {
-		return this.dataStorage.has(name);
-	}
+  async delete(name: N): Promise<iTraitCollection<N, V, D, T>> {
+    await this.dataStorage.delete(name);
+    return this;
+  }
 
-	/**
-	 * Update trait value if it exists, otherwise add a new one
-	 * @param name name of trait to edit or create
-	 * @param newValue value to assign
-	 */
-	set(name: N, newValue: V): iTraitCollection<N, V, D, T> {
-		this.dataStorage.set(name, newValue);
-		return this;
-	}
+  get(name: N): T | void {
+    return this.dataStorage.get(name);
+  }
 
-	toArray(): T[] {
-		return this.dataStorage.toArray();
-	}
+  has(name: N): boolean {
+    return this.dataStorage.has(name);
+  }
+
+  /**
+   * Update trait value if it exists, otherwise add a new one
+   * @param name name of trait to edit or create
+   * @param newValue value to assign
+   */
+  async set(name: N, newValue: V): Promise<iTraitCollection<N, V, D, T>> {
+    await this.dataStorage.set(name, newValue);
+    return this;
+  }
+
+  toArray(): T[] {
+    return this.dataStorage.toArray();
+  }
 }
