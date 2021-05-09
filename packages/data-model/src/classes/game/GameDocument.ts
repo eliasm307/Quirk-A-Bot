@@ -5,6 +5,7 @@ import { iCharacterSheet } from '../character-sheet/interfaces/character-sheet-i
 import {
   iDataStorageFactory, iGameDataStorage, iHasDataStorageFactory,
 } from '../data-storage/interfaces/data-storage-interfaces';
+import { createPath } from '../data-storage/utils/createPath';
 import { iGame, iGameData } from './interfaces/game-interfaces';
 import { iCharacterData } from './interfaces/game-player-interfaces';
 
@@ -17,18 +18,20 @@ export interface iGameProps extends iLoaderProps {
   initialData: iGameData;
 }
 
-export default class Game implements iGame {
+export default class GameDocument implements iGame {
   /** Existing singleton instances of this class */
-  protected static instances: Map<string, Game> = new Map<string, Game>();
+  protected static instances: Map<string, GameDocument> = new Map<
+    string,
+    GameDocument
+  >();
+
+  readonly id: string;
 
   #dataStorageFactory: iDataStorageFactory;
   #gameDataStorage: iGameDataStorage;
   characters: Map<string, iCharacterData>;
-  description: string;
-  discordBotWebSocketServer?: string;
   gameMasters: Set<string>;
-  id: string;
-  parentPath: string;
+  path: string;
 
   private constructor({
     id,
@@ -39,13 +42,12 @@ export default class Game implements iGame {
     initialData,
   }: iGameProps) {
     this.id = id;
-    this.parentPath = parentPath;
+    this.path = createPath(parentPath, id);
+
     this.#dataStorageFactory = dataStorageFactory;
     this.#gameDataStorage = gameDataStorage;
 
     this.gameMasters = new Set(initialData.gameMasters);
-
-    this.description = gameDataStorage.description;
 
     this.characters = new Map(
       initialCharacterData.map((character) => [character.id, character])
@@ -53,12 +55,12 @@ export default class Game implements iGame {
   }
 
   /** Loads a game instance **/
-  static async load(props: iLoaderProps): Promise<Game> {
+  static async load(props: iLoaderProps): Promise<GameDocument> {
     const { dataStorageFactory, id } = props;
 
     dataStorageFactory.assertIdIsValid(id);
 
-    const preExistingInstance = Game.instances.get(id);
+    const preExistingInstance = GameDocument.instances.get(id);
 
     // if an instance has already been created with this id then use that instance
     if (preExistingInstance) return preExistingInstance;
@@ -73,7 +75,7 @@ export default class Game implements iGame {
 
       const initialCharacterData = await gameDataStorage.getCharacters();
 
-      return new Game({
+      return new GameDocument({
         ...props,
         gameDataStorage,
         dataStorageFactory,
@@ -92,6 +94,10 @@ export default class Game implements iGame {
 
   addCharacter(id: string): Promise<void> {
     return this.#gameDataStorage.addCharacter(id);
+  }
+
+  data(): Promise<iGameData> {
+    throw new Error("Method not implemented.");
   }
 
   async loadCharacterSheets(): Promise<Map<UID, iCharacterSheet>> {

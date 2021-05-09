@@ -1,7 +1,8 @@
-import { UID, WebURL } from '@quirk-a-bot/common';
+import { GameId, iHasParentPath, UID, WebURL } from '@quirk-a-bot/common';
 
 import { iTraitCollection } from '../../../classes/traits/interfaces/trait-collection-interfaces';
 import { iStringTrait } from '../../../classes/traits/interfaces/trait-interfaces';
+import { iHasId } from '../../../declarations/interfaces';
 import { iCharacterSheet } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import { iCharacterData } from './game-player-interfaces';
 
@@ -31,14 +32,17 @@ export interface iGameData extends iGameShape {
 }
 
 /** Represents a VTM game in firestore */
-export interface iGame extends iGameShape {
+export interface iGame {
   /** ids from characters sub collection  */
   readonly characters: Map<UID, iCharacterData>;
-  readonly description: string;
+  /** Unique game id */
+  readonly id: GameId;
+  readonly path: string;
 
   gameMasters: Set<UID>;
 
   addCharacter(id: string): Promise<void>;
+  data(): Promise<iGameData>;
   /** Loads character sheets defined in the game */
   loadCharacterSheets(): Promise<Map<UID, iCharacterSheet>>;
   setDescription(description: string): Promise<void>;
