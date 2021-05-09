@@ -1,3 +1,5 @@
+import { UID } from '@quirk-a-bot/common';
+
 import { iTraitCollection } from '../../../classes/traits/interfaces/trait-collection-interfaces';
 import { iStringTrait } from '../../../classes/traits/interfaces/trait-interfaces';
 import { iCharacterSheet } from '../../character-sheet/interfaces/character-sheet-interfaces';
@@ -10,9 +12,8 @@ export interface iGameShape {
 
   /** The uri to the last websocket instance created by a discord bot instance // todo implement */
   botWebsocketUri?: string;
-  /** The ids of character sheets in a game (equivalent to the non-game master player ids),
-   * from a sub-collection  */
-  characterSheetIds: string[];
+  /** The core data of a character document, which a sub-collection for character sheet traits etc (fetched separately)  */
+  characters: UID[];
   /** Optional description of the game */
   description: any;
   /** List of players who are game masters, this is a subset of the players list */

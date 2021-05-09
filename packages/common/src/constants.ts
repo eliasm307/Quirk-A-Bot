@@ -11,6 +11,7 @@ export const ATTRIBUTE_NAMES = [
   "Resolve",
 ] as const;
 
+// todo check spelling
 export const SKILL_NAMES = [
   "Athletics",
   "Brawl",

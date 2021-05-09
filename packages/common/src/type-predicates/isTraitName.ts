@@ -3,7 +3,7 @@ import {
 } from '../constants';
 import {
   AttributeName, CoreNumberTraitName, CoreStringTraitName, DisciplineName, SkillName,
-} from '../declarations/types';
+} from '../declarations/typePredicates';
 
 export function isAttributeName(name: string): name is AttributeName {
   const allowedKeys: string[] = [...ATTRIBUTE_NAMES];
