@@ -1,9 +1,11 @@
-import { iGamePlayerData } from '../../classes/game/interfaces/game-player-interfaces';
+import { iGameCharacterData } from '../../classes/game/interfaces/game-player-interfaces';
 
-export default function isGamePlayerData(data: any): data is iGamePlayerData {
+export default function isGamePlayerData(
+  data: any
+): data is iGameCharacterData {
   if (typeof data !== "object") return false;
 
-  const { id } = data as iGamePlayerData;
+  const { id } = data as iGameCharacterData;
 
   const hasId = typeof id === "string";
   // const hasIsGameMaster = typeof isGameMaster === "boolean";

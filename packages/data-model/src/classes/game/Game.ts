@@ -5,13 +5,16 @@ import { iCharacterSheet } from '../character-sheet/interfaces/character-sheet-i
 import {
   iDataStorageFactory, iGameDataStorage, iHasDataStorageFactory,
 } from '../data-storage/interfaces/data-storage-interfaces';
-import { iGame } from './interfaces/game-interfaces';
+import { iGame, iGameData } from './interfaces/game-interfaces';
+import { iGameCharacterData } from './interfaces/game-player-interfaces';
 
 // ? similar to characterSheetDataStorage loader, should these be the same?
 interface iLoaderProps extends iHasId, iHasDataStorageFactory, iHasParentPath {}
 
 export interface iGameProps extends iLoaderProps {
   gameDataStorage: iGameDataStorage;
+  initialCharacterData: iGameCharacterData[];
+  initialData: iGameData;
 }
 
 export default class Game implements iGame {
@@ -20,7 +23,7 @@ export default class Game implements iGame {
 
   #dataStorageFactory: iDataStorageFactory;
   #gameDataStorage: iGameDataStorage;
-  characterIds: Set<string>;
+  characters: Map<string, iGameCharacterData>;
   description: string;
   discordBotWebSocketServer?: string;
   gameMasters: Set<string>;
@@ -32,17 +35,21 @@ export default class Game implements iGame {
     dataStorageFactory,
     gameDataStorage,
     parentPath,
+    initialCharacterData,
+    initialData,
   }: iGameProps) {
     this.id = id;
     this.parentPath = parentPath;
     this.#dataStorageFactory = dataStorageFactory;
     this.#gameDataStorage = gameDataStorage;
 
-    this.gameMasters = new Set(gameDataStorage.getData().gameMasters);
+    this.gameMasters = new Set(initialData.gameMasters);
 
     this.description = gameDataStorage.description;
 
-    this.characterIds = new Set(gameDataStorage.getCharacterIds());
+    this.characters = new Map(
+      initialCharacterData.map((character) => [character.id, character])
+    );
   }
 
   /** Loads a game instance **/
@@ -62,7 +69,17 @@ export default class Game implements iGame {
       // check if a character sheet with this id doesn't  exist in the data storage, initialise a blank character sheet if not
       await gameDataStorage.assertDataExistsOnDataStorage();
 
-      return new Game({ ...props, gameDataStorage, dataStorageFactory });
+      const initialData = await gameDataStorage.getData();
+
+      const initialCharacterData = await gameDataStorage.getCharacters();
+
+      return new Game({
+        ...props,
+        gameDataStorage,
+        dataStorageFactory,
+        initialCharacterData,
+        initialData,
+      });
     } catch (error) {
       console.error(__filename, { error });
       throw Error(

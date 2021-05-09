@@ -21,6 +21,7 @@ export default class FirestoreCompositeGameDataStorage
   protected gameData?: iGameData;
   protected id: string;
 
+  #characterData: iCharacterData[];
   #compositeDocument: AbstractCompositeDocument<iGameData>;
   description: string;
   path: string;
@@ -34,7 +35,7 @@ export default class FirestoreCompositeGameDataStorage
   }
 
   addCharacter(id: string): Promise<void> {
-    const characterIds =  this.getCharacterIds()
+    const characterIds = this.getCharacterIds();
   }
 
   // todo replace this with a load method instead?
@@ -62,8 +63,9 @@ export default class FirestoreCompositeGameDataStorage
   }
 
   getCharacterIds(): string[] {
-    this.#compositeDocument.
-
+    return this.firestore.collection(
+      createPath(this.#compositeDocument.path, CHARACTER_COLLECTION_NAME)
+    );
   }
 
   getCharacterSheets(): Promise<iCharacterSheet[]> {}

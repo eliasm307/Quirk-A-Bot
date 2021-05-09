@@ -2,7 +2,7 @@ import { PLAYER_COLLECTION_NAME } from '@quirk-a-bot/common';
 
 import { isCoreGameData, isGamePlayerData } from '../../../../utils/type-predicates';
 import { iGameData } from '../../../game/interfaces/game-interfaces';
-import { iGamePlayerData } from '../../../game/interfaces/game-player-interfaces';
+import { iGameCharacterData } from '../../../game/interfaces/game-player-interfaces';
 import { DocumentDataReaderProps } from '../../Firestore/utils/assertDocumentExistsOnFirestore';
 import { createPath } from '../../utils/createPath';
 

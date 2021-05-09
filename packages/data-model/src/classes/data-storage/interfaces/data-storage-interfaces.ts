@@ -9,6 +9,7 @@ import {
   iCharacterSheet, iCharacterSheetData,
 } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import { iGameData } from '../../game/interfaces/game-interfaces';
+import { iGameCharacterData } from '../../game/interfaces/game-player-interfaces';
 import {
   iHasTraitCollectionLogReporter, iHasTraitLogReporter,
 } from '../../log/interfaces/log-interfaces';
@@ -73,11 +74,11 @@ export interface iGameDataStorage extends iHasPath {
   addCharacter(id: string): Promise<void>;
   /** Makes sure that a game with the given id actually exists in the given data storage, otherwise it creates it with default values */
   assertDataExistsOnDataStorage(): Promise<void>;
-  getCharacterIds(): UID[];
   /** Returns instantiated character sheet objects for the game */
   getCharacterSheets(): Promise<iCharacterSheet[]>;
+  getCharacters(): Promise<iGameCharacterData[]>;
   /** Returns the game data */
-  getData(): iGameData;
+  getData(): Promise<iGameData>;
   setDescription(description: string): Promise<void>;
 }
 
@@ -92,6 +93,7 @@ export interface iDataStorageFactory {
   newCharacterSheetDataStorage(
     props: iCharacterSheetDataStorageFactoryProps
   ): iCharacterSheetDataStorage;
+  /** // todo instantiation method should be async */
   newGameDataStorage(props: iGameDataStorageFactoryProps): iGameDataStorage;
   newTraitCollectionDataStorageInitialiser(
     props: iTraitCollectionDataStorageInitialiserFactoryProps
