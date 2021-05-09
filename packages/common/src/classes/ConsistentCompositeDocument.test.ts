@@ -50,7 +50,7 @@ describe("ConsistentCompositeDocument", () => {
 
     const path = `${rootPath}/NewComposite`;
 
-    // assert document doesnt exist
+    // assert document doesn't exist
     await deleteDocument(path);
 
     const docRef = firestore.doc(path);
@@ -94,7 +94,7 @@ describe("ConsistentCompositeDocument", () => {
 
     // delete in 2 ways
     await compositeDocument.get("a")?.delete();
-    await compositeDocument.delete("b"); // can handle deleting item that doesnt exist
+    await compositeDocument.delete("b"); // can handle deleting item that doesn't exist
     await compositeDocument.delete("c");
     await pause(300);
 

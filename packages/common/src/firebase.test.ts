@@ -1,4 +1,4 @@
-import { firestoreEmulator, isFirestoreEmulatorRunning } from './';
+import { firestoreEmulator, isFirestoreEmulatorRunning } from "./";
 
 const testDocData = {
   testProperty: `testing @ ${new Date().toLocaleString()}`,
@@ -122,7 +122,7 @@ describe("firestore emulator", () => {
 
           if (!change.doc.exists)
             throw Error(
-              `Document at path ${localTestCollectionName}/${change.doc.id} is marked as doesnt exist`
+              `Document at path ${localTestCollectionName}/${change.doc.id} is marked as doesn't exist`
             );
 
           // todo use switch statement

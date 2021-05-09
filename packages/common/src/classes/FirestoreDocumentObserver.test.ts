@@ -23,11 +23,11 @@ interface SCHEMA {
   stringArrayProp: string[];
   stringProp: string;
 
-  // undefinedProp: undefined; // ! undefined not allowed by firestore
+// undefinedProp: undefined; // ! undefined not allowed by firestore
 }
 
 const documentSchemaIsValid = (data: any): data is SCHEMA => {
-  if (data === undefined) return true; // undefined values represent documents that dont exist yet, this is valid
+  if (data === undefined) return true; // undefined values represent documents that don't exist yet, this is valid
   if (typeof data !== "object") {
     console.error(`Data received was not an object`, {
       data,
@@ -70,18 +70,18 @@ const goodData1: SCHEMA = {
   boolProp: true,
   nullProp: null,
   numberProp: 3,
-  objProp: { stringProp: "dkkd" },
-  stringArrayProp: ["ede", "mnedi"],
-  stringProp: "kncrnci",
+  objProp: { stringProp: "string prop" },
+  stringArrayProp: ["string 1", "string 2"],
+  stringProp: "string prop",
 };
 
 const goodData2: SCHEMA = {
   boolProp: false,
   nullProp: null,
   numberProp: 3343,
-  objProp: { stringProp: "dkkdcedecce" },
-  stringArrayProp: ["ede", "mnedi", "nciecnic", "kncice", "ekcnice"],
-  stringProp: "kncrnci",
+  objProp: { stringProp: "string prop" },
+  stringArrayProp: ["string 1", "string 2", "string 3", "string 4"],
+  stringProp: "string prop",
 };
 
 const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));
@@ -94,14 +94,14 @@ describe("FirestoreDocumentObserver", () => {
     const path = `${rootCollectionPath}/CUD-test`;
     let eventCount = 0;
 
-    // make sure test doc doesnt exist
+    // make sure test doc doesn't exist
     await firestore.doc(path).delete();
 
     await sleep(1000);
 
     // event 1: should fire an initial change event?
     console.warn(`observer load`);
-    const observer = await FirestoreDocumentObserver.load<SCHEMA>({
+    const observer = new FirestoreDocumentObserver<SCHEMA>({
       firestore,
       handleChange: (changeData) => {
         const { snapshot, ...dataToPrint } = changeData;
@@ -140,13 +140,13 @@ describe("FirestoreDocumentObserver", () => {
         }
       },
       path,
-      documentSchemaIsValid,
+      schemaPredicate: documentSchemaIsValid,
     });
 
     await sleep(3000);
 
-    // 2 fires a change event for doc being set intially
-    console.warn(`intial set`);
+    // 2 fires a change event for doc being set initially
+    console.warn(`initial set`);
     await firestore.doc(path).set(goodData1);
     // await sleep(1000);
 
@@ -160,7 +160,7 @@ describe("FirestoreDocumentObserver", () => {
     await firestore.doc(path).delete();
     await sleep(1000);
 
-    // it should unsubsribe with no issues
+    // it should unsubscribe with no issues
     expect(observer.unsubscribe()).toBeUndefined();
   }, 99999);
 

@@ -89,7 +89,7 @@ export default class FirestoreDocumentObserver<D>
 
           // ! always allow undefined values as these represent documents that dont exist
           if (typeof newData !== "undefined" && !schemaPredicate(newData)) {
-            const error = `New data for document at path "${path}" doesnt meet required schema predicate`;
+            const error = `New data for document at path "${path}" doesn't meet required schema predicate`;
             console.error({ error, path: this.path, newData });
             throw Error(error);
           }
@@ -116,7 +116,7 @@ export default class FirestoreDocumentObserver<D>
   }
 
   // todo delete
-  // ! doesnt need load method as initial data is optional, this will be set when the listener is set anyway
+  // ! doesn't need load method as initial data is optional, this will be set when the listener is set anyway
   /*
   static   load<D>(
     props: FirestoreDocumentObserverLoaderProps<D>

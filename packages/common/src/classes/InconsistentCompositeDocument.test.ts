@@ -45,7 +45,7 @@ describe("InconsistentCompositeDocument", () => {
 
     const path = `${rootPath}/NewComposite`;
 
-    // assert document doesnt exist
+    // assert document doesn't exist
     await deleteDocument(path);
 
     const docRef = firestore.doc(path);
