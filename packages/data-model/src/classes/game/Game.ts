@@ -73,6 +73,10 @@ export default class Game implements iGame {
     }
   }
 
+  addCharacter(id: string): Promise<void> {
+    return this.#gameDataStorage.addCharacter(id);
+  }
+
   async loadCharacterSheets(): Promise<Map<UID, iCharacterSheet>> {
     const characterSheets = await this.#gameDataStorage.getCharacterSheets();
 

@@ -38,6 +38,7 @@ export interface iGame extends iGameShape {
 
   gameMasters: Set<UID>;
 
+  addCharacter(id: string): Promise<void>;
   /** Loads character sheets defined in the game */
   loadCharacterSheets(): Promise<Map<UID, iCharacterSheet>>;
   setDescription(description: string): Promise<void>;
