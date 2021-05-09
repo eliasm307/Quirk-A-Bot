@@ -23,7 +23,7 @@ const valuePredicate = (value: any): value is ValueType => {
   return typeof val1 === "string";
 };
 
-/** Base props for consistent composit document loading */
+/** Base props for consistent composite document loading */
 const baseProps: Omit<
   ConsistentCompositeDocumentLoaderProps<KeyType, ValueType>,
   "path"
@@ -40,7 +40,7 @@ const baseProps: Omit<
 
 const deleteDocument = async (path: string) => {
   await firestore.doc(path).delete();
-  // pause for syncronisation
+  // pause for synchronisation
   return pause(100);
 };
 
@@ -108,12 +108,4 @@ describe("ConsistentCompositeDocument", () => {
 
     compositeDocument.cleanUp();
   });
-  /*
-  it("can automatically load existing data from firestore", () => {
-    expect.hasAssertions();
-  });
-  it("can accomodate sub documents with different schemas", () => {
-    expect.hasAssertions();
-  });
-  */
 });

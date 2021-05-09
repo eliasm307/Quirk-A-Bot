@@ -32,7 +32,7 @@ export interface AbstractCompositeDocumentLoaderProps<
   S extends Record<string, any>
 > extends BaseDocumentObserverLoaderProps<S> {
   handleChange: (changeData: CompositeDocumentChangeData<S>) => void;
-  initialData: S;
+  initialData?: S;
 }
 
 export interface AbstractCompositeDocumentProps<S extends Record<string, any>>
@@ -78,7 +78,7 @@ export default abstract class AbstractCompositeDocument<
 
     this.#ref = firestore.doc(path);
 
-    this.data = { ...initialData };
+    this.data = initialData ? { ...initialData } : ({} as SchemaType);
 
     this.#private = {
       firestore,

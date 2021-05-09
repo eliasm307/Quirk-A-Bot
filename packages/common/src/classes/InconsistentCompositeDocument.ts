@@ -16,9 +16,9 @@ export default class ConsistentCompositeDocument<
     super(props);
   }
 
-  async load<S extends Record<string, any>>(
+  static load<S extends Record<string, any>>(
     props: InconsistentCompositeDocumentLoaderProps<S>
-  ): Promise<AbstractCompositeDocument<S>> {
+  ): AbstractCompositeDocument<S> {
     const { valuePredicates, initialData } = props;
 
     const schemaPredicate = (data: any): data is S => {
