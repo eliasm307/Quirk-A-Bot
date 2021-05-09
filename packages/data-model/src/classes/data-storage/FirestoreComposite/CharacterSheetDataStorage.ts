@@ -12,7 +12,7 @@ import {
   iFirestoreCharacterSheetDataStorageProps, iFirestoreCompositeCharacterSheetDataStorageProps,
 } from '../interfaces/props/character-sheet-data-storage';
 import { createPath } from '../utils/createPath';
-import readCharacterSheetDataFromFirestoreComposite from './utils/readCharacterSheetDataFromFirestoreComposite';
+import readCharacterSheetDataFromFirestoreComposite from './utils/readCharacterSheetData';
 
 export default class FirestoreCompositeCharacterSheetDataStorage
   implements iCharacterSheetDataStorage {
