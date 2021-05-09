@@ -11,7 +11,7 @@ export default async function writeGameDataToFirestore({
   const timerName = `Time to write game data at path ${path}`;
   console.time(timerName);
 
-  const { players, characterSheetIds, ...coreData } = data;
+  const { players: players, characterSheetIds, ...coreData } = data;
 
   try {
     const gameDocRef = firestore.doc(path);

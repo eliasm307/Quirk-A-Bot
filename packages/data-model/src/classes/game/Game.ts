@@ -23,7 +23,7 @@ export default class Game implements iGame {
   /** Existing singleton-ish instances of this class */
   protected static instances: Map<string, Game> = new Map<string, Game>();
 
-  botWebsocketUri?: string | undefined;
+  discordBotWebSocketServer?: string | undefined;
   characterSheetIds: string[];
   characterSheets: Map<string, iCharacterSheet>;
   description: iStringTrait<string, string>;

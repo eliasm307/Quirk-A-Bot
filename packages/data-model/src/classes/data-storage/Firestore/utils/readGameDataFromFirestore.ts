@@ -66,7 +66,7 @@ export default async function readGameDataFromFirestore({
     characterSheetIds,
     description,
     id,
-    players,
+    players: players,
     gameMasters,
   };
 }

@@ -22,6 +22,7 @@ export interface iGamePlayer extends iGamePlayerShape {
   status: iStringTrait<"Status", PlayerStatus>;
 }
 
+// todo not required for now, but will be for tracking game users/players
 /** Represents user details specific to a game */
 export interface iGamePlayerData extends iGamePlayerShape {
   /** How the player would like to be addressed as in this game, defaults to User.name */

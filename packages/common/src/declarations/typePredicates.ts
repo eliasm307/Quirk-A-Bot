@@ -41,3 +41,8 @@ export type LogSourceTypeNameUnion =
 
 /** A user id */
 export type UID = string;
+
+export type GameId = string;
+
+/** URL to an online resource */
+export type WebURL = string;
