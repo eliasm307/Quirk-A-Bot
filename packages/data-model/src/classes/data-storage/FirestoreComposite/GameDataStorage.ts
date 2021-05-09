@@ -10,6 +10,8 @@ import {
   iFirestoreCompositeCharacterSheetDataStorageProps,
 } from '../interfaces/props/character-sheet-data-storage';
 import { createPath } from '../utils/createPath';
+import readGameDataFromFirestoreComposite from './utils/readGameData';
+import writeGameDataToFirestoreComposite from './utils/writeGameData';
 
 export default class FirestoreCompositeGameDataStorage
   implements iGameDataStorage {
@@ -52,9 +54,7 @@ export default class FirestoreCompositeGameDataStorage
 
     this.gameData = {
       id: this.id,
-      characterSheetIds: [],
       description: "",
-      players: [],
       gameMasters: [],
     };
   }

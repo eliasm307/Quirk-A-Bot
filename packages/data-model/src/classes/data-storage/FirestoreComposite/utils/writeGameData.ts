@@ -1,5 +1,3 @@
-import { PLAYER_COLLECTION_NAME } from '@quirk-a-bot/common';
-
 import { iGameData } from '../../../game/interfaces/game-interfaces';
 import { DocumentDataWriterProps } from '../../Firestore/utils/assertDocumentExistsOnFirestore';
 
