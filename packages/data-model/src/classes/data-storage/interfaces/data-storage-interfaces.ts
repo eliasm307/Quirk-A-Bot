@@ -67,7 +67,7 @@ export interface iCharacterSheetDataStorage extends iHasPath {
 }
 
 /** Represents all game data in a data store, access control to be handled by proxies */
-export interface iGameDataStorage extends iHasPath {
+export interface iGameDataStorage extends iHasPath, iHasCleanUp {
   /** If a character doesn't already exist, this sets-up a character with default details */
   addCharacter(id: string): Promise<void>;
   /** Makes sure that a game with the given id actually exists in the given data storage, otherwise it creates it with default values */

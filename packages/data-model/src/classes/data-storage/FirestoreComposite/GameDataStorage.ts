@@ -1,12 +1,11 @@
-import path from 'node:path';
-
-/* eslint-disable no-unreachable */
 import {
-  AbstractCompositeDocument, CHARACTER_COLLECTION_NAME, ConsistentCompositeDocument, Firestore,
-  FirestoreCollectionReference, FirestoreDocumentReference, InconsistentCompositeDocument, isString,
+  AbstractCompositeDocument, CHARACTER_COLLECTION_NAME, DEFAULT_CHARACTER_IMAGE_URL,
+  DEFAULT_CHARACTER_NAME, Firestore, FirestoreCollectionReference, InconsistentCompositeDocument,
+  isString, pause,
 } from '@quirk-a-bot/common';
 
 import { CharacterSheet } from '../../..';
+import isCharacterData from '../../../utils/type-predicates/isCharacterData';
 import { iCharacterSheet } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import { iGameData } from '../../game/interfaces/game-interfaces';
 import { iCharacterData } from '../../game/interfaces/game-player-interfaces';
@@ -32,6 +31,7 @@ export default class FirestoreCompositeGameDataStorage
   // this will be loaded when listener returns first results
   #characterData?: iCharacterData[];
   #compositeDocument: AbstractCompositeDocument<iGameData>;
+  #unsubscribeCharacterCollection: () => void;
   path: string;
 
   constructor(props: iFirestoreCompositeCharacterSheetDataStorageProps) {
@@ -48,14 +48,21 @@ export default class FirestoreCompositeGameDataStorage
       characterCollectionPath
     );
 
-    this.#characterCollectionRef.onSnapshot({
-      next: (snapshot) => {
-        const data = snapshot.docs.map((snapshot) => snapshot.data());
+    // listen to character collection
+    this.#unsubscribeCharacterCollection = this.#characterCollectionRef.onSnapshot(
+      {
+        next: (collectionSnapshot) => {
+          const data = collectionSnapshot.docs.map((documentSnapshot) =>
+            documentSnapshot.data()
+          );
 
-        const characters = data.filter(isCharacterData);
-      },
-    });
+          this.#characterData = data.filter(isCharacterData);
+        },
+        error: console.error,
+      }
+    );
 
+    // load and listen to game document
     this.#compositeDocument = InconsistentCompositeDocument.load<iGameData>({
       firestore,
       handleChange: ({ newData }) => {
@@ -80,14 +87,14 @@ export default class FirestoreCompositeGameDataStorage
         "Cannot add character to game as they are already in the game"
       );
 
+    // todo extract to util
     const newCharacterData: iCharacterData = {
       id,
-      img,
-      name: DEFAUL,
+      img: DEFAULT_CHARACTER_IMAGE_URL,
+      name: DEFAULT_CHARACTER_NAME,
     };
 
-    // todo add default character data here
-    this.#characterCollectionRef.doc(id).set(data, options);
+    await this.#characterCollectionRef.doc(id).set(newCharacterData);
   }
 
   // todo replace this with a load method instead?
@@ -114,6 +121,17 @@ export default class FirestoreCompositeGameDataStorage
     };
   }
 
+  cleanUp(): boolean {
+    try {
+      this.#unsubscribeCharacterCollection();
+      this.#compositeDocument.cleanUp();
+      return true;
+    } catch (error) {
+      console.error(`Error cleaning up game "${this.path}"`, error);
+      return false;
+    }
+  }
+
   async getCharacterSheets(): Promise<iCharacterSheet[]> {
     const characterSheetPromises = (await this.getCharacters()).map(
       (character) =>
@@ -128,17 +146,51 @@ export default class FirestoreCompositeGameDataStorage
   }
 
   async getCharacters(): Promise<iCharacterData[]> {
-    return this.#characterData;
+    return this.returnValueWhenLoaded(
+      () => this.#characterData,
+      "characters data"
+    );
   }
 
   async getData(): Promise<iGameData> {
-    if (!this.gameData)
-      throw Error(
-        `Game data not loaded, please call assertDataExistsOnDataStorage before using this method`
-      );
-
-    return this.gameData;
+    return this.returnValueWhenLoaded(() => this.gameData, "game data");
   }
 
-  setDescription(description: string): Promise<void> {}
+  async setDescription(description: string): Promise<void> {
+    await this.#compositeDocument.set("description", description);
+  }
+
+  private async returnValueWhenLoaded<T>(
+    valueChecker: () => T | undefined,
+    valueName: string
+  ): Promise<T> {
+    // if it is already defined return it
+    let value = valueChecker();
+    if (value) return value;
+
+    let counter = 0;
+    const maxWaitTimeMs = 2000;
+    const checkIntervalMs = 100;
+
+    // if this is being called just after instantiation, need to wait for collection observer to do initial data load
+    while (counter < maxWaitTimeMs / checkIntervalMs) {
+      value = valueChecker();
+      if (value) {
+        console.log(`${valueName} loaded, returning now`);
+        return value;
+      }
+
+      console.warn(
+        `${valueName} was not defined, waiting ${checkIntervalMs}ms then checking again...`
+      );
+
+      // eslint-disable-next-line no-await-in-loop
+      await pause(checkIntervalMs);
+      counter++;
+    }
+
+    throw Error(
+      `Could not get ${valueName} because character data did not load in given time frame`
+    );
+  }
 }

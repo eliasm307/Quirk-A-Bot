@@ -102,3 +102,6 @@ export const CHARACTER_COLLECTION_NAME = "characters";
 // values
 export const STRING_TRAIT_DEFAULT_VALUE = "";
 export const DEFAULT_USER_NAME = "Nameless Wanderer";
+export const DEFAULT_CHARACTER_NAME = "Nameless Undead";
+export const DEFAULT_CHARACTER_IMAGE_URL =
+  "https://www.flaticon.com/svg/vstatic/svg/3504/3504404.svg?token=exp=1620587740~hmac=701e673f405dbcc957d4629d2d6264ad"; // todo add attribution
