@@ -87,18 +87,18 @@ export const TRAIT_TYPES = [
 ] as const;
 
 // todo move these to a firestore constants file?
+
+// collection names
+export const CHARACTER_SHEET_TRAIT_COMPOSITE_DOCUMENT_COLLECTION_NAME = `character-sheet-traits`;
+export const CORE_TRAIT_COLLECTION_NAME = `core-traits`;
+export const ATTRIBUTE_COLLECTION_NAME = `attributes`;
+export const SKILL_COLLECTION_NAME = `skills`;
+export const DISCIPLINE_COLLECTION_NAME = `disciplines`;
+export const TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME = `touchstones-and-convictions`;
+export const USER_COLLECTION_NAME = "users";
+export const PLAYER_COLLECTION_NAME = "players";
+export const CHARACTER_COLLECTION_NAME = "characters";
+
 // values
-export const TRAIT_COMPOSITE_DOCUMENT_COLLECTION_NAME = `traits`;
-export const CORE_TRAIT_COLLECTION_NAME = `CoreTraits`;
-export const ATTRIBUTE_COLLECTION_NAME = `Attributes`;
-export const SKILL_COLLECTION_NAME = `Skills`;
-export const DISCIPLINE_COLLECTION_NAME = `Disciplines`;
-export const TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME = `TouchstonesAndConvictions`;
-
 export const STRING_TRAIT_DEFAULT_VALUE = "";
-
-export const USER_COLLECTION_NAME = "Users";
-
-export const PLAYER_COLLECTION_NAME = "Players";
-
 export const DEFAULT_USER_NAME = "Nameless Wanderer";

@@ -19,7 +19,7 @@ export interface SubDocumentProps<
  */
 export default class SubDocument<
   S extends Record<string, any>,
-  K extends keyof S
+  K extends keyof S = keyof S
 > implements iSubDocument<S, K> {
   #private: Omit<SubDocumentProps<S, K>, "parentDocumentPath"> & {
     onChangeCallback?: (newData: S[K]) => void;
