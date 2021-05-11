@@ -14,11 +14,11 @@ import {
   iHasTraitCollectionLogReporter, iHasTraitLogReporter,
 } from '../../log/interfaces/log-interfaces';
 import { iBaseTrait, iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
+import { iCharacterSheetDataStorageFactoryProps } from './props/character-sheet-data-storage';
+import { iGameDataStorageFactoryProps } from './props/game-data-storage';
 import {
-  iCharacterSheetDataStorageFactoryProps, iGameDataStorageFactoryProps,
-  iTraitCollectionDataStorageInitialiserFactoryProps, iTraitDataStorageInitialiserFactoryProps,
-} from './props/data-storage-creator';
-import { iBaseTraitCollectionDataStorageProps } from './props/trait-collection-data-storage';
+  iBaseTraitCollectionDataStorageProps, iTraitCollectionDataStorageInitialiserProps,
+} from './props/trait-collection-data-storage';
 import { iBaseTraitDataStorageProps } from './props/trait-data-storage';
 
 // todo split this up
@@ -96,7 +96,7 @@ export interface iDataStorageFactory {
   /** // todo instantiation method should be async */
   newGameDataStorage(props: iGameDataStorageFactoryProps): iGameDataStorage;
   newTraitCollectionDataStorageInitialiser(
-    props: iTraitCollectionDataStorageInitialiserFactoryProps
+    props: iTraitCollectionDataStorageInitialiserProps
   ): <
     N extends TraitNameUnionOrString,
     V extends TraitValueTypeUnion,
@@ -106,7 +106,7 @@ export interface iDataStorageFactory {
     props: iBaseTraitCollectionDataStorageProps<N, V, D, T>
   ) => iTraitCollectionDataStorage<N, V, D, T>;
 
-  // NOTE the factory props just define what will be available, the specific factories don't need to require any of the given props
+// NOTE the factory props just define what will be available, the specific factories don't need to require any of the given props
   // ! traits will always be part of trait collections, so factory shouldn't have this method. Trait collections should instead
   /*
   newTraitDataStorageInitialiser(

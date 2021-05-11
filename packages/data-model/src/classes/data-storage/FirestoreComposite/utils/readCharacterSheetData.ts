@@ -1,7 +1,7 @@
 import {
-  ATTRIBUTE_COLLECTION_NAME, CORE_TRAIT_COLLECTION_NAME, DISCIPLINE_COLLECTION_NAME, Firestore,
-  SKILL_COLLECTION_NAME, TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME,
-  TRAIT_COMPOSITE_DOCUMENT_COLLECTION_NAME,
+  ATTRIBUTE_COLLECTION_NAME, CHARACTER_SHEET_TRAIT_COMPOSITE_DOCUMENT_COLLECTION_NAME,
+  CORE_TRAIT_COLLECTION_NAME, DISCIPLINE_COLLECTION_NAME, Firestore, SKILL_COLLECTION_NAME,
+  TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME,
 } from '@quirk-a-bot/common';
 
 import { isCharacterSheetData } from '../../../../utils/type-predicates';
@@ -41,7 +41,7 @@ export default async function readCharacterSheetDataFromFirestoreComposite({
   // create the path to the sub-collection of the character sheet where the composite documents with traits are contained
   const characterSheetTraitCompositesPath = createPath(
     path,
-    TRAIT_COMPOSITE_DOCUMENT_COLLECTION_NAME
+    CHARACTER_SHEET_TRAIT_COMPOSITE_DOCUMENT_COLLECTION_NAME
   );
 
   // read trait collection data as firestore collections

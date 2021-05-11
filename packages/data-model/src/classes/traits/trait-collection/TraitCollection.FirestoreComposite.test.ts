@@ -33,6 +33,7 @@ const createTraitCollectionFactoryMethodProps = (
   // traitDataStorageInitialiser: dataStorageFactory.newTraitDataStorageInitialiser(),
   parentPath: `${rootCollectionPath}/${groupName}`,
   loggerCreator: null,
+  dataStorageFactory,
 });
 
 const readTraitCollectionInFirestore = async <D extends iGeneralTraitData>(

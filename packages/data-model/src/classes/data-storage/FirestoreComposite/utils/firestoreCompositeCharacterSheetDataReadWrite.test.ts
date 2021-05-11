@@ -7,8 +7,8 @@ import {
   iAttributeData, iBaseTraitData, iGeneralTraitData,
 } from '../../../traits/interfaces/trait-interfaces';
 import { createPath } from '../../utils/createPath';
-import readCharacterSheetDataFromFirestoreComposite from './readCharacterSheetDataFromFirestoreComposite';
-import writeCharacterSheetDataToFirestoreComposite from './writeCharacterSheetDataToFirestoreComposite';
+import readCharacterSheetDataFromFirestoreComposite from './readCharacterSheetData';
+import writeCharacterSheetDataToFirestoreComposite from './writeCharacterSheetData';
 
 const firestore = firestoreEmulator;
 
@@ -39,9 +39,9 @@ describe("firestoreCompositeCharacterSheetDataReadWrite.test", () => {
         { name: "Firearms", value: 4 },
       ],
       touchstonesAndConvictions: [
-        { name: "de ekidn", value: "kdonoxc f f f " },
-        { name: "dfff", value: "rvrrvrv  f f ff " },
-        { name: "ededed", value: "kdonoxc  f f f f" },
+        { name: "de name", value: "value f f f " },
+        { name: "name2", value: "value  f f ff " },
+        { name: "ededed", value: "clan  f f f f" },
       ],
     };
 

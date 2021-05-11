@@ -8,7 +8,7 @@ import DeleteLogEvent from '../log/log-events/DeleteLogEvent';
 import TraitCollectionLogger from '../log/loggers/TraitCollectionLogger';
 import { iBaseTrait, iBaseTraitData, iBaseTraitProps } from '../traits/interfaces/trait-interfaces';
 import {
-  iBaseTraitDataStorage, iTraitCollectionDataStorage,
+  iBaseTraitDataStorage, iDataStorageFactory, iTraitCollectionDataStorage,
 } from './interfaces/data-storage-interfaces';
 import {
   iBaseTraitCollectionDataStorageProps,
@@ -23,10 +23,12 @@ export default abstract class AbstractTraitCollectionDataStorage<
   V extends TraitValueTypeUnion,
   D extends iBaseTraitData<N, V>,
   T extends iBaseTrait<N, V, D>
-> implements iTraitCollectionDataStorage<N, V, D, T> {
+> implements iTraitCollectionDataStorage<N, V, D, T>
+{
   protected afterAddCustom?: (props: iAddLogEventProps<V>) => void;
   // ? is this required
   protected afterDeleteCustom?: (props: iDeleteLogEventProps<V>) => void;
+  protected dataStorageFactory: iDataStorageFactory;
   // ? is this required
   protected logger: iTraitCollectionLogger;
   protected map: Map<N, T> = new Map();
@@ -53,8 +55,9 @@ export default abstract class AbstractTraitCollectionDataStorage<
     initialData,
     parentPath,
     loggerCreator: logger,
+    dataStorageFactory,
   }: iBaseTraitCollectionDataStorageProps<N, V, D, T>) {
-    // save local values
+    this.dataStorageFactory = dataStorageFactory;
     this.afterAddCustom = onAdd;
     this.afterDeleteCustom = onDelete;
     this.name = collectionName;
@@ -215,6 +218,7 @@ export default abstract class AbstractTraitCollectionDataStorage<
         traitDataStorageInitialiser: (props) => this.newTraitDataStorage(props),
         loggerCreator: (props: iChildLoggerCreatorProps) =>
           this.logger.createChildTraitLogger(props), // NOTE this needs to be extracted into a function to create a closure such that the 'this' references are maintained
+        dataStorageFactory: this.dataStorageFactory,
       })
     );
   }

@@ -57,12 +57,8 @@ export default class CharacterSheet implements iCharacterSheet {
   //-------------------------------------
   // PRIVATE CONSTRUCTOR FOR SINGLETONS
   private constructor(props: iCharacterSheetProps) {
-    const {
-      id,
-      dataStorageFactory,
-      parentPath,
-      characterSheetDataStorage,
-    } = props;
+    const { id, dataStorageFactory, parentPath, characterSheetDataStorage } =
+      props;
 
     this.id = id;
     this.parentPath = parentPath;
@@ -80,11 +76,10 @@ export default class CharacterSheet implements iCharacterSheet {
     // expose logger reporter
     this.log = this.logger.reporter;
 
-    const traitCollectionDataStorageInitialiser = dataStorageFactory.newTraitCollectionDataStorageInitialiser(
-      {
+    const traitCollectionDataStorageInitialiser =
+      dataStorageFactory.newTraitCollectionDataStorageInitialiser({
         characterSheet: this,
-      }
-    );
+      });
 
     // ? is this required?
     // create core trait logger initialiser function
@@ -131,6 +126,7 @@ export default class CharacterSheet implements iCharacterSheet {
       traitCollectionDataStorageInitialiser,
       parentPath: this.path,
       loggerCreator: traitCollectionLoggerCreator,
+      dataStorageFactory,
     };
 
     // create collections, with initial data where available
@@ -160,10 +156,11 @@ export default class CharacterSheet implements iCharacterSheet {
       ...initialData.disciplines
     );
 
-    this.touchstonesAndConvictions = TraitFactory.newTouchstonesAndConvictionTraitCollection(
-      traitCollectionFactoryProps,
-      ...initialData.touchstonesAndConvictions
-    );
+    this.touchstonesAndConvictions =
+      TraitFactory.newTouchstonesAndConvictionTraitCollection(
+        traitCollectionFactoryProps,
+        ...initialData.touchstonesAndConvictions
+      );
 
     // core number traits
     this.bloodPotency = this.#coreNumberTraitCollection.get(
@@ -216,9 +213,8 @@ export default class CharacterSheet implements iCharacterSheet {
     if (preExistingInstance) return preExistingInstance;
 
     // check if a character sheet with this id doesn't  exist in the data storage, initialise a blank character sheet if not
-    const characterSheetDataStorage = dataStorageFactory.newCharacterSheetDataStorage(
-      props
-    );
+    const characterSheetDataStorage =
+      dataStorageFactory.newCharacterSheetDataStorage(props);
 
     try {
       // makes sure some data exists for the character sheet instance to link to

@@ -22,10 +22,12 @@ const rootCollectionPath = "FirestoreDataStorageFactory-traitCollectionTests";
 const createTraitCollectionFactoryMethodProps = (
   groupName: string
 ): iTraitCollectionFactoryMethodProps => ({
-  traitCollectionDataStorageInitialiser: dataStorageFactory.newTraitCollectionDataStorageInitialiser(),
+  traitCollectionDataStorageInitialiser:
+    dataStorageFactory.newTraitCollectionDataStorageInitialiser(),
   // traitDataStorageInitialiser: dataStorageFactory.newTraitDataStorageInitialiser(),
   parentPath: `${rootCollectionPath}/${groupName}`,
   loggerCreator: null,
+  dataStorageFactory,
 });
 
 const deleteExistingCollectionDataAsync = async (collectionPath: string) => {

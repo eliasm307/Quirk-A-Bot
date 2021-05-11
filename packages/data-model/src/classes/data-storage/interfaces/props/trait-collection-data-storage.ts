@@ -4,7 +4,9 @@ import {
   iHasFirestore, iHasParentPath, iHasResolvedBasePath,
 } from '../../../../declarations/interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../../declarations/types';
-import { iCharacterSheet } from '../../../character-sheet/interfaces/character-sheet-interfaces';
+import {
+  iCharacterSheet, iHasCharacterSheet,
+} from '../../../character-sheet/interfaces/character-sheet-interfaces';
 import {
   iAddLogEventProps, iDeleteLogEventProps, iTraitCollectionLogger,
 } from '../../../log/interfaces/log-interfaces';
@@ -15,6 +17,9 @@ import {
   iBaseTraitDataStorage, iHasDataStorageFactory, iHasTraitDataStorageInitialiser,
 } from '../data-storage-interfaces';
 import { iBaseTraitDataStorageProps } from './trait-data-storage';
+
+export interface iTraitCollectionDataStorageInitialiserProps
+  extends iHasCharacterSheet {}
 
 // TRAIT COLLECTION DATA STORAGE PROPS
 export interface iBaseTraitCollectionDataStorageProps<

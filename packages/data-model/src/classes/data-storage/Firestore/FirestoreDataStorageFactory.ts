@@ -6,9 +6,10 @@ import {
   iTraitCollectionDataStorage,
 } from '../interfaces/data-storage-interfaces';
 import {
-  iBaseCharacterSheetDataStorageFactoryMethodProps, iGameDataStorageFactoryProps,
-} from '../interfaces/props/data-storage-creator';
+  iCharacterSheetDataStorageFactoryProps,
+} from '../interfaces/props/character-sheet-data-storage';
 import { iFirestoreDataStorageFactoryProps } from '../interfaces/props/data-storage-factory';
+import { iGameDataStorageFactoryProps } from '../interfaces/props/game-data-storage';
 import {
   iBaseTraitCollectionDataStorageProps,
 } from '../interfaces/props/trait-collection-data-storage';
@@ -42,7 +43,7 @@ export default class FirestoreDataStorageFactory
   }
 
   newCharacterSheetDataStorage(
-    props: iBaseCharacterSheetDataStorageFactoryMethodProps
+    props: iCharacterSheetDataStorageFactoryProps
   ): iCharacterSheetDataStorage {
     return new FirestoreCharacterSheetDataStorage({
       ...props,

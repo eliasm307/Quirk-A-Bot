@@ -5,9 +5,9 @@ import {
   iTraitCollectionDataStorage,
 } from '../interfaces/data-storage-interfaces';
 import {
-  iBaseCharacterSheetDataStorageFactoryMethodProps, iGameDataStorageFactoryProps,
-} from '../interfaces/props/data-storage-creator';
-import { iInMemoryFileDataStorageFactoryProps } from '../interfaces/props/data-storage-factory';
+  iCharacterSheetDataStorageFactoryProps,
+} from '../interfaces/props/character-sheet-data-storage';
+import { iGameDataStorageFactoryProps } from '../interfaces/props/game-data-storage';
 import {
   iBaseTraitCollectionDataStorageProps,
 } from '../interfaces/props/trait-collection-data-storage';
@@ -31,7 +31,7 @@ export default class InMemoryDataStorageFactory implements iDataStorageFactory {
   }
 
   newCharacterSheetDataStorage(
-    props: iBaseCharacterSheetDataStorageFactoryMethodProps
+    props: iCharacterSheetDataStorageFactoryProps
   ): iCharacterSheetDataStorage {
     return new InMemoryCharacterSheetDataStorage({
       ...props,

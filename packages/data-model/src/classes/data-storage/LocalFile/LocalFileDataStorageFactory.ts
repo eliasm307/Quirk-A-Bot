@@ -6,16 +6,13 @@ import {
   iBaseTraitDataStorage, iCharacterSheetDataStorage, iDataStorageFactory, iGameDataStorage,
   iTraitCollectionDataStorage,
 } from '../interfaces/data-storage-interfaces';
-import {
-  iBaseCharacterSheetDataStorageFactoryMethodProps, iGameDataStorageFactoryProps,
-} from '../interfaces/props/data-storage-creator';
 import { iLocalFileDataStorageFactoryProps } from '../interfaces/props/data-storage-factory';
+import { iGameDataStorageFactoryProps } from '../interfaces/props/game-data-storage';
 import {
   iBaseTraitCollectionDataStorageProps,
 } from '../interfaces/props/trait-collection-data-storage';
 import { iBaseTraitDataStorageProps } from '../interfaces/props/trait-data-storage';
 import { createPath } from '../utils/createPath';
-import LocalFileCharacterSheetDataStorage from './LocalFileCharacterSheetDataStorage';
 import LocalFileTraitCollectionDataStorage from './LocalFileTraitCollectionDataStorage';
 import LocalFileTraitDataStorage from './LocalFileTraitDataStorage';
 
@@ -40,17 +37,8 @@ export default class LocalFileDataStorageFactory
     return firestoreIdIsValid(id);
   }
 
-  newCharacterSheetDataStorage(
-    props: iBaseCharacterSheetDataStorageFactoryMethodProps
-  ): iCharacterSheetDataStorage {
+  newCharacterSheetDataStorage(props: any): iCharacterSheetDataStorage {
     throw new Error("Method not implemented.");
-    /*
-    return new LocalFileCharacterSheetDataStorage({
-      ...props,
-      dataStorageFactory: this,
-      resolvedBasePath: this.#resolvedBasePath,
-    });
-    */
   }
 
   newGameDataStorage(props: iGameDataStorageFactoryProps): iGameDataStorage {

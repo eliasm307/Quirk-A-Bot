@@ -9,10 +9,12 @@ const dataStorageFactory = new InMemoryDataStorageFactory();
 const rootCollectionPath = "traitCollectionTests";
 
 const traitCollectionFactoryMethodProps: iTraitCollectionFactoryMethodProps = {
-  traitCollectionDataStorageInitialiser: dataStorageFactory.newTraitCollectionDataStorageInitialiser(),
+  traitCollectionDataStorageInitialiser:
+    dataStorageFactory.newTraitCollectionDataStorageInitialiser(),
   // traitDataStorageInitialiser: dataStorageFactory.newTraitDataStorageInitialiser(),
   parentPath: rootCollectionPath,
   loggerCreator: null,
+  dataStorageFactory,
 };
 
 test("TraitCollection CRUD functionality", async () => {
