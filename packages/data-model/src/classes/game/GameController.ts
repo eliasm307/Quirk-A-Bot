@@ -16,7 +16,7 @@ interface iLoaderProps extends iHasId, iHasDataStorageFactory, iHasParentPath {}
 export interface iGameProps extends iLoaderProps {
   gameDataStorage: iGameDataStorage;
 
-// initialCharacterData: iCharacterData[];
+  // initialCharacterData: iCharacterData[];
   // initialData: iGameData;
 }
 
@@ -142,6 +142,6 @@ export default class GameController implements iGameController {
   }
 
   set(props: Partial<Omit<iGameData, "id">>): Promise<iGameData> {
-    return this.#gameDataStorage.setData(props);
+    return this.#gameDataStorage.updateData(props);
   }
 }

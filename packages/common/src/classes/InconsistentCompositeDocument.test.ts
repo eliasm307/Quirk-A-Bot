@@ -8,21 +8,23 @@ const firestore = firestoreEmulator;
 
 const rootPath = `DocumentGroupTests`;
 
+interface ObjSchema {
+  val1: string;
+}
+
 interface S {
   boolVal: boolean;
-  objVal: {
-    val1: string;
-  };
+  objVal: ObjSchema;
   stringVal: string;
 }
 
 const valuePredicates: Record<keyof S, (value: any) => value is S[keyof S]> = {
   boolVal: (value): value is boolean => typeof value === "boolean",
-  objVal: (value): value is any => typeof value === "object",
+  objVal: (value): value is ObjSchema => typeof value === "object" && !!value,
   stringVal: (value): value is string => typeof value === "string",
 };
 
-/** Base props for Inconsistent composit document loading */
+/** Base props for Inconsistent composite document loading */
 const baseProps: Omit<InconsistentCompositeDocumentLoaderProps<S>, "path"> = {
   firestore,
   valuePredicates,
@@ -35,7 +37,7 @@ const baseProps: Omit<InconsistentCompositeDocumentLoaderProps<S>, "path"> = {
 
 const deleteDocument = async (path: string) => {
   await firestore.doc(path).delete();
-  // pause for syncronisation
+  // pause for synchronisation
   return pause(100);
 };
 
@@ -113,7 +115,7 @@ describe("InconsistentCompositeDocument", () => {
   it("can automatically load existing data from firestore", () => {
     expect.hasAssertions();
   });
-  it("can accomodate sub documents with different schemas", () => {
+  it("can accommodate sub documents with different schemas", () => {
     expect.hasAssertions();
   });
   */

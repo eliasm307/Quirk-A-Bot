@@ -9,7 +9,7 @@ export interface InconsistentCompositeDocumentLoaderProps<
   valuePredicates: Record<keyof S, (value: any) => value is S[keyof S]>;
 }
 
-export default class ConsistentCompositeDocument<
+export default class InconsistentCompositeDocument<
   S extends Record<string, any>
 > extends AbstractCompositeDocument<S> {
   protected constructor(props: AbstractCompositeDocumentProps<S>) {
@@ -18,7 +18,7 @@ export default class ConsistentCompositeDocument<
 
   static load<S extends Record<string, any>>(
     props: InconsistentCompositeDocumentLoaderProps<S>
-  ): AbstractCompositeDocument<S> {
+  ): InconsistentCompositeDocument<S> {
     const { valuePredicates, initialData } = props;
 
     const schemaPredicate = (data: any): data is S => {
@@ -45,7 +45,7 @@ export default class ConsistentCompositeDocument<
       return true;
     };
 
-    return new ConsistentCompositeDocument({
+    return new InconsistentCompositeDocument({
       ...props,
       initialData,
       schemaPredicate,

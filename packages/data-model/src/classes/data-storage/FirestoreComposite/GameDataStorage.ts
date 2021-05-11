@@ -1,7 +1,6 @@
 import {
-  AbstractCompositeDocument, CHARACTER_COLLECTION_NAME, DEFAULT_CHARACTER_IMAGE_URL,
-  DEFAULT_CHARACTER_NAME, Firestore, FirestoreCollectionReference, InconsistentCompositeDocument,
-  isString, pause,
+  CHARACTER_COLLECTION_NAME, DEFAULT_CHARACTER_IMAGE_URL, DEFAULT_CHARACTER_NAME, Firestore,
+  FirestoreCollectionReference, InconsistentCompositeDocument, isString, pause,
 } from '@quirk-a-bot/common';
 
 import isCharacterData from '../../../utils/type-predicates/isCharacterData';
@@ -135,12 +134,12 @@ export default class FirestoreCompositeGameDataStorage
     return this.returnValueWhenLoaded(() => this.gameData, "game data");
   }
 
-  setData(props: Partial<Omit<iGameData, "id">>): Promise<iGameData> {
-    this.#compositeDocument.
-  }
-
   async setDescription(description: string): Promise<void> {
     await this.#compositeDocument.set("description", description);
+  }
+
+  async updateData(updates: Partial<Omit<iGameData, "id">>): Promise<void> {
+    await this.#compositeDocument.update(updates);
   }
 
   private async returnValueWhenLoaded<T>(

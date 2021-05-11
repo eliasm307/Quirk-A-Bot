@@ -77,7 +77,7 @@ export interface iGameDataStorage extends iHasPath, iHasCleanUp {
   getCharacterData(): Promise<iCharacterData[]>;
   /** Returns the game data */
   getData(): Promise<iGameData>;
-  setData(props: Partial<Omit<iGameData, "id">>): Promise<iGameData>;
+  updateData(props: Partial<Omit<iGameData, "id">>): Promise<void>;
 }
 
 // -------------------------------------------------------

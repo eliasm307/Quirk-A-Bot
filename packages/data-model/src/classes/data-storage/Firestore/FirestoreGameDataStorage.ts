@@ -101,7 +101,7 @@ export default class FirestoreGameDataStorage implements iGameDataStorage {
     return this.gameData;
   }
 
-  setData(props: Partial<Omit<iGameData, "id">>): Promise<iGameData> {
+  updateData(props: Partial<Omit<iGameData, "id">>): Promise<iGameData> {
     throw new Error("Method not implemented.");
   }
 
