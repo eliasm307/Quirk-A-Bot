@@ -44,7 +44,7 @@ export interface iGame {
   getCharacterData(): Promise<Map<UID, iCharacterData>>;
   /** Loads character sheets defined in the game */
   loadCharacterSheets(): Promise<Map<UID, iCharacterSheet>>;
-  set(props: Partial<Omit<iGameData, "id">>): Promise<iGameData>;
+  update(props: Partial<Omit<iGameData, "id">>): Promise<void>;
 
 // players: Map<UID, iGamePlayerData>;
 

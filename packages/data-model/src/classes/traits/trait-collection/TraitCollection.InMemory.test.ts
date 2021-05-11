@@ -1,3 +1,5 @@
+import { ATTRIBUTE_COLLECTION_NAME } from '@quirk-a-bot/common';
+
 import { AttributeName, LogOperationUnion } from '../../../declarations/types';
 import InMemoryDataStorageFactory from '../../data-storage/InMemory/InMemoryDataStorageFactory';
 import { iTraitCollectionFactoryMethodProps } from '../interfaces/trait-collection-interfaces';
@@ -25,7 +27,7 @@ test("TraitCollection CRUD functionality", async () => {
   );
 
   // it('creates a path', () => {
-  expect(tc.path).toEqual(`${rootCollectionPath}/Attributes`);
+  expect(tc.path).toEqual(`${rootCollectionPath}/${ATTRIBUTE_COLLECTION_NAME}`);
 
   // it('has initial size of 0', () => {
   expect(tc.size).toEqual(0);
@@ -38,7 +40,7 @@ test("TraitCollection CRUD functionality", async () => {
 
   // 	it('adds its name to the trait path', () => {
   expect((tc.get("Wits") as iGeneralTrait).path).toEqual(
-    `${rootCollectionPath}/Attributes/Wits`
+    `${rootCollectionPath}/${ATTRIBUTE_COLLECTION_NAME}/Wits`
   );
 
   // it('can change existing trait values', () => {

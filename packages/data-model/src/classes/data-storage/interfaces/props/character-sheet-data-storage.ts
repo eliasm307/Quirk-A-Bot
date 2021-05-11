@@ -9,10 +9,6 @@ export interface iCharacterSheetDataStorageFactoryProps
   extends iHasId,
     iHasParentPath {}
 
-export interface iCharacterSheetDataStorageFactoryProps
-  extends iHasId,
-    iHasParentPath {}
-
 export interface iBaseCharacterSheetDataStorageProps
   extends iHasId,
     iHasParentPath,
