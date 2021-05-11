@@ -73,8 +73,8 @@ export interface iGameDataStorage extends iHasPath, iHasCleanUp {
   /** Makes sure that a game with the given id actually exists in the given data storage, otherwise it creates it with default values */
   assertDataExistsOnDataStorage(): Promise<void>;
   /** Returns instantiated character sheet objects for the game */
-  getCharacterSheets(): Promise<iCharacterSheet[]>;
-  getCharacters(): Promise<iCharacterData[]>;
+  // getCharacterSheets(): Promise<iCharacterSheet>;
+  getCharacterData(): Promise<iCharacterData[]>;
   /** Returns the game data */
   getData(): Promise<iGameData>;
   setDescription(description: string): Promise<void>;
@@ -106,7 +106,7 @@ export interface iDataStorageFactory {
     props: iBaseTraitCollectionDataStorageProps<N, V, D, T>
   ) => iTraitCollectionDataStorage<N, V, D, T>;
 
-// NOTE the factory props just define what will be available, the specific factories don't need to require any of the given props
+  // NOTE the factory props just define what will be available, the specific factories don't need to require any of the given props
   // ! traits will always be part of trait collections, so factory shouldn't have this method. Trait collections should instead
   /*
   newTraitDataStorageInitialiser(

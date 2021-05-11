@@ -31,6 +31,7 @@ export default class FirestoreCompositeGameDataStorage
   #characterData?: iCharacterData[];
   #compositeDocument: AbstractCompositeDocument<iGameData>;
   #unsubscribeCharacterCollection: () => void;
+  // characterData: Map<string, iCharacterData>;
   path: string;
 
   constructor(props: iFirestoreCompositeCharacterSheetDataStorageProps) {
@@ -79,7 +80,7 @@ export default class FirestoreCompositeGameDataStorage
   }
 
   async addCharacter(id: string): Promise<void> {
-    const charactersData = await this.getCharacters();
+    const charactersData = await this.getCharacterData();
 
     if (charactersData.some((character) => character.id === id))
       return console.warn(
@@ -131,20 +132,7 @@ export default class FirestoreCompositeGameDataStorage
     }
   }
 
-  async getCharacterSheets(): Promise<iCharacterSheet[]> {
-    const characterSheetPromises = (await this.getCharacters()).map(
-      (character) =>
-        CharacterSheet.load({
-          dataStorageFactory: this.dataStorageFactory,
-          id: character.id,
-          parentPath: this.path,
-        })
-    );
-
-    return Promise.all(characterSheetPromises);
-  }
-
-  async getCharacters(): Promise<iCharacterData[]> {
+  async getCharacterData(): Promise<iCharacterData[]> {
     return this.returnValueWhenLoaded(
       () => this.#characterData,
       "characters data"

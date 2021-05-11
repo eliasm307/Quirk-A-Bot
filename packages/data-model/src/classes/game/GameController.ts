@@ -1,12 +1,13 @@
 import { iHasParentPath, UID } from '@quirk-a-bot/common';
 
 import { iHasId } from '../../declarations/interfaces';
+import CharacterSheet from '../character-sheet/CharacterSheet';
 import { iCharacterSheet } from '../character-sheet/interfaces/character-sheet-interfaces';
 import {
   iDataStorageFactory, iGameDataStorage, iHasDataStorageFactory,
 } from '../data-storage/interfaces/data-storage-interfaces';
 import { createPath } from '../data-storage/utils/createPath';
-import { iGame, iGameData } from './interfaces/game-interfaces';
+import { iGame as iGameController, iGameData } from './interfaces/game-interfaces';
 import { iCharacterData } from './interfaces/game-player-interfaces';
 
 // ? similar to characterSheetDataStorage loader, should these be the same?
@@ -14,23 +15,22 @@ interface iLoaderProps extends iHasId, iHasDataStorageFactory, iHasParentPath {}
 
 export interface iGameProps extends iLoaderProps {
   gameDataStorage: iGameDataStorage;
-  initialCharacterData: iCharacterData[];
-  initialData: iGameData;
+
+// initialCharacterData: iCharacterData[];
+  // initialData: iGameData;
 }
 
-export default class GameDocument implements iGame {
+export default class GameController implements iGameController {
   /** Existing singleton instances of this class */
-  protected static instances: Map<string, GameDocument> = new Map<
+  protected static instances: Map<string, GameController> = new Map<
     string,
-    GameDocument
+    GameController
   >();
 
   readonly id: string;
 
   #dataStorageFactory: iDataStorageFactory;
   #gameDataStorage: iGameDataStorage;
-  characters: Map<string, iCharacterData>;
-  gameMasters: Set<string>;
   path: string;
 
   private constructor({
@@ -38,8 +38,6 @@ export default class GameDocument implements iGame {
     dataStorageFactory,
     gameDataStorage,
     parentPath,
-    initialCharacterData,
-    initialData,
   }: iGameProps) {
     this.id = id;
     this.path = createPath(parentPath, id);
@@ -47,20 +45,22 @@ export default class GameDocument implements iGame {
     this.#dataStorageFactory = dataStorageFactory;
     this.#gameDataStorage = gameDataStorage;
 
+    /*
     this.gameMasters = new Set(initialData.gameMasters);
 
     this.characters = new Map(
       initialCharacterData.map((character) => [character.id, character])
     );
+    */
   }
 
   /** Loads a game instance **/
-  static async load(props: iLoaderProps): Promise<GameDocument> {
+  static async load(props: iLoaderProps): Promise<GameController> {
     const { dataStorageFactory, id } = props;
 
     dataStorageFactory.assertIdIsValid(id);
 
-    const preExistingInstance = GameDocument.instances.get(id);
+    const preExistingInstance = GameController.instances.get(id);
 
     // if an instance has already been created with this id then use that instance
     if (preExistingInstance) return preExistingInstance;
@@ -71,16 +71,16 @@ export default class GameDocument implements iGame {
       // todo find a better way to do this
       await gameDataStorage.assertDataExistsOnDataStorage();
 
+      /*
       const initialData = await gameDataStorage.getData();
 
       const initialCharacterData = await gameDataStorage.getCharacters();
+      */
 
-      return new GameDocument({
+      return new GameController({
         ...props,
         gameDataStorage,
         dataStorageFactory,
-        initialCharacterData,
-        initialData,
       });
     } catch (error) {
       console.error(__filename, { error });
@@ -100,15 +100,33 @@ export default class GameDocument implements iGame {
     return this.#gameDataStorage.getData();
   }
 
+  async getCharacterData(): Promise<Map<string, iCharacterData>> {
+    const data = await this.#gameDataStorage.getCharacterData();
+
+    return new Map(
+      data.map((characterData) => [characterData.id, characterData])
+    );
+  }
+
   async loadCharacterSheets(): Promise<Map<UID, iCharacterSheet>> {
-    const characterSheets = await this.#gameDataStorage.getCharacterSheets();
+    const characterSheetPromises = (
+      await this.#gameDataStorage.getCharacterData()
+    ).map(({ id }) =>
+      CharacterSheet.load({
+        dataStorageFactory: this.#dataStorageFactory,
+        id,
+        parentPath: this.path,
+      })
+    );
+
+    const characterSheets = await Promise.all(characterSheetPromises);
 
     // no character sheets defined
     if (!characterSheets || !characterSheets.length) return new Map();
 
     // return character sheet instances
     return new Map(
-      characterSheets.map((characterSheet) => [
+      Array.from(characterSheets.values()).map((characterSheet) => [
         characterSheet.id,
         characterSheet,
       ])
