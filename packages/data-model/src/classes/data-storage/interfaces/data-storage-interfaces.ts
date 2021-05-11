@@ -86,6 +86,8 @@ export interface iGameDataStorage extends iHasPath, iHasCleanUp {
 export interface iDataStorageFactory {
   /** Validates an id, throws an error if not valid */
   assertIdIsValid(id: string): void;
+  /** Creates a path to an entity in the data storage format */
+  createPath(parentPath: string, id: string): string;
   /** Validates an id and returns a boolean to indicate validity */
   idIsValid(id: string): boolean;
   newCharacterSheetDataStorage(

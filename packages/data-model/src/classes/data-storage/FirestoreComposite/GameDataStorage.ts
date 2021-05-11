@@ -40,7 +40,7 @@ export default class FirestoreCompositeGameDataStorage
     this.path = createPath(parentPath, id);
     this.dataStorageFactory = dataStorageFactory;
     this.firestore = firestore;
-    const characterCollectionPath = createPath(
+    const characterCollectionPath = dataStorageFactory.createPath(
       this.path,
       CHARACTER_COLLECTION_NAME
     );
