@@ -1,4 +1,8 @@
-import { FirestoreDocumentReference } from '../FirebaseExports';
+/** Props for a change handler */
+export interface BaseChangeProps<T> {
+  new: T;
+  old: T;
+}
 
 export interface iHasGetData<D> {
   readonly data: () => D;

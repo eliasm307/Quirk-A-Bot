@@ -6,24 +6,33 @@ import {
   iCharacterSheetDataStorage, iDataStorageFactory, iGameDataStorage, iTraitCollectionDataStorage,
 } from '../interfaces/data-storage-interfaces';
 import {
-  iBaseCharacterSheetDataStorageFactoryMethodProps, iGameDataStorageFactoryProps,
-} from '../interfaces/props/data-storage-creator';
+  iCharacterSheetDataStorageFactoryProps,
+} from '../interfaces/props/character-sheet-data-storage';
 import {
   iFirestoreCompositeDataStorageFactoryProps,
 } from '../interfaces/props/data-storage-factory';
+import { iGameDataStorageFactoryProps } from '../interfaces/props/game-data-storage';
 import {
   iBaseTraitCollectionDataStorageProps,
 } from '../interfaces/props/trait-collection-data-storage';
+import { createPath } from '../utils/createPath';
 import FirestoreCompositeCharacterSheetDataStorage from './CharacterSheetDataStorage';
 import FirestoreCompositeGameDataStorage from './GameDataStorage';
 import FirestoreCompositeTraitCollectionDataStorage from './TraitCollectionDataStorage';
 
 export default class FirestoreCompositeDataStorageFactory
-  implements iDataStorageFactory {
+  implements iDataStorageFactory
+{
   #firestore: Firestore;
 
   constructor({ firestore }: iFirestoreCompositeDataStorageFactoryProps) {
     this.#firestore = firestore;
+  }
+
+  assertIdIsValid(id: string): void {}
+
+  createPath(parentPath: string, id: string): string {
+    return createPath(parentPath, id);
   }
 
   idIsValid(id: string): boolean {
@@ -31,7 +40,7 @@ export default class FirestoreCompositeDataStorageFactory
   }
 
   newCharacterSheetDataStorage(
-    props: iBaseCharacterSheetDataStorageFactoryMethodProps
+    props: iCharacterSheetDataStorageFactoryProps
   ): iCharacterSheetDataStorage {
     return new FirestoreCompositeCharacterSheetDataStorage({
       ...props,

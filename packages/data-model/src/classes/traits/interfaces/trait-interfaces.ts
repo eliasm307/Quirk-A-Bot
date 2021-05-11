@@ -6,7 +6,7 @@ import {
   SkillName, TraitNameUnionOrString, TraitValueTypeUnion,
 } from '../../../declarations/types';
 import {
-  iHasTraitDataStorageInitialiser,
+  iHasDataStorageFactory, iHasTraitDataStorageInitialiser,
 } from '../../data-storage/interfaces/data-storage-interfaces';
 import {
   iBaseLogger, iChildLoggerCreatorProps, iHasLogReporter, iTraitCollectionLogger, iTraitLogger,
@@ -53,6 +53,7 @@ export interface iBaseTraitProps<
   D extends iBaseTraitData<N, V>
 > extends iHasTraitDataStorageInitialiser<N, V>,
     iHasParentPath,
+    iHasDataStorageFactory,
     iCanHaveLoggerCreator<iTraitLogger> {
   name: N;
   value: V;
@@ -62,6 +63,7 @@ export interface iAbstractBaseTraitProps<
   V extends TraitValueTypeUnion,
   D extends iBaseTraitData<N, V>
 > extends iBaseTraitProps<N, V, D>,
+    iHasDataStorageFactory,
     iHasGetData<D> {}
 
 export interface iStringTraitProps<
@@ -123,6 +125,7 @@ export interface iTraitCollectionProps<
   T extends iBaseTrait<N, V, D>
 > extends iHasTraitInstanceCreator<N, V, D, T>,
     iTraitCollectionDataStorageInitialiserBundle,
+    iHasDataStorageFactory,
     // iHasTraitDataStorageInitialiser,
     iHasParentPath,
     iCanHaveLoggerCreator<iTraitCollectionLogger> {

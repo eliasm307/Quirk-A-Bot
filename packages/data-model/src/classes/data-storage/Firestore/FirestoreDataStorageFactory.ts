@@ -13,6 +13,7 @@ import {
   iBaseTraitCollectionDataStorageProps,
 } from '../interfaces/props/trait-collection-data-storage';
 import { iBaseTraitDataStorageProps } from '../interfaces/props/trait-data-storage';
+import { createPath } from '../utils/createPath';
 import FirestoreCharacterSheetDataStorage from './FirestoreCharacterSheetDataStorage';
 import FirestoreGameDataStorage from './FirestoreGameDataStorage';
 import FirestoreTraitCollectionDataStorage from './FirestoreTraitCollectionDataStorage';
@@ -20,11 +21,20 @@ import FirestoreTraitDataStorage from './FirestoreTraitDataStorage';
 import firestoreIdIsValid from './utils/firestoreIdIsValid';
 
 export default class FirestoreDataStorageFactory
-  implements iDataStorageFactory {
+  implements iDataStorageFactory
+{
   #firestore: Firestore;
 
   constructor({ firestore }: iFirestoreDataStorageFactoryProps) {
     this.#firestore = firestore;
+  }
+
+  assertIdIsValid(id: string): void {
+    throw new Error("Method not implemented.");
+  }
+
+  createPath(parentPath: string, id: string): string {
+    return createPath(parentPath, id);
   }
 
   idIsValid(id: string): boolean {

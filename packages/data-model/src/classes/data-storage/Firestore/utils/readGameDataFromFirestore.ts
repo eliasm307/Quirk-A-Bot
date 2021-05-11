@@ -63,10 +63,10 @@ export default async function readGameDataFromFirestore({
 
   console.timeEnd(timerName);
   return {
-    characterSheetIds,
+    // characterSheetIds,
     description,
     id,
-    players: players,
+    // players: players,
     gameMasters,
   };
 }

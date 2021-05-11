@@ -63,6 +63,7 @@ module.exports = {
     "@typescript-eslint/no-use-before-define": 1,
     "@typescript-eslint/no-var-requires": 0,
     "@typescript-eslint/quotes": 0,
+    "@typescript-eslint/brace-style": 0,
     "@typescript-eslint/restrict-plus-operands": 1,
     "@typescript-eslint/restrict-template-expressions": 1,
     "@typescript-eslint/semi": 0,

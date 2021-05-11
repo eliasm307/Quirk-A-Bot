@@ -1,6 +1,6 @@
 import {
-  ATTRIBUTE_COLLECTION_NAME, DISCIPLINE_COLLECTION_NAME, firestoreEmulator, pause,
-  SKILL_COLLECTION_NAME, TRAIT_COMPOSITE_DOCUMENT_COLLECTION_NAME,
+  ATTRIBUTE_COLLECTION_NAME, CHARACTER_SHEET_TRAIT_COMPOSITE_DOCUMENT_COLLECTION_NAME,
+  DISCIPLINE_COLLECTION_NAME, firestoreEmulator, pause, SKILL_COLLECTION_NAME,
 } from '@quirk-a-bot/common';
 
 import { AttributeName, DisciplineName, SkillName } from '../../../declarations/types';
@@ -23,12 +23,13 @@ const getTraitCollectionPath = (
   parentPath: string,
   traitCollectionName: string
 ) =>
-  `${parentPath}/${TRAIT_COMPOSITE_DOCUMENT_COLLECTION_NAME}/${traitCollectionName}`;
+  `${parentPath}/${CHARACTER_SHEET_TRAIT_COMPOSITE_DOCUMENT_COLLECTION_NAME}/${traitCollectionName}`;
 
 const createTraitCollectionFactoryMethodProps = (
   groupName: string
 ): iTraitCollectionFactoryMethodProps => ({
-  traitCollectionDataStorageInitialiser: dataStorageFactory.newTraitCollectionDataStorageInitialiser(),
+  traitCollectionDataStorageInitialiser:
+    dataStorageFactory.newTraitCollectionDataStorageInitialiser(),
   // traitDataStorageInitialiser: dataStorageFactory.newTraitDataStorageInitialiser(),
   parentPath: `${rootCollectionPath}/${groupName}`,
   loggerCreator: null,

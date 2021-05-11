@@ -7,7 +7,7 @@ import {
   AttributeName, DisciplineName, SkillName, TraitNameUnionOrString, TraitValueTypeUnion,
 } from '../../../declarations/types';
 import {
-  iHasTraitDataStorageInitialiser, iTraitCollectionDataStorage,
+  iHasDataStorageFactory, iHasTraitDataStorageInitialiser, iTraitCollectionDataStorage,
 } from '../../data-storage/interfaces/data-storage-interfaces';
 import {
   iBaseTraitCollectionDataStorageProps,
@@ -45,6 +45,7 @@ export interface iTraitCollectionDataStorageInitialiserBundle {
 export interface iTraitCollectionFactoryMethodProps
   extends iTraitCollectionDataStorageInitialiserBundle,
     iHasParentPath,
+    iHasDataStorageFactory,
     iCanHaveLoggerCreator<iTraitCollectionLogger> {}
 
 // -------------------------------------------------------

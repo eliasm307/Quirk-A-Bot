@@ -14,16 +14,26 @@ import {
   iBaseTraitCollectionDataStorageProps,
 } from '../interfaces/props/trait-collection-data-storage';
 import { iBaseTraitDataStorageProps } from '../interfaces/props/trait-data-storage';
+import { createPath } from '../utils/createPath';
 import LocalFileCharacterSheetDataStorage from './LocalFileCharacterSheetDataStorage';
 import LocalFileTraitCollectionDataStorage from './LocalFileTraitCollectionDataStorage';
 import LocalFileTraitDataStorage from './LocalFileTraitDataStorage';
 
 export default class LocalFileDataStorageFactory
-  implements iDataStorageFactory {
+  implements iDataStorageFactory
+{
   #resolvedBasePath: string;
 
   constructor({ resolvedBasePath }: iLocalFileDataStorageFactoryProps) {
     this.#resolvedBasePath = resolvedBasePath;
+  }
+
+  assertIdIsValid(id: string): void {
+    throw new Error("Method not implemented.");
+  }
+
+  createPath(parentPath: string, id: string): string {
+    return createPath(parentPath, id);
   }
 
   idIsValid(id: string): boolean {
@@ -33,11 +43,14 @@ export default class LocalFileDataStorageFactory
   newCharacterSheetDataStorage(
     props: iBaseCharacterSheetDataStorageFactoryMethodProps
   ): iCharacterSheetDataStorage {
+    throw new Error("Method not implemented.");
+    /*
     return new LocalFileCharacterSheetDataStorage({
       ...props,
       dataStorageFactory: this,
       resolvedBasePath: this.#resolvedBasePath,
     });
+    */
   }
 
   newGameDataStorage(props: iGameDataStorageFactoryProps): iGameDataStorage {

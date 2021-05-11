@@ -1,30 +1,36 @@
 import InMemoryDataStorageFactory from '../../data-storage/InMemory/InMemoryDataStorageFactory';
 import NumberTrait from './NumberTrait';
 
-const dataStorageFactory = new InMemoryDataStorageFactory({});
-const traitDataStorageInitialiser = dataStorageFactory.newTraitDataStorageInitialiser();
+const dataStorageFactory = new InMemoryDataStorageFactory();
+
+const traitDataStorageInitialiser =
+  dataStorageFactory.newTraitDataStorageInitialiser();
 const parentPath = "NumberTrait-InMemory-test";
+
+const baseProps = {
+  traitDataStorageInitialiser,
+  dataStorageFactory,
+  loggerCreator: null,
+};
 
 // todo replace all jest "test" functions with "it" functions
 
 describe("Number trait with in memory data storage", () => {
   it("rounds values on instantiation", () => {
     const trait1 = new NumberTrait<string>({
+      ...baseProps,
       max: 10,
       name: "numberTrait1",
       value: 5.2,
-      traitDataStorageInitialiser,
       parentPath,
-      loggerCreator: null,
     });
 
     const trait2 = new NumberTrait<string>({
+      ...baseProps,
       max: 10,
       name: "numberTrait2",
       value: 5.8,
-      traitDataStorageInitialiser,
       parentPath,
-      loggerCreator: null,
     });
     expect(trait1.value).toEqual(5);
     expect(trait2.value).toEqual(6);
@@ -33,12 +39,11 @@ describe("Number trait with in memory data storage", () => {
   it("rounds up values with a decimal portion equal to or greater than 0.5 on value modification", async () => {
     expect.assertions(1);
     const trait1 = new NumberTrait<string>({
+      ...baseProps,
       max: 10,
       name: "numberTrait1",
       value: 5.2,
-      traitDataStorageInitialiser,
       parentPath,
-      loggerCreator: null,
     });
 
     await trait1.setValue(0.5);
@@ -50,12 +55,11 @@ describe("Number trait with in memory data storage", () => {
     expect.assertions(1);
 
     const trait1 = new NumberTrait<string>({
+      ...baseProps,
       max: 10,
       name: "numberTrait1",
       value: 5.2,
-      traitDataStorageInitialiser,
       parentPath,
-      loggerCreator: null,
     });
 
     await trait1.setValue(0.4);
@@ -66,12 +70,11 @@ describe("Number trait with in memory data storage", () => {
     expect.assertions(1);
 
     const trait1 = new NumberTrait<string>({
+      ...baseProps,
       max: 10,
       name: "numberTrait1",
       value: 5.2,
-      traitDataStorageInitialiser,
       parentPath,
-      loggerCreator: null,
     });
 
     await trait1.setValue(5);
@@ -85,12 +88,11 @@ describe("Number trait with in memory data storage", () => {
     expect.assertions(1);
 
     const trait1 = new NumberTrait<string>({
+      ...baseProps,
       max: 10,
       name: "numberTrait1",
       value: 5.2,
-      traitDataStorageInitialiser,
       parentPath,
-      loggerCreator: null,
     });
     await trait1.setValue(1);
     await trait1.setValue(2);

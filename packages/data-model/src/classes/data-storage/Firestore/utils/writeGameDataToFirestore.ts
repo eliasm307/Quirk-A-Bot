@@ -11,7 +11,7 @@ export default async function writeGameDataToFirestore({
   const timerName = `Time to write game data at path ${path}`;
   console.time(timerName);
 
-  const { players: players, characterSheetIds, ...coreData } = data;
+  const { ...coreData } = data;
 
   try {
     const gameDocRef = firestore.doc(path);
@@ -23,12 +23,14 @@ export default async function writeGameDataToFirestore({
     batch.set(gameDocRef, coreData);
 
     // set each players data
+    /*
     players.forEach((playerData) => {
       const playerDocRef = firestore.doc(
         `${path}/${PLAYER_COLLECTION_NAME}/${playerData.id}`
       );
       batch.set(playerDocRef, playerData);
     });
+    */
 
     // commit batch
     await batch.commit();

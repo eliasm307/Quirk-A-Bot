@@ -11,6 +11,9 @@ import { iTraitLogger } from '../../../log/interfaces/log-interfaces';
 import { iBaseTraitData, iCanHaveLoggerCreator } from '../../../traits/interfaces/trait-interfaces';
 import { iHasDataStorageFactory } from '../data-storage-interfaces';
 
+export interface iTraitDataStorageInitialiserFactoryProps
+  extends iHasCharacterSheet {}
+
 export interface iBaseTraitDataStorageProps<
   N extends TraitNameUnionOrString,
   V extends TraitValueTypeUnion

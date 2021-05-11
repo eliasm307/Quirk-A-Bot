@@ -12,12 +12,19 @@ import {
   iBaseTraitCollectionDataStorageProps,
 } from '../interfaces/props/trait-collection-data-storage';
 import { iBaseTraitDataStorageProps } from '../interfaces/props/trait-data-storage';
+import { createPath } from '../utils/createPath';
 import InMemoryCharacterSheetDataStorage from './InMemoryCharacterSheetDataStorage';
 import InMemoryTraitCollectionDataStorage from './InMemoryTraitCollectionDataStorage';
 import InMemoryTraitDataStorage from './InMemoryTraitDataStorage';
 
 export default class InMemoryDataStorageFactory implements iDataStorageFactory {
-  constructor(props?: iInMemoryFileDataStorageFactoryProps) {}
+  assertIdIsValid(id: string): void {
+    throw new Error("Method not implemented.");
+  }
+
+  createPath(parentPath: string, id: string): string {
+    return createPath(parentPath, id);
+  }
 
   idIsValid(id: string): boolean {
     throw new Error("Method not implemented.");

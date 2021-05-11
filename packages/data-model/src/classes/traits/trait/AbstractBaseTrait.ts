@@ -11,7 +11,8 @@ export default abstract class AbstractBaseTrait<
   N extends TraitNameUnionOrString,
   V extends TraitValueTypeUnion,
   D extends iBaseTraitData<N, V>
-> implements iBaseTrait<N, V, D> {
+> implements iBaseTrait<N, V, D>
+{
   protected dataStorage: iBaseTraitDataStorage<N, V>;
 
   readonly data: () => D;
@@ -29,6 +30,7 @@ export default abstract class AbstractBaseTrait<
     parentPath,
     loggerCreator,
     data,
+    dataStorageFactory,
   }: iAbstractBaseTraitProps<N, V, D>) {
     this.name = name;
 
@@ -38,6 +40,7 @@ export default abstract class AbstractBaseTrait<
       defaultValueIfNotDefined: this.preProcessValue(value),
       parentPath,
       loggerCreator,
+      dataStorageFactory,
     });
 
     this.log = this.dataStorage.log;

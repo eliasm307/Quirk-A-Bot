@@ -5,20 +5,18 @@ import {
 } from '@quirk-a-bot/common';
 
 import isCharacterData from '../../../utils/type-predicates/isCharacterData';
-import CharacterSheet from '../../character-sheet/CharacterSheet';
 import { iCharacterSheet } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import { iGameData } from '../../game/interfaces/game-interfaces';
 import { iCharacterData } from '../../game/interfaces/game-player-interfaces';
 import assertDocumentExistsOnFirestore from '../Firestore/utils/assertDocumentExistsOnFirestore';
 import { iDataStorageFactory, iGameDataStorage } from '../interfaces/data-storage-interfaces';
-import {
-  iFirestoreCompositeCharacterSheetDataStorageProps,
-} from '../interfaces/props/character-sheet-data-storage';
+import { iFirestoreCompositeGameDataStorageProps } from '../interfaces/props/game-data-storage';
 import readGameDataFromFirestoreComposite from './utils/readGameData';
 import writeGameDataToFirestoreComposite from './utils/writeGameData';
 
 export default class FirestoreCompositeGameDataStorage
-  implements iGameDataStorage {
+  implements iGameDataStorage
+{
   protected characterSheets?: Map<string, iCharacterSheet>;
   protected dataStorageFactory: iDataStorageFactory;
   protected firestore: Firestore;
@@ -34,7 +32,7 @@ export default class FirestoreCompositeGameDataStorage
   // characterData: Map<string, iCharacterData>;
   path: string;
 
-  constructor(props: iFirestoreCompositeCharacterSheetDataStorageProps) {
+  constructor(props: iFirestoreCompositeGameDataStorageProps) {
     const { id, dataStorageFactory, firestore, parentPath } = props;
     this.id = id;
     this.path = dataStorageFactory.createPath(parentPath, id);
@@ -49,8 +47,8 @@ export default class FirestoreCompositeGameDataStorage
     );
 
     // listen to character collection
-    this.#unsubscribeCharacterCollection = this.#characterCollectionRef.onSnapshot(
-      {
+    this.#unsubscribeCharacterCollection =
+      this.#characterCollectionRef.onSnapshot({
         next: (collectionSnapshot) => {
           const data = collectionSnapshot.docs.map((documentSnapshot) =>
             documentSnapshot.data()
@@ -59,8 +57,7 @@ export default class FirestoreCompositeGameDataStorage
           this.#characterData = data.filter(isCharacterData);
         },
         error: console.error,
-      }
-    );
+      });
 
     // load and listen to game document
     this.#compositeDocument = InconsistentCompositeDocument.load<iGameData>({

@@ -3,8 +3,11 @@ import { Firestore } from '@quirk-a-bot/common';
 import { CharacterSheet } from '../../..';
 import { iCharacterSheet } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import { iGameData } from '../../game/interfaces/game-interfaces';
+import { iCharacterData } from '../../game/interfaces/game-player-interfaces';
 import { iDataStorageFactory, iGameDataStorage } from '../interfaces/data-storage-interfaces';
-import { iFirestoreCharacterSheetDataStorageProps } from '../interfaces/props/game-data-storage';
+import {
+  iFirestoreCharacterSheetDataStorageProps,
+} from '../interfaces/props/character-sheet-data-storage';
 import assertDocumentExistsOnFirestore from './utils/assertDocumentExistsOnFirestore';
 import readGameDataFromFirestore from './utils/readGameDataFromFirestore';
 import writeGameDataToFirestore from './utils/writeGameDataToFirestore';
@@ -26,6 +29,10 @@ export default class FirestoreGameDataStorage implements iGameDataStorage {
     this.firestore = firestore;
   }
 
+  addCharacter(id: string): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+
   // todo replace this with a load method instead?
   async assertDataExistsOnDataStorage(): Promise<void> {
     this.gameData = await assertDocumentExistsOnFirestore<iGameData>({
@@ -43,6 +50,7 @@ export default class FirestoreGameDataStorage implements iGameDataStorage {
       documentDataWriter: writeGameDataToFirestore,
     });
 
+    /*
     const characterSheetPromises = this.getCharacterIds().map((id) =>
       CharacterSheet.load({
         id,
@@ -50,8 +58,10 @@ export default class FirestoreGameDataStorage implements iGameDataStorage {
         parentPath: this.path,
       })
     );
+    */
 
     try {
+      /*
       const characterSheetsArray = await Promise.all(characterSheetPromises);
 
       this.characterSheets = new Map(
@@ -60,6 +70,7 @@ export default class FirestoreGameDataStorage implements iGameDataStorage {
           characterSheet,
         ])
       );
+      */
     } catch (error) {
       const errorDetail = {
         message: `Error loading character sheets for game with id ${this.id}`,
@@ -73,23 +84,24 @@ export default class FirestoreGameDataStorage implements iGameDataStorage {
     }
   }
 
-  getCharacterIds(): string[] {}
-
-  getCharacterSheets(): Map<string, iCharacterSheet> {
-    if (!this.characterSheets)
-      throw Error(
-        `Game character sheets not loaded, please call assertDataExistsOnDataStorage before using this method`
-      );
-
-    return this.characterSheets;
+  cleanUp(): boolean {
+    throw new Error("Method not implemented.");
   }
 
-  getData(): iGameData {
+  getCharacterData(): Promise<iCharacterData[]> {
+    throw new Error("Method not implemented.");
+  }
+
+  async getData(): Promise<iGameData> {
     if (!this.gameData)
       throw Error(
         `Game data not loaded, please call assertDataExistsOnDataStorage before using this method`
       );
 
     return this.gameData;
+  }
+
+  setDescription(description: string): Promise<void> {
+    throw new Error("Method not implemented.");
   }
 }

@@ -1,7 +1,17 @@
-import { iHasParentPath } from '@quirk-a-bot/common';
+import { BaseChangeProps, iHasParentPath } from '@quirk-a-bot/common';
 
 import { iHasFirestore, iHasId, iHasResolvedBasePath } from '../../../../declarations/interfaces';
+import { iGameData } from '../../../game/interfaces/game-interfaces';
+import { iCharacterData } from '../../../game/interfaces/game-player-interfaces';
 import { iHasDataStorageFactory } from '../data-storage-interfaces';
+
+export interface iCharacterSheetDataStorageFactoryProps
+  extends iHasId,
+    iHasParentPath {}
+
+export interface iCharacterSheetDataStorageFactoryProps
+  extends iHasId,
+    iHasParentPath {}
 
 export interface iBaseCharacterSheetDataStorageProps
   extends iHasId,
