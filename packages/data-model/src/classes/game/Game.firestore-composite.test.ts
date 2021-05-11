@@ -1,7 +1,7 @@
 import { firestoreEmulator, pause } from '@quirk-a-bot/common';
 
-import GameController from '../../game/GameController';
-import FirestoreCompositeDataStorageFactory from './DataStorageFactory';
+import FirestoreCompositeDataStorageFactory from '../data-storage/FirestoreComposite/DataStorageFactory';
+import GameController from './GameController';
 
 const firestore = firestoreEmulator;
 
@@ -25,8 +25,20 @@ describe("Game with firestore composite data storage", () => {
 
     await pause(200);
 
-    const firestoreData = (await firestore.doc(documentPath).get()).data();
+    const docRef = firestore.doc(documentPath);
+
+    let firestoreData = (await docRef.get()).data();
 
     await expect(game.data()).resolves.toEqual(firestoreData);
+
+    // update description and check result
+    const description = "something";
+
+    await game.update({ description });
+
+    firestoreData = (await docRef.get()).data();
+
+    await expect(game.data()).resolves.toEqual(firestoreData);
+    expect(firestoreData?.description).toEqual(description);
   });
 });
