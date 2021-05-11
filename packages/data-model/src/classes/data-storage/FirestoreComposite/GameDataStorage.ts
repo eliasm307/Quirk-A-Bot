@@ -4,8 +4,8 @@ import {
   isString, pause,
 } from '@quirk-a-bot/common';
 
-import { CharacterSheet } from '../../..';
 import isCharacterData from '../../../utils/type-predicates/isCharacterData';
+import CharacterSheet from '../../character-sheet/CharacterSheet';
 import { iCharacterSheet } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import { iGameData } from '../../game/interfaces/game-interfaces';
 import { iCharacterData } from '../../game/interfaces/game-player-interfaces';

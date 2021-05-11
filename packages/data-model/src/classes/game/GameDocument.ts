@@ -68,7 +68,7 @@ export default class GameDocument implements iGame {
     try {
       const gameDataStorage = dataStorageFactory.newGameDataStorage(props);
 
-      // check if a character sheet with this id doesn't  exist in the data storage, initialise a blank character sheet if not
+      // todo find a better way to do this
       await gameDataStorage.assertDataExistsOnDataStorage();
 
       const initialData = await gameDataStorage.getData();
@@ -97,14 +97,16 @@ export default class GameDocument implements iGame {
   }
 
   data(): Promise<iGameData> {
-    throw new Error("Method not implemented.");
+    return this.#gameDataStorage.getData();
   }
 
   async loadCharacterSheets(): Promise<Map<UID, iCharacterSheet>> {
     const characterSheets = await this.#gameDataStorage.getCharacterSheets();
 
+    // no character sheets defined
     if (!characterSheets || !characterSheets.length) return new Map();
 
+    // return character sheet instances
     return new Map(
       characterSheets.map((characterSheet) => [
         characterSheet.id,
