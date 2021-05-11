@@ -52,6 +52,7 @@ export default abstract class AbstractCompositeDocument<
   SchemaType extends Record<string, any>
 > implements iCompositeDocument<SchemaType>
 {
+  protected documentRef: FirestoreDocumentReference;
   protected firestore: Firestore;
   protected observer: FirestoreDocumentObserver<SchemaType>;
   protected subDocuments: Map<
@@ -61,7 +62,6 @@ export default abstract class AbstractCompositeDocument<
 
   readonly path: string;
 
-  #ref: FirestoreDocumentReference;
   data: SchemaType;
 
   /*
@@ -76,7 +76,7 @@ export default abstract class AbstractCompositeDocument<
 
     this.path = path;
 
-    this.#ref = firestore.doc(path);
+    this.documentRef = firestore.doc(path);
 
     this.data = initialData ? { ...initialData } : ({} as SchemaType);
 
@@ -140,7 +140,7 @@ export default abstract class AbstractCompositeDocument<
     */
 
     try {
-      await this.#ref.set(dataAfterDelete);
+      await this.documentRef.set(dataAfterDelete);
       this.handleSubDocumentRemoval(dataAfterDelete as SchemaType);
     } catch (error) {
       console.error(

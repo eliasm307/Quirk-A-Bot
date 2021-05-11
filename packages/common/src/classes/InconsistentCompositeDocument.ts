@@ -51,4 +51,8 @@ export default class ConsistentCompositeDocument<
       schemaPredicate,
     });
   }
+
+  async update(updates: Partial<S>): Promise<void> {
+    await this.documentRef.update(updates);
+  }
 }
