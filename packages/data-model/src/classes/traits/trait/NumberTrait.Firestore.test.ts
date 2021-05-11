@@ -8,8 +8,15 @@ import NumberTrait from './NumberTrait';
 const firestore = firestoreEmulator;
 
 const dataStorageFactory = new FirestoreDataStorageFactory({ firestore });
-const traitDataStorageInitialiser = dataStorageFactory.newTraitDataStorageInitialiser();
+const traitDataStorageInitialiser =
+  dataStorageFactory.newTraitDataStorageInitialiser();
 const testSuiteParentPath = "numberTrait-firestore";
+
+const baseProps = {
+  traitDataStorageInitialiser,
+  dataStorageFactory,
+  loggerCreator: null,
+};
 
 describe("Number trait with firestore data storage", () => {
   it("asserts trait exists in firestore in the right format", async () => {
@@ -17,12 +24,11 @@ describe("Number trait with firestore data storage", () => {
     const testParentPath = `${testSuiteParentPath}-trait-exists`;
 
     const trait1 = new NumberTrait<string>({
+      ...baseProps,
       max: 10,
       name: trait1Name,
       value: 5.2,
-      traitDataStorageInitialiser,
       parentPath: testParentPath,
-      loggerCreator: null,
     });
 
     await pause(1000); // wait for synchronisation
@@ -46,12 +52,11 @@ describe("Number trait with firestore data storage", () => {
     const testParentPath = `${testSuiteParentPath}-trait-writes`;
 
     const trait1 = new NumberTrait<string>({
+      ...baseProps,
       max: 10,
       name: trait1Name,
       value: 5.2,
-      traitDataStorageInitialiser,
       parentPath: testParentPath,
-      loggerCreator: null,
     });
 
     await pause(100); // wait for synchronisation
@@ -77,22 +82,20 @@ describe("Number trait with firestore data storage", () => {
     const testParentPath = `${testSuiteParentPath}-trait-init`;
 
     const trait1 = new NumberTrait<string>({
+      ...baseProps,
       max: 10,
       name: trait1Name,
       value: 5.2,
-      traitDataStorageInitialiser,
       parentPath: testParentPath,
-      loggerCreator: null,
     });
     await pause(100); // wait for synchronisation
 
     const trait2 = new NumberTrait<string>({
+      ...baseProps,
       max: 10,
       name: trait1Name,
       value: 5,
-      traitDataStorageInitialiser,
       parentPath: testParentPath,
-      loggerCreator: null,
     });
 
     await pause(100); // wait for synchronisation
@@ -126,23 +129,21 @@ describe("Number trait with firestore data storage", () => {
     const initialValue = 0;
     const changeValue = 0;
     const trait1 = new NumberTrait<string>({
+      ...baseProps,
       max: 10,
       name: trait1Name,
       value: 5.2,
-      traitDataStorageInitialiser,
       parentPath: testParentPath,
-      loggerCreator: null,
     });
 
     await pause(100); // wait for synchronisation
 
     const trait2 = new NumberTrait<string>({
+      ...baseProps,
       max: 10,
       name: trait1Name,
       value: 5,
-      traitDataStorageInitialiser,
       parentPath: testParentPath,
-      loggerCreator: null,
     });
 
     await pause(100); // wait for synchronisation
