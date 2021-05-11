@@ -53,6 +53,7 @@ export default class GameController implements iGameController {
     );
     */
   }
+  set(props: iGameData): Promise<iGameData> {}
 
   static defaultData(id: string): iGameData {
     return {
@@ -139,9 +140,5 @@ export default class GameController implements iGameController {
         characterSheet,
       ])
     );
-  }
-
-  setDescription(description: string): Promise<void> {
-    return this.#gameDataStorage.setDescription(description);
   }
 }
