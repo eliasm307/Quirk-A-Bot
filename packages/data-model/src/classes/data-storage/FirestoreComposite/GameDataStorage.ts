@@ -28,7 +28,7 @@ export default class FirestoreCompositeGameDataStorage
   #characterCollectionRef: FirestoreCollectionReference;
   // this will be loaded when listener returns first results
   #characterData?: iCharacterData[];
-  #compositeDocument: AbstractCompositeDocument<iGameData>;
+  #compositeDocument: InconsistentCompositeDocument<iGameData>;
   #unsubscribeCharacterCollection: () => void;
   // characterData: Map<string, iCharacterData>;
   path: string;
@@ -133,6 +133,10 @@ export default class FirestoreCompositeGameDataStorage
 
   async getData(): Promise<iGameData> {
     return this.returnValueWhenLoaded(() => this.gameData, "game data");
+  }
+
+  setData(props: Partial<Omit<iGameData, "id">>): Promise<iGameData> {
+    this.#compositeDocument.
   }
 
   async setDescription(description: string): Promise<void> {

@@ -18,7 +18,7 @@ export interface iGameShape {
   /** List of game masters */
   gameMasters: unknown;
 
-  /** List of players involved in this game as characters, from a sub-collection */
+/** List of players involved in this game as characters, from a sub-collection */
   // players: unknown; // todo to be implemented as part of player management system
 }
 
@@ -28,7 +28,7 @@ export interface iGameData extends iGameShape {
    * this is a subset of the players list */
   gameMasters: UID[];
 
-  // players: iGamePlayerData[];
+// players: iGamePlayerData[];
 }
 
 /** Represents a VTM game in firestore */
@@ -44,9 +44,9 @@ export interface iGame {
   getCharacterData(): Promise<Map<UID, iCharacterData>>;
   /** Loads character sheets defined in the game */
   loadCharacterSheets(): Promise<Map<UID, iCharacterSheet>>;
-  set(props: iGameData): Promise<iGameData>;
+  set(props: Partial<Omit<iGameData, "id">>): Promise<iGameData>;
 
-  // players: Map<UID, iGamePlayerData>;
+// players: Map<UID, iGamePlayerData>;
 
   // todo add game user control functions
   /** Accept a player's request to join a game,
