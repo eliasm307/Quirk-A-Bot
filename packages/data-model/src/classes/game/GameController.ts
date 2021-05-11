@@ -104,6 +104,10 @@ export default class GameController implements iGameController {
     return this.#gameDataStorage.addCharacter(id);
   }
 
+  cleanUp() {
+    this.#gameDataStorage.cleanUp();
+  }
+
   data(): Promise<iGameData> {
     return this.#gameDataStorage.getData();
   }

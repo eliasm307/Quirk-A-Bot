@@ -104,12 +104,6 @@ export default class FirestoreCompositeGameDataStorage
       documentDataReader: readGameDataFromFirestoreComposite,
       documentDataWriter: writeGameDataToFirestoreComposite,
     });
-
-    this.gameData = {
-      id: this.id,
-      description: "",
-      gameMasters: [],
-    };
   }
 
   cleanUp(): boolean {
@@ -148,7 +142,14 @@ export default class FirestoreCompositeGameDataStorage
   ): Promise<T> {
     // if it is already defined return it
     let value = valueChecker();
-    if (value) return value;
+    if (value) {
+      console.log(
+        __filename,
+        `returnValueWhenLoaded, value already loaded, returning`,
+        { value, valueName }
+      );
+      return value;
+    }
 
     let counter = 0;
     const maxWaitTimeMs = 2000;

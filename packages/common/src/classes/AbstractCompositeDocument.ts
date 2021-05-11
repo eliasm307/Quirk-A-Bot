@@ -52,7 +52,6 @@ export default abstract class AbstractCompositeDocument<
   SchemaType extends Record<string, any>
 > implements iCompositeDocument<SchemaType>
 {
-  protected documentRef: FirestoreDocumentReference;
   protected firestore: Firestore;
   protected observer: FirestoreDocumentObserver<SchemaType>;
   protected subDocuments: Map<
@@ -63,6 +62,7 @@ export default abstract class AbstractCompositeDocument<
   readonly path: string;
 
   data: SchemaType;
+  documentRef: FirestoreDocumentReference;
 
   /*
   abstract load<C extends AbstractCompositeDocument<S>>(

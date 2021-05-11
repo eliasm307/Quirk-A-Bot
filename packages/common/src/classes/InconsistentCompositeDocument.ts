@@ -54,5 +54,7 @@ export default class InconsistentCompositeDocument<
 
   async update(updates: Partial<S>): Promise<void> {
     await this.documentRef.update(updates);
+
+    this.data = { ...this.data, ...updates };
   }
 }
