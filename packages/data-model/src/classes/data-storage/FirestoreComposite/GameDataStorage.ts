@@ -6,6 +6,7 @@ import {
 
 import isCharacterData from '../../../utils/type-predicates/isCharacterData';
 import { iCharacterSheet } from '../../character-sheet/interfaces/character-sheet-interfaces';
+import GameController from '../../game/GameController';
 import { iGameData } from '../../game/interfaces/game-interfaces';
 import { iCharacterData } from '../../game/interfaces/game-player-interfaces';
 import assertDocumentExistsOnFirestore from '../Firestore/utils/assertDocumentExistsOnFirestore';
@@ -100,13 +101,7 @@ export default class FirestoreCompositeGameDataStorage
       firestore: this.firestore,
       path: this.path,
       // todo extract this to a static method or util
-      newDefaultData: () => ({
-        id: this.id,
-        characterSheetIds: [],
-        description: "",
-        players: [],
-        gameMasters: [],
-      }),
+      newDefaultData: () => GameController.defaultData(this.id),
       documentDataReader: readGameDataFromFirestoreComposite,
       documentDataWriter: writeGameDataToFirestoreComposite,
     });

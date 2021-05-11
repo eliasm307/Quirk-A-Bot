@@ -16,7 +16,7 @@ interface iLoaderProps extends iHasId, iHasDataStorageFactory, iHasParentPath {}
 export interface iGameProps extends iLoaderProps {
   gameDataStorage: iGameDataStorage;
 
-// initialCharacterData: iCharacterData[];
+  // initialCharacterData: iCharacterData[];
   // initialData: iGameData;
 }
 
@@ -52,6 +52,14 @@ export default class GameController implements iGameController {
       initialCharacterData.map((character) => [character.id, character])
     );
     */
+  }
+
+  static defaultData(id: string): iGameData {
+    return {
+      id,
+      description: "",
+      gameMasters: [],
+    };
   }
 
   /** Loads a game instance **/
