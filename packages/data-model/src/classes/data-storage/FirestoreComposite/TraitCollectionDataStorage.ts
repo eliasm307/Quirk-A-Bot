@@ -1,7 +1,8 @@
 import {
-  AbstractCompositeDocument, arrayToRecord, CompositeDocumentChangeData,
+  AbstractCompositeDocument, arrayToRecord,
+  CHARACTER_SHEET_TRAIT_COMPOSITE_DOCUMENT_COLLECTION_NAME, CompositeDocumentChangeData,
   ConsistentCompositeDocument, SubDocumentCreateDetails, SubDocumentDeleteDetails,
-  SubDocumentUpdateDetails, TRAIT_COMPOSITE_DOCUMENT_COLLECTION_NAME,
+  SubDocumentUpdateDetails,
 } from '@quirk-a-bot/common';
 
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
@@ -12,7 +13,6 @@ import {
   iFirestoreCompositeTraitCollectionDataStorageProps,
 } from '../interfaces/props/trait-collection-data-storage';
 import { iBaseTraitDataStorageProps } from '../interfaces/props/trait-data-storage';
-import { createPath } from '../utils/createPath';
 import FirestoreCompositeTraitDataStorage from './TraitDataStorage';
 
 export default class FirestoreCompositeTraitCollectionDataStorage<
@@ -39,17 +39,21 @@ export default class FirestoreCompositeTraitCollectionDataStorage<
       // onDelete,
       initialData,
       dataPredicate,
+      dataStorageFactory,
       namePredicate,
     } = props;
     // this.#firestore = firestore;
 
-    const pathToCompositeDocumentCollection = createPath(
+    const pathToCompositeDocumentCollection = dataStorageFactory.createPath(
       parentPath,
-      TRAIT_COMPOSITE_DOCUMENT_COLLECTION_NAME
+      CHARACTER_SHEET_TRAIT_COMPOSITE_DOCUMENT_COLLECTION_NAME
     );
 
     // path to the composite document
-    const path = createPath(pathToCompositeDocumentCollection, name);
+    const path = dataStorageFactory.createPath(
+      pathToCompositeDocumentCollection,
+      name
+    );
     this.path = path;
 
     const handleChange: (

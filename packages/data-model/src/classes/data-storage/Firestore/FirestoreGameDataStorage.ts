@@ -5,7 +5,6 @@ import { iCharacterSheet } from '../../character-sheet/interfaces/character-shee
 import { iGameData } from '../../game/interfaces/game-interfaces';
 import { iDataStorageFactory, iGameDataStorage } from '../interfaces/data-storage-interfaces';
 import { iFirestoreCharacterSheetDataStorageProps } from '../interfaces/props/game-data-storage';
-import { createPath } from '../utils/createPath';
 import assertDocumentExistsOnFirestore from './utils/assertDocumentExistsOnFirestore';
 import readGameDataFromFirestore from './utils/readGameDataFromFirestore';
 import writeGameDataToFirestore from './utils/writeGameDataToFirestore';
@@ -22,7 +21,7 @@ export default class FirestoreGameDataStorage implements iGameDataStorage {
   constructor(props: iFirestoreCharacterSheetDataStorageProps) {
     const { id, dataStorageFactory, firestore, parentPath } = props;
     this.id = id;
-    this.path = createPath(parentPath, id);
+    this.path = dataStorageFactory.createPath(parentPath, id);
     this.dataStorageFactory = dataStorageFactory;
     this.firestore = firestore;
   }
@@ -44,7 +43,7 @@ export default class FirestoreGameDataStorage implements iGameDataStorage {
       documentDataWriter: writeGameDataToFirestore,
     });
 
-    const characterSheetPromises = this.gameData.characterSheetIds.map((id) =>
+    const characterSheetPromises = this.getCharacterIds().map((id) =>
       CharacterSheet.load({
         id,
         dataStorageFactory: this.dataStorageFactory,
@@ -73,6 +72,8 @@ export default class FirestoreGameDataStorage implements iGameDataStorage {
       return Promise.reject(errorDetail);
     }
   }
+
+  getCharacterIds(): string[] {}
 
   getCharacterSheets(): Map<string, iCharacterSheet> {
     if (!this.characterSheets)

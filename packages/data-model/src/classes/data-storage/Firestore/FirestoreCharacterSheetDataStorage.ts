@@ -8,7 +8,6 @@ import {
 import {
   iFirestoreCharacterSheetDataStorageProps,
 } from '../interfaces/props/character-sheet-data-storage';
-import { createPath } from '../utils/createPath';
 import assertDocumentExistsOnFirestore from './utils/assertDocumentExistsOnFirestore';
 import readCharacterSheetDataFromFirestore from './utils/readCharacterSheetDataFromFirestore';
 import writeCharacterSheetDataToFirestore from './utils/writeCharacterSheetDataToFirestore';
@@ -29,7 +28,7 @@ export default class FirestoreCharacterSheetDataStorage
     firestore,
   }: iFirestoreCharacterSheetDataStorageProps) {
     this.id = id;
-    this.path = createPath(parentPath, id);
+    this.path = dataStorageFactory.createPath(parentPath, id);
     this.dataStorageFactory = dataStorageFactory;
     this.firestore = firestore;
   }

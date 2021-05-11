@@ -9,11 +9,13 @@ import { iHasFirestore, iHasResolvedBasePath } from '../../../../declarations/in
 import { iHasCharacterSheet } from '../../../character-sheet/interfaces/character-sheet-interfaces';
 import { iTraitLogger } from '../../../log/interfaces/log-interfaces';
 import { iBaseTraitData, iCanHaveLoggerCreator } from '../../../traits/interfaces/trait-interfaces';
+import { iHasDataStorageFactory } from '../data-storage-interfaces';
 
 export interface iBaseTraitDataStorageProps<
   N extends TraitNameUnionOrString,
   V extends TraitValueTypeUnion
 > extends iHasParentPath,
+    iHasDataStorageFactory,
     iCanHaveLoggerCreator<iTraitLogger> {
   defaultValueIfNotDefined: V;
   name: N;

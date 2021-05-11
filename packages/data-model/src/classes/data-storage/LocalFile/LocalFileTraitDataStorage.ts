@@ -6,7 +6,6 @@ import { iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
 import AbstractTraitDataStorage from '../AbstractTraitDataStorage';
 import { iBaseTraitDataStorage } from '../interfaces/data-storage-interfaces';
 import { iLocalFileTraitDataStorageProps } from '../interfaces/props/trait-data-storage';
-import { createPath } from '../utils/createPath';
 import saveCharacterSheetToFile from './utils/saveCharacterSheetToFile';
 
 export default class LocalFileTraitDataStorage<
@@ -21,8 +20,14 @@ export default class LocalFileTraitDataStorage<
 
   constructor(props: iLocalFileTraitDataStorageProps<N, V>) {
     super(props);
-    const { characterSheet, resolvedBasePath, name, parentPath } = props;
-    this.path = createPath(parentPath, name);
+    const {
+      characterSheet,
+      resolvedBasePath,
+      name,
+      parentPath,
+      dataStorageFactory,
+    } = props;
+    this.path = dataStorageFactory.createPath(parentPath, name);
 
     // ? is this required, needed to do some debugging before
     if (!characterSheet) throw Error(`characterSheet is not defined`);

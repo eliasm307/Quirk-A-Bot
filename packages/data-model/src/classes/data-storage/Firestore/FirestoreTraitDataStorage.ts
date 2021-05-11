@@ -8,9 +8,8 @@ import isTraitData from '../../../utils/type-predicates/isTraitData';
 import UpdateLogEvent from '../../log/log-events/UpdateLogEvent';
 import { iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
 import AbstractTraitDataStorage from '../AbstractTraitDataStorage';
-import { iBaseTraitDataStorage } from '../interfaces/data-storage-interfaces';
+import { iBaseTraitDataStorage, iDataStorageFactory } from '../interfaces/data-storage-interfaces';
 import { iFirestoreTraitDataStorageProps } from '../interfaces/props/trait-data-storage';
-import { createPath } from '../utils/createPath';
 
 export default class FirestoreTraitDataStorage<
     N extends TraitNameUnionOrString,
@@ -18,13 +17,23 @@ export default class FirestoreTraitDataStorage<
   >
   extends AbstractTraitDataStorage<N, V>
   implements iBaseTraitDataStorage<N, V> {
+  protected dataStorageFactory: iDataStorageFactory;
+
   #firestore: Firestore;
   path: string;
 
   constructor(props: iFirestoreTraitDataStorageProps<N, V>) {
     super(props);
-    const { firestore, parentPath, defaultValueIfNotDefined, name } = props;
+    const {
+      firestore,
+      parentPath,
+      defaultValueIfNotDefined,
+      name,
+      dataStorageFactory,
+    } = props;
     this.#firestore = firestore;
+    this.dataStorageFactory = dataStorageFactory;
+
     this.path = this.createTraitPath(parentPath, name);
 
     // const timerName = `Time to initialise trait "${this.path}"`;
@@ -91,11 +100,14 @@ export default class FirestoreTraitDataStorage<
 
     if (segments.length % 2) {
       // if parent is a collection (even path segments) then return as normal
-      return createPath(parentPath, name);
+      return this.dataStorageFactory.createPath(parentPath, name);
     }
 
     // if parent is a document (odd path segments) then put this in a core collection, to satisfy firestore requirements
-    return createPath(`${parentPath}/${CORE_TRAIT_COLLECTION_NAME}`, name);
+    return this.dataStorageFactory.createPath(
+      `${parentPath}/${CORE_TRAIT_COLLECTION_NAME}`,
+      name
+    );
   }
 
   /** Attaches change event listeners for this trait via its parent collection, and returns the unsubscribe function */
@@ -174,10 +186,10 @@ export default class FirestoreTraitDataStorage<
     try {
       const doc = await this.#firestore.doc(this.path).get();
 
-      // ? is this right? does doc.exists actually mean the document doesn exist?
+      // ? is this right? does doc.exists actually mean the document doesn't exist?
       // check document exists
       if (!doc.exists) {
-        // if it doesn't  exist, it might be a left over from an old delete, delete it again just incase
+        // if it doesn't  exist, it might be a left over from an old delete, delete it again just in case
         // console.log(__filename, `Attempting to delete trait document ${this.#path}, it is shown as not existing`);
         // await doc.ref.delete();
 
@@ -228,7 +240,7 @@ export default class FirestoreTraitDataStorage<
     const parentPath = pathModule.dirname(this.path);
 
     try {
-      // add event liseners
+      // add event listeners
       this.#unsubscribeFromEventListeners = await this.attachFirestoreEventListenersAsync(
         parentPath
       );

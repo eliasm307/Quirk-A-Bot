@@ -3,7 +3,6 @@ import { iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
 import AbstractTraitDataStorage from '../AbstractTraitDataStorage';
 import { iBaseTraitDataStorage } from '../interfaces/data-storage-interfaces';
 import { iBaseTraitDataStorageProps } from '../interfaces/props/trait-data-storage';
-import { createPath } from '../utils/createPath';
 
 export default class InMemoryTraitDataStorage<
     N extends TraitNameUnionOrString,
@@ -15,8 +14,8 @@ export default class InMemoryTraitDataStorage<
 
   constructor(props: iBaseTraitDataStorageProps<N, V>) {
     super(props);
-    const { name, parentPath } = props;
-    this.path = createPath(parentPath, name);
+    const { name, parentPath, dataStorageFactory } = props;
+    this.path = dataStorageFactory.createPath(parentPath, name);
   }
 
   cleanUp(): boolean {

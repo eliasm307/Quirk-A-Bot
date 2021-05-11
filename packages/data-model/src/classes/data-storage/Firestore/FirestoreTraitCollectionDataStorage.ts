@@ -9,7 +9,6 @@ import {
   iFirestoreTraitCollectionDataStorageProps,
 } from '../interfaces/props/trait-collection-data-storage';
 import { iBaseTraitDataStorageProps } from '../interfaces/props/trait-data-storage';
-import { createPath } from '../utils/createPath';
 import FirestoreTraitDataStorage from './FirestoreTraitDataStorage';
 
 export default class FirestoreTraitCollectionDataStorage<
@@ -25,8 +24,14 @@ export default class FirestoreTraitCollectionDataStorage<
     super({
       ...props,
     });
-    const { firestore, initialData, name, parentPath } = props;
-    this.path = createPath(parentPath, name);
+    const {
+      firestore,
+      initialData,
+      name,
+      parentPath,
+      dataStorageFactory,
+    } = props;
+    this.path = dataStorageFactory.createPath(parentPath, name);
     this.#firestore = firestore;
     this.setInitialData(initialData);
     this.init();
@@ -34,7 +39,7 @@ export default class FirestoreTraitCollectionDataStorage<
 
   #unsubscribeFromEventListeners: () => void = () => {};
 
-  protected addTraitToDataStorage(name: N): void {
+  protected addTraitToDataStorage(_name: N): void {
     // do nothing, traits add themselves to firestore
   }
 

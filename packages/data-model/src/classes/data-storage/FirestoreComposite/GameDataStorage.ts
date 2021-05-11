@@ -14,7 +14,6 @@ import { iDataStorageFactory, iGameDataStorage } from '../interfaces/data-storag
 import {
   iFirestoreCompositeCharacterSheetDataStorageProps,
 } from '../interfaces/props/character-sheet-data-storage';
-import { createPath } from '../utils/createPath';
 import readGameDataFromFirestoreComposite from './utils/readGameData';
 import writeGameDataToFirestoreComposite from './utils/writeGameData';
 
@@ -37,7 +36,7 @@ export default class FirestoreCompositeGameDataStorage
   constructor(props: iFirestoreCompositeCharacterSheetDataStorageProps) {
     const { id, dataStorageFactory, firestore, parentPath } = props;
     this.id = id;
-    this.path = createPath(parentPath, id);
+    this.path = dataStorageFactory.createPath(parentPath, id);
     this.dataStorageFactory = dataStorageFactory;
     this.firestore = firestore;
     const characterCollectionPath = dataStorageFactory.createPath(

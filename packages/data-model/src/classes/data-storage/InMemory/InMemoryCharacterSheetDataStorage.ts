@@ -6,7 +6,6 @@ import {
 import {
   iBaseCharacterSheetDataStorageProps,
 } from '../interfaces/props/character-sheet-data-storage';
-import { createPath } from '../utils/createPath';
 
 export default class InMemoryCharacterSheetDataStorage
   implements iCharacterSheetDataStorage {
@@ -22,14 +21,13 @@ export default class InMemoryCharacterSheetDataStorage
     parentPath,
   }: iBaseCharacterSheetDataStorageProps) {
     this.id = id;
-    this.path = createPath(parentPath, id);
+    this.path = dataStorageFactory.createPath(parentPath, id);
     this.dataStorageFactory = dataStorageFactory;
     this.characterSheetData = CharacterSheet.newDataObject({ id: this.id }); // load data to local variable
   }
 
   async assertDataExistsOnDataStorage(): Promise<void> {
     // always uses new data so nothing to assert
-    return;
   }
 
   getData(): iCharacterSheetData {

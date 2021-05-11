@@ -8,7 +8,6 @@ import {
   iBaseTraitCollectionDataStorageProps,
 } from '../interfaces/props/trait-collection-data-storage';
 import { iBaseTraitDataStorageProps } from '../interfaces/props/trait-data-storage';
-import { createPath } from '../utils/createPath';
 import InMemoryTraitDataStorage from './InMemoryTraitDataStorage';
 
 export default class InMemoryTraitCollectionDataStorage<
@@ -24,9 +23,9 @@ export default class InMemoryTraitCollectionDataStorage<
   constructor(props: iBaseTraitCollectionDataStorageProps<N, V, D, T>) {
     super(props);
 
-    const { initialData, parentPath, name } = props;
+    const { initialData, parentPath, name, dataStorageFactory } = props;
 
-    this.path = createPath(parentPath, name);
+    this.path = dataStorageFactory.createPath(parentPath, name);
 
     this.setInitialData(initialData);
   }
