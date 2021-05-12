@@ -75,4 +75,12 @@ describe("Game with firestore composite data storage", () => {
 
     game.cleanUp();
   });
+
+  it("Can add new characters", () => {
+    expect.hasAssertions();
+  });
+
+  it("Can load existing character sheet instances", () => {
+    expect.hasAssertions();
+  });
 });

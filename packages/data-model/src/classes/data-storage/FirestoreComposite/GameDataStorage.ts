@@ -17,7 +17,7 @@ import writeGameDataToFirestoreComposite from './utils/writeGameData';
 export default class FirestoreCompositeGameDataStorage
   implements iGameDataStorage
 {
-  protected characterSheets?: Map<string, iCharacterSheet>;
+  // protected characterSheets?: Map<string, iCharacterSheet>;
   protected dataStorageFactory: iDataStorageFactory;
   protected firestore: Firestore;
   // this will be loaded when listener returns first results
@@ -91,6 +91,12 @@ export default class FirestoreCompositeGameDataStorage
       name: DEFAULT_CHARACTER_NAME,
     };
 
+    // add to local data
+    this.#characterData = this.#characterData
+      ? [...this.#characterData, newCharacterData]
+      : [newCharacterData];
+
+    // update on data storage
     await this.#characterCollectionRef.doc(id).set(newCharacterData);
   }
 
