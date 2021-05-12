@@ -66,7 +66,7 @@ export interface iHasCleanUp {
 }
 
 export interface iSubDocument<
-  S extends Record<string, any>,
+  S extends Record<string, unknown>,
   K extends keyof S
 > {
   readonly parentDocumentPath: string;
@@ -79,7 +79,7 @@ export interface iSubDocument<
 }
 
 /** Represents a single Firestore document which comprises of multiple sub documents as a record */
-export interface iCompositeDocument<S extends Record<string, any>> {
+export interface iCompositeDocument<S extends Record<string, unknown>> {
   readonly data?: Readonly<S>;
 
   cleanUp(): void;

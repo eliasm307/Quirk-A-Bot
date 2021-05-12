@@ -34,10 +34,10 @@ export interface BaseDocumentObserverLoaderProps<D> {
   firestore: Firestore;
   /** Change handler function used to notify  */
   handleChange: (changeData: any) => void;
-  /** Firestore path for document, can be undefined if document didnt exist */
+  /** Firestore path for document, can be undefined if document didn't exist */
   path: string;
   /** Document schema validator, to allow the return data to be typed */
-  schemaPredicate: (data: any) => data is D;
+  schemaPredicate: (data: unknown) => data is D;
 }
 
 export interface FirestoreDocumentObserverLoaderProps<D>
@@ -49,7 +49,7 @@ export interface FirestoreDocumentObserverLoaderProps<D>
 /** Listens to changes to a Firestore document and creates events if there are updates */
 export default class FirestoreDocumentObserver<D>
   implements iFirestoreDocumentObserver {
-  protected unsub: () => void;
+  protected unsubscriber: () => void;
 
   #data?: D;
   path: string;
@@ -65,7 +65,7 @@ export default class FirestoreDocumentObserver<D>
     this.#data = initialData;
 
     // subscribe to firestore document
-    this.unsub = firestore.doc(path).onSnapshot(
+    this.unsubscriber = firestore.doc(path).onSnapshot(
       { includeMetadataChanges: false },
       {
         next: (snapshot) => {
@@ -78,7 +78,7 @@ export default class FirestoreDocumentObserver<D>
             hasPendingWrites: snapshot.metadata.hasPendingWrites,
           });
 
-          // ! includeMetadataChanges set to false so this shouldnt matter
+          // ! includeMetadataChanges set to false so this shouldn't matter
           /*
           if (snapshot.metadata.hasPendingWrites) {
             // ignore local changes not yet commited to firestore
@@ -87,7 +87,7 @@ export default class FirestoreDocumentObserver<D>
           }
           */
 
-          // ! always allow undefined values as these represent documents that dont exist
+          // ! always allow undefined values as these represent documents that don't exist
           if (typeof newData !== "undefined" && !schemaPredicate(newData)) {
             const error = `New data for document at path "${path}" doesn't meet required schema predicate`;
             console.error({ error, path: this.path, newData });
@@ -144,8 +144,8 @@ export default class FirestoreDocumentObserver<D>
   /** Unsubscribe to Firestore document */
   unsubscribe(): void {
     try {
-      this.unsub();
-    } catch (error: any) {
+      this.unsubscriber();
+    } catch (error) {
       console.error(__filename, `Could not unsubscribe to firestore document`, {
         path: this.path,
         error,

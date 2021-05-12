@@ -50,8 +50,7 @@ export interface CompositeDocumentChangeData<S>
 
 export default abstract class AbstractCompositeDocument<
   SchemaType extends Record<string, any>
-> implements iCompositeDocument<SchemaType>
-{
+> implements iCompositeDocument<SchemaType> {
   protected firestore: Firestore;
   protected observer: FirestoreDocumentObserver<SchemaType>;
   protected subDocuments: Map<
@@ -261,8 +260,7 @@ export default abstract class AbstractCompositeDocument<
   private handleSubDocumentAddition(
     newData: SchemaType | undefined
   ): SubDocumentCreateDetails<SchemaType> {
-    const creates: SubDocumentCreateDetails<SchemaType> =
-      {} as SubDocumentCreateDetails<SchemaType>;
+    const creates: SubDocumentCreateDetails<SchemaType> = {} as SubDocumentCreateDetails<SchemaType>;
 
     for (const [_key, _value] of Object.entries(newData || {})) {
       const key = _key as keyof SchemaType;
@@ -282,8 +280,7 @@ export default abstract class AbstractCompositeDocument<
     oldData: SchemaType,
     newData: SchemaType
   ): SubDocumentUpdateDetails<SchemaType> {
-    const updates: SubDocumentUpdateDetails<SchemaType> =
-      {} as SubDocumentUpdateDetails<SchemaType>;
+    const updates: SubDocumentUpdateDetails<SchemaType> = {} as SubDocumentUpdateDetails<SchemaType>;
 
     for (const [_key, newValue] of Object.entries(newData || {})) {
       const key = _key as keyof SchemaType;
@@ -311,8 +308,7 @@ export default abstract class AbstractCompositeDocument<
   private handleSubDocumentRemoval(
     newData: SchemaType
   ): SubDocumentDeleteDetails<SchemaType> {
-    const deletes: SubDocumentDeleteDetails<SchemaType> =
-      {} as SubDocumentDeleteDetails<SchemaType>;
+    const deletes: SubDocumentDeleteDetails<SchemaType> = {} as SubDocumentDeleteDetails<SchemaType>;
     for (const key of this.subDocuments.keys()) {
       // remove extra sub document
       if (!newData[key as keyof SchemaType]) {

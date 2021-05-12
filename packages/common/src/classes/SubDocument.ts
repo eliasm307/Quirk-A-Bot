@@ -2,15 +2,15 @@ import { iSubDocument } from '../declarations/interfaces';
 import { Firestore } from '../FirebaseExports';
 
 export interface SubDocumentProps<
-  S extends Record<string, any>,
+  S extends Record<string, unknown>,
   K extends keyof S
 > {
-  deleteFromDataStorage: () => Promise<any>;
+  deleteFromDataStorage: () => Promise<unknown>;
   firestore: Firestore;
   getDataFromStorage: () => S[K] | undefined;
   key: K;
   parentDocumentPath: string;
-  setOnDataStorage: (newData: S[K]) => Promise<any>;
+  setOnDataStorage: (newData: S[K]) => Promise<unknown>;
 }
 
 /** Provides an interface for viewing and mutating sub documents
@@ -18,7 +18,7 @@ export interface SubDocumentProps<
  * @generic `K` - this is the specific key of the composite that the sub document relates to, allows the type system to be more accurate if the schema is inconsistent
  */
 export default class SubDocument<
-  S extends Record<string, any>,
+  S extends Record<string, unknown>,
   K extends keyof S = keyof S
 > implements iSubDocument<S, K> {
   #private: Omit<SubDocumentProps<S, K>, "parentDocumentPath"> & {

@@ -94,7 +94,7 @@ describe("firestore emulator", () => {
       .doc(`${localTestCollectionName}/${testDocumentName}`)
       .onSnapshot({
         next: (snapshot) => {
-          const data: any = snapshot.data();
+          const data: unknown = snapshot.data();
           // console.log('doc change', { data });
           if (snapshot.exists) {
             if (snapshot.metadata.hasPendingWrites) {
@@ -118,7 +118,7 @@ describe("firestore emulator", () => {
       .collection(localTestCollectionName)
       .onSnapshot((querySnapshot) => {
         querySnapshot.docChanges().forEach((change) => {
-          const data: any = change.doc.data();
+          const data: unknown = change.doc.data();
 
           if (!change.doc.exists)
             throw Error(

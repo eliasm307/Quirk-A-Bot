@@ -6,7 +6,7 @@ import AbstractCompositeDocument, {
 export interface InconsistentCompositeDocumentLoaderProps<
   S extends Record<string, any>
 > extends Omit<AbstractCompositeDocumentLoaderProps<S>, "schemaPredicate"> {
-  valuePredicates: Record<keyof S, (value: any) => value is S[keyof S]>;
+  valuePredicates: Record<keyof S, (value: unknown) => value is S[keyof S]>;
 }
 
 export default class InconsistentCompositeDocument<
@@ -21,8 +21,9 @@ export default class InconsistentCompositeDocument<
   ): InconsistentCompositeDocument<S> {
     const { valuePredicates, initialData } = props;
 
-    const schemaPredicate = (data: any): data is S => {
+    const schemaPredicate = (data: unknown): data is S => {
       if (typeof data !== "object") return false;
+      if (!data) return false;
 
       for (const [key, value] of Object.entries(data)) {
         const valuePredicate = valuePredicates[key];

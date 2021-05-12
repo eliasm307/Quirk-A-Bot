@@ -8,8 +8,8 @@ export interface ConsistentCompositeDocumentLoaderProps<K extends string, V>
     AbstractCompositeDocumentLoaderProps<Record<K, V>>,
     "schemaPredicate"
   > {
-  keyPredicate: (key: any) => key is K;
-  valuePredicate: (value: any) => value is V;
+  keyPredicate: (key: unknown) => key is K;
+  valuePredicate: (value: unknown) => value is V;
 }
 
 export default class ConsistentCompositeDocument<
@@ -26,7 +26,7 @@ export default class ConsistentCompositeDocument<
     const { keyPredicate, valuePredicate } = props;
 
     // schema predicate for a consistent composite tests if keys and values match a given predicate
-    const schemaPredicate = (data: any): data is Record<K, V> =>
+    const schemaPredicate = (data: unknown): data is Record<K, V> =>
       isRecord(data, keyPredicate, valuePredicate);
 
     /*

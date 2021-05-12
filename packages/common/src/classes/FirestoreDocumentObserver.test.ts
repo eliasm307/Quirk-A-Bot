@@ -26,7 +26,7 @@ interface SCHEMA {
 // undefinedProp: undefined; // ! undefined not allowed by firestore
 }
 
-const documentSchemaIsValid = (data: any): data is SCHEMA => {
+const documentSchemaIsValid = (data: unknown): data is SCHEMA => {
   if (data === undefined) return true; // undefined values represent documents that don't exist yet, this is valid
   if (typeof data !== "object") {
     console.error(`Data received was not an object`, {

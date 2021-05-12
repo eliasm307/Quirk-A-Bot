@@ -14,11 +14,11 @@ interface ValueType {
   val1: string;
 }
 
-const keyPredicate = (key: any): key is KeyType => {
+const keyPredicate = (key: unknown): key is KeyType => {
   return key === "a" || key === "b" || key === "c";
 };
 
-const valuePredicate = (value: any): value is ValueType => {
+const valuePredicate = (value: unknown): value is ValueType => {
   const { val1 } = value as ValueType;
   return typeof val1 === "string";
 };

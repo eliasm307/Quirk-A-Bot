@@ -18,7 +18,10 @@ interface S {
   stringVal: string;
 }
 
-const valuePredicates: Record<keyof S, (value: any) => value is S[keyof S]> = {
+const valuePredicates: Record<
+  keyof S,
+  (value: unknown) => value is S[keyof S]
+> = {
   boolVal: (value): value is boolean => typeof value === "boolean",
   objVal: (value): value is ObjSchema => typeof value === "object" && !!value,
   stringVal: (value): value is string => typeof value === "string",
