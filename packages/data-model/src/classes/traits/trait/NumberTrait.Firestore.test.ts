@@ -110,7 +110,7 @@ describe("Number trait with firestore data storage", () => {
     const doc1 = await firestore.doc(trait1.path).get();
     const doc2 = await firestore.doc(trait2.path).get();
 
-    const doc1Data: any = doc1.data();
+    const doc1Data: unknown = doc1.data();
     const doc2Data = doc2.data() as iGeneralTraitData;
 
     expect.assertions(4);

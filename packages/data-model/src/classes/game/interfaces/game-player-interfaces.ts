@@ -10,7 +10,7 @@ export interface iGameCharacterShape {
   /** Link to any profile image */
   img: WebURL;
   /** How the player would like to be addressed as in this game, defaults to User.name */
-  name: any;
+  name: unknown;
 
 /** Status of the player for the game */
   // status: any;

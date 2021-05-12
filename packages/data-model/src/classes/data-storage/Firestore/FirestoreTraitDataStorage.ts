@@ -16,7 +16,8 @@ export default class FirestoreTraitDataStorage<
     V extends TraitValueTypeUnion
   >
   extends AbstractTraitDataStorage<N, V>
-  implements iBaseTraitDataStorage<N, V> {
+  implements iBaseTraitDataStorage<N, V>
+{
   protected dataStorageFactory: iDataStorageFactory;
 
   #firestore: Firestore;
@@ -140,7 +141,7 @@ export default class FirestoreTraitDataStorage<
           //	}
 
           querySnapshot.docChanges().forEach((change) => {
-            const data: any = change.doc.data();
+            const data: unknown = change.doc.data();
 
             if (!isTraitData(data))
               throw Error(
@@ -241,9 +242,8 @@ export default class FirestoreTraitDataStorage<
 
     try {
       // add event listeners
-      this.#unsubscribeFromEventListeners = await this.attachFirestoreEventListenersAsync(
-        parentPath
-      );
+      this.#unsubscribeFromEventListeners =
+        await this.attachFirestoreEventListenersAsync(parentPath);
     } catch (error) {
       this.#unsubscribeFromEventListeners();
       console.error(

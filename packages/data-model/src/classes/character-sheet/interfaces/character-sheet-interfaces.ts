@@ -36,19 +36,19 @@ export interface iCharacterSheetProps
 export interface iCharacterSheetShape {
   readonly id: string;
 
-  attributes: any;
-  bloodPotency: any;
-  clan: any;
-  disciplines: any;
-  health: any;
-  humanity: any;
-  hunger: any;
+  attributes: unknown;
+  bloodPotency: unknown;
+  clan: unknown;
+  disciplines: unknown;
+  health: unknown;
+  humanity: unknown;
+  hunger: unknown;
   // todo add user aliases (ie known discord names to be added by bot)
-  name: any;
-  sire: any;
-  skills: any;
-  touchstonesAndConvictions: any;
-  willpower: any;
+  name: unknown;
+  sire: unknown;
+  skills: unknown;
+  touchstonesAndConvictions: unknown;
+  willpower: unknown;
 }
 
 /** The shape of character sheet as plain JSON data */

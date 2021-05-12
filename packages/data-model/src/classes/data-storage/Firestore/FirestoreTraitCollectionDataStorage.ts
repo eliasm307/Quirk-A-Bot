@@ -100,7 +100,7 @@ export default class FirestoreTraitCollectionDataStorage<
         .collection(parentCollectionPath)
         .onSnapshot((querySnapshot) => {
           querySnapshot.docChanges().forEach((change) => {
-            const data: any = change.doc.data();
+            const data: unknown = change.doc.data();
 
             // confirm it is trait data
             if (!isTraitData(data))

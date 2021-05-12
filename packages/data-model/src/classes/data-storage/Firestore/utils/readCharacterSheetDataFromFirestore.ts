@@ -93,9 +93,8 @@ export default async function readCharacterSheetDataFromFirestore({
   const attributes = attributesCollection.docs.map((doc) => doc.data());
   const disciplines = disciplinesCollection.docs.map((doc) => doc.data());
   const skills = skillsCollection.docs.map((doc) => doc.data());
-  const touchstonesAndConvictions = touchstonesAndConvictionsCollection.docs.map(
-    (doc) => doc.data()
-  );
+  const touchstonesAndConvictions =
+    touchstonesAndConvictionsCollection.docs.map((doc) => doc.data());
 
   // add the core data and collection data
   const data: any = {

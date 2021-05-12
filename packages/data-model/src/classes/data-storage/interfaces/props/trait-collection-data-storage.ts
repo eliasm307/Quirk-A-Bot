@@ -32,10 +32,10 @@ export interface iBaseTraitCollectionDataStorageProps<
     // iHasTraitDataStorageInitialiser<N, V>,
     iHasParentPath,
     iCanHaveLoggerCreator<iTraitCollectionLogger> {
-  dataPredicate: (data: any) => data is D;
+  dataPredicate: (data: unknown) => data is D;
   initialData?: D[];
   name: string;
-  namePredicate: (name: any) => name is N;
+  namePredicate: (name: unknown) => name is N;
   onAdd?: (props: iAddLogEventProps<V>) => void;
   onDelete?: (props: iDeleteLogEventProps<V>) => void;
 }
@@ -64,6 +64,6 @@ export interface iFirestoreCompositeTraitCollectionDataStorageProps<
   T extends iBaseTrait<N, V, D>
 > extends iBaseTraitCollectionDataStorageProps<N, V, D, T>,
     iHasFirestore {
-  dataPredicate: (data: any) => data is D;
-  namePredicate: (name: any) => name is N;
+  dataPredicate: (data: unknown) => data is D;
+  namePredicate: (name: unknown) => name is N;
 }

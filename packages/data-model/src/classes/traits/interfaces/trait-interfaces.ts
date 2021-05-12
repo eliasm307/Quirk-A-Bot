@@ -129,9 +129,9 @@ export interface iTraitCollectionProps<
     // iHasTraitDataStorageInitialiser,
     iHasParentPath,
     iCanHaveLoggerCreator<iTraitCollectionLogger> {
-  dataPredicate: (data: any) => data is D;
+  dataPredicate: (data: unknown) => data is D;
   name: string;
-  namePredicate: (name: any) => name is N;
+  namePredicate: (name: unknown) => name is N;
 }
 // -------------------------------------------------------
 // GENERIC TRAIT DATA TYPES
@@ -140,7 +140,7 @@ export interface iTraitCollectionProps<
 /** Defines the most basic shape of a trait */
 export interface iBaseTraitShape {
   name: string;
-  value: any;
+  value: unknown;
 }
 
 /** Describes the shape of trait data with generic types */

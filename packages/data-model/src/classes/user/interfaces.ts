@@ -6,7 +6,7 @@ export interface iHasUid {
 /** Base shape of a user */
 export interface iUserShape {
   /** List of games the user is involved in */
-  myGames: any;
+  myGames: unknown;
   /** User name in VTM */
   name: string;
 }

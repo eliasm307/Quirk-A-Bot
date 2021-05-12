@@ -70,7 +70,7 @@ export default function isCharacterSheetData(
   }
 
   // check core number traits
-  const coreNumberTraitData: any[] = [
+  const coreNumberTraitData: unknown[] = [
     health,
     humanity,
     hunger,
