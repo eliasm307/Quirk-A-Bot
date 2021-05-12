@@ -200,12 +200,7 @@ export default class CharacterSheet implements iCharacterSheet {
   ): Promise<CharacterSheet> {
     const { dataStorageFactory, id } = props;
 
-    if (!dataStorageFactory.idIsValid(id)) {
-      throw Error(
-        `Id "${id}" is not a valid character sheet id. This should only contain alpha numeric characters, underscores, or dashes.`
-      );
-      // return;
-    }
+    dataStorageFactory.assertIdIsValid(id);
 
     const preExistingInstance = CharacterSheet.instances.get(id);
 

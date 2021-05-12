@@ -22,7 +22,7 @@ export default async function readGameDataFromFirestore({
 
   const coreGameData = coreDataDocument.data();
 
-  // todo assert it is core game data
+  // assert it is core game data
   if (!isCoreGameData(coreGameData)) {
     console.timeEnd(timerName);
     const error = `Core game data was read but format is invalid`;
@@ -47,7 +47,7 @@ export default async function readGameDataFromFirestore({
   playerCollection.forEach((snapshot) => {
     const playerData = snapshot.data();
 
-    // todo assert player data is correct format
+    // assert player data is correct format
     if (!isGamePlayerData(playerData)) {
       console.timeEnd(timerName);
       const error = `Data for player document with id ${snapshot.id} is not valid player data`;

@@ -2,7 +2,7 @@ import { isNonEmptyString, isString } from '@quirk-a-bot/common';
 
 import { iCharacterData } from '../../classes/game/interfaces/game-player-interfaces';
 
-export default function isCharacterData(data: any): data is iCharacterData {
+export default function isCharacterData(data: unknown): data is iCharacterData {
   if (typeof data !== "object") return false;
 
   const { id, img, name } = data as iCharacterData;
