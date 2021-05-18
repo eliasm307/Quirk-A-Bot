@@ -130,10 +130,12 @@ describe("Character sheet using Firestore", () => {
     const touchstonesAndConvictionsData =
       touchstonesAndConvictionsCollection.docs.map((doc) => doc.data());
 
+    /*
     console.warn(__filename, "before assertions", {
       csData: cs.data(),
       initialData,
     });
+    */
 
     expect(cs.data()).toEqual(initialData);
     expect(attributesData).toEqual(initialData.attributes);

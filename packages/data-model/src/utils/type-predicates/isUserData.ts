@@ -7,7 +7,7 @@ export default function isUserData(data: unknown): data is iUserData {
   if (!data) return false;
 
   // destructure expected properties
-  const { myGames, name, uid } = data as iUserData;
+  const { getMyGames: myGames, name, uid } = data as iUserData;
 
   const hasCorrectNumberOfProperties = Object.keys(data).length !== 3;
   if (!hasCorrectNumberOfProperties) return false;

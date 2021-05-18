@@ -26,7 +26,7 @@ describe("firestore", () => {
       .get();
 
     const dataOut = ref.data();
-    // console.warn(__filename, { dataOut, arr1Elem1: data.arr1[1] });
+    // console.warn(__filename, { dataOut, arr1Element1: data.arr1[1] });
 
     expect(data).toEqual(dataOut);
   });
@@ -87,7 +87,7 @@ describe("firestore emulator", () => {
       .doc(`${localTestCollectionName}/${testDocumentName}`)
       .delete();
 
-    await new Promise((res) => setTimeout(res, 500)); // wait for syncronisation
+    await new Promise((res) => setTimeout(res, 500)); // wait for synchronisation
 
     // subscribe to document level changes
     const unsubscribeToDocument = firestoreEmulator
@@ -118,7 +118,7 @@ describe("firestore emulator", () => {
       .collection(localTestCollectionName)
       .onSnapshot((querySnapshot) => {
         querySnapshot.docChanges().forEach((change) => {
-          const data: unknown = change.doc.data();
+          const data = change.doc.data();
 
           if (!change.doc.exists)
             throw Error(
@@ -136,7 +136,7 @@ describe("firestore emulator", () => {
             expect(data.added).toBeTruthy();
           } else if (change.type === "removed") {
             // console.log('Removed document: ', { data });
-            // pause for syncronisation then check deletion
+            // pause for synchronisation then check deletion
             new Promise((res) => setTimeout(res, 50)).then(() => {
               expect(
                 firestoreEmulator
@@ -157,7 +157,7 @@ describe("firestore emulator", () => {
       .doc(`${localTestCollectionName}/${testDocumentName}`)
       .set(testDocData);
 
-    await new Promise((res) => setTimeout(res, 200)); // pause for syncronisation
+    await new Promise((res) => setTimeout(res, 200)); // pause for synchronisation
 
     // assertion 3 & 4 (collection and document events)
     // console.log('updating document');
@@ -165,7 +165,7 @@ describe("firestore emulator", () => {
       .doc(`${localTestCollectionName}/${testDocumentName}`)
       .update({ added: "something" });
 
-    await new Promise((res) => setTimeout(res, 200)); // pause for syncronisation
+    await new Promise((res) => setTimeout(res, 200)); // pause for synchronisation
 
     // assertion 5 & 6 (collection and document events)
     // console.log('deleting document');
@@ -173,14 +173,14 @@ describe("firestore emulator", () => {
       .doc(`${localTestCollectionName}/${testDocumentName}`)
       .delete();
 
-    await new Promise((res) => setTimeout(res, 200)); // pause for syncronisation
+    await new Promise((res) => setTimeout(res, 200)); // pause for synchronisation
 
     // detach observers
     unsubscribeToCollection();
     unsubscribeToDocument();
     // console.log('observers detached');
 
-    await new Promise((res) => setTimeout(res, 200)); // pause for syncronisation
+    await new Promise((res) => setTimeout(res, 200)); // pause for synchronisation
 
     // these should not create any events on observer
     await firestoreEmulator

@@ -1,34 +1,37 @@
+import { GameId, UID } from '@quirk-a-bot/common';
+
 export interface iHasUid {
   /** UID from Firebase Authentication  */
   uid: string;
 }
 
-/** Base shape of a user */
-export interface iUserShape {
-  /** List of games the user is involved in */
-  myGames: unknown;
+/** User data as saved in firestore as JSON */
+export interface iUserData extends iHasUid {
   /** User name in VTM */
   name: string;
 }
 
 /** User object instance */
-export interface iUser extends iUserShape {
-  /** List of games the user is involved in, as a map using gameId as key */
-  myGames: Map<string, iUserGameParticipationData>;
-}
+export interface iUserController {
+  /** List of games the user is involved in as a player */
+  getMyAdminGameIds: Set<GameId>;
+  /** List of games the user is involved in as a player */
+  getMyPlayerGameIds: Set<GameId>;
 
-/** User data as saved in firestore as JSON */
-export interface iUserData extends iUserShape, iHasUid {
-  /** List of games the user is involved in, as an array */
-  myGames: iUserGameParticipationData[];
+  onChange(handler: ())
 
-  // NOTE uid is only required to identify users in Firestore
+  /** Get current user data */
+  data(): Promise<iUserData>;
+  /** Update user data */
+  update(newData: Partial<Omit<iUserData, "uid" | "id">>): Promise<void>;
 }
 
 /** Defines the participation of a user in a game and provides information on the participation */
 export interface iUserGameParticipationData {
+  // todo delete this interface
   /** The id of a game */
-  gameId: string;
-  /** The id of a user in a particular game */
-  playerId: string;
+  gameId: GameId;
+
+/** The id of a user in a particular game */
+  // playerId: UID;
 }
