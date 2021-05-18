@@ -17,7 +17,7 @@ const dataStorageFactory = new FirestoreDataStorageFactory({ firestore });
 
 const deleteDoc = async (path: string) => {
   await firestore.doc(path).delete();
-  await new Promise((resolve) => setTimeout(resolve, 100)); // wait for synchronisation
+  await pause(200); // wait for synchronisation
 
   // make sure document doesn't  exist
   const doc = await firestore.doc(path).get();
@@ -26,7 +26,7 @@ const deleteDoc = async (path: string) => {
 };
 
 describe("Character sheet using Firestore", () => {
-  it("adds a new charactersheet to firestore", async () => {
+  it("adds a new character sheet to firestore", async () => {
     expect.hasAssertions();
 
     const csId = "newCharacterSheet";
@@ -59,13 +59,14 @@ describe("Character sheet using Firestore", () => {
     expect(cs.cleanUp()).toEqual(true);
   });
 
-  it("loads an existing charactersheet from firestore", async () => {
+  it("loads an existing character sheet from firestore", async () => {
     expect.hasAssertions();
 
     const csId = "existingCharacterSheet";
     const docPath = createPath(parentPath, csId);
 
     // delete any existing data
+    // todo this doesn't delete sub collections etc
     await deleteDoc(docPath);
 
     const initialData: iCharacterSheetData = {
@@ -89,9 +90,9 @@ describe("Character sheet using Firestore", () => {
         { name: "Firearms", value: 4 },
       ],
       touchstonesAndConvictions: [
-        { name: "de ekidn", value: "kdonoxc f f f " },
-        { name: "dfff", value: "rvrrvrv  f f ff " },
-        { name: "ededed", value: "kdonoxc  f f f f" },
+        { name: "de name", value: "val f f f " },
+        { name: "dfff", value: "val  f f ff " },
+        { name: "ededed", value: "val  f f f f" },
       ],
     };
 
@@ -128,6 +129,11 @@ describe("Character sheet using Firestore", () => {
     const skillsData = skillsCollection.docs.map((doc) => doc.data());
     const touchstonesAndConvictionsData =
       touchstonesAndConvictionsCollection.docs.map((doc) => doc.data());
+
+    console.warn(__filename, "before assertions", {
+      csData: cs.data(),
+      initialData,
+    });
 
     expect(cs.data()).toEqual(initialData);
     expect(attributesData).toEqual(initialData.attributes);

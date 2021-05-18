@@ -33,7 +33,7 @@ const dataStorageFactory = new LocalFileDataStorageFactory({
   resolvedBasePath,
 });
 
-let testName: string;
+// let testName: string;
 /*
 testName = 'loading from file that doesn't  exist';
 test(testName, () => {
@@ -44,8 +44,7 @@ test(testName, () => {
 	).toThrowError();
 });*/
 
-testName = "save new blank character sheet and load the character sheet";
-test(testName, async () => {
+test("save new blank character sheet and load the character sheet", async () => {
   // creates new sheet and does initial save
   const cs: CharacterSheet = await CharacterSheet.load({
     dataStorageFactory,
@@ -72,8 +71,7 @@ test(testName, async () => {
   expect(cs).toEqual(csLoaded);
 });
 
-testName = "test new file, autosave and custom setters for basic data types";
-test(testName, async () => {
+test("test new file, autosave and custom setters for basic data types", async () => {
   const cs: CharacterSheet = await CharacterSheet.load({
     dataStorageFactory,
     id: newDataId,
@@ -166,9 +164,7 @@ test(testName, async () => {
   expect(csLoaded.log.report).toEqual(cs2.log.report);
 });
 
-testName =
-  "test existing file, autosave and custom setters for basic data types";
-test(testName, async () => {
+test("test existing file, autosave and custom setters for basic data types", async () => {
   const cs: CharacterSheet = await CharacterSheet.load({
     dataStorageFactory,
     id: existingDataId,
@@ -214,8 +210,8 @@ test(testName, async () => {
 });
 
 // todo move these to trait collection tests
-testName = "test basic trait methods";
-test(testName, async () => {
+
+test("test basic trait methods", async () => {
   // console.log(`creating cs`);
   const cs: CharacterSheet = await CharacterSheet.load({
     dataStorageFactory,
@@ -239,8 +235,10 @@ test(testName, async () => {
   expect((cs.attributes.get("Strength") as iAttribute).value).toEqual(5);
   expect((cs.skills.get("Athletics") as iSkill)?.value).toEqual(3);
   expect(
-    (cs.touchstonesAndConvictions.get(
-      "a custom one"
-    ) as iTouchStoneOrConviction)?.value
+    (
+      cs.touchstonesAndConvictions.get(
+        "a custom one"
+      ) as iTouchStoneOrConviction
+    )?.value
   ).toEqual("something, something, something");
 });

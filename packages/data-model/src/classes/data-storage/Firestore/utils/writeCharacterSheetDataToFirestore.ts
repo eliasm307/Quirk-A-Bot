@@ -11,6 +11,21 @@ import {
 import { iGeneralTraitData } from '../../../traits/interfaces/trait-interfaces';
 import { DocumentDataWriterProps } from './assertDocumentExistsOnFirestore';
 
+function writeTraitCollectionAsBatch(
+  firestore: Firestore,
+  traitDataArray: iGeneralTraitData[],
+  characterSheetDocPath: string,
+  traitCollectionName: string,
+  batch: FirestoreBatch
+) {
+  traitDataArray.forEach((traitData) => {
+    const traitDoc = firestore.doc(
+      `${characterSheetDocPath}/${traitCollectionName}/${traitData.name}`
+    );
+    batch.set(traitDoc, traitData);
+  });
+}
+
 export default async function writeCharacterSheetDataToFirestore({
   firestore,
   path,
@@ -109,19 +124,4 @@ export default async function writeCharacterSheetDataToFirestore({
   } finally {
     console.timeEnd(timerName);
   }
-}
-
-function writeTraitCollectionAsBatch(
-  firestore: Firestore,
-  traitDataArray: iGeneralTraitData[],
-  characterSheetDocpath: string,
-  traitCollectionName: string,
-  batch: FirestoreBatch
-) {
-  traitDataArray.forEach((traitData) => {
-    const traitDoc = firestore.doc(
-      `${characterSheetDocpath}/${traitCollectionName}/${traitData.name}`
-    );
-    batch.set(traitDoc, traitData);
-  });
 }
