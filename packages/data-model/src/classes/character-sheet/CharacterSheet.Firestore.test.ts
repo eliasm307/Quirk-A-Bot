@@ -35,7 +35,7 @@ describe("Character sheet using Firestore", () => {
     // delete any existing data
     await deleteDoc(docPath);
 
-    // test intialising new cs
+    // test initialising new cs
     const cs = await CharacterSheet.load({
       dataStorageFactory,
       id: csId,
@@ -126,9 +126,8 @@ describe("Character sheet using Firestore", () => {
     const attributesData = attributesCollection.docs.map((doc) => doc.data());
     const disciplinesData = disciplinesCollection.docs.map((doc) => doc.data());
     const skillsData = skillsCollection.docs.map((doc) => doc.data());
-    const touchstonesAndConvictionsData = touchstonesAndConvictionsCollection.docs.map(
-      (doc) => doc.data()
-    );
+    const touchstonesAndConvictionsData =
+      touchstonesAndConvictionsCollection.docs.map((doc) => doc.data());
 
     expect(cs.data()).toEqual(initialData);
     expect(attributesData).toEqual(initialData.attributes);

@@ -32,7 +32,7 @@ export default class LocalFileDataStorageFactory
   }
 
   assertIdIsValid(id: string): void {
-    throw new Error("Method not implemented.");
+    if (!this.idIsValid(id)) throw Error(`Id is not valid: ${id}`);
   }
 
   createPath(parentPath: string, id: string): string {
