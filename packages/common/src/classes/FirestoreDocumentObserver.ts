@@ -8,14 +8,14 @@ export interface iFirestoreDocumentObserver {
 
 export interface FirestoreDocumentChangeData<D> {
   /** Whether Firestore says the document exists */
-  exists: boolean;
+  // exists: boolean;
   /** Firestore document id */
-  id: string;
+  // id: string;
   /** New data from this change */
   newData?: D;
-  /** Old data from last change, can be undefined if document didnt exist but must not contain undefined fields */
+  /** Old data from last change, can be undefined if document didn't exist but must not contain undefined fields */
   oldData?: D;
-  /** Firestore path for document, can be undefined if document didnt exist but must not contain undefined fields */
+  /** Firestore path for document, can be undefined if document didn't exist but must not contain undefined fields */
   path: string;
   /** Raw Firestore document change snapshot */
   snapshot: FirestoreDocumentSnapshot;
@@ -23,32 +23,23 @@ export interface FirestoreDocumentChangeData<D> {
   time: number;
 }
 
-export interface FirestoreDocumentObserverProps<D>
-  extends FirestoreDocumentObserverLoaderProps<D> {
-  /** Initial internal data for the observer */
-  initialData?: D;
-}
-
-export interface BaseDocumentObserverLoaderProps<D> {
+export interface FirestoreDocumentObserverProps<D> {
   /** Firestore instance to use */
   firestore: Firestore;
   /** Change handler function used to notify  */
-  handleChange: (changeData: any) => void;
+  handleChange: (changeData: FirestoreDocumentChangeData<D>) => void;
+  /** Initial internal data for the observer */
+  initialData?: D;
   /** Firestore path for document, can be undefined if document didn't exist */
   path: string;
   /** Document schema validator, to allow the return data to be typed */
   schemaPredicate: (data: unknown) => data is D;
 }
 
-export interface FirestoreDocumentObserverLoaderProps<D>
-  extends BaseDocumentObserverLoaderProps<D> {
-  /** Change handler function used to notify  */
-  handleChange: (changeData: FirestoreDocumentChangeData<D>) => void;
-}
-
 /** Listens to changes to a Firestore document and creates events if there are updates */
 export default class FirestoreDocumentObserver<D>
-  implements iFirestoreDocumentObserver {
+  implements iFirestoreDocumentObserver
+{
   protected unsubscriber: () => void;
 
   #data?: D;
@@ -81,7 +72,7 @@ export default class FirestoreDocumentObserver<D>
           // ! includeMetadataChanges set to false so this shouldn't matter
           /*
           if (snapshot.metadata.hasPendingWrites) {
-            // ignore local changes not yet commited to firestore
+            // ignore local changes not yet committed to firestore
             // console.log('Modified document: ', { data });
             return;
           }
@@ -99,8 +90,6 @@ export default class FirestoreDocumentObserver<D>
             oldData: this.#data && { ...this.#data },
             path: this.path,
             time: new Date().getTime(),
-            exists: snapshot.exists,
-            id: snapshot.id,
             snapshot,
           };
 
