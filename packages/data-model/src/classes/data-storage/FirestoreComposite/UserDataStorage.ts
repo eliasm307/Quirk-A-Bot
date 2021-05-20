@@ -1,7 +1,8 @@
 import {
-  ChangeHandler, InconsistentCompositeDocument, isString, USER_COLLECTION_NAME,
+  ChangeHandler, InconsistentCompositeDocument, isString, newIsArrayPredicate, USER_COLLECTION_NAME,
 } from '@quirk-a-bot/common';
 
+import returnValueWhenLoaded from '../../../utils/returnValueWhenLoaded';
 import { iUserData } from '../../user/interfaces';
 import { iUserDataStorage } from '../interfaces/data-storage-interfaces';
 import { iFirestoreCompositeUserDataStorageProps } from '../interfaces/props/user-data-storage';
@@ -28,27 +29,28 @@ export default class FirestoreCompositeUserDataStorage
       },
       path: this.path,
       valuePredicates: {
-        adminGames,
-        name,
-        playerGames: isArrayOf
+        adminGames: newIsArrayPredicate(isString),
+        name: isString,
+        playerGames: newIsArrayPredicate(isString),
         uid: isString,
       },
     });
   }
 
   cleanUp(): boolean {
-    throw new Error("Method not implemented.");
+    this.#compositeDocument.cleanUp();
+    return true;
   }
 
   data(): Promise<iUserData> {
-    throw new Error("Method not implemented.");
+    return returnValueWhenLoaded(() => this.#data, "game data");
   }
 
   onChange(handler: ChangeHandler<iUserData>): void {
-    throw new Error("Method not implemented.");
+    this.#externalChangeHandler = handler;
   }
 
-  update(props: Partial<Omit<iUserData, "id" | "uid">>): Promise<void> {
-    throw new Error("Method not implemented.");
+  async update(updates: Partial<Omit<iUserData, "id" | "uid">>): Promise<void> {
+    await this.#compositeDocument.update(updates);
   }
 }

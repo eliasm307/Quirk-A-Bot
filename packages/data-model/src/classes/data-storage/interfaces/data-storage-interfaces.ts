@@ -1,14 +1,11 @@
-/* eslint-disable no-use-before-define */
-import { UID } from '@quirk-a-bot/common';
-
 import {
-  iBaseCollection, iHasCleanUp, iHasGetData, iHasPath,
+  iBaseCollection, iBaseEntity, iHasCleanUp, iHasGetData, iHasPath,
 } from '../../../declarations/interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
 import {
   iCharacterSheet, iCharacterSheetData,
 } from '../../character-sheet/interfaces/character-sheet-interfaces';
-import { iBaseEntity, iGameData } from '../../game/interfaces/game-interfaces';
+import { iGameData } from '../../game/interfaces/game-interfaces';
 import { iCharacterData } from '../../game/interfaces/game-player-interfaces';
 import {
   iHasTraitCollectionLogReporter, iHasTraitLogReporter,
@@ -93,7 +90,6 @@ export interface iDataStorageFactory {
   createPath(parentPath: string, id: string): string;
   /** Validates an id and returns a boolean to indicate validity */
   idIsValid(id: string): boolean;
-  newUserDataStorage(): Promise<iUserDataStorage>;
   newCharacterSheetDataStorage(
     props: iCharacterSheetDataStorageFactoryProps
   ): iCharacterSheetDataStorage;
@@ -110,8 +106,9 @@ export interface iDataStorageFactory {
   >(
     props: iBaseTraitCollectionDataStorageProps<N, V, D, T>
   ) => iTraitCollectionDataStorage<N, V, D, T>;
+  newUserDataStorage(): Promise<iUserDataStorage>;
 
-  // NOTE the factory props just define what will be available, the specific factories don't need to require any of the given props
+// NOTE the factory props just define what will be available, the specific factories don't need to require any of the given props
   // ! traits will always be part of trait collections, so factory shouldn't have this method. Trait collections should instead
   /*
   newTraitDataStorageInitialiser(

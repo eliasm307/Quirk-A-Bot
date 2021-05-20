@@ -11,7 +11,7 @@ export interface iBaseEntity<D> {
   data(): Promise<D>;
   /** Registers a callback to call when game data changes */
   onChange(handler: ChangeHandler<D>): void;
-  update(props: Partial<Omit<D, "id" | "uid">>): Promise<void>;
+  update(updates: Partial<Omit<D, "id" | "uid">>): Promise<void>;
 }
 
 export interface iHasId {
