@@ -6,7 +6,7 @@ import { iBaseTrait, iBaseTraitData } from '../../traits/interfaces/trait-interf
 import firestoreIdIsValid from '../Firestore/utils/firestoreIdIsValid';
 import {
   iBaseTraitDataStorage, iCharacterSheetDataStorage, iDataStorageFactory, iGameDataStorage,
-  iTraitCollectionDataStorage,
+  iTraitCollectionDataStorage, iUserDataStorage,
 } from '../interfaces/data-storage-interfaces';
 import {
   iCharacterSheetDataStorageFactoryProps,
@@ -17,6 +17,7 @@ import {
   iBaseTraitCollectionDataStorageProps,
 } from '../interfaces/props/trait-collection-data-storage';
 import { iBaseTraitDataStorageProps } from '../interfaces/props/trait-data-storage';
+import { iUserDataStorageFactoryProps } from '../interfaces/props/user-data-storage';
 import { createPath } from '../utils/createPath';
 import LocalFileCharacterSheetDataStorage from './LocalFileCharacterSheetDataStorage';
 import LocalFileTraitCollectionDataStorage from './LocalFileTraitCollectionDataStorage';
@@ -56,7 +57,9 @@ export default class LocalFileDataStorageFactory
     });
   }
 
-  newGameDataStorage(props: iGameDataStorageFactoryProps): iGameDataStorage {
+  newGameDataStorage(
+    props: iGameDataStorageFactoryProps
+  ): Promise<iGameDataStorage> {
     throw new Error("Method not implemented.");
   }
 
@@ -89,5 +92,11 @@ export default class LocalFileDataStorageFactory
         characterSheet,
         resolvedBasePath: this.#resolvedBasePath,
       });
+  }
+
+  newUserDataStorage(
+    props: iUserDataStorageFactoryProps
+  ): Promise<iUserDataStorage> {
+    throw new Error("Method not implemented.");
   }
 }

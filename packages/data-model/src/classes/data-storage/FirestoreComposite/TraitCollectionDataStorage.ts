@@ -163,9 +163,12 @@ export default class FirestoreCompositeTraitCollectionDataStorage<
 
   protected newTraitDataStorage: (
     props: iBaseTraitDataStorageProps<N, V>
-  ) => iBaseTraitDataStorage<N, V> = (props) =>
-    new FirestoreCompositeTraitDataStorage<N, V>({
+  ) => iBaseTraitDataStorage<N, V> = (props) => {
+    const { name } = props;
+
+    return new FirestoreCompositeTraitDataStorage<N, V>({
       ...props,
-      subDocument: this.#compositeDocument.get(props.name),
+      subDocument: this.#compositeDocument.get(name),
     });
+  };
 }
