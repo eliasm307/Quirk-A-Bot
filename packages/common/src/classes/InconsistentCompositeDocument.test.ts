@@ -94,12 +94,12 @@ describe("InconsistentCompositeDocument", () => {
       objVal: objVal2,
       stringVal: stringVal,
     });
-    expect(compositeDocument.get("objVal")?.data).toEqual(objVal2);
-    expect(compositeDocument.get("boolVal")?.data).toEqual(true);
-    expect(compositeDocument.get("stringVal")?.data).toEqual(stringVal);
+    expect((await compositeDocument.get("objVal"))?.data).toEqual(objVal2);
+    expect((await compositeDocument.get("boolVal"))?.data).toEqual(true);
+    expect((await compositeDocument.get("stringVal"))?.data).toEqual(stringVal);
 
     // delete in 2 ways
-    await compositeDocument.get("objVal")?.delete();
+    (await compositeDocument.get("objVal"))?.delete();
     await compositeDocument.delete("boolVal");
     await compositeDocument.delete("stringVal");
     await pause(300);

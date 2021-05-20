@@ -74,15 +74,10 @@ export default abstract class AbstractCompositeDocument<
     const { path, firestore, handleChange, initialData } = props;
 
     this.path = path;
-
     this.documentRef = firestore.doc(path);
-
     this.data = initialData ? { ...initialData } : ({} as SchemaType);
-
     this.firestore = firestore;
-
     this.subDocuments = new Map();
-
     this.observer = new FirestoreDocumentObserver({
       ...props,
       handleChange: (firestoreDocumentChangeData) => {
@@ -154,10 +149,10 @@ export default abstract class AbstractCompositeDocument<
     return this;
   }
 
-  async get(
+  get(
     key: keyof SchemaType
-  ): Promise<iSubDocument<SchemaType, keyof SchemaType>> {
-    return this.subDocuments.get(key) || this.addSubDocument(key, undefined);
+  ): iSubDocument<SchemaType, keyof SchemaType> | undefined {
+    return this.subDocuments.get(key);
   }
 
   /** Set the value of a sub document, merges change into overall composite document */

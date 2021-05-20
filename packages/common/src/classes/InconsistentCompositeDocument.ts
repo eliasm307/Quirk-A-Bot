@@ -5,7 +5,10 @@ import AbstractCompositeDocument, {
 
 export interface InconsistentCompositeDocumentLoaderProps<
   S extends Record<string, any>
-> extends Omit<AbstractCompositeDocumentLoaderProps<S>, "schemaPredicate"> {
+> extends Omit<
+    AbstractCompositeDocumentLoaderProps<S>,
+    "documentSchemaPredicate"
+  > {
   valuePredicates: Record<keyof S, (value: unknown) => value is S[keyof S]>;
 }
 
