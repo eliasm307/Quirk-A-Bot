@@ -18,6 +18,7 @@ import { createPath } from './utils/createPath';
 
 // todo break this up
 
+/** Responsible for managing collections of traits and initialising trait data storages */
 export default abstract class AbstractTraitCollectionDataStorage<
   N extends TraitNameUnionOrString,
   V extends TraitValueTypeUnion,
