@@ -29,10 +29,7 @@ export interface SubDocumentChangeDetails<S> {
 
 export interface AbstractCompositeDocumentLoaderProps<
   S extends Record<string, any>
-> extends FirestoreDocumentObserverProps<S, CompositeDocumentChangeData<S>> {
-  handleChange: (changeData: CompositeDocumentChangeData<S>) => void;
-  initialData?: S;
-}
+> extends FirestoreDocumentObserverProps<S, CompositeDocumentChangeData<S>> {}
 
 export interface AbstractCompositeDocumentProps<S extends Record<string, any>>
   extends AbstractCompositeDocumentLoaderProps<S> {}

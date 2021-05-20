@@ -49,9 +49,11 @@ export default class FirestoreCompositeDataStorageFactory
     });
   }
 
-  newGameDataStorage(props: iGameDataStorageFactoryProps): iGameDataStorage {
+  async newGameDataStorage(
+    props: iGameDataStorageFactoryProps
+  ): Promise<iGameDataStorage> {
     // todo implement
-    return new FirestoreCompositeGameDataStorage({
+    return FirestoreCompositeGameDataStorage.load({
       ...props,
       dataStorageFactory: this,
       firestore: this.#firestore,
@@ -73,7 +75,7 @@ export default class FirestoreCompositeDataStorageFactory
       });
   }
 
-/*
+  /*
   newTraitDataStorageInitialiser(): <
     N extends string,
     V extends TraitValueTypeUnion

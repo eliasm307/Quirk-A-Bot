@@ -1,8 +1,6 @@
-import { BaseChangeProps, iHasParentPath } from '@quirk-a-bot/common';
+import { iHasParentPath } from '@quirk-a-bot/common';
 
 import { iHasFirestore, iHasId } from '../../../../declarations/interfaces';
-import { iGameData } from '../../../game/interfaces/game-interfaces';
-import { iCharacterData } from '../../../game/interfaces/game-player-interfaces';
 import { iHasDataStorageFactory } from '../data-storage-interfaces';
 
 // ? really similar to iCharacterSheetDataStorageFactoryProps, should they be the same?

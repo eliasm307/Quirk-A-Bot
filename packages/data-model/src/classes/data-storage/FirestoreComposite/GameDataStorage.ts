@@ -1,6 +1,6 @@
 import {
-  CHARACTER_COLLECTION_NAME, DEFAULT_CHARACTER_IMAGE_URL, DEFAULT_CHARACTER_NAME, Firestore,
-  FirestoreCollectionReference, InconsistentCompositeDocument, isString, pause,
+  ChangeHandler, CHARACTER_COLLECTION_NAME, DEFAULT_CHARACTER_IMAGE_URL, DEFAULT_CHARACTER_NAME,
+  Firestore, FirestoreCollectionReference, InconsistentCompositeDocument, isString, pause,
 } from '@quirk-a-bot/common';
 
 import isCharacterData from '../../../utils/type-predicates/isCharacterData';
@@ -8,6 +8,7 @@ import { iCharacterSheet } from '../../character-sheet/interfaces/character-shee
 import GameViewModel from '../../game/GameViewModel';
 import { iGameData } from '../../game/interfaces/game-interfaces';
 import { iCharacterData } from '../../game/interfaces/game-player-interfaces';
+import defaultGameData from '../../game/utils/defaultGameData';
 import assertDocumentExistsOnFirestore from '../Firestore/utils/assertDocumentExistsOnFirestore';
 import { iDataStorageFactory, iGameDataStorage } from '../interfaces/data-storage-interfaces';
 import { iFirestoreCompositeGameDataStorageProps } from '../interfaces/props/game-data-storage';
@@ -32,10 +33,14 @@ export default class FirestoreCompositeGameDataStorage
   // characterData: Map<string, iCharacterData>;
   path: string;
 
-  constructor(props: iFirestoreCompositeGameDataStorageProps) {
-    const { id, dataStorageFactory, firestore, parentPath } = props;
+  private constructor(
+    props: iFirestoreCompositeGameDataStorageProps & { initialData: iGameData }
+  ) {
+    const { id, dataStorageFactory, firestore, parentPath, initialData } =
+      props;
     this.id = id;
     this.path = dataStorageFactory.createPath(parentPath, id);
+    this.gameData = initialData;
     this.dataStorageFactory = dataStorageFactory;
     this.firestore = firestore;
     const characterCollectionPath = dataStorageFactory.createPath(
@@ -76,6 +81,22 @@ export default class FirestoreCompositeGameDataStorage
     });
   }
 
+  static async load(
+    props: iFirestoreCompositeGameDataStorageProps
+  ): Promise<FirestoreCompositeGameDataStorage> {
+    const { firestore, dataStorageFactory, id, parentPath } = props;
+
+    const initialData = await assertDocumentExistsOnFirestore<iGameData>({
+      firestore,
+      path: dataStorageFactory.createPath(parentPath, id),
+      newDefaultData: () => defaultGameData(id),
+      documentDataReader: readGameDataFromFirestoreComposite,
+      documentDataWriter: writeGameDataToFirestoreComposite,
+    });
+
+    return new FirestoreCompositeGameDataStorage({ ...props, initialData });
+  }
+
   async addCharacter(id: string): Promise<void> {
     const charactersData = await this.getCharacterData();
 
@@ -100,18 +121,6 @@ export default class FirestoreCompositeGameDataStorage
     await this.#characterCollectionRef.doc(id).set(newCharacterData);
   }
 
-  // todo replace this with a load method instead?
-  async assertDataExistsOnDataStorage(): Promise<void> {
-    this.gameData = await assertDocumentExistsOnFirestore<iGameData>({
-      firestore: this.firestore,
-      path: this.path,
-      // todo extract this to a static method or util
-      newDefaultData: () => GameViewModel.defaultData(this.id),
-      documentDataReader: readGameDataFromFirestoreComposite,
-      documentDataWriter: writeGameDataToFirestoreComposite,
-    });
-  }
-
   cleanUp(): boolean {
     try {
       this.#unsubscribeCharacterCollection();
@@ -123,6 +132,10 @@ export default class FirestoreCompositeGameDataStorage
     }
   }
 
+  async data(): Promise<iGameData> {
+    return this.returnValueWhenLoaded(() => this.gameData, "game data");
+  }
+
   async getCharacterData(): Promise<iCharacterData[]> {
     return this.returnValueWhenLoaded(
       () => this.#characterData,
@@ -130,8 +143,8 @@ export default class FirestoreCompositeGameDataStorage
     );
   }
 
-  async data(): Promise<iGameData> {
-    return this.returnValueWhenLoaded(() => this.gameData, "game data");
+  onChange(handler: ChangeHandler<iGameData>): void {
+    throw new Error("Method not implemented.");
   }
 
   async setDescription(description: string): Promise<void> {
@@ -140,46 +153,5 @@ export default class FirestoreCompositeGameDataStorage
 
   async update(updates: Partial<Omit<iGameData, "id">>): Promise<void> {
     await this.#compositeDocument.update(updates);
-  }
-
-  private async returnValueWhenLoaded<T>(
-    valueChecker: () => T | undefined,
-    valueName: string
-  ): Promise<T> {
-    // if it is already defined return it
-    let value = valueChecker();
-    if (value) {
-      console.log(
-        __filename,
-        `returnValueWhenLoaded, value already loaded, returning`,
-        { value, valueName }
-      );
-      return value;
-    }
-
-    let counter = 0;
-    const maxWaitTimeMs = 2000;
-    const checkIntervalMs = 100;
-
-    // if this is being called just after instantiation, need to wait for collection observer to do initial data load
-    while (counter < maxWaitTimeMs / checkIntervalMs) {
-      value = valueChecker();
-      if (value) {
-        console.log(`${valueName} loaded, returning now`);
-        return value;
-      }
-
-      console.warn(
-        `${valueName} was not defined, waiting ${checkIntervalMs}ms then checking again...`
-      );
-
-      // eslint-disable-next-line no-await-in-loop
-      await pause(checkIntervalMs);
-      counter++;
-    }
-
-    throw Error(
-      `Could not get ${valueName} because character data did not load in given time frame`
-    );
   }
 }

@@ -54,14 +54,6 @@ export default class GameViewModel implements iGameViewModel {
     */
   }
 
-  static defaultData(id: string): iGameData {
-    return {
-      id,
-      description: "",
-      gameMasters: [],
-    };
-  }
-
   /** Loads a game instance **/
   static async load(props: iLoaderProps): Promise<GameViewModel> {
     const { dataStorageFactory, id } = props;
@@ -74,16 +66,9 @@ export default class GameViewModel implements iGameViewModel {
     if (preExistingInstance) return preExistingInstance;
 
     try {
-      const gameDataStorage = dataStorageFactory.newGameDataStorage(props);
-
-      // todo find a better way to do this
-      await gameDataStorage.assertDataExistsOnDataStorage();
-
-      /*
-      const initialData = await gameDataStorage.getData();
-
-      const initialCharacterData = await gameDataStorage.getCharacters();
-      */
+      const gameDataStorage = await dataStorageFactory.newGameDataStorage(
+        props
+      );
 
       return new GameViewModel({
         ...props,
