@@ -62,22 +62,6 @@ export default class FirestoreDocumentObserver<D>
         next: (snapshot) => {
           const newData = snapshot.data();
 
-          console.log(__filename, `Internal change log`, {
-            newData,
-            oldData: this.#data,
-            path,
-            hasPendingWrites: snapshot.metadata.hasPendingWrites,
-          });
-
-          // ! includeMetadataChanges set to false so this shouldn't matter
-          /*
-          if (snapshot.metadata.hasPendingWrites) {
-            // ignore local changes not yet committed to firestore
-            // console.log('Modified document: ', { data });
-            return;
-          }
-          */
-
           // ! always allow undefined values as these represent documents that don't exist
           if (typeof newData !== "undefined" && !schemaPredicate(newData)) {
             const error = `New data for document at path "${path}" doesn't meet required schema predicate`;
@@ -85,60 +69,25 @@ export default class FirestoreDocumentObserver<D>
             throw Error(error);
           }
 
-          const changeData: FirestoreDocumentChangeData<D> = {
+          // update internal data
+          this.#data = newData;
+
+          // notify subscriber of change
+          handleChange({
             newData: newData && { ...newData },
             oldData: this.#data && { ...this.#data },
             path: this.path,
             time: new Date().getTime(),
             snapshot,
-          };
-
-          // update internal data
-          this.#data = newData;
-
-          // notify subscriber of change
-          return handleChange(changeData);
+          });
         },
         error: console.error, // ? should this throw?
       }
     );
   }
 
-  // todo delete
-  // ! doesn't need load method as initial data is optional, this will be set when the listener is set anyway
-  /*
-  static   load<D>(
-    props: FirestoreDocumentObserverLoaderProps<D>
-  ):  FirestoreDocumentObserver<D>  {
-    const { schemaPredicate , firestore, path , } = props;
-/*
-    const doc = await firestore.doc(path).get();
-
-    const initialData = doc.data();
-    */
-
-  /*
-    if (!schemaPredicate(initialData)) {
-      const error = `Could not load document observer for document path "${path}", the initial data does not meet the provided predicate`;
-      console.error({ error, path, initialData });
-
-      return Promise.reject(Error(error));
-    }
-
-    // todo instead of returning a new instance each time, this should keep track of instances and reuse them if an instance at the same path is requested, documents at the same path should have the same predicates etc, maybe different firestore objects?
-    return new FirestoreDocumentObserver({ ...props, initialData });
-  }
-  */
-
   /** Unsubscribe to Firestore document */
   unsubscribe(): void {
-    try {
-      this.unsubscriber();
-    } catch (error) {
-      console.error(__filename, `Could not unsubscribe to firestore document`, {
-        path: this.path,
-        error,
-      });
-    }
+    this.unsubscriber();
   }
 }

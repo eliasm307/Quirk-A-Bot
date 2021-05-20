@@ -1,4 +1,4 @@
-import { Firestore } from '../FirebaseExports';
+import { Firestore, FirestoreCollectionSnapshot } from '../FirebaseExports';
 
 export interface iFirestoreCollectionObserver {
   path: string;
@@ -7,13 +7,11 @@ export interface iFirestoreCollectionObserver {
 }
 
 export interface FirestoreCollectionChangeData<D> {
-  /** Firestore document id */
-  id: string;
-  /** New data from this change */
-  newData?: D;
-  /** Old data from last change, can be undefined if document didn't exist but must not contain undefined fields */
-  oldData?: D;
-  /** Firestore path for document, can be undefined if document didn't exist but must not contain undefined fields */
+  /** New data from this snapshot */
+  newData: D[];
+  /** Old data from last snapshot */
+  oldData: D[];
+  /** Firestore path for collection */
   path: string;
   /** Raw Firestore document change snapshot */
   snapshot: FirestoreCollectionSnapshot;
@@ -39,6 +37,7 @@ export default class FirestoreCollectionObserver<D>
 {
   protected unsubscriber: () => void;
 
+  #data?: D[];
   path: string;
 
   constructor({
@@ -48,10 +47,49 @@ export default class FirestoreCollectionObserver<D>
     documentSchemaPredicate: schemaPredicate,
     initialData,
   }: FirestoreCollectionObserverProps<D>) {
-    this.unsubscriber = firestore
-      .collection(path)
-      .onSnapshot({ next: (snapshot) => {}, error: console.error });
+    this.path = path;
+
+    this.unsubscriber = firestore.collection(path).onSnapshot(
+      { includeMetadataChanges: false },
+      {
+        next: (snapshot) => {
+          const newData: D[] = [];
+
+          // process document snapshots
+          snapshot.forEach((docSnapshot) => {
+            const newDocData = docSnapshot.data();
+            const path = docSnapshot.ref.path;
+
+            // ! always allow undefined values as these represent documents that don't exist
+            if (
+              typeof newDocData !== "undefined" &&
+              !schemaPredicate(newDocData)
+            ) {
+              const error = `New data for document at path "${path}" doesn't meet required schema predicate`;
+              console.error({ error, path, newDocData });
+              throw Error(error);
+            }
+            newData.push(newDocData);
+          });
+
+          // update internal data
+          this.#data = newData;
+
+          // notify subscriber of change
+          handleChange({
+            path: this.path,
+            snapshot,
+            time: new Date().getTime(),
+            newData,
+            oldData: this.#data,
+          });
+        },
+        error: console.error, // ? should this throw?
+      }
+    );
   }
 
-  unsubscribe(): void {}
+  unsubscribe(): void {
+    this.unsubscriber();
+  }
 }
