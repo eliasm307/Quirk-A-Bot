@@ -3,6 +3,7 @@ import {
   Firestore, FirestoreCollectionReference, InconsistentCompositeDocument, isString, pause,
 } from '@quirk-a-bot/common';
 
+import returnValueWhenLoaded from '../../../utils/returnValueWhenLoaded';
 import isCharacterData from '../../../utils/type-predicates/isCharacterData';
 import { iCharacterSheet } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import GameViewModel from '../../game/GameViewModel';
@@ -133,14 +134,11 @@ export default class FirestoreCompositeGameDataStorage
   }
 
   async data(): Promise<iGameData> {
-    return this.returnValueWhenLoaded(() => this.gameData, "game data");
+    return returnValueWhenLoaded(() => this.gameData, "game data");
   }
 
   async getCharacterData(): Promise<iCharacterData[]> {
-    return this.returnValueWhenLoaded(
-      () => this.#characterData,
-      "characters data"
-    );
+    return returnValueWhenLoaded(() => this.#characterData, "characters data");
   }
 
   onChange(handler: ChangeHandler<iGameData>): void {

@@ -1,3 +1,5 @@
+import { UID } from './typePredicates';
+
 /** Props for a change handler */
 export interface BaseChangeProps<T> {
   new: T;
@@ -84,5 +86,10 @@ export interface iCompositeDocument<S extends Record<string, unknown>> {
 
   cleanUp(): void;
   get(key: keyof S): iSubDocument<S, keyof S> | undefined;
-  toArray<V extends S[keyof S]>(): iSubDocument<S, keyof S>[];
+  toArray(): iSubDocument<S, keyof S>[];
+}
+
+export interface iHasUid {
+  /** UID from Firebase Authentication  */
+  uid: UID;
 }

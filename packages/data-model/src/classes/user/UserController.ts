@@ -4,7 +4,7 @@ import { DEFAULT_USER_NAME, USER_COLLECTION_NAME } from '../../../../common/src/
 import { iHasFirestore } from '../../declarations/interfaces';
 import isUserData from '../../utils/type-predicates/isUserData';
 import {
-  iHasUid, iUserController as iUserController, iUserData, iUserGameParticipationData,
+  iHasUid, iPlayerGameParticipationData, iUserController as iUserController, iUserData,
 } from './interfaces';
 
 interface iLoadProps
@@ -14,7 +14,7 @@ interface iLoadProps
 
 export default class UserController implements iUserController {
   // todo this should be a proxy over a base editable object?
-  readonly getMyGames: Map<string, iUserGameParticipationData>;
+  readonly getMyGames: Map<string, iPlayerGameParticipationData>;
   readonly name: string;
 
   private constructor({ getMyGames: myGames, name, uid }: iUserData) {
@@ -24,7 +24,8 @@ export default class UserController implements iUserController {
     const userGamesEntries = myGames.map(
       (game) => [game.gameId, game] as const
     );
-    this.getMyGames = new Map<string, iUserGameParticipationData>(
+
+    this.getMyGames = new Map<string, iPlayerGameParticipationData>(
       userGamesEntries
     );
   }
@@ -77,7 +78,7 @@ export default class UserController implements iUserController {
     return new UserController(userData);
   }
 
-/*
+  /*
   protected static newUser({
     uid,
     name = DEFAULT_USER_NAME,

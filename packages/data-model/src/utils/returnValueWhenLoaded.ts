@@ -2,7 +2,7 @@ import { pause } from '@quirk-a-bot/common';
 
 export default async function returnValueWhenLoaded<T>(
   valueChecker: () => T | undefined,
-  valueName: string // todo should be optional
+  valueDescription: string // todo should be optional
 ): Promise<T> {
   // if it is already defined return it
   let value = valueChecker();
@@ -10,7 +10,7 @@ export default async function returnValueWhenLoaded<T>(
     console.log(
       __filename,
       `returnValueWhenLoaded, value already loaded, returning`,
-      { value, valueName }
+      { value, valueName: valueDescription }
     );
     return value;
   }
@@ -23,12 +23,12 @@ export default async function returnValueWhenLoaded<T>(
   while (counter < maxWaitTimeMs / checkIntervalMs) {
     value = valueChecker();
     if (value) {
-      console.log(`${valueName} loaded, returning now`);
+      console.log(`${valueDescription} loaded, returning now`);
       return value;
     }
 
     console.warn(
-      `${valueName} was not defined, waiting ${checkIntervalMs}ms then checking again...`
+      `${valueDescription} was not defined, waiting ${checkIntervalMs}ms then checking again...`
     );
 
     // eslint-disable-next-line no-await-in-loop
@@ -37,6 +37,6 @@ export default async function returnValueWhenLoaded<T>(
   }
 
   throw Error(
-    `Could not get ${valueName} because character data did not load in given time frame`
+    `Could not get ${valueDescription} because character data did not load in given time frame`
   );
 }
