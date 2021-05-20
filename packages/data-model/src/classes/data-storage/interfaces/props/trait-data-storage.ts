@@ -24,6 +24,8 @@ export interface iBaseTraitDataStorageProps<
   name: N;
 }
 
+// todo co locate these with classes
+
 export interface iInMemoryTraitDataStorageProps<
   N extends TraitNameUnionOrString,
   V extends TraitValueTypeUnion

@@ -4,7 +4,7 @@ import {
 
 import { iTraitCollection } from '../../../classes/traits/interfaces/trait-collection-interfaces';
 import { iStringTrait } from '../../../classes/traits/interfaces/trait-interfaces';
-import { iHasId } from '../../../declarations/interfaces';
+import { iBaseEntity, iHasId } from '../../../declarations/interfaces';
 import { iCharacterSheet } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import { iCharacterData } from './game-player-interfaces';
 
@@ -20,7 +20,7 @@ export interface iGameShape {
   /** List of game masters */
   gameMasters: unknown;
 
-  /** List of players involved in this game as characters, from a sub-collection */
+/** List of players involved in this game as characters, from a sub-collection */
   // players: unknown; // todo to be implemented as part of player management system
 }
 
@@ -30,15 +30,7 @@ export interface iGameData extends iGameShape {
    * this is a subset of the players list */
   gameMasters: UID[];
 
-  // players: iGamePlayerData[];
-}
-
-export interface iBaseEntity<D> {
-  // todo controllers and data stores should implement this
-  data(): Promise<D>;
-  /** Registers a callback to call when game data changes */
-  onChange(handler: ChangeHandler<D>): void;
-  update(props: Partial<Omit<D, "id" | "uid">>): Promise<void>;
+// players: iGamePlayerData[];
 }
 
 /** Represents a VTM game in firestore */
@@ -52,7 +44,7 @@ export interface iGameViewModel extends iBaseEntity<iGameData>, iHasCleanUp {
   /** ids from characters sub collection  */
   getCharacterData(): Promise<Map<UID, iCharacterData>>;
 
-  /** Loads character sheets defined in the game */
+/** Loads character sheets defined in the game */
   // loadCharacterSheets(): Promise<Map<UID, iCharacterSheet>>;
 
   // players: Map<UID, iGamePlayerData>;

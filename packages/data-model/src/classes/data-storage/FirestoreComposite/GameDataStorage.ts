@@ -20,14 +20,13 @@ export default class FirestoreCompositeGameDataStorage
   // protected characterSheets?: Map<string, iCharacterSheet>;
   protected dataStorageFactory: iDataStorageFactory;
   protected firestore: Firestore;
-  // this will be loaded when listener returns first results
-  protected gameData?: iGameData;
   protected id: string;
 
   #characterCollectionRef: FirestoreCollectionReference;
   // this will be loaded when listener returns first results
   #characterData?: iCharacterData[];
   #compositeDocument: InconsistentCompositeDocument<iGameData>;
+  #data?: iGameData;
   #externalChangeHandler?: ChangeHandler<iGameData>;
   #unsubscribeCharacterCollection: () => void;
   // characterData: Map<string, iCharacterData>;
@@ -40,7 +39,7 @@ export default class FirestoreCompositeGameDataStorage
       props;
     this.id = id;
     this.path = dataStorageFactory.createPath(parentPath, id);
-    this.gameData = initialData;
+    this.#data = initialData;
     this.dataStorageFactory = dataStorageFactory;
     this.firestore = firestore;
     const characterCollectionPath = dataStorageFactory.createPath(
@@ -68,7 +67,7 @@ export default class FirestoreCompositeGameDataStorage
     this.#compositeDocument = InconsistentCompositeDocument.load<iGameData>({
       firestore,
       handleChange: ({ newData }) => {
-        this.gameData = newData && { ...newData };
+        this.#data = newData && { ...newData };
         if (this.#externalChangeHandler) this.#externalChangeHandler(newData);
       },
       path: this.path,
@@ -134,7 +133,7 @@ export default class FirestoreCompositeGameDataStorage
   }
 
   async data(): Promise<iGameData> {
-    return returnValueWhenLoaded(() => this.gameData, "game data");
+    return returnValueWhenLoaded(() => this.#data, "game data");
   }
 
   async getCharacterData(): Promise<iCharacterData[]> {

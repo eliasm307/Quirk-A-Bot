@@ -1,9 +1,17 @@
-import { Firestore } from '@quirk-a-bot/common';
+import { ChangeHandler, Firestore } from '@quirk-a-bot/common';
 
 // todo move this to common
 
 export interface iHasGetData<D> {
   readonly data: () => D;
+}
+
+export interface iBaseEntity<D> {
+  // todo controllers and data stores should implement this
+  data(): Promise<D>;
+  /** Registers a callback to call when game data changes */
+  onChange(handler: ChangeHandler<D>): void;
+  update(props: Partial<Omit<D, "id" | "uid">>): Promise<void>;
 }
 
 export interface iHasId {

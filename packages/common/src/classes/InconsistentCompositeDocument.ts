@@ -9,7 +9,7 @@ export interface InconsistentCompositeDocumentLoaderProps<
     AbstractCompositeDocumentLoaderProps<S>,
     "documentSchemaPredicate"
   > {
-  valuePredicates: Record<keyof S, (value: unknown) => value is S[keyof S]>;
+  valuePredicates: { [K in keyof S]: (value: unknown) => value is S[K] };
 }
 
 export default class InconsistentCompositeDocument<
