@@ -1,1 +1,1 @@
-export type ChangeHandler<D> = (newData: D) => void;
+export type ChangeHandler<D> = (newData?: D) => void;

@@ -1,12 +1,10 @@
 import {
   ChangeHandler, CHARACTER_COLLECTION_NAME, DEFAULT_CHARACTER_IMAGE_URL, DEFAULT_CHARACTER_NAME,
-  Firestore, FirestoreCollectionReference, InconsistentCompositeDocument, isString, pause,
+  Firestore, FirestoreCollectionReference, InconsistentCompositeDocument, isString,
 } from '@quirk-a-bot/common';
 
 import returnValueWhenLoaded from '../../../utils/returnValueWhenLoaded';
 import isCharacterData from '../../../utils/type-predicates/isCharacterData';
-import { iCharacterSheet } from '../../character-sheet/interfaces/character-sheet-interfaces';
-import GameViewModel from '../../game/GameViewModel';
 import { iGameData } from '../../game/interfaces/game-interfaces';
 import { iCharacterData } from '../../game/interfaces/game-player-interfaces';
 import defaultGameData from '../../game/utils/defaultGameData';
@@ -30,6 +28,7 @@ export default class FirestoreCompositeGameDataStorage
   // this will be loaded when listener returns first results
   #characterData?: iCharacterData[];
   #compositeDocument: InconsistentCompositeDocument<iGameData>;
+  #externalChangeHandler?: ChangeHandler<iGameData>;
   #unsubscribeCharacterCollection: () => void;
   // characterData: Map<string, iCharacterData>;
   path: string;
@@ -70,6 +69,7 @@ export default class FirestoreCompositeGameDataStorage
       firestore,
       handleChange: ({ newData }) => {
         this.gameData = newData && { ...newData };
+        if (this.#externalChangeHandler) this.#externalChangeHandler(newData);
       },
       path: this.path,
       valuePredicates: {
@@ -142,7 +142,7 @@ export default class FirestoreCompositeGameDataStorage
   }
 
   onChange(handler: ChangeHandler<iGameData>): void {
-    throw new Error("Method not implemented.");
+    this.#externalChangeHandler = handler;
   }
 
   async setDescription(description: string): Promise<void> {

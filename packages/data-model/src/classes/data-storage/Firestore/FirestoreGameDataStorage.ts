@@ -1,4 +1,4 @@
-import { Firestore } from '@quirk-a-bot/common';
+import { ChangeHandler, Firestore } from '@quirk-a-bot/common';
 
 import { CharacterSheet } from '../../..';
 import { iCharacterSheet } from '../../character-sheet/interfaces/character-sheet-interfaces';
@@ -21,16 +21,12 @@ export default class FirestoreGameDataStorage implements iGameDataStorage {
 
   path: string;
 
-  constructor(props: iFirestoreCharacterSheetDataStorageProps) {
+  private constructor(props: iFirestoreCharacterSheetDataStorageProps) {
     const { id, dataStorageFactory, firestore, parentPath } = props;
     this.id = id;
     this.path = dataStorageFactory.createPath(parentPath, id);
     this.dataStorageFactory = dataStorageFactory;
     this.firestore = firestore;
-  }
-
-  addCharacter(id: string): Promise<void> {
-    throw new Error("Method not implemented.");
   }
 
   // todo replace this with a load method instead?
@@ -84,10 +80,6 @@ export default class FirestoreGameDataStorage implements iGameDataStorage {
     }
   }
 
-  cleanUp(): boolean {
-    throw new Error("Method not implemented.");
-  }
-
   async data(): Promise<iGameData> {
     if (!this.gameData)
       throw Error(
@@ -95,9 +87,5 @@ export default class FirestoreGameDataStorage implements iGameDataStorage {
       );
 
     return this.gameData;
-  }
-
-  async update(props: Partial<Omit<iGameData, "id">>): Promise<void> {
-    throw new Error("Method not implemented.");
   }
 }

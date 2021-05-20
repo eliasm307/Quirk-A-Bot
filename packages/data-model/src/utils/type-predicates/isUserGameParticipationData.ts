@@ -1,6 +1,5 @@
-import { iPlayerGameParticipationData } from '../../classes/user/interfaces';
-
-// todo test
+// todo delete
+/*
 export default function isUserGameParticipationData(
   data: unknown
 ): data is iPlayerGameParticipationData {
@@ -17,3 +16,5 @@ export default function isUserGameParticipationData(
 
   return (hasGameId && hasPlayerId) as boolean;
 }
+*/
+export {};

@@ -14,6 +14,7 @@ import {
   iHasTraitCollectionLogReporter, iHasTraitLogReporter,
 } from '../../log/interfaces/log-interfaces';
 import { iBaseTrait, iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
+import { iUserData } from '../../user/interfaces';
 import { iCharacterSheetDataStorageFactoryProps } from './props/character-sheet-data-storage';
 import { iGameDataStorageFactoryProps } from './props/game-data-storage';
 import {
@@ -80,6 +81,8 @@ export interface iGameDataStorage
   getCharacterData(): Promise<iCharacterData[]>;
 }
 
+export interface iUserDataStorage extends iBaseEntity<iUserData>, iHasCleanUp {}
+
 // -------------------------------------------------------
 // DATA STORAGE FACTORY
 
@@ -90,6 +93,7 @@ export interface iDataStorageFactory {
   createPath(parentPath: string, id: string): string;
   /** Validates an id and returns a boolean to indicate validity */
   idIsValid(id: string): boolean;
+  newUserDataStorage(): Promise<iUserDataStorage>;
   newCharacterSheetDataStorage(
     props: iCharacterSheetDataStorageFactoryProps
   ): iCharacterSheetDataStorage;
@@ -107,7 +111,7 @@ export interface iDataStorageFactory {
     props: iBaseTraitCollectionDataStorageProps<N, V, D, T>
   ) => iTraitCollectionDataStorage<N, V, D, T>;
 
-// NOTE the factory props just define what will be available, the specific factories don't need to require any of the given props
+  // NOTE the factory props just define what will be available, the specific factories don't need to require any of the given props
   // ! traits will always be part of trait collections, so factory shouldn't have this method. Trait collections should instead
   /*
   newTraitDataStorageInitialiser(

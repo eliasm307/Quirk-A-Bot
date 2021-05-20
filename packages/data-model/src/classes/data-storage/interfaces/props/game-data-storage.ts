@@ -18,10 +18,3 @@ export interface iFirestoreGameDataStorageProps
 export interface iFirestoreCompositeGameDataStorageProps
   extends iBaseGameDataStorageProps,
     iHasFirestore {}
-
-/*
-characterCollectionChangeHandler: (
-    props: BaseChangeProps<iCharacterData>
-  ) => void;
-  gameDataChangeHandler: (props: BaseChangeProps<iGameData>) => void;
-  */
