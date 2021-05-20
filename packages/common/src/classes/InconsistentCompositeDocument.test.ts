@@ -1,3 +1,4 @@
+import { SchemaPredicateMap } from '../declarations/typeAliases';
 import { firestoreEmulator } from '../FirebaseExports';
 import pause from '../utils/pause';
 import InconsistentCompositeDocument, {
@@ -18,10 +19,7 @@ interface S {
   stringVal: string;
 }
 
-const valuePredicates: Record<
-  keyof S,
-  (value: unknown) => value is S[keyof S]
-> = {
+const valuePredicates: SchemaPredicateMap<S> = {
   boolVal: (value): value is boolean => typeof value === "boolean",
   objVal: (value): value is ObjSchema => typeof value === "object" && !!value,
   stringVal: (value): value is string => typeof value === "string",

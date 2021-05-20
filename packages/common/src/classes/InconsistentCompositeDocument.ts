@@ -1,3 +1,4 @@
+import { SchemaPredicateMap } from '../declarations/typeAliases';
 import { isRecord } from '../type-predicates';
 import AbstractCompositeDocument, {
   AbstractCompositeDocumentLoaderProps, AbstractCompositeDocumentProps,
@@ -9,7 +10,7 @@ export interface InconsistentCompositeDocumentLoaderProps<
     AbstractCompositeDocumentLoaderProps<S>,
     "documentSchemaPredicate"
   > {
-  valuePredicates: { [K in keyof S]: (value: unknown) => value is S[K] };
+  valuePredicates: SchemaPredicateMap<S>;
 }
 
 export default class InconsistentCompositeDocument<
