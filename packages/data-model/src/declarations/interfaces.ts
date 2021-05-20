@@ -23,6 +23,10 @@ export interface iBaseViewModel<D> extends iBaseEntity<D> {}
 // todo use where relevant
 export interface iBaseModel<D> extends iBaseEntity<D> {}
 
+export interface iHasInitialData<D> {
+  initialData: D;
+}
+
 export interface iHasId {
   id: string;
 }

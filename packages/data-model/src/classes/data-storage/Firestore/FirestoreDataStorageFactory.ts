@@ -52,9 +52,11 @@ export default class FirestoreDataStorageFactory
     });
   }
 
-  newGameDataStorage(props: iGameDataStorageFactoryProps): iGameDataStorage {
+  async newGameDataStorage(
+    props: iGameDataStorageFactoryProps
+  ): Promise<iGameDataStorage> {
     // todo implement
-    return new FirestoreGameDataStorage({
+    return FirestoreGameDataStorage.load({
       ...props,
       dataStorageFactory: this,
       firestore: this.#firestore,
