@@ -45,30 +45,27 @@ export default class FirestoreCompositeUserDataStorage
 
   static async load(
     props: iFirestoreCompositeUserDataStorageProps
-  ): Promise<FirestoreCompositeUserDataStorage | void> {
+  ): Promise<FirestoreCompositeUserDataStorage> {
     const { id, firestore } = props;
-    try {
-      const userDoc = await firestore
-        .collection(USER_COLLECTION_NAME)
-        .doc(id)
-        .get();
 
-      if (!userDoc || !userDoc.exists)
-        throw Error(
-          `Could not load user with uid "${id}", no data found on this user, need to sign up first`
-        );
+    const userDoc = await firestore
+      .collection(USER_COLLECTION_NAME)
+      .doc(id)
+      .get();
 
-      const data = userDoc.data();
+    if (!userDoc || !userDoc.exists)
+      throw Error(
+        `Could not load user with uid "${id}", no data found on this user, need to sign up first`
+      );
 
-      if (!isUserData(data))
-        throw Error(
-          `Could not load user with uid "${id}", data was invalid format`
-        );
+    const data = userDoc.data();
 
-      return new FirestoreCompositeUserDataStorage({ ...props, data });
-    } catch (error) {
-      return console.error({ error });
-    }
+    if (!isUserData(data))
+      throw Error(
+        `Could not load user with uid "${id}", data was invalid format`
+      );
+
+    return new FirestoreCompositeUserDataStorage({ ...props, data });
   }
 
   cleanUp(): boolean {

@@ -32,6 +32,7 @@ export default class FirestoreDataStorageFactory
   }
 
   assertIdIsValid(id: string): void {
+    // todo personalise reason
     if (!this.idIsValid(id)) throw Error(`Id is not valid: ${id}`);
   }
 
