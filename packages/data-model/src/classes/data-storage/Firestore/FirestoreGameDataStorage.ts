@@ -88,11 +88,7 @@ export default class FirestoreGameDataStorage implements iGameDataStorage {
     throw new Error("Method not implemented.");
   }
 
-  getCharacterData(): Promise<iCharacterData[]> {
-    throw new Error("Method not implemented.");
-  }
-
-  async getData(): Promise<iGameData> {
+  async data(): Promise<iGameData> {
     if (!this.gameData)
       throw Error(
         `Game data not loaded, please call assertDataExistsOnDataStorage before using this method`
@@ -101,11 +97,7 @@ export default class FirestoreGameDataStorage implements iGameDataStorage {
     return this.gameData;
   }
 
-  setDescription(description: string): Promise<void> {
-    throw new Error("Method not implemented.");
-  }
-
-  async updateData(props: Partial<Omit<iGameData, "id">>): Promise<void> {
+  async update(props: Partial<Omit<iGameData, "id">>): Promise<void> {
     throw new Error("Method not implemented.");
   }
 }

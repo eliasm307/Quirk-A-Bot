@@ -1,13 +1,17 @@
+import { UID } from '@quirk-a-bot/common/sr';
+
 import { DEFAULT_USER_NAME, USER_COLLECTION_NAME } from '../../../../common/src/constants';
 import { iHasFirestore } from '../../declarations/interfaces';
 import isUserData from '../../utils/type-predicates/isUserData';
 import {
-  iUserController as iUserController, iUserData, iUserGameParticipationData,
+  iHasUid, iUserController as iUserController, iUserData, iUserGameParticipationData,
 } from './interfaces';
 
-interface iLoadProps extends iHasFirestore {
-  uid: string;
-}
+interface iLoadProps
+  extends iHasFirestore,
+    Partial<Omit<iUserData, "uid">>,
+    iHasUid {}
+
 export default class UserController implements iUserController {
   // todo this should be a proxy over a base editable object?
   readonly getMyGames: Map<string, iUserGameParticipationData>;
@@ -25,8 +29,9 @@ export default class UserController implements iUserController {
     );
   }
 
+  /** Loads an existing user */
   static async load(props: iLoadProps): Promise<UserController | void> {
-    const { uid, firestore } = props;
+    const { uid, firestore, name } = props;
     try {
       const userDoc = await firestore
         .collection(USER_COLLECTION_NAME)
@@ -34,14 +39,13 @@ export default class UserController implements iUserController {
         .get();
 
       if (!userDoc || !userDoc.exists) {
-        /*
-				// ? should this return something special to indicate that sign up process should be run?
-				return console.error(
-					`Could not load user with uid "${uid}", no data found on this user, need to sign up first`
-				); */
-        return await UserController.initNewUser(props);
+        throw Error(
+          `Could not load user with uid "${uid}", no data found on this user, need to sign up first`
+        );
       }
+
       const userData = userDoc.data();
+
       if (!isUserData(userData)) {
         return console.error(
           `Could not load user with uid "${uid}", data was invalid format`
@@ -54,11 +58,14 @@ export default class UserController implements iUserController {
     }
   }
 
-  protected static async initNewUser({
+  protected static async newUser({
     uid,
     firestore,
-  }: iLoadProps): Promise<UserController> {
-    const userData = UserController.newUserData(uid);
+    data,
+  }: iLoadProps & {
+    data: Partial<Omit<iUserData, "uid">>;
+  }): Promise<UserController> {
+    const userData: iUserData = { uid, name: DEFAULT_USER_NAME, ...data };
 
     try {
       // init user on firestore
@@ -70,11 +77,15 @@ export default class UserController implements iUserController {
     return new UserController(userData);
   }
 
-  protected static newUserData(uid: string): iUserData {
+/*
+  protected static newUser({
+    uid,
+    name = DEFAULT_USER_NAME,
+  }: Partial<iUserData> & iHasUid): iUserData {
     return {
       uid,
-      name: DEFAULT_USER_NAME, // ? should this require a name to be user defined?
-      getMyGames: [],
+      name,
     };
   }
+  */
 }

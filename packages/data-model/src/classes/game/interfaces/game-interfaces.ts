@@ -1,4 +1,6 @@
-import { GameId, iHasParentPath, UID, WebURL } from '@quirk-a-bot/common';
+import {
+  ChangeHandler, GameId, iHasCleanUp, iHasParentPath, UID, WebURL,
+} from '@quirk-a-bot/common';
 
 import { iTraitCollection } from '../../../classes/traits/interfaces/trait-collection-interfaces';
 import { iStringTrait } from '../../../classes/traits/interfaces/trait-interfaces';
@@ -18,7 +20,7 @@ export interface iGameShape {
   /** List of game masters */
   gameMasters: unknown;
 
-/** List of players involved in this game as characters, from a sub-collection */
+  /** List of players involved in this game as characters, from a sub-collection */
   // players: unknown; // todo to be implemented as part of player management system
 }
 
@@ -28,25 +30,32 @@ export interface iGameData extends iGameShape {
    * this is a subset of the players list */
   gameMasters: UID[];
 
-// players: iGamePlayerData[];
+  // players: iGamePlayerData[];
+}
+
+export interface iBaseEntity<D> {
+  // todo controllers and data stores should implement this
+  data(): Promise<D>;
+  /** Registers a callback to call when game data changes */
+  onChange(handler: ChangeHandler<D>): void;
+  update(props: Partial<Omit<D, "id" | "uid">>): Promise<void>;
 }
 
 /** Represents a VTM game in firestore */
-export interface iGame {
+export interface iGameController extends iBaseEntity<iGameData>, iHasCleanUp {
   /** Unique game id */
   readonly id: GameId;
   readonly path: string;
 
   // gameMasters: Set<UID>;
   addCharacter(id: string): Promise<void>;
-  data(): Promise<iGameData>;
   /** ids from characters sub collection  */
   getCharacterData(): Promise<Map<UID, iCharacterData>>;
-  /** Loads character sheets defined in the game */
-  loadCharacterSheets(): Promise<Map<UID, iCharacterSheet>>;
-  update(props: Partial<Omit<iGameData, "id">>): Promise<void>;
 
-// players: Map<UID, iGamePlayerData>;
+  /** Loads character sheets defined in the game */
+  // loadCharacterSheets(): Promise<Map<UID, iCharacterSheet>>;
+
+  // players: Map<UID, iGamePlayerData>;
 
   // todo add game user control functions
   /** Accept a player's request to join a game,

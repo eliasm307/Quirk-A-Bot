@@ -130,7 +130,7 @@ export default class FirestoreCompositeGameDataStorage
     );
   }
 
-  async getData(): Promise<iGameData> {
+  async data(): Promise<iGameData> {
     return this.returnValueWhenLoaded(() => this.gameData, "game data");
   }
 
@@ -138,7 +138,7 @@ export default class FirestoreCompositeGameDataStorage
     await this.#compositeDocument.set("description", description);
   }
 
-  async updateData(updates: Partial<Omit<iGameData, "id">>): Promise<void> {
+  async update(updates: Partial<Omit<iGameData, "id">>): Promise<void> {
     await this.#compositeDocument.update(updates);
   }
 

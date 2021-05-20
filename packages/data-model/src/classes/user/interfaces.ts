@@ -1,4 +1,4 @@
-import { GameId, UID } from '@quirk-a-bot/common';
+import { ChangeHandler, GameId, UID } from '@quirk-a-bot/common';
 
 export interface iHasUid {
   /** UID from Firebase Authentication  */
@@ -18,12 +18,11 @@ export interface iUserController {
   /** List of games the user is involved in as a player */
   getMyPlayerGameIds: Set<GameId>;
 
-  onChange(handler: ())
-
   /** Get current user data */
   data(): Promise<iUserData>;
+  onChange(handler: ChangeHandler<iUserData>): void;
   /** Update user data */
-  update(newData: Partial<Omit<iUserData, "uid" | "id">>): Promise<void>;
+  update(updates: Partial<Omit<iUserData, "uid" | "id">>): Promise<void>;
 }
 
 /** Defines the participation of a user in a game and provides information on the participation */

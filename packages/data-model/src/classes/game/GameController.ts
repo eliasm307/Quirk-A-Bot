@@ -1,13 +1,11 @@
-import { iHasParentPath, UID } from '@quirk-a-bot/common';
+import { ChangeHandler, iHasParentPath } from '@quirk-a-bot/common';
 
 import { iHasId } from '../../declarations/interfaces';
-import CharacterSheet from '../character-sheet/CharacterSheet';
-import { iCharacterSheet } from '../character-sheet/interfaces/character-sheet-interfaces';
 import {
   iDataStorageFactory, iGameDataStorage, iHasDataStorageFactory,
 } from '../data-storage/interfaces/data-storage-interfaces';
 import { createPath } from '../data-storage/utils/createPath';
-import { iGame as iGameController, iGameData } from './interfaces/game-interfaces';
+import { iGameController, iGameData } from './interfaces/game-interfaces';
 import { iCharacterData } from './interfaces/game-player-interfaces';
 
 // ? similar to characterSheetDataStorage loader, should these be the same?
@@ -16,11 +14,13 @@ interface iLoaderProps extends iHasId, iHasDataStorageFactory, iHasParentPath {}
 export interface iGameProps extends iLoaderProps {
   gameDataStorage: iGameDataStorage;
 
-// initialCharacterData: iCharacterData[];
+  // initialCharacterData: iCharacterData[];
   // initialData: iGameData;
 }
 
 export default class GameController implements iGameController {
+  private externalChangeHandler?: ChangeHandler<iGameData>;
+
   /** Existing singleton instances of this class */
   protected static instances: Map<string, GameController> = new Map<
     string,
@@ -104,12 +104,13 @@ export default class GameController implements iGameController {
     return this.#gameDataStorage.addCharacter(id);
   }
 
-  cleanUp() {
+  cleanUp(): boolean {
     this.#gameDataStorage.cleanUp();
+    return true;
   }
 
   data(): Promise<iGameData> {
-    return this.#gameDataStorage.getData();
+    return this.#gameDataStorage.data();
   }
 
   async getCharacterData(): Promise<Map<string, iCharacterData>> {
@@ -120,6 +121,12 @@ export default class GameController implements iGameController {
     );
   }
 
+  onChange(handler: ChangeHandler<iGameData>): void {
+    this.externalChangeHandler = handler;
+  }
+
+  // not game's responsibility to instantiate character sheets
+  /*
   async loadCharacterSheets(): Promise<Map<UID, iCharacterSheet>> {
     const characterSheetPromises = (
       await this.#gameDataStorage.getCharacterData()
@@ -144,8 +151,8 @@ export default class GameController implements iGameController {
       ])
     );
   }
-
+  */
   update(props: Partial<Omit<iGameData, "id">>): Promise<void> {
-    return this.#gameDataStorage.updateData(props);
+    return this.#gameDataStorage.update(props);
   }
 }
