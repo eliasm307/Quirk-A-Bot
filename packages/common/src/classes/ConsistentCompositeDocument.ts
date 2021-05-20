@@ -6,7 +6,7 @@ import AbstractCompositeDocument, {
 export interface ConsistentCompositeDocumentLoaderProps<K extends string, V>
   extends Omit<
     AbstractCompositeDocumentLoaderProps<Record<K, V>>,
-    "schemaPredicate"
+    "documentSchemaPredicate"
   > {
   keyPredicate: (key: unknown) => key is K;
   valuePredicate: (value: unknown) => value is V;

@@ -23,7 +23,7 @@ interface SCHEMA {
   stringArrayProp: string[];
   stringProp: string;
 
-  // undefinedProp: undefined; // ! undefined not allowed by firestore
+// undefinedProp: undefined; // ! undefined not allowed by firestore
 }
 
 const documentSchemaIsValid = (data: unknown): data is SCHEMA => {
@@ -115,7 +115,12 @@ describe("FirestoreDocumentObserver", () => {
         });
         expect(changeData).toBeTruthy();
 
-        const { exists, oldData, newData } = changeData;
+        const {
+          oldData,
+          newData,
+          snapshot: { exists },
+        } = changeData;
+
         switch (eventCount) {
           case 1: // initial read event
             expect(exists).toBeFalsy();
