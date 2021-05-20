@@ -7,6 +7,7 @@ import returnValueWhenLoaded from '../../../utils/returnValueWhenLoaded';
 import isCharacterData from '../../../utils/type-predicates/isCharacterData';
 import { iGameData } from '../../game/interfaces/game-interfaces';
 import { iCharacterData } from '../../game/interfaces/game-player-interfaces';
+import defaultCharacterData from '../../game/utils/defaultCharacterData';
 import defaultGameData from '../../game/utils/defaultGameData';
 import assertDocumentExistsOnFirestore from '../Firestore/utils/assertDocumentExistsOnFirestore';
 import { iDataStorageFactory, iGameDataStorage } from '../interfaces/data-storage-interfaces';
@@ -20,7 +21,6 @@ export default class FirestoreCompositeGameDataStorage
   // protected characterSheets?: Map<string, iCharacterSheet>;
   protected dataStorageFactory: iDataStorageFactory;
   protected firestore: Firestore;
-  protected id: string;
 
   #characterCollectionRef: FirestoreCollectionReference;
   // this will be loaded when listener returns first results
@@ -29,6 +29,7 @@ export default class FirestoreCompositeGameDataStorage
   #data?: iGameData;
   #externalChangeHandler?: ChangeHandler<iGameData>;
   #unsubscribeCharacterCollection: () => void;
+  id: string;
   // characterData: Map<string, iCharacterData>;
   path: string;
 
@@ -106,11 +107,7 @@ export default class FirestoreCompositeGameDataStorage
       );
 
     // todo extract to util
-    const newCharacterData: iCharacterData = {
-      id,
-      img: DEFAULT_CHARACTER_IMAGE_URL,
-      name: DEFAULT_CHARACTER_NAME,
-    };
+    const newCharacterData: iCharacterData = defaultCharacterData(id);
 
     // add to local data
     this.#characterData = this.#characterData

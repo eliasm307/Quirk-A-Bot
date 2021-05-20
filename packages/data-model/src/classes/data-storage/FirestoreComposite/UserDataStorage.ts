@@ -3,6 +3,7 @@ import {
 } from '@quirk-a-bot/common';
 
 import returnValueWhenLoaded from '../../../utils/returnValueWhenLoaded';
+import isUserData from '../../../utils/type-predicates/isUserData';
 import { iUserData } from '../../user/interfaces';
 import { iUserDataStorage } from '../interfaces/data-storage-interfaces';
 import { iFirestoreCompositeUserDataStorageProps } from '../interfaces/props/user-data-storage';
@@ -13,11 +14,16 @@ export default class FirestoreCompositeUserDataStorage
   #compositeDocument: InconsistentCompositeDocument<iUserData>;
   #data?: iUserData;
   #externalChangeHandler?: ChangeHandler<iUserData>;
+  id: string;
   path: string;
 
-  constructor(props: iFirestoreCompositeUserDataStorageProps) {
-    const { id, dataStorageFactory, firestore } = props;
+  private constructor(
+    props: iFirestoreCompositeUserDataStorageProps & { data?: iUserData }
+  ) {
+    const { id, dataStorageFactory, firestore, data } = props;
 
+    this.id = id;
+    this.#data = data;
     this.path = dataStorageFactory.createPath(USER_COLLECTION_NAME, id);
 
     // load and listen to game document
@@ -35,6 +41,34 @@ export default class FirestoreCompositeUserDataStorage
         uid: isString,
       },
     });
+  }
+
+  static async load(
+    props: iFirestoreCompositeUserDataStorageProps
+  ): Promise<FirestoreCompositeUserDataStorage | void> {
+    const { id, firestore } = props;
+    try {
+      const userDoc = await firestore
+        .collection(USER_COLLECTION_NAME)
+        .doc(id)
+        .get();
+
+      if (!userDoc || !userDoc.exists)
+        throw Error(
+          `Could not load user with uid "${id}", no data found on this user, need to sign up first`
+        );
+
+      const data = userDoc.data();
+
+      if (!isUserData(data))
+        throw Error(
+          `Could not load user with uid "${id}", data was invalid format`
+        );
+
+      return new FirestoreCompositeUserDataStorage({ ...props, data });
+    } catch (error) {
+      return console.error({ error });
+    }
   }
 
   cleanUp(): boolean {

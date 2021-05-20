@@ -1,66 +1,83 @@
-import { ChangeHandler, iHasUid } from '@quirk-a-bot/common';
+import { ChangeHandler, iHasParentPath, iHasUid } from '@quirk-a-bot/common';
 
 import { USER_COLLECTION_NAME } from '../../../../common/src/constants';
-import { iHasFirestore } from '../../declarations/interfaces';
+import { iHasFirestore, iHasId } from '../../declarations/interfaces';
 import isUserData from '../../utils/type-predicates/isUserData';
+import {
+  iGameDataStorage, iHasDataStorageFactory, iUserDataStorage,
+} from '../data-storage/interfaces/data-storage-interfaces';
+import { iUserDataStorageFactoryProps } from '../data-storage/interfaces/props/user-data-storage';
 import { iUserController as iUserViewModel, iUserData } from './interfaces';
-import defaultUserData from './utils/defaultUserData';
 
-interface iLoadProps
-  extends iHasFirestore,
-    Partial<Omit<iUserData, "uid">>,
-    iHasUid {}
+export interface iUserProps
+  extends iHasId,
+    iHasDataStorageFactory,
+    iHasFirestore {}
 
 export default class UserViewModel implements iUserViewModel {
-  // todo this should be a proxy over a base editable object?
-  // readonly getMyGames: Map<string, iPlayerGameParticipationData>;
-  private constructor({ name }: iUserData) {
-    // todo there should be a User editor class that allows user data to be modified
-    /*
-    const userGamesEntries = myGames.map(
-      (game) => [game.gameId, game] as const
-    );
+  /** Existing singleton instances of this class */
+  protected static instances: Map<string, UserViewModel> = new Map<
+    string,
+    UserViewModel
+  >();
 
-    this.getMyGames = new Map<string, iPlayerGameParticipationData>(
-      userGamesEntries
-    );
-    */
+  #dataStorage: iUserDataStorage;
+  id: string;
+  path: string;
+
+  private constructor(
+    props: iUserProps & { userDataStorage: iUserDataStorage }
+  ) {
+    const { id, userDataStorage } = props;
+
+    this.id = id;
+    this.path = userDataStorage.path;
+    this.#dataStorage = userDataStorage;
   }
 
-  /** Loads an existing user */
-  static async load(props: iLoadProps): Promise<UserViewModel | void> {
-    const { uid, firestore, name } = props;
+  static async load(props: iUserProps): Promise<UserViewModel> {
+    const { dataStorageFactory, id } = props;
+
+    dataStorageFactory.assertIdIsValid(id);
+
+    const preExistingInstance = UserViewModel.instances.get(id);
+
+    if (preExistingInstance) return preExistingInstance;
+
     try {
-      const userDoc = await firestore
-        .collection(USER_COLLECTION_NAME)
-        .doc(uid)
-        .get();
+      const userDataStorage = await dataStorageFactory.newUserDataStorage({
+        ...props,
+        parentPath: USER_COLLECTION_NAME,
+      });
 
-      if (!userDoc || !userDoc.exists)
-        throw Error(
-          `Could not load user with uid "${uid}", no data found on this user, need to sign up first`
-        );
-
-      const userData = userDoc.data();
-
-      if (!isUserData(userData))
-        throw Error(
-          `Could not load user with uid "${uid}", data was invalid format`
-        );
-
-      return new UserViewModel(userData);
+      return new UserViewModel({
+        ...props,
+        userDataStorage,
+      });
     } catch (error) {
-      return console.error({ error });
+      console.error(__filename, { error });
+      throw Error(
+        `Could not create user instance with id "${id}", Message: ${JSON.stringify(
+          error
+        )}`
+      );
     }
   }
 
-  data(): Promise<iUserData> {}
+  data(): Promise<iUserData> {
+    return this.#dataStorage.data();
+  }
 
-  onChange(handler: ChangeHandler<iUserData>): void {}
+  onChange(handler: ChangeHandler<iUserData>): void {
+    this.#dataStorage.onChange(handler);
+  }
 
-  update(updates: Partial<Omit<iUserData, "uid" | "id">>): Promise<void> {}
+  update(updates: Partial<Omit<iUserData, "uid" | "id">>): Promise<void> {
+    return this.#dataStorage.update(updates);
+  }
 
-  // todo this shouldnt be part of the UserViewModel, users can only be created from signing up
+// todo this shouldnt be part of the UserViewModel, users can only be created from signing up
+  /*
   protected static async newUser({
     uid,
     firestore,
@@ -82,4 +99,5 @@ export default class UserViewModel implements iUserViewModel {
     }
     return new UserViewModel(userData);
   }
+  */
 }

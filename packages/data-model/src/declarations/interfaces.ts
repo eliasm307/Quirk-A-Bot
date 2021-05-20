@@ -6,13 +6,17 @@ export interface iHasGetData<D> {
   readonly data: () => D;
 }
 
-export interface iBaseEntity<D> {
+export interface iBaseEntity<D> extends Readonly<iHasId>, Readonly<iHasPath> {
   // todo controllers and data stores should implement this
   data(): Promise<D>;
   /** Registers a callback to call when game data changes */
   onChange(handler: ChangeHandler<D>): void;
   update(updates: Partial<Omit<D, "id" | "uid">>): Promise<void>;
 }
+
+export interface iBaseViewModel<D> extends iBaseEntity<D> {}
+
+export interface iBaseModel<D> extends iBaseEntity<D> {}
 
 export interface iHasId {
   id: string;

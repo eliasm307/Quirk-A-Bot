@@ -18,6 +18,7 @@ import {
   iBaseTraitCollectionDataStorageProps, iTraitCollectionDataStorageInitialiserProps,
 } from './props/trait-collection-data-storage';
 import { iBaseTraitDataStorageProps } from './props/trait-data-storage';
+import { iUserDataStorageFactoryProps } from './props/user-data-storage';
 
 // todo split this up
 
@@ -65,10 +66,7 @@ export interface iCharacterSheetDataStorage extends iHasPath {
 }
 
 /** Represents all game data in a data store, access control to be handled by proxies */
-export interface iGameDataStorage
-  extends iHasPath,
-    iHasCleanUp,
-    iBaseEntity<iGameData> {
+export interface iGameDataStorage extends iHasCleanUp, iBaseEntity<iGameData> {
   /** If a character doesn't already exist, this sets-up a character with default details */
   addCharacter(id: string): Promise<void>;
   /** Makes sure that a game with the given id actually exists in the given data storage, otherwise it creates it with default values */
@@ -106,7 +104,9 @@ export interface iDataStorageFactory {
   >(
     props: iBaseTraitCollectionDataStorageProps<N, V, D, T>
   ) => iTraitCollectionDataStorage<N, V, D, T>;
-  newUserDataStorage(): Promise<iUserDataStorage>;
+  newUserDataStorage(
+    props: iUserDataStorageFactoryProps
+  ): Promise<iUserDataStorage>;
 
 // NOTE the factory props just define what will be available, the specific factories don't need to require any of the given props
   // ! traits will always be part of trait collections, so factory shouldn't have this method. Trait collections should instead

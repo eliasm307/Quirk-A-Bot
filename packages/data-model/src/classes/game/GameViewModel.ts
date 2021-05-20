@@ -8,19 +8,12 @@ import { createPath } from '../data-storage/utils/createPath';
 import { iGameData, iGameViewModel } from './interfaces/game-interfaces';
 import { iCharacterData } from './interfaces/game-player-interfaces';
 
-// ? similar to characterSheetDataStorage loader, should these be the same?
-interface iLoaderProps extends iHasId, iHasDataStorageFactory, iHasParentPath {}
-
-export interface iGameProps extends iLoaderProps {
-  gameDataStorage: iGameDataStorage;
-
-// initialCharacterData: iCharacterData[];
-  // initialData: iGameData;
-}
+export interface iGameProps
+  extends iHasId,
+    iHasDataStorageFactory,
+    iHasParentPath {}
 
 export default class GameViewModel implements iGameViewModel {
-  private externalChangeHandler?: ChangeHandler<iGameData>;
-
   /** Existing singleton instances of this class */
   protected static instances: Map<string, GameViewModel> = new Map<
     string,
@@ -28,34 +21,25 @@ export default class GameViewModel implements iGameViewModel {
   >();
 
   readonly id: string;
+  readonly path: string;
 
+  #dataStorage: iGameDataStorage;
   #dataStorageFactory: iDataStorageFactory;
-  #gameDataStorage: iGameDataStorage;
-  path: string;
 
   private constructor({
     id,
     dataStorageFactory,
     gameDataStorage,
     parentPath,
-  }: iGameProps) {
+  }: iGameProps & { gameDataStorage: iGameDataStorage }) {
     this.id = id;
     this.path = createPath(parentPath, id);
-
     this.#dataStorageFactory = dataStorageFactory;
-    this.#gameDataStorage = gameDataStorage;
-
-    /*
-    this.gameMasters = new Set(initialData.gameMasters);
-
-    this.characters = new Map(
-      initialCharacterData.map((character) => [character.id, character])
-    );
-    */
+    this.#dataStorage = gameDataStorage;
   }
 
   /** Loads a game instance **/
-  static async load(props: iLoaderProps): Promise<GameViewModel> {
+  static async load(props: iGameProps): Promise<GameViewModel> {
     const { dataStorageFactory, id } = props;
 
     dataStorageFactory.assertIdIsValid(id);
@@ -86,20 +70,20 @@ export default class GameViewModel implements iGameViewModel {
   }
 
   addCharacter(id: string): Promise<void> {
-    return this.#gameDataStorage.addCharacter(id);
+    return this.#dataStorage.addCharacter(id);
   }
 
   cleanUp(): boolean {
-    this.#gameDataStorage.cleanUp();
+    this.#dataStorage.cleanUp();
     return true;
   }
 
   data(): Promise<iGameData> {
-    return this.#gameDataStorage.data();
+    return this.#dataStorage.data();
   }
 
   async getCharacterData(): Promise<Map<string, iCharacterData>> {
-    const data = await this.#gameDataStorage.getCharacterData();
+    const data = await this.#dataStorage.getCharacterData();
 
     return new Map(
       data.map((characterData) => [characterData.id, characterData])
@@ -107,7 +91,7 @@ export default class GameViewModel implements iGameViewModel {
   }
 
   onChange(handler: ChangeHandler<iGameData>): void {
-    this.externalChangeHandler = handler;
+    this.#dataStorage.onChange(handler);
   }
 
   // not game's responsibility to instantiate character sheets
@@ -137,7 +121,7 @@ export default class GameViewModel implements iGameViewModel {
     );
   }
   */
-  update(props: Partial<Omit<iGameData, "id">>): Promise<void> {
-    return this.#gameDataStorage.update(props);
+  update(updates: Partial<Omit<iGameData, "id">>): Promise<void> {
+    return this.#dataStorage.update(updates);
   }
 }
