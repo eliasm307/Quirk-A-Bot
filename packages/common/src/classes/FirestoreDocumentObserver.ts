@@ -23,17 +23,20 @@ export interface FirestoreDocumentChangeData<D> {
   time: number;
 }
 
-export interface FirestoreDocumentObserverProps<D> {
+export interface FirestoreDocumentObserverProps<
+  D,
+  C extends FirestoreDocumentChangeData<D> = FirestoreDocumentChangeData<D>
+> {
+  /** Document schema validator, to allow the return data to be typed */
+  documentSchemaPredicate: (data: unknown) => data is D;
   /** Firestore instance to use */
   firestore: Firestore;
   /** Change handler function used to notify  */
-  handleChange: (changeData: FirestoreDocumentChangeData<D>) => void;
+  handleChange: (changeData: C) => void;
   /** Initial internal data for the observer */
   initialData?: D;
   /** Firestore path for document, can be undefined if document didn't exist */
   path: string;
-  /** Document schema validator, to allow the return data to be typed */
-  schemaPredicate: (data: unknown) => data is D;
 }
 
 /** Listens to changes to a Firestore document and creates events if there are updates */
@@ -49,7 +52,7 @@ export default class FirestoreDocumentObserver<D>
     firestore,
     path,
     handleChange,
-    schemaPredicate,
+    documentSchemaPredicate,
     initialData,
   }: FirestoreDocumentObserverProps<D>) {
     this.path = path;
@@ -63,7 +66,10 @@ export default class FirestoreDocumentObserver<D>
           const newData = snapshot.data();
 
           // ! always allow undefined values as these represent documents that don't exist
-          if (typeof newData !== "undefined" && !schemaPredicate(newData)) {
+          if (
+            typeof newData !== "undefined" &&
+            !documentSchemaPredicate(newData)
+          ) {
             const error = `New data for document at path "${path}" doesn't meet required schema predicate`;
             console.error({ error, path: this.path, newData });
             throw Error(error);

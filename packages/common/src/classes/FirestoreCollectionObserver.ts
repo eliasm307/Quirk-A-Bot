@@ -44,7 +44,7 @@ export default class FirestoreCollectionObserver<D>
     firestore,
     path,
     handleChange,
-    documentSchemaPredicate: schemaPredicate,
+    documentSchemaPredicate: documentSchemaPredicate,
     initialData,
   }: FirestoreCollectionObserverProps<D>) {
     this.path = path;
@@ -63,7 +63,7 @@ export default class FirestoreCollectionObserver<D>
             // ! always allow undefined values as these represent documents that don't exist
             if (
               typeof newDocData !== "undefined" &&
-              !schemaPredicate(newDocData)
+              !documentSchemaPredicate(newDocData)
             ) {
               const error = `New data for document at path "${path}" doesn't meet required schema predicate`;
               console.error({ error, path, newDocData });

@@ -26,19 +26,19 @@ export default class ConsistentCompositeDocument<
     const { keyPredicate, valuePredicate } = props;
 
     // schema predicate for a consistent composite tests if keys and values match a given predicate
-    const schemaPredicate = (data: unknown): data is Record<K, V> =>
+    const documentSchemaPredicate = (data: unknown): data is Record<K, V> =>
       isRecord(data, keyPredicate, valuePredicate);
 
     /*
     const { initialData } = await AbstractCompositeDocument.loadObserver({
       ...props,
-      schemaPredicate,
+      documentSchemaPredicate,
     });
     */
 
     return new ConsistentCompositeDocument({
       ...props,
-      schemaPredicate,
+      documentSchemaPredicate,
     });
   }
 }

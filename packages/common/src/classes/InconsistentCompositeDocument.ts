@@ -21,7 +21,7 @@ export default class InconsistentCompositeDocument<
   ): InconsistentCompositeDocument<S> {
     const { valuePredicates, initialData } = props;
 
-    const schemaPredicate = (data: unknown): data is S => {
+    const documentSchemaPredicate = (data: unknown): data is S => {
       if (typeof data !== "object") return false;
       if (!data) return false;
 
@@ -49,7 +49,7 @@ export default class InconsistentCompositeDocument<
     return new InconsistentCompositeDocument({
       ...props,
       initialData,
-      schemaPredicate,
+      documentSchemaPredicate,
     });
   }
 

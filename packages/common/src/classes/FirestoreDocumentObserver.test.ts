@@ -23,7 +23,7 @@ interface SCHEMA {
   stringArrayProp: string[];
   stringProp: string;
 
-// undefinedProp: undefined; // ! undefined not allowed by firestore
+  // undefinedProp: undefined; // ! undefined not allowed by firestore
 }
 
 const documentSchemaIsValid = (data: unknown): data is SCHEMA => {
@@ -140,7 +140,7 @@ describe("FirestoreDocumentObserver", () => {
         }
       },
       path,
-      schemaPredicate: documentSchemaIsValid,
+      documentSchemaPredicate: documentSchemaIsValid,
     });
 
     await sleep(3000);

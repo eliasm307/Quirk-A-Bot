@@ -83,8 +83,6 @@ export interface iCompositeDocument<S extends Record<string, unknown>> {
   readonly data?: Readonly<S>;
 
   cleanUp(): void;
-  get<K extends keyof S, V extends S[K]>(
-    key: K
-  ): iSubDocument<S, K> | undefined;
+  get(key: keyof S): Promise<iSubDocument<S, keyof S> | undefined>;
   toArray<V extends S[keyof S]>(): iSubDocument<S, keyof S>[];
 }
