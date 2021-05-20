@@ -5,7 +5,7 @@ import {
   iDataStorageFactory, iGameDataStorage, iHasDataStorageFactory,
 } from '../data-storage/interfaces/data-storage-interfaces';
 import { createPath } from '../data-storage/utils/createPath';
-import { iGameController, iGameData } from './interfaces/game-interfaces';
+import { iGameData, iGameViewModel } from './interfaces/game-interfaces';
 import { iCharacterData } from './interfaces/game-player-interfaces';
 
 // ? similar to characterSheetDataStorage loader, should these be the same?
@@ -14,17 +14,17 @@ interface iLoaderProps extends iHasId, iHasDataStorageFactory, iHasParentPath {}
 export interface iGameProps extends iLoaderProps {
   gameDataStorage: iGameDataStorage;
 
-  // initialCharacterData: iCharacterData[];
+// initialCharacterData: iCharacterData[];
   // initialData: iGameData;
 }
 
-export default class GameController implements iGameController {
+export default class GameViewModel implements iGameViewModel {
   private externalChangeHandler?: ChangeHandler<iGameData>;
 
   /** Existing singleton instances of this class */
-  protected static instances: Map<string, GameController> = new Map<
+  protected static instances: Map<string, GameViewModel> = new Map<
     string,
-    GameController
+    GameViewModel
   >();
 
   readonly id: string;
@@ -63,12 +63,12 @@ export default class GameController implements iGameController {
   }
 
   /** Loads a game instance **/
-  static async load(props: iLoaderProps): Promise<GameController> {
+  static async load(props: iLoaderProps): Promise<GameViewModel> {
     const { dataStorageFactory, id } = props;
 
     dataStorageFactory.assertIdIsValid(id);
 
-    const preExistingInstance = GameController.instances.get(id);
+    const preExistingInstance = GameViewModel.instances.get(id);
 
     // if an instance has already been created with this id then use that instance
     if (preExistingInstance) return preExistingInstance;
@@ -85,7 +85,7 @@ export default class GameController implements iGameController {
       const initialCharacterData = await gameDataStorage.getCharacters();
       */
 
-      return new GameController({
+      return new GameViewModel({
         ...props,
         gameDataStorage,
         dataStorageFactory,

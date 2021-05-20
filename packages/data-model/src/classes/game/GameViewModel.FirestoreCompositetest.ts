@@ -1,7 +1,7 @@
 import { firestoreEmulator, pause } from '@quirk-a-bot/common';
 
 import FirestoreCompositeDataStorageFactory from '../data-storage/FirestoreComposite/DataStorageFactory';
-import GameController from './GameController';
+import GameViewModel from './GameViewModel';
 import { iGameData } from './interfaces/game-interfaces';
 
 const firestore = firestoreEmulator;
@@ -18,7 +18,7 @@ describe("Game with firestore composite data storage", () => {
     const documentPath = dataStorageFactory.createPath(ROOT_PATH, id);
     const docRef = firestore.doc(documentPath);
 
-    const game = await GameController.load({
+    const game = await GameViewModel.load({
       id,
       dataStorageFactory,
       parentPath: ROOT_PATH,
@@ -61,7 +61,7 @@ describe("Game with firestore composite data storage", () => {
 
     await pause(500);
 
-    const game = await GameController.load({
+    const game = await GameViewModel.load({
       dataStorageFactory,
       id,
       parentPath: ROOT_PATH,

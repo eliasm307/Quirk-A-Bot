@@ -42,7 +42,7 @@ export interface iBaseEntity<D> {
 }
 
 /** Represents a VTM game in firestore */
-export interface iGameController extends iBaseEntity<iGameData>, iHasCleanUp {
+export interface iGameViewModel extends iBaseEntity<iGameData>, iHasCleanUp {
   /** Unique game id */
   readonly id: GameId;
   readonly path: string;
