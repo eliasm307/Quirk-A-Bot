@@ -22,6 +22,8 @@ import { iUserDataStorageFactoryProps } from './props/user-data-storage';
 
 // todo split this up
 
+// todo rename data storages to models
+
 // -------------------------------------------------------
 // GENERAL
 

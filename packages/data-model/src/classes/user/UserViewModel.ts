@@ -1,13 +1,11 @@
-import { ChangeHandler, iHasParentPath, iHasUid } from '@quirk-a-bot/common';
+import { ChangeHandler } from '@quirk-a-bot/common';
 
 import { USER_COLLECTION_NAME } from '../../../../common/src/constants';
 import { iHasFirestore, iHasId } from '../../declarations/interfaces';
-import isUserData from '../../utils/type-predicates/isUserData';
 import {
-  iGameDataStorage, iHasDataStorageFactory, iUserDataStorage,
+  iHasDataStorageFactory, iUserDataStorage,
 } from '../data-storage/interfaces/data-storage-interfaces';
-import { iUserDataStorageFactoryProps } from '../data-storage/interfaces/props/user-data-storage';
-import { iUserController as iUserViewModel, iUserData } from './interfaces';
+import { iUserData, iUserViewModel } from './interfaces';
 
 export interface iUserProps
   extends iHasId,
@@ -29,7 +27,6 @@ export default class UserViewModel implements iUserViewModel {
     props: iUserProps & { userDataStorage: iUserDataStorage }
   ) {
     const { id, userDataStorage } = props;
-
     this.id = id;
     this.path = userDataStorage.path;
     this.#dataStorage = userDataStorage;
@@ -41,7 +38,6 @@ export default class UserViewModel implements iUserViewModel {
     dataStorageFactory.assertIdIsValid(id);
 
     const preExistingInstance = UserViewModel.instances.get(id);
-
     if (preExistingInstance) return preExistingInstance;
 
     try {
@@ -64,6 +60,11 @@ export default class UserViewModel implements iUserViewModel {
     }
   }
 
+  cleanUp(): boolean {
+    this.#dataStorage.cleanUp();
+    return true;
+  }
+
   data(): Promise<iUserData> {
     return this.#dataStorage.data();
   }
@@ -75,29 +76,4 @@ export default class UserViewModel implements iUserViewModel {
   update(updates: Partial<Omit<iUserData, "uid" | "id">>): Promise<void> {
     return this.#dataStorage.update(updates);
   }
-
-// todo this shouldnt be part of the UserViewModel, users can only be created from signing up
-  /*
-  protected static async newUser({
-    uid,
-    firestore,
-    data,
-  }: iLoadProps & {
-    data: Partial<Omit<iUserData, "uid">>;
-  }): Promise<UserViewModel> {
-    const userData: iUserData = {
-      ...defaultUserData(uid),
-      ...data,
-    };
-
-    try {
-      // init user on firestore
-      await firestore.collection(USER_COLLECTION_NAME).doc(uid).set(userData);
-    } catch (error) {
-      console.error({ error });
-      throw Error(`Error initialising user with uid ${uid}`);
-    }
-    return new UserViewModel(userData);
-  }
-  */
 }

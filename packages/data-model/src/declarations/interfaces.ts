@@ -6,7 +6,10 @@ export interface iHasGetData<D> {
   readonly data: () => D;
 }
 
-export interface iBaseEntity<D> extends Readonly<iHasId>, Readonly<iHasPath> {
+export interface iBaseEntity<D>
+  extends Readonly<iHasId>,
+    Readonly<iHasPath>,
+    iHasCleanUp {
   // todo controllers and data stores should implement this
   data(): Promise<D>;
   /** Registers a callback to call when game data changes */
@@ -14,8 +17,10 @@ export interface iBaseEntity<D> extends Readonly<iHasId>, Readonly<iHasPath> {
   update(updates: Partial<Omit<D, "id" | "uid">>): Promise<void>;
 }
 
+// todo use where relevant
 export interface iBaseViewModel<D> extends iBaseEntity<D> {}
 
+// todo use where relevant
 export interface iBaseModel<D> extends iBaseEntity<D> {}
 
 export interface iHasId {

@@ -82,7 +82,7 @@ export default class GameViewModel implements iGameViewModel {
     return this.#dataStorage.data();
   }
 
-  async getCharacterData(): Promise<Map<string, iCharacterData>> {
+  async getCharactersData(): Promise<Map<string, iCharacterData>> {
     const data = await this.#dataStorage.getCharacterData();
 
     return new Map(
