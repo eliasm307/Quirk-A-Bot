@@ -64,6 +64,8 @@ const loadGameCharactersData = async (
 };
 
 describe("Game with firestore composite data storage", () => {
+  afterAll(async () => firestore.app.delete());
+
   it("Can create and edit new games", async () => {
     const id = "createNewGame";
     const documentPath = dataStorageFactory.createPath(ROOT_PATH, id);
@@ -153,6 +155,7 @@ describe("Game with firestore composite data storage", () => {
     await game.addCharacter(character2Id);
 
     let firestoreCharacters = await loadGameCharactersData(documentPath);
+    let gameCharactersData = await game.getCharactersData();
 
     expect(firestoreCharacters.length).toEqual(2);
     expect(firestoreCharacters[0]).toEqual(
@@ -161,24 +164,27 @@ describe("Game with firestore composite data storage", () => {
     expect(firestoreCharacters[1]).toEqual(
       defaultCharacterData(firestoreCharacters[1].id)
     );
-    expect((await game.getCharactersData()).size).toEqual(2);
+    expect(gameCharactersData.size).toEqual(2);
 
     // test deleting characters 1 by 1
     await game.removeCharacter(character2Id);
 
     firestoreCharacters = await loadGameCharactersData(documentPath);
-    expect(firestoreCharacters).toEqual([defaultCharacterData(character1Id)]);
-    expect(firestoreCharacters).toEqual(
-      Array.from(await game.getCharactersData()).values()
-    );
+    gameCharactersData = await game.getCharactersData();
 
+    expect(firestoreCharacters).toEqual([defaultCharacterData(character1Id)]);
     expect((await game.getCharactersData()).size).toEqual(1);
+    expect(firestoreCharacters[0]).toEqual(
+      gameCharactersData.get(character1Id)
+    );
 
     await game.removeCharacter(character1Id);
 
     firestoreCharacters = await loadGameCharactersData(documentPath);
+    gameCharactersData = await game.getCharactersData();
+
     expect(firestoreCharacters).toEqual([]);
-    expect((await game.getCharactersData()).size).toEqual(0);
+    expect(gameCharactersData.size).toEqual(0);
 
     // todo adding characters should add the game id to user profile, set this as automated function
   });
