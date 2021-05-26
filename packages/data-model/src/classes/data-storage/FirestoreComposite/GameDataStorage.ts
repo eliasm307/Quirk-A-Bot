@@ -1,6 +1,7 @@
 import {
   ChangeHandler, CHARACTER_COLLECTION_NAME, DEFAULT_CHARACTER_IMAGE_URL, DEFAULT_CHARACTER_NAME,
-  Firestore, FirestoreCollectionReference, InconsistentCompositeDocument, isString,
+  Firestore, FirestoreCollectionReference, InconsistentCompositeDocument, isOptionalString,
+  isString, newIsArrayPredicate,
 } from '@quirk-a-bot/common';
 
 import returnValueWhenLoaded from '../../../utils/returnValueWhenLoaded';
@@ -74,9 +75,9 @@ export default class FirestoreCompositeGameDataStorage
       path: this.path,
       valuePredicates: {
         description: isString,
-        discordBotWebSocketServer: (value): value is string | undefined =>
-          typeof value === "undefined" || isString(value),
-        gameMasters: Array.isArray,
+        discordBotWebSocketServer: isOptionalString,
+        gameMasters: newIsArrayPredicate(isString),
+        characterIds: newIsArrayPredicate(isString),
         id: isString,
       },
     });
@@ -100,13 +101,18 @@ export default class FirestoreCompositeGameDataStorage
 
   async addCharacter(id: string): Promise<void> {
     const charactersData = await this.getCharacterData();
+    const characterIds = charactersData.map((character) => character.id);
 
-    if (charactersData.some((character) => character.id === id))
+    const { characterIds: syncedCharacterIds } = await this.data();
+
+    this.assertCharacterIdsSynchronised(characterIds, syncedCharacterIds);
+
+    // check if character is already in game
+    if (characterIds.some((characterId) => characterId === id))
       return console.warn(
-        "Cannot add character to game as they are already in the game"
+        `Cannot add character with id ${id} to game as they are already in the game`
       );
 
-    // todo extract to util
     const newCharacterData: iCharacterData = defaultCharacterData(id);
 
     // add to local data
@@ -142,6 +148,13 @@ export default class FirestoreCompositeGameDataStorage
   }
 
   async removeCharacter(id: string): Promise<void> {
+    const charactersData = await this.getCharacterData();
+    const characterIds = charactersData.map((character) => character.id);
+
+    const { characterIds: syncedCharacterIds } = await this.data();
+
+    this.assertCharacterIdsSynchronised(characterIds, syncedCharacterIds);
+
     // remove locally
     if (this.#characterData) {
       this.#characterData = this.#characterData.filter(
@@ -158,5 +171,38 @@ export default class FirestoreCompositeGameDataStorage
 
   async update(updates: Partial<Omit<iGameData, "id">>): Promise<void> {
     await this.#compositeDocument.update(updates);
+  }
+
+  /** Makes sure the actual character ids and synced character ids are the same */
+  private assertCharacterIdsSynchronised(
+    characterIds: string[],
+    syncedCharacterIds: string[]
+  ) {
+    const characterIdsSet = new Set(characterIds);
+    const syncedCharacterIdsSet = new Set(syncedCharacterIds);
+
+    // ensure no duplicates
+    if (
+      characterIds.length !== characterIdsSet.size ||
+      syncedCharacterIds.length !== syncedCharacterIdsSet.size
+    ) {
+      const error = `There are duplicate ids in synced or actual character ids`;
+      console.error(error, { characterIds, syncedCharacterIds });
+      throw Error();
+    }
+
+    // check length
+    if (syncedCharacterIds.length !== characterIds.length)
+      throw Error(
+        `The synced character ids are out of date, ie ${syncedCharacterIds.length} synced ids and ${characterIds.length} actual character ids`
+      );
+
+    // check each key between synced and actual ids
+    syncedCharacterIdsSet.forEach((syncedCharacterId) => {
+      if (!characterIdsSet.has(syncedCharacterId))
+        throw Error(
+          `Synced CharacterId ${syncedCharacterId} is missing from actual character ids`
+        );
+    });
   }
 }
