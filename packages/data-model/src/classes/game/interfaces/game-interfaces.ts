@@ -8,8 +8,8 @@ import { iBaseEntity, iBaseViewModel, iHasId } from '../../../declarations/inter
 import { iCharacterSheet } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import { iCharacterData } from './game-player-interfaces';
 
-/** Game data including data from sub-collections */
-export interface iGameShape {
+/** Game data as stored in firestore game document */
+export interface iGameData {
   /** Unique game id */
   readonly id: string;
 
@@ -17,20 +17,13 @@ export interface iGameShape {
   description: string;
   /** The uri to the last websocket instance created by a discord bot instance // todo implement */
   discordBotWebSocketServer?: WebURL;
-  /** List of game masters */
-  gameMasters: unknown;
-
-/** List of players involved in this game as characters, from a sub-collection */
+  /** List of players involved in this game as characters, from a sub-collection */
   // players: unknown; // todo to be implemented as part of player management system
-}
-
-/** Game data as stored in firestore game document */
-export interface iGameData extends iGameShape {
   /** Read-only List of players ids of players who are game masters,
    * this is a subset of the players list */
   gameMasters: UID[];
 
-// players: iGamePlayerData[];
+  // players: iGamePlayerData[];
 }
 
 /** Represents a VTM game in firestore */
@@ -44,7 +37,7 @@ export interface iGameViewModel extends iBaseViewModel<iGameData> {
   getCharactersData(): Promise<Map<UID, iCharacterData>>;
   removeCharacter(id: UID): Promise<void>;
 
-/** Loads character sheets defined in the game */
+  /** Loads character sheets defined in the game */
   // loadCharacterSheets(): Promise<Map<UID, iCharacterSheet>>;
 
   // players: Map<UID, iGamePlayerData>;
