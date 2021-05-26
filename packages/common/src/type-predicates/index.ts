@@ -2,14 +2,17 @@ export { default as hasCleanUp } from "./hasCleanUp";
 export { default as isRecord } from "./isRecord";
 export * from "./isTraitName";
 
+/** Predicate for any string */
 export function isString(value: unknown): value is string {
   return typeof value === "string";
 }
 
+/** Predicate for any string or undefined */
 export function isOptionalString(value: unknown): value is string | undefined {
   return value === undefined || typeof value === "string";
 }
 
+/** Predicate for non-empty strings only */
 export function isNonEmptyString(value: unknown): value is string {
   return typeof value === "string" && value !== "";
 }

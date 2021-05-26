@@ -1,5 +1,5 @@
 import {
-  ChangeHandler, InconsistentCompositeDocument, isString, newIsArrayPredicate, USER_COLLECTION_NAME,
+  ChangeHandler, InconsistentCompositeDocument, isString, USER_COLLECTION_NAME,
 } from '@quirk-a-bot/common';
 
 import returnValueWhenLoaded from '../../../utils/returnValueWhenLoaded';
@@ -35,10 +35,9 @@ export default class FirestoreCompositeUserDataStorage
       },
       path: this.path,
       valuePredicates: {
-        adminGames: newIsArrayPredicate(isString),
         name: isString,
-        playerGames: newIsArrayPredicate(isString),
         uid: isString,
+        img: isString,
       },
     });
   }

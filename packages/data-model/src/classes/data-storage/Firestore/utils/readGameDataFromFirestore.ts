@@ -62,11 +62,16 @@ export default async function readGameDataFromFirestore({
   });
 
   console.timeEnd(timerName);
+
+  throw Error(`Not implemented properly`);
+
+  /*
   return {
-    // characterSheetIds,
+    characterIds,
     description,
     id,
     // players: players,
     gameMasters,
   };
+  */
 }
