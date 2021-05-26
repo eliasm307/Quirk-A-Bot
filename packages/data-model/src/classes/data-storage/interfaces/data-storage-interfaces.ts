@@ -1,4 +1,4 @@
-import { UID } from '@quirk-a-bot/common';
+import { ChangeHandler, UID } from '@quirk-a-bot/common';
 
 import {
   iBaseCollection, iBaseEntity, iHasCleanUp, iHasGetData, iHasPath,
@@ -78,6 +78,7 @@ export interface iGameDataStorage extends iHasCleanUp, iBaseEntity<iGameData> {
   /** Returns instantiated character sheet objects for the game */
   // getCharacterSheets(): Promise<iCharacterSheet>;
   getCharacterData(): Promise<iCharacterData[]>;
+  onCharactersChange(handler: ChangeHandler<iCharacterData[]>): void;
   removeCharacter(id: UID): Promise<void>;
 }
 

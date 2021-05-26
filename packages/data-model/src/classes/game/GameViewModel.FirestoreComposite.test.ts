@@ -110,6 +110,7 @@ describe("Game with firestore composite data storage", () => {
       id,
       gameMasters: ["a guy", "another guy"],
       discordBotWebSocketServer: "www.some-site.com",
+      characterIds: [],
     };
 
     await docRef.set(gameData);
@@ -156,6 +157,7 @@ describe("Game with firestore composite data storage", () => {
 
     let firestoreCharacters = await loadGameCharactersData(documentPath);
     let gameCharactersData = await game.getCharactersData();
+    let gameData = await game.data();
 
     expect(firestoreCharacters.length).toEqual(2);
     expect(firestoreCharacters[0]).toEqual(
@@ -165,34 +167,50 @@ describe("Game with firestore composite data storage", () => {
       defaultCharacterData(firestoreCharacters[1].id)
     );
     expect(gameCharactersData.size).toEqual(2);
+    // test synced ids
+    expect(gameData.characterIds.sort()).toEqual(
+      firestoreCharacters.map((character) => character.id).sort()
+    );
 
-    // test deleting characters 1 by 1
+    // test deleting characters
+
+    // delete character 2
     await game.removeCharacter(character2Id);
 
     firestoreCharacters = await loadGameCharactersData(documentPath);
     gameCharactersData = await game.getCharactersData();
+    gameData = await game.data();
 
     expect(firestoreCharacters).toEqual([defaultCharacterData(character1Id)]);
     expect((await game.getCharactersData()).size).toEqual(1);
     expect(firestoreCharacters[0]).toEqual(
       gameCharactersData.get(character1Id)
     );
+    expect(gameData.characterIds.sort()).toEqual(
+      firestoreCharacters.map((character) => character.id).sort()
+    );
 
+    // delete character1
     await game.removeCharacter(character1Id);
 
     firestoreCharacters = await loadGameCharactersData(documentPath);
     gameCharactersData = await game.getCharactersData();
+    gameData = await game.data();
 
     expect(firestoreCharacters).toEqual([]);
     expect(gameCharactersData.size).toEqual(0);
+    expect(gameData.characterIds.sort()).toEqual(
+      firestoreCharacters.map((character) => character.id).sort()
+    );
 
     // todo adding characters should add the game id to user profile, set this as automated function
   });
 
-  /*
-  Not the games responsibility to instantiate these
-  it("Can load existing character sheet instances", () => {
+  it("detects data changes and notifies subscriber", () => {
     expect.hasAssertions();
   });
-  */
+
+  it("detects characters data changes and notifies subscriber", () => {
+    expect.hasAssertions();
+  });
 });

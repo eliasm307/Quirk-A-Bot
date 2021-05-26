@@ -19,6 +19,7 @@ import writeGameDataToFirestoreComposite from './utils/writeGameData';
 export default class FirestoreCompositeGameDataStorage
   implements iGameDataStorage
 {
+  protected characterChangeHandler?: ChangeHandler<iCharacterData[]>;
   // protected characterSheets?: Map<string, iCharacterSheet>;
   protected dataStorageFactory: iDataStorageFactory;
   protected firestore: Firestore;
@@ -55,12 +56,83 @@ export default class FirestoreCompositeGameDataStorage
     // listen to character collection
     this.#unsubscribeCharacterCollection =
       this.#characterCollectionRef.onSnapshot({
-        next: (collectionSnapshot) => {
-          const data = collectionSnapshot.docs.map((documentSnapshot) =>
-            documentSnapshot.data()
-          );
+        next: async (collectionSnapshot) => {
+          const data = collectionSnapshot.docs
+            .map((documentSnapshot) => documentSnapshot.data())
+            .filter(isCharacterData);
 
-          this.#characterData = data.filter(isCharacterData);
+          const updatePromises: Promise<void>[] = [];
+
+          collectionSnapshot
+            .docChanges({ includeMetadataChanges: false })
+            .forEach((docChange) => {
+              const changedDocData = docChange.doc.data();
+              const changedDocId = changedDocData.id || docChange.doc.id;
+
+              switch (docChange.type) {
+                case "added":
+                  // local update
+                  if (this.#data) {
+                    this.#data = {
+                      ...this.#data,
+                      characterIds: [...this.#data.characterIds, changedDocId],
+                    };
+                  } else {
+                    // ? is this required?
+                    this.#data = {
+                      ...defaultGameData(changedDocId),
+                      characterIds: [changedDocId],
+                    };
+                  }
+
+                  // firestore update promise
+                  updatePromises.push(
+                    this.#compositeDocument.update({
+                      characterIds: this.#data.characterIds,
+                    })
+                  );
+                  break;
+
+                case "removed":
+                  // local update
+                  if (this.#data) {
+                    this.#data = {
+                      ...this.#data,
+                      characterIds: this.#data.characterIds.filter(
+                        (characterId) => characterId !== changedDocId
+                      ),
+                    };
+                  } else {
+                    // ? is this required?
+                    this.#data = {
+                      ...defaultGameData(changedDocId),
+                    };
+                  }
+
+                  // firestore update promise
+                  updatePromises.push(
+                    this.#compositeDocument.update({
+                      characterIds: this.#data.characterIds,
+                    })
+                  );
+                  break;
+
+                case "modified":
+                  // handled separately, in
+                  break;
+
+                default:
+              }
+            });
+
+          // local update
+          this.#characterData = { ...data };
+
+          // external change handler
+          this.handleCharactersChangeCustom({ ...data });
+
+          // firestore update(s)
+          await Promise.allSettled(updatePromises);
         },
         error: console.error,
       });
@@ -120,6 +192,9 @@ export default class FirestoreCompositeGameDataStorage
       ? [...this.#characterData, newCharacterData]
       : [newCharacterData];
 
+    if (this.#data)
+      this.#data = { ...this.#data, characterIds: [...characterIds, id] };
+
     // update on data storage
     await this.#characterCollectionRef.doc(id).set(newCharacterData);
   }
@@ -145,6 +220,11 @@ export default class FirestoreCompositeGameDataStorage
 
   onChange(handler: ChangeHandler<iGameData>): void {
     this.#externalChangeHandler = handler;
+  }
+
+  /** Sets a character change handler */
+  onCharactersChange(handler: ChangeHandler<iCharacterData[]>): void {
+    this.characterChangeHandler = handler;
   }
 
   async removeCharacter(id: string): Promise<void> {
@@ -204,5 +284,9 @@ export default class FirestoreCompositeGameDataStorage
           `Synced CharacterId ${syncedCharacterId} is missing from actual character ids`
         );
     });
+  }
+
+  private handleCharactersChangeCustom(newData: iCharacterData[]) {
+    if (this.characterChangeHandler) this.characterChangeHandler(newData);
   }
 }

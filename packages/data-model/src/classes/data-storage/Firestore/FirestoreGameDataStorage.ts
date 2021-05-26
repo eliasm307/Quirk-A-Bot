@@ -5,6 +5,7 @@ import returnValueWhenLoaded from '../../../utils/returnValueWhenLoaded';
 import { iCharacterSheet } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import { iGameData } from '../../game/interfaces/game-interfaces';
 import { iCharacterData } from '../../game/interfaces/game-player-interfaces';
+import defaultGameData from '../../game/utils/defaultGameData';
 import { iDataStorageFactory, iGameDataStorage } from '../interfaces/data-storage-interfaces';
 import { iFirestoreGameDataStorageProps } from '../interfaces/props/game-data-storage';
 import assertDocumentExistsOnFirestore from './utils/assertDocumentExistsOnFirestore';
@@ -41,13 +42,7 @@ export default class FirestoreGameDataStorage implements iGameDataStorage {
       firestore,
       path: dataStorageFactory.createPath(parentPath, id),
       // todo extract this to a static method or util
-      newDefaultData: () => ({
-        id,
-        characterSheetIds: [],
-        description: "",
-        players: [],
-        gameMasters: [],
-      }),
+      newDefaultData: () => defaultGameData(id),
       documentDataReader: readGameDataFromFirestore,
       documentDataWriter: writeGameDataToFirestore,
     });
@@ -72,6 +67,10 @@ export default class FirestoreGameDataStorage implements iGameDataStorage {
   }
 
   onChange(handler: ChangeHandler<iGameData>): void {
+    throw new Error("Method not implemented.");
+  }
+
+  onCharactersChange(handler: ChangeHandler<iCharacterData[]>): void {
     throw new Error("Method not implemented.");
   }
 
