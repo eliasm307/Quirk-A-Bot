@@ -1,4 +1,4 @@
-import { GameId, iHasUid } from '@quirk-a-bot/common';
+import { GameId, iHasUid, WebURL } from '@quirk-a-bot/common';
 
 import { iBaseViewModel } from '../../declarations/interfaces';
 
@@ -6,6 +6,8 @@ import { iBaseViewModel } from '../../declarations/interfaces';
 export interface iUserData extends iHasUid {
   /** List of games the user is involved in as an admin */
   adminGames: GameId[];
+  /** Link to a profile image for a user */
+  img: WebURL;
   /** User name in VTM */
   name: string;
   /** List of games the user is involved in as a player */

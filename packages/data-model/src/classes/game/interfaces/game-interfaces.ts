@@ -1,11 +1,6 @@
-import {
-  ChangeHandler, GameId, iHasCleanUp, iHasParentPath, UID, WebURL,
-} from '@quirk-a-bot/common';
+import { GameId, UID, WebURL } from '@quirk-a-bot/common';
 
-import { iTraitCollection } from '../../../classes/traits/interfaces/trait-collection-interfaces';
-import { iStringTrait } from '../../../classes/traits/interfaces/trait-interfaces';
-import { iBaseEntity, iBaseViewModel, iHasId } from '../../../declarations/interfaces';
-import { iCharacterSheet } from '../../character-sheet/interfaces/character-sheet-interfaces';
+import { iBaseViewModel } from '../../../declarations/interfaces';
 import { iCharacterData } from './game-player-interfaces';
 
 /** Game data as stored in firestore game document */
@@ -23,7 +18,7 @@ export interface iGameData {
    * this is a subset of the players list */
   gameMasters: UID[];
 
-  // players: iGamePlayerData[];
+// players: iGamePlayerData[];
 }
 
 /** Represents a VTM game in firestore */
@@ -37,7 +32,7 @@ export interface iGameViewModel extends iBaseViewModel<iGameData> {
   getCharactersData(): Promise<Map<UID, iCharacterData>>;
   removeCharacter(id: UID): Promise<void>;
 
-  /** Loads character sheets defined in the game */
+/** Loads character sheets defined in the game */
   // loadCharacterSheets(): Promise<Map<UID, iCharacterSheet>>;
 
   // players: Map<UID, iGamePlayerData>;
