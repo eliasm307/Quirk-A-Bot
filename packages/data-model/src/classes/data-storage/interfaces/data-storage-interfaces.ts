@@ -1,3 +1,5 @@
+import { UID } from '@quirk-a-bot/common';
+
 import {
   iBaseCollection, iBaseEntity, iHasCleanUp, iHasGetData, iHasPath,
 } from '../../../declarations/interfaces';
@@ -76,6 +78,7 @@ export interface iGameDataStorage extends iHasCleanUp, iBaseEntity<iGameData> {
   /** Returns instantiated character sheet objects for the game */
   // getCharacterSheets(): Promise<iCharacterSheet>;
   getCharacterData(): Promise<iCharacterData[]>;
+  removeCharacter(id: UID): Promise<void>;
 }
 
 export interface iUserDataStorage extends iBaseEntity<iUserData>, iHasCleanUp {}

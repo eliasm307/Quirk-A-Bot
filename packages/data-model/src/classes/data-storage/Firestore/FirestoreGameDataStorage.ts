@@ -75,6 +75,10 @@ export default class FirestoreGameDataStorage implements iGameDataStorage {
     throw new Error("Method not implemented.");
   }
 
+  removeCharacter(id: string): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+
   update(updates: Partial<Omit<iGameData, "id" | "uid">>): Promise<void> {
     throw new Error("Method not implemented.");
   }

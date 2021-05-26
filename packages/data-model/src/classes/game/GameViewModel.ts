@@ -94,6 +94,10 @@ export default class GameViewModel implements iGameViewModel {
     this.#dataStorage.onChange(handler);
   }
 
+  removeCharacter(id: string): Promise<void> {
+    return this.#dataStorage.removeCharacter(id);
+  }
+
   // not game's responsibility to instantiate character sheets
   /*
   async loadCharacterSheets(): Promise<Map<UID, iCharacterSheet>> {

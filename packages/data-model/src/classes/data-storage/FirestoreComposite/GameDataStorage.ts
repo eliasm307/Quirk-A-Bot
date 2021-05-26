@@ -81,6 +81,9 @@ export default class FirestoreCompositeGameDataStorage
       },
     });
   }
+  removeCharacter ( id: string ): Promise<void> {
+    throw new Error( 'Method not implemented.' );
+  }
 
   static async load(
     props: iFirestoreCompositeGameDataStorageProps

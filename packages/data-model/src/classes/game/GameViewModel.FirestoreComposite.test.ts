@@ -78,6 +78,9 @@ describe("Game with firestore composite data storage", () => {
 
   it("Can add new characters", () => {
     expect.hasAssertions();
+
+    const id = "createNewGame";
+    // todo adding characters should add the game id to user profile, set this as automated function
   });
 
   it("Can load existing character sheet instances", () => {
