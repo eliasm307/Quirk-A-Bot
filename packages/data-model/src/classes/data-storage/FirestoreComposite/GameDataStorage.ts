@@ -81,9 +81,6 @@ export default class FirestoreCompositeGameDataStorage
       },
     });
   }
-  removeCharacter ( id: string ): Promise<void> {
-    throw new Error( 'Method not implemented.' );
-  }
 
   static async load(
     props: iFirestoreCompositeGameDataStorageProps
@@ -142,6 +139,17 @@ export default class FirestoreCompositeGameDataStorage
 
   onChange(handler: ChangeHandler<iGameData>): void {
     this.#externalChangeHandler = handler;
+  }
+
+  async removeCharacter(id: string): Promise<void> {
+    // remove locally
+    if (this.#characterData) {
+      this.#characterData = this.#characterData.filter(
+        (data) => data.id !== id
+      );
+    }
+    // remove on firestore
+    await this.#characterCollectionRef.doc(id).delete();
   }
 
   async setDescription(description: string): Promise<void> {

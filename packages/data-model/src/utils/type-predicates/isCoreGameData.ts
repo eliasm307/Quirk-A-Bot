@@ -1,6 +1,6 @@
 import { isNonEmptyString, isString } from '@quirk-a-bot/common';
 
-import { iGameData, iGameShape } from '../../classes/game/interfaces/game-interfaces';
+import { iGameData } from '../../classes/game/interfaces/game-interfaces';
 
 export default function isCoreGameData(data: unknown): data is iGameData {
   if (typeof data !== "object") return false;
