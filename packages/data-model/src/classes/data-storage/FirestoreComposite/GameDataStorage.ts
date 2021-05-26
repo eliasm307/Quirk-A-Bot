@@ -69,10 +69,19 @@ export default class FirestoreCompositeGameDataStorage
               const changedDocData = docChange.doc.data();
               const changedDocId = changedDocData.id || docChange.doc.id;
 
+              // synchronise character id changes with game document
               switch (docChange.type) {
                 case "added":
                   // local update
                   if (this.#data) {
+                    // if changed document id has already been added, skip
+                    if (
+                      this.#data.characterIds.some(
+                        (characterId) => characterId === changedDocId
+                      )
+                    )
+                      break;
+
                     this.#data = {
                       ...this.#data,
                       characterIds: [...this.#data.characterIds, changedDocId],
@@ -87,9 +96,7 @@ export default class FirestoreCompositeGameDataStorage
 
                   // firestore update promise
                   updatePromises.push(
-                    this.#compositeDocument.update({
-                      characterIds: this.#data.characterIds,
-                    })
+                    this.#compositeDocument.update(this.#data)
                   );
                   break;
 
@@ -104,6 +111,7 @@ export default class FirestoreCompositeGameDataStorage
                     };
                   } else {
                     // ? is this required?
+
                     this.#data = {
                       ...defaultGameData(changedDocId),
                     };
@@ -111,14 +119,12 @@ export default class FirestoreCompositeGameDataStorage
 
                   // firestore update promise
                   updatePromises.push(
-                    this.#compositeDocument.update({
-                      characterIds: this.#data.characterIds,
-                    })
+                    this.#compositeDocument.update(this.#data)
                   );
                   break;
 
                 case "modified":
-                  // handled separately, in
+                  // handled separately
                   break;
 
                 default:
@@ -126,10 +132,10 @@ export default class FirestoreCompositeGameDataStorage
             });
 
           // local update
-          this.#characterData = { ...data };
+          this.#characterData = [...data];
 
           // external change handler
-          this.handleCharactersChangeCustom({ ...data });
+          this.handleCharactersChangeCustom([...data]);
 
           // firestore update(s)
           await Promise.allSettled(updatePromises);

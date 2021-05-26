@@ -23,7 +23,7 @@ export default async function returnValueWhenLoaded<T>(
   while (counter < maxWaitTimeMs / checkIntervalMs) {
     value = valueChecker();
     if (value) {
-      console.log(`${valueDescription} loaded, returning now`);
+      console.log(`${valueDescription} loaded, returning now`, { value });
       return value;
     }
 

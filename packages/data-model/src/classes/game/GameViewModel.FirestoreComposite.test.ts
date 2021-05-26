@@ -135,7 +135,7 @@ describe("Game with firestore composite data storage", () => {
   it("Can add and remove characters", async () => {
     expect.hasAssertions();
 
-    const id = "createNewGame";
+    const id = "addRemoveCharacters";
     const documentPath = dataStorageFactory.createPath(ROOT_PATH, id);
 
     // const docRef = firestore.doc(documentPath);
@@ -204,9 +204,9 @@ describe("Game with firestore composite data storage", () => {
     );
 
     // todo adding characters should add the game id to user profile, set this as automated function
-  });
+  }, 99999);
 
-  it("detects data changes and notifies subscriber", () => {
+  it("detects game data changes and notifies subscriber", () => {
     expect.hasAssertions();
   });
 
