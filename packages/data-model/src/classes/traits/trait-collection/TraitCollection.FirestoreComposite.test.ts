@@ -257,7 +257,7 @@ describe("Trait collection with Firestore data storage", () => {
       { name: "Celerity", value: 5 },
     ];
 
-    await pause(1000); // wait for synchronisation
+    await pause(2000); // wait for synchronisation
 
     // expect collection 2 to have the changes
     expect(tc2.size).toEqual(3);

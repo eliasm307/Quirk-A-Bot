@@ -204,7 +204,7 @@ describe("Game with firestore composite data storage", () => {
     );
 
     // todo adding characters should add the game id to user profile, set this as automated function
-  }, 99999);
+  }, 9999);
 
   it("detects game data changes and notifies subscriber", () => {
     expect.hasAssertions();
