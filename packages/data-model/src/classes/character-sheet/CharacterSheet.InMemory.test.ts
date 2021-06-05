@@ -1,4 +1,4 @@
-import InMemoryDataStorageFactory from '../data-storage/InMemory/InMemoryDataStorageFactory';
+import InMemoryDataStorageFactory from "../data-storage-OLD/InMemory/InMemoryDataStorageFactory";
 
 const parentPath = "characterSheetInMemoryTest";
 const dataStorageFactory = new InMemoryDataStorageFactory();

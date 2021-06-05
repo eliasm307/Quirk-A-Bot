@@ -1,15 +1,23 @@
-import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
-import { iTraitCollectionDataStorage } from '../../data-storage/interfaces/data-storage-interfaces';
-import { iTraitCollectionLogReporter } from '../../log/interfaces/log-interfaces';
-import { iTraitCollection } from '../interfaces/trait-collection-interfaces';
-import { iBaseTrait, iBaseTraitData, iTraitCollectionProps } from '../interfaces/trait-interfaces';
+import {
+  TraitNameUnionOrString,
+  TraitValueTypeUnion,
+} from "../../../declarations/types";
+import { iTraitCollectionDataStorage } from "../../data-storage-OLD/interfaces/data-storage-interfaces";
+import { iTraitCollectionLogReporter } from "../../log/interfaces/log-interfaces";
+import { iTraitCollection } from "../interfaces/trait-collection-interfaces";
+import {
+  iBaseTrait,
+  iBaseTraitData,
+  iTraitCollectionProps,
+} from "../interfaces/trait-interfaces";
 
 export default class TraitCollection<
   N extends TraitNameUnionOrString,
   V extends TraitValueTypeUnion,
   D extends iBaseTraitData<N, V>,
   T extends iBaseTrait<N, V, D>
-> implements iTraitCollection<N, V, D, T> {
+> implements iTraitCollection<N, V, D, T>
+{
   protected dataStorage: iTraitCollectionDataStorage<N, V, D, T>;
 
   // #typeName: TraitTypeNameUnion | string = 'Trait Collection'; // ? is this required

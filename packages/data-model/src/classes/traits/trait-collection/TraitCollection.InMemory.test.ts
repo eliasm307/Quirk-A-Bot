@@ -1,10 +1,10 @@
-import { ATTRIBUTE_COLLECTION_NAME } from '@quirk-a-bot/common';
+import { ATTRIBUTE_COLLECTION_NAME } from "@quirk-a-bot/common";
 
-import { AttributeName, LogOperationUnion } from '../../../declarations/types';
-import InMemoryDataStorageFactory from '../../data-storage/InMemory/InMemoryDataStorageFactory';
-import { iTraitCollectionFactoryMethodProps } from '../interfaces/trait-collection-interfaces';
-import { iBaseTraitData, iGeneralTrait } from '../interfaces/trait-interfaces';
-import TraitFactory from '../TraitFactory';
+import { AttributeName, LogOperationUnion } from "../../../declarations/types";
+import InMemoryDataStorageFactory from "../../data-storage-OLD/InMemory/InMemoryDataStorageFactory";
+import { iTraitCollectionFactoryMethodProps } from "../interfaces/trait-collection-interfaces";
+import { iBaseTraitData, iGeneralTrait } from "../interfaces/trait-interfaces";
+import TraitFactory from "../TraitFactory";
 
 const dataStorageFactory = new InMemoryDataStorageFactory();
 

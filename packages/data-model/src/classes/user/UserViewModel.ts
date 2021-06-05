@@ -1,11 +1,12 @@
-import { ChangeHandler } from '@quirk-a-bot/common';
+import { ChangeHandler } from "@quirk-a-bot/common";
 
-import { USER_COLLECTION_NAME } from '../../../../common/src/constants';
-import { iHasFirestore, iHasId } from '../../declarations/interfaces';
+import { USER_COLLECTION_NAME } from "../../../../common/src/constants";
+import { iHasFirestore, iHasId } from "../../declarations/interfaces";
 import {
-  iHasDataStorageFactory, iUserDataStorage,
-} from '../data-storage/interfaces/data-storage-interfaces';
-import { iUserData, iUserViewModel } from './interfaces';
+  iHasDataStorageFactory,
+  iUserDataStorage,
+} from "../data-storage-OLD/interfaces/data-storage-interfaces";
+import { iUserData, iUserViewModel } from "./interfaces";
 
 export interface iUserProps
   extends iHasId,

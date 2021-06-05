@@ -1,19 +1,33 @@
 import {
-  iHasCleanUp, iHasGetData, iHasParentPath, iHasPath,
-} from '../../../declarations/interfaces';
+  iHasCleanUp,
+  iHasGetData,
+  iHasParentPath,
+  iHasPath,
+} from "../../../declarations/interfaces";
 import {
-  AttributeCategory, AttributeName, CoreNumberTraitName, CoreStringTraitName, DisciplineName,
-  SkillName, TraitNameUnionOrString, TraitValueTypeUnion,
-} from '../../../declarations/types';
+  AttributeCategory,
+  AttributeName,
+  CoreNumberTraitName,
+  CoreStringTraitName,
+  DisciplineName,
+  SkillName,
+  TraitNameUnionOrString,
+  TraitValueTypeUnion,
+} from "../../../declarations/types";
 import {
-  iHasDataStorageFactory, iHasTraitDataStorageInitialiser,
-} from '../../data-storage/interfaces/data-storage-interfaces';
+  iHasDataStorageFactory,
+  iHasTraitDataStorageInitialiser,
+} from "../../data-storage-OLD/interfaces/data-storage-interfaces";
 import {
-  iBaseLogger, iChildLoggerCreatorProps, iHasLogReporter, iTraitCollectionLogger, iTraitLogger,
+  iBaseLogger,
+  iChildLoggerCreatorProps,
+  iHasLogReporter,
+  iTraitCollectionLogger,
+  iTraitLogger,
   iTraitLogReporter,
-} from '../../log/interfaces/log-interfaces';
-import { iBaseLogReport } from '../../log/interfaces/logReportInterfaces';
-import { iTraitCollectionDataStorageInitialiserBundle } from './trait-collection-interfaces';
+} from "../../log/interfaces/log-interfaces";
+import { iBaseLogReport } from "../../log/interfaces/logReportInterfaces";
+import { iTraitCollectionDataStorageInitialiserBundle } from "./trait-collection-interfaces";
 
 export interface iHasCategorySelector<N extends string, C extends string> {
   categorySelector: (name: N) => C;
@@ -42,7 +56,7 @@ export interface iHasTraitInstanceCreator<
 > {
   instanceCreator: (props: iBaseTraitProps<N, V, D>) => T;
 
-// todo this should only require name and value, everything else should be pre configured
+  // todo this should only require name and value, everything else should be pre configured
 }
 // -------------------------------------------------------
 // TRAIT PROPS
@@ -104,7 +118,7 @@ export interface iNumberTraitWithCategoryProps<
 export interface iCanHaveLoggerCreator<L extends iBaseLogger<iBaseLogReport>> {
   loggerCreator: ((props: iChildLoggerCreatorProps) => L) | null;
 
-// todo rename to loggerCreator
+  // todo rename to loggerCreator
 }
 
 /*
@@ -196,7 +210,7 @@ export interface iBaseTrait<
   /** Method to update value directly with a new value or a function that does a relative update using the old value */
   setValue: (newValue: V | ((oldValue: V) => V)) => Promise<void>;
 
-// todo add explain method to give a summary what this trait is for
+  // todo add explain method to give a summary what this trait is for
   // todo add explainValue method to describe the current value of the attribute, ie add description getter to describe the meaning of a value
 }
 

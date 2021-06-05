@@ -1,15 +1,19 @@
 import {
-  ATTRIBUTE_COLLECTION_NAME, DISCIPLINE_COLLECTION_NAME, firestoreEmulator, pause,
-  SKILL_COLLECTION_NAME, TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME,
-} from '@quirk-a-bot/common';
+  ATTRIBUTE_COLLECTION_NAME,
+  DISCIPLINE_COLLECTION_NAME,
+  firestoreEmulator,
+  pause,
+  SKILL_COLLECTION_NAME,
+  TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME,
+} from "@quirk-a-bot/common";
 
-import isCharacterSheetData from '../../utils/type-predicates/isCharacterSheetData';
-import FirestoreDataStorageFactory from '../data-storage/Firestore/FirestoreDataStorageFactory';
-import readCharacterSheetDataFromFirestore from '../data-storage/Firestore/utils/readCharacterSheetDataFromFirestore';
-import writeCharacterSheetDataToFirestore from '../data-storage/Firestore/utils/writeCharacterSheetDataToFirestore';
-import { createPath } from '../data-storage/utils/createPath';
-import CharacterSheet from './CharacterSheet';
-import { iCharacterSheetData } from './interfaces/character-sheet-interfaces';
+import isCharacterSheetData from "../../utils/type-predicates/isCharacterSheetData";
+import FirestoreDataStorageFactory from "../data-storage-OLD/Firestore/FirestoreDataStorageFactory";
+import readCharacterSheetDataFromFirestore from "../data-storage-OLD/Firestore/utils/readCharacterSheetDataFromFirestore";
+import writeCharacterSheetDataToFirestore from "../data-storage-OLD/Firestore/utils/writeCharacterSheetDataToFirestore";
+import { createPath } from "../data-storage-OLD/utils/createPath";
+import CharacterSheet from "./CharacterSheet";
+import { iCharacterSheetData } from "./interfaces/character-sheet-interfaces";
 
 const parentPath = "characterSheetTestCollection";
 const firestore = firestoreEmulator;

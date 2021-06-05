@@ -1,9 +1,12 @@
-import { firestoreEmulator, pause } from '@quirk-a-bot/common';
+import { firestoreEmulator, pause } from "@quirk-a-bot/common";
 
-import isTraitData from '../../../utils/type-predicates/isTraitData';
-import FirestoreDataStorageFactory from '../../data-storage/Firestore/FirestoreDataStorageFactory';
-import { iBaseTraitData, iGeneralTraitData } from '../interfaces/trait-interfaces';
-import NumberTrait from './NumberTrait';
+import isTraitData from "../../../utils/type-predicates/isTraitData";
+import FirestoreDataStorageFactory from "../../data-storage-OLD/Firestore/FirestoreDataStorageFactory";
+import {
+  iBaseTraitData,
+  iGeneralTraitData,
+} from "../interfaces/trait-interfaces";
+import NumberTrait from "./NumberTrait";
 
 const firestore = firestoreEmulator;
 

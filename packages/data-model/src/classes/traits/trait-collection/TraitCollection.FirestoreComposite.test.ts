@@ -1,14 +1,25 @@
 import {
-  ATTRIBUTE_COLLECTION_NAME, CHARACTER_SHEET_TRAIT_COMPOSITE_DOCUMENT_COLLECTION_NAME,
-  DISCIPLINE_COLLECTION_NAME, firestoreEmulator, pause, SKILL_COLLECTION_NAME,
-} from '@quirk-a-bot/common';
+  ATTRIBUTE_COLLECTION_NAME,
+  CHARACTER_SHEET_TRAIT_COMPOSITE_DOCUMENT_COLLECTION_NAME,
+  DISCIPLINE_COLLECTION_NAME,
+  firestoreEmulator,
+  pause,
+  SKILL_COLLECTION_NAME,
+} from "@quirk-a-bot/common";
 
-import { AttributeName, DisciplineName, SkillName } from '../../../declarations/types';
-import isTraitData from '../../../utils/type-predicates/isTraitData';
-import FirestoreCompositeDataStorageFactory from '../../data-storage/FirestoreComposite/DataStorageFactory';
-import { iTraitCollectionFactoryMethodProps } from '../interfaces/trait-collection-interfaces';
-import { iBaseTraitData, iGeneralTraitData } from '../interfaces/trait-interfaces';
-import TraitFactory from '../TraitFactory';
+import {
+  AttributeName,
+  DisciplineName,
+  SkillName,
+} from "../../../declarations/types";
+import isTraitData from "../../../utils/type-predicates/isTraitData";
+import FirestoreCompositeDataStorageFactory from "../../data-storage-OLD/FirestoreComposite/DataStorageFactory";
+import { iTraitCollectionFactoryMethodProps } from "../interfaces/trait-collection-interfaces";
+import {
+  iBaseTraitData,
+  iGeneralTraitData,
+} from "../interfaces/trait-interfaces";
+import TraitFactory from "../TraitFactory";
 
 const firestore = firestoreEmulator;
 

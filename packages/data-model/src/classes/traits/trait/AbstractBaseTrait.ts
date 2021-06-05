@@ -1,11 +1,16 @@
-import { hasCleanUp } from '@quirk-a-bot/common';
+import { hasCleanUp } from "@quirk-a-bot/common";
 
-import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
-import { iBaseTraitDataStorage } from '../../data-storage/interfaces/data-storage-interfaces';
-import { iTraitLogReporter } from '../../log/interfaces/log-interfaces';
 import {
-  iAbstractBaseTraitProps, iBaseTrait, iBaseTraitData,
-} from '../interfaces/trait-interfaces';
+  TraitNameUnionOrString,
+  TraitValueTypeUnion,
+} from "../../../declarations/types";
+import { iBaseTraitDataStorage } from "../../data-storage-OLD/interfaces/data-storage-interfaces";
+import { iTraitLogReporter } from "../../log/interfaces/log-interfaces";
+import {
+  iAbstractBaseTraitProps,
+  iBaseTrait,
+  iBaseTraitData,
+} from "../interfaces/trait-interfaces";
 
 export default abstract class AbstractBaseTrait<
   N extends TraitNameUnionOrString,
