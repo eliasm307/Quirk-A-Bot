@@ -1,14 +1,14 @@
 // Firebase App (the core Firebase SDK) is always required and
 // Add the Firebase services that you want to use
-import 'firebase/auth';
-import 'firebase/firestore';
+import "firebase/auth";
+import "firebase/firestore";
 
 // import dotenv from 'dotenv';
 // must be listed before other Firebase SDKs
-import firebase from 'firebase/app';
-import urlExistSync from 'url-exist-sync';
+import firebase from "firebase/app";
+import urlExistSync from "url-exist-sync";
 
-import config from '../private/firebase-config';
+import config from "../private/firebase-config";
 
 // const localDotenvPath = path.resolve(__dirname, '..', '.env');
 
@@ -78,8 +78,8 @@ export interface FireBaseUser extends firebase.User {}
 ////////////////////////////////////////////////////////
 // Firestore exports
 
-export const firestoreLive = firebase.firestore();
-
+export const firestore = firebase.firestore();
+// todo export one firestore which uses emulator based on node env variable
 const _firestoreEmulator = firebase.firestore();
 _firestoreEmulator.useEmulator("localhost", 8080);
 export const firestoreEmulator = _firestoreEmulator;

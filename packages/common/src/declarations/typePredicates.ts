@@ -1,7 +1,13 @@
 import {
-  ATTRIBUTE_CATEGORIES, ATTRIBUTE_NAMES, CORE_NUMBER_TRAIT_NAMES, CORE_STRING_TRAIT_NAMES,
-  DISCIPLINE_NAMES, SKILL_NAMES, TRAIT_TYPES,
-} from '../constants';
+  ATTRIBUTE_CATEGORIES,
+  ATTRIBUTE_NAMES,
+  CORE_NUMBER_TRAIT_NAMES,
+  CORE_STRING_TRAIT_NAMES,
+  DISCIPLINE_NAMES,
+  SKILL_NAMES,
+  TRAIT_COLLECTION_NAMES,
+  TRAIT_TYPES,
+} from "../constants";
 
 export type ClanName = "Caitiff" | string; // todo explicitly specify names
 
@@ -31,6 +37,8 @@ export type TraitNameUnion =
 export type TraitNameUnionOrString = TraitNameUnion | string;
 
 export type TraitTypeNameUnion = typeof TRAIT_TYPES[number];
+
+export type TraitCollectionNameUnion = typeof TRAIT_COLLECTION_NAMES[number];
 
 export type LogOperationUnion = "ADD" | "UPDATE" | "DELETE";
 
