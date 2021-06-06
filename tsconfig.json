@@ -5,15 +5,8 @@
     "paths": {
       "@quirk-a-bot/*": ["packages/*/src"]
     },
-    "typeRoots": [
-      "./node_modules/@types",
-      "./node_modules/rxjs/dist/types/index.d.ts"
-    ],
-    "types": [
-      "@types/jest",
-      "@types/node",
-      "./node_modules/rxjs/dist/types/index.d.ts"
-    ],
+    "typeRoots": ["./node_modules/@types"],
+    "types": ["@types/jest", "@types/node"],
     "preserveSymlinks": true,
     "allowJs": true,
     "skipLibCheck": true,
@@ -29,6 +22,7 @@
     "**/dist/**",
     "**/build/**",
     "**/lib/**",
-    "**/public/**"
+    "**/public/**",
+    "./node_modules/rxjs/dist/types"
   ]
 }

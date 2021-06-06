@@ -2,7 +2,7 @@
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "esnext"],
     "module": "commonjs",
-    "target": "es2015",
+    "target": "es2017",
     "sourceMap": true,
     "noEmit": false,
     "noEmitOnError": true,

@@ -12,11 +12,14 @@ module.exports = {
     "\\/dist\\/",
     "\\/node_modules\\/",
     "\\/coverage\\/",
-    "\\/src/index\\/", // ignore main index file for test coverage
+    // "\\/src/index\\/", // ignore main index file for test coverage
   ],
   collectCoverage: true,
   collectCoverageFrom: ["src/**/*.{js,jsx,ts,tsx}"],
-
+  transform: {
+    "^.+\\.(ts|tsx)?$": "ts-jest",
+    "^.+\\.(js|jsx)$": "babel-jest",
+  },
   // transformIgnorePatterns: ['packages/shared-utils/(?!(dist)/)'],
   moduleNameMapper: pathsToModuleNameMapper(
     { ...compilerOptions.paths },

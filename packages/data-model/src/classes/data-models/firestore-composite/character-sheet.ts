@@ -1,10 +1,7 @@
 import { from, Observable, of, Subject, timer } from 'rxjs';
 import { catchError, delayWhen, map, retryWhen, tap } from 'rxjs/operators';
 
-import {
-  ALL_TRAITS_COLLECTION_NAME, CHARACTER_SHEET_TRAIT_COMPOSITE_DOCUMENT_COLLECTION_NAME, firestore,
-  FirestoreDocumentReference, iHasParentPath,
-} from '@quirk-a-bot/common';
+import { firestore, FirestoreDocumentReference, iHasParentPath } from '@quirk-a-bot/common';
 
 import { iHasId } from '../../../declarations/interfaces';
 import { isCharacterSheetData } from '../../../utils/type-predicates';
@@ -101,7 +98,7 @@ export default class CharacterSheetFirestoreCompositeModel
     // handle external change events internally
     this.#incomingUpdatesSubject
       .pipe(
-        map((newData) =>
+        map((newData: iCharacterSheetData) =>
           from(this.#firestoreDocumentRef.set(newData)).pipe(
             tap(() => {
               console.warn("Data updated successfully", { newData });
