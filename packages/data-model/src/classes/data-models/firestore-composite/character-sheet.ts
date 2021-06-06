@@ -37,7 +37,7 @@ export default class CharacterSheetFirestoreCompositeModel
     this.#incomingUpdatesSubject = new Subject<iCharacterSheetData>();
 
     // handle external change events internally
-    this.#incomingUpdatesSubject
+    const incomingUpdatesSubscription = this.#incomingUpdatesSubject
       .pipe(
         switchMap((newData: iCharacterSheetData) =>
           from(this.#firestoreDocumentRef.set(newData)).pipe(
@@ -47,6 +47,7 @@ export default class CharacterSheetFirestoreCompositeModel
             })
           )
         ),
+        /*
         retryWhen((errors) =>
           errors.pipe(
             // log error message
@@ -59,6 +60,7 @@ export default class CharacterSheetFirestoreCompositeModel
             delayWhen(() => timer(1000))
           )
         ),
+        */
         catchError((error) => {
           console.error(`update failed for character sheet "${this.path}"`, {
             error,
@@ -75,6 +77,8 @@ export default class CharacterSheetFirestoreCompositeModel
         },
       });
 
+    this.#unsubscribers.push(() => incomingUpdatesSubscription.unsubscribe());
+
     const { outgoingUpdatesSubject, ref } =
       this.getCharacterSheetTraitsDocumentChangeSubject(this.path);
 
@@ -90,7 +94,13 @@ export default class CharacterSheetFirestoreCompositeModel
     this.#unsubscribers.forEach((unsubscribe) => unsubscribe());
   }
 
-  getCharacterSheetTraitsDocumentChangeSubject(compositeDocumentPath: string): {
+  update(updatedData: Omit<iCharacterSheetData, "id">): void {
+    this.#incomingUpdatesSubject.next({ ...updatedData, id: this.id });
+  }
+
+  private getCharacterSheetTraitsDocumentChangeSubject(
+    compositeDocumentPath: string
+  ): {
     outgoingUpdatesSubject: Subject<iCharacterSheetData | undefined>;
     ref: FirestoreDocumentReference;
   } {
@@ -111,7 +121,7 @@ export default class CharacterSheetFirestoreCompositeModel
 
     const ref = firestore.doc(compositeDocumentPath);
 
-    // if document doesnt exist then send this status
+    // if document doesn't exist then send this status
     void ref
       .get()
       .then((snapshot) => {
@@ -150,9 +160,5 @@ export default class CharacterSheetFirestoreCompositeModel
       });
 
     return { outgoingUpdatesSubject, ref };
-  }
-
-  update(updatedData: Omit<iCharacterSheetData, "id">): void {
-    this.#incomingUpdatesSubject.next({ ...updatedData, id: this.id });
   }
 }
