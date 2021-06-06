@@ -1,3 +1,4 @@
+import { CharacterSheet } from '../../..';
 import { createPath } from '../../data-storage/utils/createPath';
 import CharacterSheetFirestoreCompositeModel from './character-sheet';
 
@@ -19,12 +20,15 @@ describe("Firestore Composite Character Sheet Model using RX", () => {
       next: (data: any) => console.warn({ data }),
     });
 
+    model.update(CharacterSheet.newDataObject({ id }));
+
     await new Promise<void>((resolve) =>
       setTimeout(() => {
         resolve();
       }, 5000)
     )
-      .then(model.dispose)
+      .then(() => model.dispose())
+      .catch(console.error)
       .finally(done);
   });
 });

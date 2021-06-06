@@ -1,5 +1,5 @@
 import { from, Observable, of, Subject, timer } from 'rxjs';
-import { catchError, delayWhen, map, retryWhen, tap } from 'rxjs/operators';
+import { catchError, delayWhen, map, retryWhen, switchMap, tap } from 'rxjs/operators';
 
 import { firestore, FirestoreDocumentReference, iHasParentPath } from '@quirk-a-bot/common';
 
@@ -39,7 +39,7 @@ export default class CharacterSheetFirestoreCompositeModel
     // handle external change events internally
     this.#incomingUpdatesSubject
       .pipe(
-        map((newData: iCharacterSheetData) =>
+        switchMap((newData: iCharacterSheetData) =>
           from(this.#firestoreDocumentRef.set(newData)).pipe(
             tap(() => {
               console.warn("Data updated successfully", { newData });
@@ -87,6 +87,7 @@ export default class CharacterSheetFirestoreCompositeModel
 
   /** Releases any resources */
   dispose() {
+    console.log(`Dispose for path ${this.path}`);
     this.#unsubscribers.forEach((unsubscribe) => unsubscribe());
   }
 

@@ -9,7 +9,7 @@
     "dev-bot": "yarn --cwd packages/discord-bot start dev",
     "dev-client": "yarn --cwd packages/character-sheet-client start",
     "build-client": "yarn --cwd packages/character-sheet-client build",
-    "start-emulators": "firebase emulators:start"
+    "start-emulators": "kill-port 4000 && kill-port 8080 && firebase emulators:start"
   },
   "author": "",
   "license": "ISC",
