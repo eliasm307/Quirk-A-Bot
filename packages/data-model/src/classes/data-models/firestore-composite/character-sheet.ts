@@ -82,10 +82,10 @@ export default class CharacterSheetFirestoreCompositeModel
   #firestoreDocumentRef: FirestoreDocumentReference;
   /** Incoming changes */
   #incomingUpdatesSubject: Subject<iCharacterSheetData>;
-  #outgoingUpdatesSubject: Subject<iCharacterSheetData>;
+  #outgoingUpdatesSubject: Subject<iCharacterSheetData | undefined>;
   #unsubscribers: (() => void)[] = [];
   /** Outgoing changes to observers of this instance */
-  changes: Observable<iCharacterSheetData>;
+  changes: Observable<iCharacterSheetData | undefined>;
   id: string;
   path: string;
 
@@ -256,11 +256,13 @@ export default class CharacterSheetFirestoreCompositeModel
   }
 
   getCharacterSheetTraitsDocumentChangeSubject(characterSheetPath: string): {
-    outgoingUpdatesSubject: Subject<iCharacterSheetData>;
+    outgoingUpdatesSubject: Subject<iCharacterSheetData | undefined>;
     firestoreDocumentUnsubscribe: () => void;
     ref: FirestoreDocumentReference;
   } {
-    const outgoingUpdatesSubject = new Subject<iCharacterSheetData>();
+    const outgoingUpdatesSubject = new Subject<
+      iCharacterSheetData | undefined
+    >();
 
     const compositeDocumentsCollectionPath = createPath(
       characterSheetPath,
@@ -279,7 +281,9 @@ export default class CharacterSheetFirestoreCompositeModel
       next: (snapshot) => {
         const newData = snapshot.data();
 
-        // no valid update unless data is valid character sheet data
+        // ? undefined represents a document that doesn't exist
+        if (newData === undefined) return outgoingUpdatesSubject.next(newData);
+
         if (!isCharacterSheetData(newData)) {
           const error = `New data from document at path "${compositeDocumentPath}" doesn't meet required schema predicate`;
           console.error({ error, compositeDocumentPath, newData });

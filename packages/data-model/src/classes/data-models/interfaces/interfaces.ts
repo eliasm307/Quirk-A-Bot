@@ -5,7 +5,7 @@ import { Observable } from "rxjs";
  * Simplified model that only accepts updates and provides change notifications
  */
 export interface BaseModel<T> {
-  readonly changes: Observable<T>;
+  readonly changes: Observable<T | undefined>;
 
   dispose(): void;
   update(updates: Partial<Omit<T, "id">>): void;
