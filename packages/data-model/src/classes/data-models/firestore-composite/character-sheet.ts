@@ -127,8 +127,13 @@ export default class CharacterSheetFirestoreCompositeModel
           next: (snapshot) => {
             const newData = snapshot.data();
 
+            console.warn(`initial snapshot for ${this.path}`, {
+              newData,
+              documentExists: snapshot.exists,
+            });
+
             // ? undefined represents a document that doesn't exist
-            if (newData === undefined)
+            if (newData === undefined || !snapshot.exists)
               return outgoingUpdatesSubject.next(undefined);
 
             if (!isCharacterSheetData(newData)) {

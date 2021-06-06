@@ -1,4 +1,4 @@
-import { firestore } from '@quirk-a-bot/common';
+import { firestore, pause } from '@quirk-a-bot/common';
 
 import { CharacterSheet } from '../../..';
 import { createPath } from '../../data-storage/utils/createPath';
@@ -15,7 +15,9 @@ describe("Firestore Composite Character Sheet Model using RX", () => {
 
     const docPath = createPath(parentPath, id);
 
-    await firestore.doc(docPath);
+    await firestore.doc(docPath).delete();
+
+    await pause(1000);
 
     const model = new CharacterSheetFirestoreCompositeModel({ id, parentPath });
 
@@ -23,6 +25,8 @@ describe("Firestore Composite Character Sheet Model using RX", () => {
       error: console.error,
       next: (data: any) => console.warn({ data }),
     });
+
+    await pause(1000);
 
     model.update(CharacterSheet.newDataObject({ id }));
 
