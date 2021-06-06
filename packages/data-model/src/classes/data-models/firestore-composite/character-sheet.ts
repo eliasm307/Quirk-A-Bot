@@ -1,19 +1,16 @@
-import { from, Observable, of, Subject, timer } from "rxjs";
-import { catchError, delayWhen, map, retryWhen, tap } from "rxjs/operators";
+import { from, Observable, of, Subject, timer } from 'rxjs';
+import { catchError, delayWhen, map, retryWhen, tap } from 'rxjs/operators';
 
 import {
-  ALL_TRAITS_COLLECTION_NAME,
-  CHARACTER_SHEET_TRAIT_COMPOSITE_DOCUMENT_COLLECTION_NAME,
-  firestore,
-  FirestoreDocumentReference,
-  iHasParentPath,
-} from "@quirk-a-bot/common";
+  ALL_TRAITS_COLLECTION_NAME, CHARACTER_SHEET_TRAIT_COMPOSITE_DOCUMENT_COLLECTION_NAME, firestore,
+  FirestoreDocumentReference, iHasParentPath,
+} from '@quirk-a-bot/common';
 
-import { iHasId } from "../../../declarations/interfaces";
-import { isCharacterSheetData } from "../../../utils/type-predicates";
-import { iCharacterSheetData } from "../../character-sheet/interfaces/character-sheet-interfaces";
-import { createPath } from "../../data-storage-OLD/utils/createPath";
-import { BaseModel } from "../interfaces/interfaces";
+import { iHasId } from '../../../declarations/interfaces';
+import { isCharacterSheetData } from '../../../utils/type-predicates';
+import { iCharacterSheetData } from '../../character-sheet/interfaces/character-sheet-interfaces';
+import { createPath } from '../../data-storage-OLD/utils/createPath';
+import { BaseModel } from '../interfaces/interfaces';
 
 interface Props extends iHasId, iHasParentPath {}
 
@@ -135,7 +132,7 @@ export default class CharacterSheetFirestoreCompositeModel
         error: console.error,
         complete: () =>
           console.warn(`Observer completed but this should never complete`),
-        next: (error) => {
+        next: (error: any) => {
           if (error) console.error(`Update failed2`, { error });
         },
       });
@@ -255,7 +252,7 @@ export default class CharacterSheetFirestoreCompositeModel
     this.#unsubscribers.forEach((unsubscribe) => unsubscribe());
   }
 
-  getCharacterSheetTraitsDocumentChangeSubject(characterSheetPath: string): {
+  getCharacterSheetTraitsDocumentChangeSubject(compositeDocumentPath: string): {
     outgoingUpdatesSubject: Subject<iCharacterSheetData | undefined>;
     firestoreDocumentUnsubscribe: () => void;
     ref: FirestoreDocumentReference;
@@ -264,6 +261,7 @@ export default class CharacterSheetFirestoreCompositeModel
       iCharacterSheetData | undefined
     >();
 
+    /*
     const compositeDocumentsCollectionPath = createPath(
       characterSheetPath,
       CHARACTER_SHEET_TRAIT_COMPOSITE_DOCUMENT_COLLECTION_NAME
@@ -272,6 +270,7 @@ export default class CharacterSheetFirestoreCompositeModel
       compositeDocumentsCollectionPath,
       ALL_TRAITS_COLLECTION_NAME
     );
+    */
 
     const ref = firestore.doc(compositeDocumentPath);
 
