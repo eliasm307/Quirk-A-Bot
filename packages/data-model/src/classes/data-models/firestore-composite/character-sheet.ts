@@ -75,11 +75,10 @@ export default class CharacterSheetFirestoreCompositeModel
         },
       });
 
-    const { outgoingUpdatesSubject, ref, firestoreDocumentUnsubscribe } =
+    const { outgoingUpdatesSubject, ref } =
       this.getCharacterSheetTraitsDocumentChangeSubject(this.path);
 
     this.#firestoreDocumentRef = ref;
-    this.#unsubscribers.push(firestoreDocumentUnsubscribe);
 
     this.#outgoingUpdatesSubject = outgoingUpdatesSubject;
     this.changes = outgoingUpdatesSubject.asObservable();
@@ -93,7 +92,6 @@ export default class CharacterSheetFirestoreCompositeModel
 
   getCharacterSheetTraitsDocumentChangeSubject(compositeDocumentPath: string): {
     outgoingUpdatesSubject: Subject<iCharacterSheetData | undefined>;
-    firestoreDocumentUnsubscribe: () => void;
     ref: FirestoreDocumentReference;
   } {
     const outgoingUpdatesSubject = new Subject<
@@ -114,34 +112,39 @@ export default class CharacterSheetFirestoreCompositeModel
     const ref = firestore.doc(compositeDocumentPath);
 
     // if document doesnt exist then send this status
-    void ref.get().then((snapshot) => {
-      // eslint-disable-next-line promise/always-return
-      if (!snapshot.exists) outgoingUpdatesSubject.next(undefined);
+    void ref
+      .get()
+      .then((snapshot) => {
+        // eslint-disable-next-line promise/always-return
+        if (!snapshot.exists) outgoingUpdatesSubject.next(undefined);
 
-      // ? should initial data be sent from here?
-    });
+        // ? should initial data be sent from here?
+      })
+      .then(() => {
+        const firestoreDocumentUnsubscribe = ref.onSnapshot({
+          complete: outgoingUpdatesSubject.complete,
+          error: outgoingUpdatesSubject.error,
+          next: (snapshot) => {
+            const newData = snapshot.data();
 
-    const firestoreDocumentUnsubscribe = ref.onSnapshot({
-      complete: outgoingUpdatesSubject.complete,
-      error: outgoingUpdatesSubject.error,
-      next: (snapshot) => {
-        const newData = snapshot.data();
+            // ? undefined represents a document that doesn't exist
+            if (newData === undefined)
+              return outgoingUpdatesSubject.next(undefined);
 
-        // ? undefined represents a document that doesn't exist
-        if (newData === undefined)
-          return outgoingUpdatesSubject.next(undefined);
+            if (!isCharacterSheetData(newData)) {
+              const error = `New data from document at path "${compositeDocumentPath}" doesn't meet required schema predicate`;
+              console.error({ error, compositeDocumentPath, newData });
+              throw Error(error);
+            }
 
-        if (!isCharacterSheetData(newData)) {
-          const error = `New data from document at path "${compositeDocumentPath}" doesn't meet required schema predicate`;
-          console.error({ error, compositeDocumentPath, newData });
-          throw Error(error);
-        }
+            outgoingUpdatesSubject.next(newData);
+          },
+        });
 
-        outgoingUpdatesSubject.next(newData);
-      },
-    });
+        this.#unsubscribers.push(firestoreDocumentUnsubscribe);
+      });
 
-    return { outgoingUpdatesSubject, firestoreDocumentUnsubscribe, ref };
+    return { outgoingUpdatesSubject, ref };
   }
 
   update(updatedData: Omit<iCharacterSheetData, "id">): void {

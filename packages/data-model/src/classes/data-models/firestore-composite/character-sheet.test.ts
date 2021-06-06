@@ -1,3 +1,5 @@
+import { firestore } from '@quirk-a-bot/common';
+
 import { CharacterSheet } from '../../..';
 import { createPath } from '../../data-storage/utils/createPath';
 import CharacterSheetFirestoreCompositeModel from './character-sheet';
@@ -7,15 +9,17 @@ const parentPath = "fc-rx-characterSheetTraitDocsCollection";
 
 describe("Firestore Composite Character Sheet Model using RX", () => {
   it("can create a new character sheet", async (done) => {
-    expect.hasAssertions();
+    // expect.hasAssertions();
 
     const id = "newCharacterSheetTraits";
 
     const docPath = createPath(parentPath, id);
 
+    await firestore.doc(docPath);
+
     const model = new CharacterSheetFirestoreCompositeModel({ id, parentPath });
 
-    model.changes.subscribe({
+    const subscription = model.changes.subscribe({
       error: console.error,
       next: (data: any) => console.warn({ data }),
     });
@@ -25,12 +29,15 @@ describe("Firestore Composite Character Sheet Model using RX", () => {
     await new Promise<void>((resolve) =>
       setTimeout(() => {
         resolve();
-      }, 5000)
+      }, 10000)
     )
-      .then(() => model.dispose())
+      .then(() => {
+        subscription.unsubscribe();
+        model.dispose();
+      })
       .catch(console.error)
       .finally(done);
-  });
+  }, 19999);
 
   it("can initialise from an existing character sheet", async (done) => {
     expect.hasAssertions();
