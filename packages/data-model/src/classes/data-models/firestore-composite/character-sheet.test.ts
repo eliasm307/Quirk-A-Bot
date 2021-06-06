@@ -1,4 +1,4 @@
-import { createPath } from '../../data-storage-OLD/utils/createPath';
+import { createPath } from '../../data-storage/utils/createPath';
 import CharacterSheetFirestoreCompositeModel from './character-sheet';
 
 // firestore composite - rx
@@ -16,7 +16,7 @@ describe("Firestore Composite Character Sheet Model using RX", () => {
 
     model.changes.subscribe({
       error: console.error,
-      next: (data) => console.warn({ data }),
+      next: (data: any) => console.warn({ data }),
     });
 
     await new Promise<void>((resolve) =>

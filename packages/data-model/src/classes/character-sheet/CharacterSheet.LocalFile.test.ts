@@ -1,13 +1,9 @@
-import fs from "fs-extra";
-import path from "path";
+import fs from 'fs-extra';
+import path from 'path';
 
-import LocalFileDataStorageFactory from "../data-storage-OLD/LocalFile/LocalFileDataStorageFactory";
-import {
-  iAttribute,
-  iSkill,
-  iTouchStoneOrConviction,
-} from "../traits/interfaces/trait-interfaces";
-import CharacterSheet from "./CharacterSheet";
+import LocalFileDataStorageFactory from '../data-storage/LocalFile/LocalFileDataStorageFactory';
+import { iAttribute, iSkill, iTouchStoneOrConviction } from '../traits/interfaces/trait-interfaces';
+import CharacterSheet from './CharacterSheet';
 
 // todo refactor this or do it as in memory tests
 

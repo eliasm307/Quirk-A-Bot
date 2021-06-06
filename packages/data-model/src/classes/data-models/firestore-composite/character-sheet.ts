@@ -9,7 +9,7 @@ import {
 import { iHasId } from '../../../declarations/interfaces';
 import { isCharacterSheetData } from '../../../utils/type-predicates';
 import { iCharacterSheetData } from '../../character-sheet/interfaces/character-sheet-interfaces';
-import { createPath } from '../../data-storage-OLD/utils/createPath';
+import { createPath } from '../../data-storage/utils/createPath';
 import { BaseModel } from '../interfaces/interfaces';
 
 interface Props extends iHasId, iHasParentPath {}

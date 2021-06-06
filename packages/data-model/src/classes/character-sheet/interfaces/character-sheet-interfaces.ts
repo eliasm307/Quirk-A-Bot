@@ -1,32 +1,18 @@
 /* eslint-disable no-use-before-define */
+import { iHasCleanUp, iHasGetData, iHasId, iHasParentPath } from '../../../declarations/interfaces';
+import { ClanName } from '../../../declarations/types';
 import {
-  iHasCleanUp,
-  iHasGetData,
-  iHasId,
-  iHasParentPath,
-} from "../../../declarations/interfaces";
-import { ClanName } from "../../../declarations/types";
+  iHasCharacterSheetDataStorage, iHasDataStorageFactory,
+} from '../../data-storage/interfaces/data-storage-interfaces';
+import { iHasCharacterSheetLogReporter } from '../../log/interfaces/log-interfaces';
 import {
-  iHasCharacterSheetDataStorage,
-  iHasDataStorageFactory,
-} from "../../data-storage-OLD/interfaces/data-storage-interfaces";
-import { iHasCharacterSheetLogReporter } from "../../log/interfaces/log-interfaces";
-import {
-  iAttributeTraitCollection,
-  iDisciplineTraitCollection,
-  iSkillTraitCollection,
+  iAttributeTraitCollection, iDisciplineTraitCollection, iSkillTraitCollection,
   iTouchStoneOrConvictionCollection,
-} from "../../traits/interfaces/trait-collection-interfaces";
+} from '../../traits/interfaces/trait-collection-interfaces';
 import {
-  iAttributeData,
-  iCoreNumberTrait,
-  iCoreNumberTraitData,
-  iCoreStringTrait,
-  iCoreStringTraitData,
-  iDisciplineData,
-  iSkillData,
-  iTouchStoneOrConvictionData,
-} from "../../traits/interfaces/trait-interfaces";
+  iAttributeData, iCoreNumberTrait, iCoreNumberTraitData, iCoreStringTrait, iCoreStringTraitData,
+  iDisciplineData, iSkillData, iTouchStoneOrConvictionData,
+} from '../../traits/interfaces/trait-interfaces';
 
 export interface iHasCharacterSheet {
   characterSheet: iCharacterSheet;

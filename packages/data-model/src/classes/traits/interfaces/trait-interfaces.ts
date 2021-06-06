@@ -1,33 +1,19 @@
 import {
-  iHasCleanUp,
-  iHasGetData,
-  iHasParentPath,
-  iHasPath,
-} from "../../../declarations/interfaces";
+  iHasCleanUp, iHasGetData, iHasParentPath, iHasPath,
+} from '../../../declarations/interfaces';
 import {
-  AttributeCategory,
-  AttributeName,
-  CoreNumberTraitName,
-  CoreStringTraitName,
-  DisciplineName,
-  SkillName,
-  TraitNameUnionOrString,
-  TraitValueTypeUnion,
-} from "../../../declarations/types";
+  AttributeCategory, AttributeName, CoreNumberTraitName, CoreStringTraitName, DisciplineName,
+  SkillName, TraitNameUnionOrString, TraitValueTypeUnion,
+} from '../../../declarations/types';
 import {
-  iHasDataStorageFactory,
-  iHasTraitDataStorageInitialiser,
-} from "../../data-storage-OLD/interfaces/data-storage-interfaces";
+  iHasDataStorageFactory, iHasTraitDataStorageInitialiser,
+} from '../../data-storage/interfaces/data-storage-interfaces';
 import {
-  iBaseLogger,
-  iChildLoggerCreatorProps,
-  iHasLogReporter,
-  iTraitCollectionLogger,
-  iTraitLogger,
+  iBaseLogger, iChildLoggerCreatorProps, iHasLogReporter, iTraitCollectionLogger, iTraitLogger,
   iTraitLogReporter,
-} from "../../log/interfaces/log-interfaces";
-import { iBaseLogReport } from "../../log/interfaces/logReportInterfaces";
-import { iTraitCollectionDataStorageInitialiserBundle } from "./trait-collection-interfaces";
+} from '../../log/interfaces/log-interfaces';
+import { iBaseLogReport } from '../../log/interfaces/logReportInterfaces';
+import { iTraitCollectionDataStorageInitialiserBundle } from './trait-collection-interfaces';
 
 export interface iHasCategorySelector<N extends string, C extends string> {
   categorySelector: (name: N) => C;

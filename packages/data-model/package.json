@@ -10,7 +10,9 @@
   ],
   "nohoist": [
     "**/*jest*",
-    "**/*jest*/**"
+    "**/*jest*/**",
+    "**/*rxjs*",
+    "**/*rxjs*/**"
   ],
   "scripts": {
     "test": "npx tsc && yarn build && jest --colors --logHeapUsage",

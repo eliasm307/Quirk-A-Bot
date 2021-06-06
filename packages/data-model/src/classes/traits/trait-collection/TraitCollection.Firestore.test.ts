@@ -1,22 +1,15 @@
 import {
-  ATTRIBUTE_COLLECTION_NAME,
-  DISCIPLINE_COLLECTION_NAME,
-  firestoreEmulator,
-  pause,
+  ATTRIBUTE_COLLECTION_NAME, DISCIPLINE_COLLECTION_NAME, firestoreEmulator, pause,
   SKILL_COLLECTION_NAME,
-} from "@quirk-a-bot/common";
+} from '@quirk-a-bot/common';
 
-import {
-  AttributeName,
-  DisciplineName,
-  SkillName,
-} from "../../../declarations/types";
-import isTraitData from "../../../utils/type-predicates/isTraitData";
-import FirestoreDataStorageFactory from "../../data-storage-OLD/Firestore/FirestoreDataStorageFactory";
-import { createPath } from "../../data-storage-OLD/utils/createPath";
-import { iTraitCollectionFactoryMethodProps } from "../interfaces/trait-collection-interfaces";
-import { iBaseTraitData } from "../interfaces/trait-interfaces";
-import TraitFactory from "../TraitFactory";
+import { AttributeName, DisciplineName, SkillName } from '../../../declarations/types';
+import isTraitData from '../../../utils/type-predicates/isTraitData';
+import FirestoreDataStorageFactory from '../../data-storage/Firestore/FirestoreDataStorageFactory';
+import { createPath } from '../../data-storage/utils/createPath';
+import { iTraitCollectionFactoryMethodProps } from '../interfaces/trait-collection-interfaces';
+import { iBaseTraitData } from '../interfaces/trait-interfaces';
+import TraitFactory from '../TraitFactory';
 
 // todo make these tests relevant
 

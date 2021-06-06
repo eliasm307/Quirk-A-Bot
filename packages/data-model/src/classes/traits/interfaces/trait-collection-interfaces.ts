@@ -1,48 +1,26 @@
-import { CoreNumberTraitName, CoreStringTraitName } from "@quirk-a-bot/common";
+import { CoreNumberTraitName, CoreStringTraitName } from '@quirk-a-bot/common';
 
 import {
-  iBaseCollection,
-  iHasCleanUp,
-  iHasGetData,
-  iHasParentPath,
-  iHasPath,
-} from "../../../declarations/interfaces";
+  iBaseCollection, iHasCleanUp, iHasGetData, iHasParentPath, iHasPath,
+} from '../../../declarations/interfaces';
 import {
-  AttributeName,
-  DisciplineName,
-  SkillName,
-  TraitNameUnionOrString,
-  TraitValueTypeUnion,
-} from "../../../declarations/types";
+  AttributeName, DisciplineName, SkillName, TraitNameUnionOrString, TraitValueTypeUnion,
+} from '../../../declarations/types';
 import {
-  iHasDataStorageFactory,
-  iHasTraitDataStorageInitialiser,
-  iTraitCollectionDataStorage,
-} from "../../data-storage-OLD/interfaces/data-storage-interfaces";
-import { iBaseTraitCollectionDataStorageProps } from "../../data-storage-OLD/interfaces/props/trait-collection-data-storage";
+  iHasDataStorageFactory, iHasTraitDataStorageInitialiser, iTraitCollectionDataStorage,
+} from '../../data-storage/interfaces/data-storage-interfaces';
 import {
-  iHasTraitCollectionLogReporter,
-  iTraitCollectionLogger,
-} from "../../log/interfaces/log-interfaces";
+  iBaseTraitCollectionDataStorageProps,
+} from '../../data-storage/interfaces/props/trait-collection-data-storage';
 import {
-  iAttribute,
-  iAttributeData,
-  iBaseTrait,
-  iBaseTraitData,
-  iCanHaveLoggerCreator,
-  iCoreNumberTrait,
-  iCoreNumberTraitData,
-  iCoreStringTrait,
-  iCoreStringTraitData,
-  iDiscipline,
-  iDisciplineData,
-  iGeneralTrait,
-  iGeneralTraitData,
-  iSkill,
-  iSkillData,
-  iTouchStoneOrConviction,
+  iHasTraitCollectionLogReporter, iTraitCollectionLogger,
+} from '../../log/interfaces/log-interfaces';
+import {
+  iAttribute, iAttributeData, iBaseTrait, iBaseTraitData, iCanHaveLoggerCreator, iCoreNumberTrait,
+  iCoreNumberTraitData, iCoreStringTrait, iCoreStringTraitData, iDiscipline, iDisciplineData,
+  iGeneralTrait, iGeneralTraitData, iSkill, iSkillData, iTouchStoneOrConviction,
   iTouchStoneOrConvictionData,
-} from "./trait-interfaces";
+} from './trait-interfaces';
 
 // -------------------------------------------------------
 // GENERAL

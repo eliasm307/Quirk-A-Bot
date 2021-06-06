@@ -1,15 +1,11 @@
-import {
-  CHARACTER_COLLECTION_NAME,
-  firestoreEmulator,
-  pause,
-} from "@quirk-a-bot/common";
+import { CHARACTER_COLLECTION_NAME, firestoreEmulator, pause } from '@quirk-a-bot/common';
 
-import isCharacterData from "../../utils/type-predicates/isCharacterData";
-import FirestoreCompositeDataStorageFactory from "../data-storage-OLD/FirestoreComposite/DataStorageFactory";
-import GameViewModel from "./GameViewModel";
-import { iGameData } from "./interfaces/game-interfaces";
-import { iCharacterData } from "./interfaces/game-player-interfaces";
-import defaultCharacterData from "./utils/defaultCharacterData";
+import isCharacterData from '../../utils/type-predicates/isCharacterData';
+import FirestoreCompositeDataStorageFactory from '../data-storage/FirestoreComposite/DataStorageFactory';
+import GameViewModel from './GameViewModel';
+import { iGameData } from './interfaces/game-interfaces';
+import { iCharacterData } from './interfaces/game-player-interfaces';
+import defaultCharacterData from './utils/defaultCharacterData';
 
 const firestore = firestoreEmulator;
 

@@ -4,6 +4,15 @@
     "baseUrl": "./",
     "paths": {
       "@quirk-a-bot/*": ["../*/src"]
-    }
+    },
+    "typeRoots": [
+      "./node_modules/@types",
+      "./node_modules/rxjs/dist/types/index.d.ts"
+    ],
+    "types": [
+      "@types/jest",
+      "@types/node",
+      "./node_modules/rxjs/dist/types/index.d.ts"
+    ]
   }
 }

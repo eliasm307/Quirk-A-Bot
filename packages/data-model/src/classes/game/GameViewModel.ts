@@ -1,14 +1,12 @@
-import { ChangeHandler, iHasParentPath } from "@quirk-a-bot/common";
+import { ChangeHandler, iHasParentPath } from '@quirk-a-bot/common';
 
-import { iHasId } from "../../declarations/interfaces";
+import { iHasId } from '../../declarations/interfaces';
 import {
-  iDataStorageFactory,
-  iGameDataStorage,
-  iHasDataStorageFactory,
-} from "../data-storage-OLD/interfaces/data-storage-interfaces";
-import { createPath } from "../data-storage-OLD/utils/createPath";
-import { iGameData, iGameViewModel } from "./interfaces/game-interfaces";
-import { iCharacterData } from "./interfaces/game-player-interfaces";
+  iDataStorageFactory, iGameDataStorage, iHasDataStorageFactory,
+} from '../data-storage/interfaces/data-storage-interfaces';
+import { createPath } from '../data-storage/utils/createPath';
+import { iGameData, iGameViewModel } from './interfaces/game-interfaces';
+import { iCharacterData } from './interfaces/game-player-interfaces';
 
 export interface iGameProps
   extends iHasId,
