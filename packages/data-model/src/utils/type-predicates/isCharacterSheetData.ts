@@ -1,8 +1,6 @@
-import CharacterSheet from '../../classes/character-sheet/CharacterSheet';
-import {
-  iCharacterSheetData,
-} from '../../classes/character-sheet/interfaces/character-sheet-interfaces';
-import isTraitData from './isTraitData';
+import CharacterSheet from "../../classes/character-sheet/CharacterSheet";
+import { iCharacterSheetData } from "../../classes/character-sheet/interfaces/character-sheet-interfaces";
+import isTraitData from "./isTraitData";
 
 export default function isCharacterSheetData(
   data: unknown
@@ -36,14 +34,30 @@ export default function isCharacterSheetData(
     willpower,
   } = data as iCharacterSheetData;
 
-  // todo add property  check
+  // ts property check, will throw an error if the schema is changed but predicate not updated
+  ((): iCharacterSheetData => ({
+    attributes,
+    bloodPotency,
+    clan,
+    disciplines,
+    health,
+    humanity,
+    hunger,
+    id,
+    name,
+    sire,
+    skills,
+    touchstonesAndConvictions,
+    willpower,
+  }))();
+
+  /*
 
   const receivedNumberOfProperties = Object.keys(data).length;
   const correctNumberOfProperties = Object.keys(exampleCorrectData).length;
 
   // check number of properties
   if (receivedNumberOfProperties !== correctNumberOfProperties) {
-    /*
 		console.warn(
 			`isCharacterSheetData, data does not have the right number of properties, expected ${correctNumberOfProperties} but received ${receivedNumberOfProperties}`,
 			{
@@ -53,7 +67,16 @@ export default function isCharacterSheetData(
 				correctData: exampleCorrectData,
 			}
 		);
-    */
+
+    return false;
+  }
+  */
+
+  if (!id) {
+    console.warn(`isCharacterSheetData, id is falsy`, {
+      id,
+    });
+
     return false;
   }
 
@@ -90,7 +113,7 @@ export default function isCharacterSheetData(
   }
 
   // check core string traits
-  const coreStringTraitData: any[] = [clan, name, sire];
+  const coreStringTraitData: unknown[] = [clan, name, sire];
   for (const traitData of coreStringTraitData) {
     if (!isTraitData(traitData) || typeof traitData.value !== "string") {
       console.warn(

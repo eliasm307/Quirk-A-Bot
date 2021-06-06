@@ -1,3 +1,5 @@
+// todo the trait names here shouldnt be the display names, this should be the property names then there should be a utility to determine the display name from the property name
+
 // type unions
 export const ATTRIBUTE_NAMES = [
   "Strength",
@@ -90,7 +92,11 @@ export const TRAIT_TYPES = [
 
 // collection names
 export const CHARACTER_SHEET_TRAIT_COMPOSITE_DOCUMENT_COLLECTION_NAME = `character-sheet-traits`;
+// ? is this required?
 export const CORE_TRAIT_COLLECTION_NAME = `core-traits`;
+//  ! prefer keeping schema consistent for core traits ie 2 separate number and string groups
+export const CORE_STRING_TRAIT_COLLECTION_NAME = `core-string-traits`;
+export const CORE_NUMBER_TRAIT_COLLECTION_NAME = `core-number-traits`;
 export const ATTRIBUTE_COLLECTION_NAME = `attributes`;
 export const SKILL_COLLECTION_NAME = `skills`;
 export const DISCIPLINE_COLLECTION_NAME = `disciplines`;
@@ -98,6 +104,7 @@ export const TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME = `touchstones-and-convic
 export const USER_COLLECTION_NAME = "users";
 export const PLAYER_COLLECTION_NAME = "players";
 export const CHARACTER_COLLECTION_NAME = "characters";
+export const ALL_TRAITS_COLLECTION_NAME = "traits";
 
 export const TRAIT_COLLECTION_NAMES = [
   ATTRIBUTE_COLLECTION_NAME,
