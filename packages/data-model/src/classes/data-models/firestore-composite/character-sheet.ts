@@ -113,6 +113,14 @@ export default class CharacterSheetFirestoreCompositeModel
 
     const ref = firestore.doc(compositeDocumentPath);
 
+    // if document doesnt exist then send this status
+    void ref.get().then((snapshot) => {
+      // eslint-disable-next-line promise/always-return
+      if (!snapshot.exists) outgoingUpdatesSubject.next(undefined);
+
+      // ? should initial data be sent from here?
+    });
+
     const firestoreDocumentUnsubscribe = ref.onSnapshot({
       complete: outgoingUpdatesSubject.complete,
       error: outgoingUpdatesSubject.error,

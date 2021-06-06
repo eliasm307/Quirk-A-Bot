@@ -31,4 +31,8 @@ describe("Firestore Composite Character Sheet Model using RX", () => {
       .catch(console.error)
       .finally(done);
   });
+
+  it("can initialise from an existing character sheet", async (done) => {
+    expect.hasAssertions();
+  });
 });
