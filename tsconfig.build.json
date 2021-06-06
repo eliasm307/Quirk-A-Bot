@@ -12,6 +12,10 @@
     "strict": true,
     "alwaysStrict": true,
     "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "allowJs": true,
+    "checkJs": false,
+    "isolatedModules": true,
     "allowSyntheticDefaultImports": true,
     "baseUrl": "./packages",
     "paths": {

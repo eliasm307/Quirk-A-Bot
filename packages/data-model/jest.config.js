@@ -21,6 +21,7 @@ module.exports = {
     "^.+\\.(js|jsx)$": "babel-jest",
   },
   // transformIgnorePatterns: ['packages/shared-utils/(?!(dist)/)'],
+  // transformIgnorePatterns: ["rxjs/dist/cjs"],
   moduleNameMapper: pathsToModuleNameMapper(
     { ...compilerOptions.paths },
     {

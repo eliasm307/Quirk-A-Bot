@@ -119,7 +119,8 @@ export default class CharacterSheetFirestoreCompositeModel
         const newData = snapshot.data();
 
         // ? undefined represents a document that doesn't exist
-        if (newData === undefined) return outgoingUpdatesSubject.next(newData);
+        if (newData === undefined)
+          return outgoingUpdatesSubject.next(undefined);
 
         if (!isCharacterSheetData(newData)) {
           const error = `New data from document at path "${compositeDocumentPath}" doesn't meet required schema predicate`;

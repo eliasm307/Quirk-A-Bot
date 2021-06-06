@@ -7,14 +7,10 @@
     },
     "typeRoots": ["./node_modules/@types"],
     "types": ["@types/jest", "@types/node"],
-    "preserveSymlinks": true,
-    "allowJs": true,
-    "skipLibCheck": true,
+
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "jsx": "react",
-    "isolatedModules": true,
-    "checkJs": false,
     "noEmit": true
   },
   "exclude": [
@@ -22,7 +18,6 @@
     "**/dist/**",
     "**/build/**",
     "**/lib/**",
-    "**/public/**",
-    "./node_modules/rxjs/dist/types"
+    "**/public/**"
   ]
 }
