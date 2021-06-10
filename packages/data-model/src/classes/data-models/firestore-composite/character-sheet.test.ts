@@ -54,6 +54,8 @@ describe("Firestore Composite Character Sheet Model using RX", () => {
         parentPath,
       });
 
+      let updateCount = 0;
+
       const subscription = model.changes
         .pipe(
           // get the index of changes
@@ -68,31 +70,59 @@ describe("Firestore Composite Character Sheet Model using RX", () => {
         .subscribe({
           error: console.error,
           next: (value) => {
-            console.warn(__filename, "newDataUpdateReceived", { value });
+            updateCount++;
+            console.warn(__filename, "newDataUpdateReceived", value);
 
             const { data, index } = value;
 
             switch (index) {
               case 0:
-                expect(data).toEqual(initialData);
-              // eslint-disable-next-line no-fallthrough
+                expect(data).toEqual(initialData(id));
+                break;
               default:
-                // stop when the known updates are done
-                subscription.unsubscribe();
-                model.dispose();
-                done();
+                console.error(`unexpected update`, value);
             }
           },
         });
 
       // update 0
       model.update(initialData(id));
+
+      // delay then stop test, to make sure all updates come in
+      await pause(5000).then(() => {
+        console.log(`Timer end`);
+
+        // stop when the known updates are done
+        subscription.unsubscribe();
+        model.dispose();
+
+        // only one sync expected
+        expect(updateCount).toEqual(1);
+
+        // eslint-disable-next-line promise/no-callback-in-promise
+        done();
+        return undefined;
+      });
     };
 
     // run test async
     void test();
-  });
-  it("can initialise from an existing character sheet", async (done) => {
+  }, 19999);
+
+  it("can initialise from an existing character sheet", (done) => {
     expect.hasAssertions();
+
+    const id = "existingCharacterSheetTraits";
+
+    const docPath = createPath(parentPath, id);
+
+    const test = async () => {
+      await firestore.doc(docPath).set(initialData(id));
+
+      await pause(500);
+    };
+
+    // run test async
+    void test();
   });
 });
