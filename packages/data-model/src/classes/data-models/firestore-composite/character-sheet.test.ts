@@ -10,16 +10,12 @@ import CharacterSheetFirestoreCompositeModel from './character-sheet';
 const parentPath = "fc-rx-characterSheetTraitDocsCollection";
 
 describe("Firestore Composite Character Sheet Model using RX", () => {
-  it("can create a new character sheet", async (done) => {
+  it("can create a new character sheet", (done) => {
     expect.hasAssertions();
 
     const id = "newCharacterSheetTraits";
 
     const docPath = createPath(parentPath, id);
-
-    await firestore.doc(docPath).delete();
-
-    await pause(500);
 
     const initialData: iCharacterSheetData = {
       id,
@@ -50,41 +46,49 @@ describe("Firestore Composite Character Sheet Model using RX", () => {
 
     const model = new CharacterSheetFirestoreCompositeModel({ id, parentPath });
 
-    const subscription = model.changes
-      .pipe(
-        // get the index of changes
-        scan(
-          (_, data, index) => ({ data, index }),
-          {} as {
-            index: number;
-            data: iCharacterSheetData | undefined;
-          }
+    const test = async () => {
+      await firestore.doc(docPath).delete();
+
+      await pause(500);
+
+      const subscription = model.changes
+        .pipe(
+          // get the index of changes
+          scan(
+            (_, data, index) => ({ data, index }),
+            {} as {
+              index: number;
+              data: iCharacterSheetData | undefined;
+            }
+          )
         )
-      )
-      .subscribe({
-        error: console.error,
-        next: (value) => {
-          console.warn(__filename, "newDataUpdateReceived", { value });
+        .subscribe({
+          error: console.error,
+          next: (value) => {
+            console.warn(__filename, "newDataUpdateReceived", { value });
 
-          const { data, index } = value;
+            const { data, index } = value;
 
-          switch (index) {
-            case 0:
-              expect(data).toEqual(initialData);
-            // eslint-disable-next-line no-fallthrough
-            default:
-              // stop when the known updates are done
-              subscription.unsubscribe();
-              model.dispose();
-              done();
-          }
-        },
-      });
+            switch (index) {
+              case 0:
+                expect(data).toEqual(initialData);
+              // eslint-disable-next-line no-fallthrough
+              default:
+                // stop when the known updates are done
+                subscription.unsubscribe();
+                model.dispose();
+                done();
+            }
+          },
+        });
 
-    // await pause(1000);
+      // await pause(1000);
 
-    // update 1
-    model.update(initialData);
+      // update 1
+      model.update(initialData);
+    };
+
+    void test();
 
     /*
     await new Promise<void>((resolve) =>
