@@ -46,7 +46,8 @@ export default class CharacterSheetFirestoreCompositeModel
         switchMap((newData: iCharacterSheetData) =>
           from(this.#firestoreDocumentRef.set(newData)).pipe(
             tap(() => {
-              console.warn("Data updated successfully", { newData });
+              // console.warn("Data updated successfully", { newData });
+              // apply local update immediately
               this.#outgoingUpdatesSubject.next(newData);
             })
           )
@@ -91,11 +92,14 @@ export default class CharacterSheetFirestoreCompositeModel
     this.#outgoingUpdatesSubject = outgoingUpdatesSubject;
     this.changes = outgoingUpdatesSubject.asObservable().pipe(
       scan(
-        (last, data) => ({ data, hasChanges: valuesAreEqual(last, data) }),
+        ({ data: lastData }, data) => ({
+          data,
+          hasChanges: !valuesAreEqual(lastData, data),
+        }),
         {} as { data: iCharacterSheetData | undefined; hasChanges: boolean }
       ),
       filter(({ hasChanges }) => {
-        if (!hasChanges) console.warn(`Ignoring change`);
+        // if (!hasChanges) console.warn(`Ignoring change`);
         return hasChanges;
       }),
       map(({ data }) => data)

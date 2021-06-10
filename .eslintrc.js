@@ -45,6 +45,7 @@ module.exports = {
     "consistent-return": 0,
     "eol-last": 1,
     "no-restricted-syntax": 0,
+    "no-fallthrough": 1,
     "func-names": 0,
     "function-paren-newline": 0,
     "global-require": 0,

@@ -49,5 +49,8 @@
   },
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "dependencies": {
+    "tslib": "^2.2.0"
+  }
 }

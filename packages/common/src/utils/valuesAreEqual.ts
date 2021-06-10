@@ -11,11 +11,15 @@ export default function valuesAreEqual(v1: unknown, v2: unknown): boolean {
     typeof v1 !== "object" ||
     typeof v2 !== "object"
   ) {
-    const error = `Could not check if objects are equal because one of the provided arguments is not an object`;
-    // console.error(error, { o1, o2 });
+    // const error = `Could not check if objects are equal because one of the provided arguments is not an object`;
+    // console.error(error, { v1, v2 });
     // throw Error(error);
     return false;
   }
 
-  return Object.keys(diff(v1 as any, v2 as any)).length === 0;
+  const objectDifferences = diff(v1 as any, v2 as any);
+
+  // console.warn({ v1, v2, objectDifferences });
+
+  return Object.keys(objectDifferences).length === 0;
 }
