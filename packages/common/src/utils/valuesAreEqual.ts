@@ -11,7 +11,7 @@ export default function valuesAreEqual(v1: unknown, v2: unknown): boolean {
     typeof v1 !== "object" ||
     typeof v2 !== "object"
   ) {
-    const error = `Could not check if objects are equal because one or more of the provided arguments is not an object`;
+    const error = `Could not check if objects are equal because one of the provided arguments is not an object`;
     // console.error(error, { o1, o2 });
     // throw Error(error);
     return false;

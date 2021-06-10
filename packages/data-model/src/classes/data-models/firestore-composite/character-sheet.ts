@@ -1,7 +1,11 @@
 import { from, Observable, of, Subject, timer } from 'rxjs';
-import { catchError, delayWhen, map, retryWhen, switchMap, tap } from 'rxjs/operators';
+import {
+  catchError, delayWhen, filter, map, retryWhen, scan, switchMap, tap,
+} from 'rxjs/operators';
 
-import { firestore, FirestoreDocumentReference, iHasParentPath } from '@quirk-a-bot/common';
+import {
+  firestore, FirestoreDocumentReference, iHasParentPath, valuesAreEqual,
+} from '@quirk-a-bot/common';
 
 import { iHasId } from '../../../declarations/interfaces';
 import { isCharacterSheetData } from '../../../utils/type-predicates';
@@ -85,7 +89,17 @@ export default class CharacterSheetFirestoreCompositeModel
     this.#firestoreDocumentRef = ref;
 
     this.#outgoingUpdatesSubject = outgoingUpdatesSubject;
-    this.changes = outgoingUpdatesSubject.asObservable();
+    this.changes = outgoingUpdatesSubject.asObservable().pipe(
+      scan(
+        (last, data) => ({ data, hasChanges: valuesAreEqual(last, data) }),
+        {} as { data: iCharacterSheetData | undefined; hasChanges: boolean }
+      ),
+      filter(({ hasChanges }) => {
+        if (!hasChanges) console.warn(`Ignoring change`);
+        return hasChanges;
+      }),
+      map(({ data }) => data)
+    );
   }
 
   /** Releases any resources */
@@ -157,6 +171,7 @@ export default class CharacterSheetFirestoreCompositeModel
         });
 
         this.#unsubscribers.push(firestoreDocumentUnsubscribe);
+        return undefined;
       });
 
     return { outgoingUpdatesSubject, ref };

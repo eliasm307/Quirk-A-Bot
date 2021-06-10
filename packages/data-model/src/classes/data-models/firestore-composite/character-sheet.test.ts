@@ -1,6 +1,9 @@
+import { scan } from 'rxjs/operators';
+
 import { firestore, pause } from '@quirk-a-bot/common';
 
 import { CharacterSheet } from '../../..';
+import { iCharacterSheetData } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import { createPath } from '../../data-storage/utils/createPath';
 import CharacterSheetFirestoreCompositeModel from './character-sheet';
 
@@ -21,12 +24,33 @@ describe("Firestore Composite Character Sheet Model using RX", () => {
 
     const model = new CharacterSheetFirestoreCompositeModel({ id, parentPath });
 
-    const subscription = model.changes.subscribe({
-      error: console.error,
-      next: (data: any) => console.warn({ data }),
-    });
+    const subscription = model.changes
+      .pipe(
+        scan(
+          (_, data, index) => ({ data, index }),
+          {} as {
+            index: number;
+            data: iCharacterSheetData | undefined;
+          }
+        )
+      )
+      .subscribe({
+        error: console.error,
+        next: (value) => {
+          console.warn({ value });
 
-    await pause(1000);
+          const { data, index } = value;
+
+          switch (index) {
+            case 0:
+              break;
+            default:
+            // do nothing
+          }
+        },
+      });
+
+    // await pause(1000);
 
     model.update(CharacterSheet.newDataObject({ id }));
 
@@ -38,6 +62,7 @@ describe("Firestore Composite Character Sheet Model using RX", () => {
       .then(() => {
         subscription.unsubscribe();
         model.dispose();
+        return undefined;
       })
       .catch(console.error)
       .finally(done);
