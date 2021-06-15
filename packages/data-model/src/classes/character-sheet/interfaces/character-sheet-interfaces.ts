@@ -76,13 +76,13 @@ export interface iCharacterSheetDataOLD extends iCharacterSheetShape {
 }
 
 /** The shape of character sheet as plain JSON data, with top level trait collections */
-export interface iCharacterSheetData extends iCharacterData {
-  attributes: Record<AttributeName, iAttributeData>;
+export interface iCharacterSheetData extends Omit<iCharacterData, "name"> {
+  attributes: Partial<Record<AttributeName, iAttributeData>>;
   coreNumberTraits: Record<CoreNumberTraitName, iCoreNumberTraitData>;
   coreStringTraits: Record<CoreStringTraitName, iCoreStringTraitData> & {
     Clan: iCoreStringTraitData<ClanName>;
   };
-  disciplines: Record<DisciplineName, iDisciplineData>;
+  disciplines: Partial<Record<DisciplineName, iDisciplineData>>;
   /*
   health: iCoreNumberTraitData;
   humanity: iCoreNumberTraitData;
@@ -92,8 +92,10 @@ export interface iCharacterSheetData extends iCharacterData {
   willpower: iCoreNumberTraitData;
   bloodPotency: iCoreNumberTraitData;
   */
-  skills: Record<SkillName, iSkillData>;
-  touchstonesAndConvictions: Record<string, iTouchStoneOrConvictionData>;
+  skills: Partial<Record<SkillName, iSkillData>>;
+  touchstonesAndConvictions: Partial<
+    Record<string, iTouchStoneOrConvictionData>
+  >;
 }
 
 /** The shape of a character sheet object instance */

@@ -21,7 +21,6 @@ export default function isCharacterSheetData(
     coreStringTraits,
     id,
     img,
-    name,
   } = data as iCharacterSheetData;
 
   // ts property check, will throw an error if the schema is changed but predicate not updated
@@ -34,7 +33,6 @@ export default function isCharacterSheetData(
     coreStringTraits,
     id,
     img,
-    name,
   }))();
 
   if (!id) {
