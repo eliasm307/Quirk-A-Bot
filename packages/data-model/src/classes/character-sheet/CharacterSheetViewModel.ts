@@ -23,17 +23,20 @@ export default class CharacterSheetViewModel
 
   #model: CharacterSheetModel;
   changes: Observable<iCharacterSheetData | undefined>;
+  id: string;
 
   private constructor(props: Props) {
-    const { model } = props;
-
+    const { model, id } = props;
+    this.id = id;
     this.#model = model;
     this.changes = model.changes;
   }
 
-  /** loads an existing instance if available */
+  /** Loads an existing instance if available */
   static load(props: Props): CharacterSheetViewModel {
     const { id } = props;
+
+    // todo should method to load an existing model and to initialise a new model be different? ie to initialise more information could be required
 
     // check if instance exists
     const existingInstance = CharacterSheetViewModel.instances.get(id);
@@ -46,10 +49,11 @@ export default class CharacterSheetViewModel
   }
 
   dispose(): void {
-    throw new Error("Method not implemented.");
+    this.#model.dispose();
+    CharacterSheetViewModel.instances.delete(this.id);
   }
 
-  setAttribute(props: iAttributeData): void {
+  setAttribute({ name, value }: iAttributeData): void {
     throw new Error("Method not implemented.");
   }
 
