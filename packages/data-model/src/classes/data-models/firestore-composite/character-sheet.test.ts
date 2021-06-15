@@ -4,7 +4,7 @@ import { firestore, pause } from '@quirk-a-bot/common';
 
 import { iCharacterSheetData } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import { createPath } from '../../data-storage/utils/createPath';
-import CharacterSheetFirestoreCompositeModel from './character-sheet';
+import CharacterSheetFirestoreCompositeModel from './character-sheet-model';
 
 // firestore composite - rx
 const parentPath = "fc-rx-characterSheetTraitDocsCollection";

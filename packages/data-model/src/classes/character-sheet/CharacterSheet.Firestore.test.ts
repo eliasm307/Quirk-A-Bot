@@ -8,7 +8,7 @@ import FirestoreDataStorageFactory from '../data-storage/Firestore/FirestoreData
 import readCharacterSheetDataFromFirestore from '../data-storage/Firestore/utils/readCharacterSheetDataFromFirestore';
 import writeCharacterSheetDataToFirestore from '../data-storage/Firestore/utils/writeCharacterSheetDataToFirestore';
 import { createPath } from '../data-storage/utils/createPath';
-import CharacterSheet from './CharacterSheet';
+import CharacterSheet from './CharacterSheet-OLD';
 import { iCharacterSheetData } from './interfaces/character-sheet-interfaces';
 
 const parentPath = "characterSheetTestCollection";

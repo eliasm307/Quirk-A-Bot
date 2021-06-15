@@ -1,4 +1,4 @@
-import CharacterSheet from '../../character-sheet/CharacterSheet';
+import CharacterSheet from '../../character-sheet/CharacterSheet-OLD';
 import { iCharacterSheetData } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import {
   iCharacterSheetDataStorage, iDataStorageFactory,
@@ -8,7 +8,8 @@ import {
 } from '../interfaces/props/character-sheet-data-storage';
 
 export default class InMemoryCharacterSheetDataStorage
-  implements iCharacterSheetDataStorage {
+  implements iCharacterSheetDataStorage
+{
   protected characterSheetData: iCharacterSheetData;
   protected dataStorageFactory: iDataStorageFactory;
   protected id: string;

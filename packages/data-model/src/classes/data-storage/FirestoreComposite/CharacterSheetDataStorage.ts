@@ -1,6 +1,6 @@
 import { Firestore } from '@quirk-a-bot/common';
 
-import CharacterSheet from '../../character-sheet/CharacterSheet';
+import CharacterSheet from '../../character-sheet/CharacterSheet-OLD';
 import { iCharacterSheetData } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import assertDocumentExistsOnFirestore from '../Firestore/utils/assertDocumentExistsOnFirestore';
 import writeCharacterSheetDataToFirestore from '../Firestore/utils/writeCharacterSheetDataToFirestore';
@@ -13,7 +13,8 @@ import {
 import readCharacterSheetDataFromFirestoreComposite from './utils/readCharacterSheetData';
 
 export default class FirestoreCompositeCharacterSheetDataStorage
-  implements iCharacterSheetDataStorage {
+  implements iCharacterSheetDataStorage
+{
   protected characterSheetData?: iCharacterSheetData;
   protected dataStorageFactory: iDataStorageFactory;
   protected firestore: Firestore;
@@ -34,15 +35,14 @@ export default class FirestoreCompositeCharacterSheetDataStorage
   }
 
   async assertDataExistsOnDataStorage(): Promise<void> {
-    this.characterSheetData = await assertDocumentExistsOnFirestore<iCharacterSheetData>(
-      {
+    this.characterSheetData =
+      await assertDocumentExistsOnFirestore<iCharacterSheetData>({
         firestore: this.firestore,
         path: this.path,
         newDefaultData: () => CharacterSheet.newDataObject({ id: this.id }),
         documentDataReader: readCharacterSheetDataFromFirestoreComposite,
         documentDataWriter: writeCharacterSheetDataToFirestore,
-      }
-    );
+      });
   }
 
   getData(): iCharacterSheetData {

@@ -2,7 +2,7 @@ import fs from 'fs-extra';
 import path from 'path';
 
 import isCharacterSheetData from '../../../utils/type-predicates/isCharacterSheetData';
-import CharacterSheet from '../../character-sheet/CharacterSheet';
+import CharacterSheet from '../../character-sheet/CharacterSheet-OLD';
 import { iCharacterSheetData } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import {
   iCharacterSheetDataStorage, iDataStorageFactory,
@@ -14,7 +14,8 @@ import importDataFromFile from './utils/importDataFromFile';
 import saveCharacterSheetToFile from './utils/saveCharacterSheetToFile';
 
 export default class LocalFileCharacterSheetDataStorage
-  implements iCharacterSheetDataStorage {
+  implements iCharacterSheetDataStorage
+{
   protected dataStorageFactory: iDataStorageFactory;
   protected id: string;
   protected resolvedBasePath: string;

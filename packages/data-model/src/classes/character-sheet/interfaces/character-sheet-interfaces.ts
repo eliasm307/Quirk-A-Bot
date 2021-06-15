@@ -1,6 +1,7 @@
 /* eslint-disable no-use-before-define */
 import { iHasCleanUp, iHasGetData, iHasId, iHasParentPath } from '../../../declarations/interfaces';
 import { ClanName } from '../../../declarations/types';
+import { BaseModelReader } from '../../data-models/interfaces/interfaces';
 import {
   iHasCharacterSheetDataStorage, iHasDataStorageFactory,
 } from '../../data-storage/interfaces/data-storage-interfaces';
@@ -92,4 +93,13 @@ export interface iCharacterSheet
   skills: iSkillTraitCollection;
   touchstonesAndConvictions: iTouchStoneOrConvictionCollection;
   willpower: iCoreNumberTrait;
+}
+
+export interface iCharacterSheetViewModel
+  extends BaseModelReader<iCharacterSheetData> {
+  setAttribute(props: iAttributeData): void;
+  setCoreNumberTrait(props: iCoreNumberTraitData): void;
+  setCoreStringTrait(props: iCoreStringTraitData): void;
+  setSkill(props: iSkillData): void;
+  setTouchstoneAndConvictions(props: iTouchStoneOrConvictionData): void;
 }

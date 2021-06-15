@@ -1,4 +1,4 @@
-import CharacterSheet from './classes/character-sheet/CharacterSheet';
+import CharacterSheet from './classes/character-sheet/CharacterSheet-OLD';
 
 // console.warn(__filename, 'init');
 

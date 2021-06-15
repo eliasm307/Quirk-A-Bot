@@ -3,7 +3,7 @@ import path from 'path';
 
 import LocalFileDataStorageFactory from '../data-storage/LocalFile/LocalFileDataStorageFactory';
 import { iAttribute, iSkill, iTouchStoneOrConviction } from '../traits/interfaces/trait-interfaces';
-import CharacterSheet from './CharacterSheet';
+import CharacterSheet from './CharacterSheet-OLD';
 
 // todo refactor this or do it as in memory tests
 
