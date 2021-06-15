@@ -11,6 +11,7 @@ import {
 import {
   iCharacterSheetData, iCharacterSheetViewModel,
 } from './interfaces/character-sheet-interfaces';
+import numberTraitIsValid from './utils/numberTraitIsValid';
 
 interface Props extends iHasId {
   model: CharacterSheetModel;
@@ -54,7 +55,11 @@ export default class CharacterSheetViewModel
   }
 
   setAttribute(data: iAttributeData): void {
-    const { name } = data;
+    const { name, value } = data;
+
+    if (!numberTraitIsValid({ data, max: 5, min: 1 }))
+      throw Error(`Could not set attribute ${name} to ${value}`);
+
     this.#model.update({ attributes: { [name]: data } });
   }
 
