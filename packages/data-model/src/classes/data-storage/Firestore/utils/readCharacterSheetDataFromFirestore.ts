@@ -5,7 +5,7 @@ import {
 
 import { isCharacterSheetData } from '../../../../utils/type-predicates';
 import {
-  iCharacterSheetData,
+  iCharacterSheetDataOLD,
 } from '../../../character-sheet/interfaces/character-sheet-interfaces';
 import { createPath } from '../../utils/createPath';
 import { DocumentDataReaderProps } from './assertDocumentExistsOnFirestore';
@@ -34,7 +34,7 @@ async function readTraitCollectionPromise(
 export default async function readCharacterSheetDataFromFirestore({
   firestore,
   path,
-}: DocumentDataReaderProps): Promise<iCharacterSheetData> {
+}: DocumentDataReaderProps): Promise<iCharacterSheetDataOLD> {
   const timerName = `Time to read character sheet data at path ${path}`;
   console.time(timerName);
 

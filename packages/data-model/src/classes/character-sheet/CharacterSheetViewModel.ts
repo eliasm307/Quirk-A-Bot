@@ -9,7 +9,7 @@ import {
   iTouchStoneOrConvictionData,
 } from '../traits/interfaces/trait-interfaces';
 import {
-  iCharacterSheetData, iCharacterSheetViewModel,
+  iCharacterSheetDataOLD, iCharacterSheetViewModel,
 } from './interfaces/character-sheet-interfaces';
 
 interface Props extends iHasId {
@@ -22,7 +22,7 @@ export default class CharacterSheetViewModel
   protected static instances: Map<UID, CharacterSheetViewModel> = new Map();
 
   #model: CharacterSheetModel;
-  changes: Observable<iCharacterSheetData | undefined>;
+  changes: Observable<iCharacterSheetDataOLD | undefined>;
   id: string;
 
   private constructor(props: Props) {

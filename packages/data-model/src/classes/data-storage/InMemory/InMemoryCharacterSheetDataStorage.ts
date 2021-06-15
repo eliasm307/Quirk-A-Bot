@@ -1,5 +1,7 @@
 import CharacterSheet from '../../character-sheet/CharacterSheet-OLD';
-import { iCharacterSheetData } from '../../character-sheet/interfaces/character-sheet-interfaces';
+import {
+  iCharacterSheetDataOLD,
+} from '../../character-sheet/interfaces/character-sheet-interfaces';
 import {
   iCharacterSheetDataStorage, iDataStorageFactory,
 } from '../interfaces/data-storage-interfaces';
@@ -10,7 +12,7 @@ import {
 export default class InMemoryCharacterSheetDataStorage
   implements iCharacterSheetDataStorage
 {
-  protected characterSheetData: iCharacterSheetData;
+  protected characterSheetData: iCharacterSheetDataOLD;
   protected dataStorageFactory: iDataStorageFactory;
   protected id: string;
 
@@ -31,7 +33,7 @@ export default class InMemoryCharacterSheetDataStorage
     // always uses new data so nothing to assert
   }
 
-  getData(): iCharacterSheetData {
+  getData(): iCharacterSheetDataOLD {
     return this.characterSheetData;
   }
 }

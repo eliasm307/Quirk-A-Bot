@@ -3,7 +3,9 @@ import path from 'path';
 
 import isCharacterSheetData from '../../../utils/type-predicates/isCharacterSheetData';
 import CharacterSheet from '../../character-sheet/CharacterSheet-OLD';
-import { iCharacterSheetData } from '../../character-sheet/interfaces/character-sheet-interfaces';
+import {
+  iCharacterSheetDataOLD,
+} from '../../character-sheet/interfaces/character-sheet-interfaces';
 import {
   iCharacterSheetDataStorage, iDataStorageFactory,
 } from '../interfaces/data-storage-interfaces';
@@ -52,7 +54,7 @@ export default class LocalFileCharacterSheetDataStorage
       );
   }
 
-  getData(): iCharacterSheetData {
+  getData(): iCharacterSheetDataOLD {
     const data = importDataFromFile(this.resolvedFilePath);
 
     if (!data)

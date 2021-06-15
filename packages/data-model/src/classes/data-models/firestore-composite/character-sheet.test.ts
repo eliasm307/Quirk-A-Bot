@@ -2,14 +2,16 @@ import { scan } from 'rxjs/operators';
 
 import { firestore, pause } from '@quirk-a-bot/common';
 
-import { iCharacterSheetData } from '../../character-sheet/interfaces/character-sheet-interfaces';
+import {
+  iCharacterSheetDataOLD,
+} from '../../character-sheet/interfaces/character-sheet-interfaces';
 import { createPath } from '../../data-storage/utils/createPath';
 import CharacterSheetFirestoreCompositeModel from './character-sheet-model';
 
 // firestore composite - rx
 const parentPath = "fc-rx-characterSheetTraitDocsCollection";
 
-const newInitialData = (id: string): iCharacterSheetData => ({
+const newInitialData = (id: string): iCharacterSheetDataOLD => ({
   id,
   bloodPotency: { name: "Blood Potency", value: 5 },
   health: { name: "Health", value: 9 },
@@ -69,7 +71,7 @@ describe("Firestore Composite Character Sheet Model using RX", () => {
             (_, data, index) => ({ data, index }),
             {} as {
               index: number;
-              data: iCharacterSheetData | undefined;
+              data: iCharacterSheetDataOLD | undefined;
             }
           )
         )
@@ -143,7 +145,7 @@ describe("Firestore Composite Character Sheet Model using RX", () => {
             (_, data, index) => ({ data, index }),
             {} as {
               index: number;
-              data: iCharacterSheetData | undefined;
+              data: iCharacterSheetDataOLD | undefined;
             }
           )
         )

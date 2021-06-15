@@ -1,6 +1,10 @@
 /* eslint-disable no-use-before-define */
+import {
+  AttributeName, CoreStringTraitName, DisciplineName, SkillName,
+} from 'packages/common/src/declarations';
+
 import { iHasCleanUp, iHasGetData, iHasId, iHasParentPath } from '../../../declarations/interfaces';
-import { ClanName } from '../../../declarations/types';
+import { ClanName, CoreNumberTraitName } from '../../../declarations/types';
 import { BaseModelReader } from '../../data-models/interfaces/interfaces';
 import {
   iHasCharacterSheetDataStorage, iHasDataStorageFactory,
@@ -19,7 +23,7 @@ export interface iHasCharacterSheet {
   characterSheet: iCharacterSheet;
 }
 export interface iHasCharacterSheetData {
-  characterSheetData: iCharacterSheetData;
+  characterSheetData: iCharacterSheetDataOLD;
 }
 
 export interface iCharacterSheetLoaderProps
@@ -53,7 +57,7 @@ export interface iCharacterSheetShape {
 }
 
 /** The shape of character sheet as plain JSON data */
-export interface iCharacterSheetData extends iCharacterSheetShape {
+export interface iCharacterSheetDataOLD extends iCharacterSheetShape {
   attributes: iAttributeData[];
   bloodPotency: iCoreNumberTraitData;
   // ? should this be just a string?
@@ -70,13 +74,35 @@ export interface iCharacterSheetData extends iCharacterSheetShape {
   willpower: iCoreNumberTraitData;
 }
 
+/** The shape of character sheet as plain JSON data, with top level trait collections */
+export interface iCharacterSheetData {
+  attributes: Record<AttributeName, iAttributeData>;
+  coreNumberTraits: Record<CoreNumberTraitName, iCoreNumberTraitData>;
+  coreStringTraits: Record<CoreStringTraitName, iCoreStringTraitData> & {
+    Clan: iCoreStringTraitData<ClanName>;
+  };
+  disciplines: Record<DisciplineName, iDisciplineData>;
+  /*
+  health: iCoreNumberTraitData;
+  humanity: iCoreNumberTraitData;
+  hunger: iCoreNumberTraitData;
+  name: iCoreStringTraitData<string>;
+  sire: iCoreStringTraitData<string>;
+  willpower: iCoreNumberTraitData;
+  bloodPotency: iCoreNumberTraitData;
+  */
+  skills: Record<SkillName, iSkillData>;
+  touchstonesAndConvictions: Record<string, iTouchStoneOrConvictionData>;
+}
+
 /** The shape of a character sheet object instance */
 export interface iCharacterSheet
   extends iCharacterSheetShape,
-    iHasGetData<iCharacterSheetData>,
+    iHasGetData<iCharacterSheetDataOLD>,
     iHasCharacterSheetLogReporter,
     iHasCleanUp,
     iHasParentPath {
+  // todo delete, not required anymore
   attributes: iAttributeTraitCollection;
   bloodPotency: iCoreNumberTrait;
   // ? should this be just a string?
@@ -96,7 +122,7 @@ export interface iCharacterSheet
 }
 
 export interface iCharacterSheetViewModel
-  extends BaseModelReader<iCharacterSheetData> {
+  extends BaseModelReader<iCharacterSheetDataOLD> {
   setAttribute(props: iAttributeData): void;
   setCoreNumberTrait(props: iCoreNumberTraitData): void;
   setCoreStringTrait(props: iCoreStringTraitData): void;

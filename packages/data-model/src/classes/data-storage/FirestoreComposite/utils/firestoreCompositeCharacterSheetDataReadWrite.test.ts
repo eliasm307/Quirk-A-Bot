@@ -1,7 +1,7 @@
 import { createObjectAlphabeticalSorter, firestoreEmulator, pause } from '@quirk-a-bot/common';
 
 import {
-  iCharacterSheetData,
+  iCharacterSheetDataOLD,
 } from '../../../character-sheet/interfaces/character-sheet-interfaces';
 import {
   iAttributeData, iBaseTraitData, iGeneralTraitData,
@@ -18,7 +18,7 @@ describe("firestoreCompositeCharacterSheetDataReadWrite.test", () => {
 
     const path = createPath(`writeCharacterSheetDataToFirestoreComposite`, id);
 
-    const characterSheetData: iCharacterSheetData = {
+    const characterSheetData: iCharacterSheetDataOLD = {
       id,
       bloodPotency: { name: "Blood Potency", value: 5 },
       health: { name: "Health", value: 9 },

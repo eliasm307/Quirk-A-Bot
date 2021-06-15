@@ -6,7 +6,7 @@ import {
 } from '@quirk-a-bot/common';
 
 import {
-  iCharacterSheetData,
+  iCharacterSheetDataOLD,
 } from '../../../character-sheet/interfaces/character-sheet-interfaces';
 import { iGeneralTraitData } from '../../../traits/interfaces/trait-interfaces';
 import { DocumentDataWriterProps } from './assertDocumentExistsOnFirestore';
@@ -30,7 +30,7 @@ export default async function writeCharacterSheetDataToFirestore({
   firestore,
   path,
   data,
-}: DocumentDataWriterProps<iCharacterSheetData>) {
+}: DocumentDataWriterProps<iCharacterSheetDataOLD>) {
   const {
     // core data
     id,

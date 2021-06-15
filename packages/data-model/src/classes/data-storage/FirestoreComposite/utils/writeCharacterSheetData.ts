@@ -8,7 +8,7 @@ import {
 } from '@quirk-a-bot/common';
 
 import {
-  iCharacterSheetData,
+  iCharacterSheetDataOLD,
 } from '../../../character-sheet/interfaces/character-sheet-interfaces';
 import { iGeneralTraitData } from '../../../traits/interfaces/trait-interfaces';
 import { DocumentDataWriterProps } from '../../Firestore/utils/assertDocumentExistsOnFirestore';
@@ -37,7 +37,7 @@ export default async function writeCharacterSheetDataToFirestoreComposite({
   firestore,
   path,
   data,
-}: DocumentDataWriterProps<iCharacterSheetData>) {
+}: DocumentDataWriterProps<iCharacterSheetDataOLD>) {
   const {
     // core data
     id,
@@ -86,7 +86,7 @@ export default async function writeCharacterSheetDataToFirestoreComposite({
     // create the path to the subcollection of the character sheet where the composite documents with traits are contained
     const characterSheetTraitCompositesPath = createPath(
       path,
-    CHARACTER_SHEET_TRAIT_COMPOSITE_DOCUMENT_COLLECTION_NAME
+      CHARACTER_SHEET_TRAIT_COMPOSITE_DOCUMENT_COLLECTION_NAME
     );
 
     // write trait collection data as firestore collections

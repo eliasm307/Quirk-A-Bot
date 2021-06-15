@@ -1,12 +1,12 @@
 import CharacterSheet from '../../classes/character-sheet/CharacterSheet-OLD';
 import {
-  iCharacterSheetData,
+  iCharacterSheetDataOLD,
 } from '../../classes/character-sheet/interfaces/character-sheet-interfaces';
 import isTraitData from './isTraitData';
 
 export default function isCharacterSheetData(
   data: unknown
-): data is iCharacterSheetData {
+): data is iCharacterSheetDataOLD {
   // todo test
   if (typeof data !== "object") {
     /*
@@ -34,10 +34,10 @@ export default function isCharacterSheetData(
     skills,
     touchstonesAndConvictions,
     willpower,
-  } = data as iCharacterSheetData;
+  } = data as iCharacterSheetDataOLD;
 
   // ts property check, will throw an error if the schema is changed but predicate not updated
-  ((): iCharacterSheetData => ({
+  ((): iCharacterSheetDataOLD => ({
     attributes,
     bloodPotency,
     clan,

@@ -9,7 +9,7 @@ import readCharacterSheetDataFromFirestore from '../data-storage/Firestore/utils
 import writeCharacterSheetDataToFirestore from '../data-storage/Firestore/utils/writeCharacterSheetDataToFirestore';
 import { createPath } from '../data-storage/utils/createPath';
 import CharacterSheet from './CharacterSheet-OLD';
-import { iCharacterSheetData } from './interfaces/character-sheet-interfaces';
+import { iCharacterSheetDataOLD } from './interfaces/character-sheet-interfaces';
 
 const parentPath = "characterSheetTestCollection";
 const firestore = firestoreEmulator;
@@ -69,7 +69,7 @@ describe("Character sheet using Firestore", () => {
     // todo this doesn't delete sub collections etc
     await deleteDoc(docPath);
 
-    const initialData: iCharacterSheetData = {
+    const initialData: iCharacterSheetDataOLD = {
       id: csId,
       bloodPotency: { name: "Blood Potency", value: 5 },
       health: { name: "Health", value: 9 },

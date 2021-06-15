@@ -15,7 +15,7 @@ import {
 } from '../traits/interfaces/trait-interfaces';
 import TraitFactory from '../traits/TraitFactory';
 import {
-  iCharacterSheet, iCharacterSheetData, iCharacterSheetLoaderProps, iCharacterSheetProps,
+  iCharacterSheet, iCharacterSheetDataOLD, iCharacterSheetLoaderProps, iCharacterSheetProps,
 } from './interfaces/character-sheet-interfaces';
 import characterSheetToData from './utils/characterSheetToData';
 import newCharacterSheetData from './utils/newCharacterSheetData';
@@ -229,7 +229,7 @@ export default class CharacterSheet implements iCharacterSheet {
   }
 
   /** Returns a new iCharacterSheetData object with default values */
-  static newDataObject(props: iHasId): iCharacterSheetData {
+  static newDataObject(props: iHasId): iCharacterSheetDataOLD {
     return newCharacterSheetData(props);
   }
 
@@ -283,14 +283,14 @@ export default class CharacterSheet implements iCharacterSheet {
     return !failCount;
   }
 
-  public data(): iCharacterSheetData {
+  public data(): iCharacterSheetDataOLD {
     // ? is this a good way to do it? The issue is trait collections need to populate initially, and some data storages e.g. local files auto save and call this method before the method is ready
     return this.#isFullyInitialised
       ? characterSheetToData(this)
       : CharacterSheet.newDataObject({ id: this.id });
   }
 
-// ? is this required
+  // ? is this required
   /*
   private getAllTraits(): iGeneralTrait[] {
     // todo make this automatic and dynamic

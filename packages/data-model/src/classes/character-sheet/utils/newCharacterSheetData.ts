@@ -1,10 +1,10 @@
 import { STRING_TRAIT_DEFAULT_VALUE } from '../../../../../common/src/constants';
 import { iHasId } from '../../../declarations/interfaces';
-import { iCharacterSheetData } from '../interfaces/character-sheet-interfaces';
+import { iCharacterSheetDataOLD } from '../interfaces/character-sheet-interfaces';
 
 export default function newCharacterSheetData({
   id,
-}: iHasId): iCharacterSheetData {
+}: iHasId): iCharacterSheetDataOLD {
   return {
     id,
     bloodPotency: { name: "Blood Potency", value: 0 },

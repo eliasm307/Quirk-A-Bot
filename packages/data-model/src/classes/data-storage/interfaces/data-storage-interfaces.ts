@@ -5,7 +5,7 @@ import {
 } from '../../../declarations/interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
 import {
-  iCharacterSheet, iCharacterSheetData,
+  iCharacterSheet, iCharacterSheetDataOLD,
 } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import { iGameData } from '../../game/interfaces/game-interfaces';
 import { iCharacterData } from '../../game/interfaces/game-player-interfaces';
@@ -66,7 +66,7 @@ export interface iCharacterSheetDataStorage extends iHasPath {
   /** Makes sure that a character sheet with the given id actually exists in the given data storage, otherwise it creates it with default values */
   assertDataExistsOnDataStorage(): Promise<void>;
   /** Returns the character sheet data from the data storage */
-  getData(): iCharacterSheetData;
+  getData(): iCharacterSheetDataOLD;
 }
 
 /** Represents all game data in a data store, access control to be handled by proxies */
@@ -114,7 +114,7 @@ export interface iDataStorageFactory {
     props: iUserDataStorageFactoryProps
   ): Promise<iUserDataStorage>;
 
-// NOTE the factory props just define what will be available, the specific factories don't need to require any of the given props
+  // NOTE the factory props just define what will be available, the specific factories don't need to require any of the given props
   // ! traits will always be part of trait collections, so factory shouldn't have this method. Trait collections should instead
   /*
   newTraitDataStorageInitialiser(

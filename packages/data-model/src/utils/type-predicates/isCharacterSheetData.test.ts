@@ -1,10 +1,10 @@
 import {
-  iCharacterSheetData,
+  iCharacterSheetDataOLD,
 } from '../../classes/character-sheet/interfaces/character-sheet-interfaces';
 import isCharacterSheetData from './isCharacterSheetData';
 
 test("Character sheet data predicate", () => {
-  const correctData: iCharacterSheetData = {
+  const correctData: iCharacterSheetDataOLD = {
     attributes: [],
     disciplines: [],
     skills: [],
