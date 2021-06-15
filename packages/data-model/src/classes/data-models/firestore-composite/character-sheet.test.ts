@@ -9,7 +9,7 @@ import CharacterSheetFirestoreCompositeModel from './character-sheet';
 // firestore composite - rx
 const parentPath = "fc-rx-characterSheetTraitDocsCollection";
 
-const initialData = (id: string): iCharacterSheetData => ({
+const newInitialData = (id: string): iCharacterSheetData => ({
   id,
   bloodPotency: { name: "Blood Potency", value: 5 },
   health: { name: "Health", value: 9 },
@@ -37,11 +37,14 @@ const initialData = (id: string): iCharacterSheetData => ({
 });
 
 describe("Firestore Composite Character Sheet Model using RX", () => {
+  afterAll(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 500)); // avoid jest open handle error
+  });
+
   it("can create a new character sheet", (done) => {
     expect.hasAssertions();
 
     const id = "newCharacterSheetTraits";
-
     const docPath = createPath(parentPath, id);
 
     const test = async () => {
@@ -77,7 +80,7 @@ describe("Firestore Composite Character Sheet Model using RX", () => {
 
             switch (index) {
               case 0:
-                expect(data).toEqual(initialData(id));
+                expect(data).toEqual(newInitialData(id));
                 break;
               default:
                 console.error(`unexpected update`, value);
@@ -86,7 +89,7 @@ describe("Firestore Composite Character Sheet Model using RX", () => {
         });
 
       // update 0
-      model.update(initialData(id));
+      model.update(newInitialData(id));
 
       // delay then stop test, to make sure all updates come in
       await pause(5000).then(() => {
@@ -113,16 +116,70 @@ describe("Firestore Composite Character Sheet Model using RX", () => {
     expect.hasAssertions();
 
     const id = "existingCharacterSheetTraits";
-
     const docPath = createPath(parentPath, id);
 
-    const test = async () => {
-      await firestore.doc(docPath).set(initialData(id));
+    const initialData = newInitialData(id);
 
+    const test = async () => {
+      await firestore.doc(docPath).set(initialData);
+
+      // make sure changes are synchronised
       await pause(500);
+
+      const model = new CharacterSheetFirestoreCompositeModel({
+        id,
+        parentPath,
+      });
+
+      let updateCount = 0;
+
+      const subscription = model.changes
+        .pipe(
+          // get the index of changes
+          scan(
+            (_, data, index) => ({ data, index }),
+            {} as {
+              index: number;
+              data: iCharacterSheetData | undefined;
+            }
+          )
+        )
+        .subscribe({
+          error: console.error,
+          next: (value) => {
+            updateCount++;
+            console.warn(__filename, "newDataUpdateReceived", value);
+
+            const { data, index } = value;
+
+            switch (index) {
+              case 0:
+                expect(data).toEqual(initialData);
+                break;
+              default:
+                console.error(`unexpected update`, value);
+            }
+          },
+        });
+
+      // delay then stop test, to make sure all updates come in
+      await pause(5000).then(() => {
+        console.log(`Timer end`);
+
+        // stop when the known updates are done
+        subscription.unsubscribe();
+        model.dispose();
+
+        // only one sync expected
+        expect(updateCount).toEqual(1);
+
+        // eslint-disable-next-line promise/no-callback-in-promise
+        done();
+        return undefined;
+      });
     };
 
     // run test async
     void test();
-  });
+  }, 19999);
 });
