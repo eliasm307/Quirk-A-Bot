@@ -3,7 +3,7 @@ import {
   SKILL_COLLECTION_NAME, TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME,
 } from '@quirk-a-bot/common';
 
-import isCharacterSheetData from '../../utils/type-predicates/isCharacterSheetData';
+import isCharacterSheetDataOLD from '../../utils/type-predicates/isCharacterSheetDataOLD';
 import FirestoreDataStorageFactory from '../data-storage/Firestore/FirestoreDataStorageFactory';
 import readCharacterSheetDataFromFirestore from '../data-storage/Firestore/utils/readCharacterSheetDataFromFirestore';
 import writeCharacterSheetDataToFirestore from '../data-storage/Firestore/utils/writeCharacterSheetDataToFirestore';
@@ -52,7 +52,7 @@ describe("Character sheet using Firestore", () => {
     });
 
     expect(doc.exists).toEqual(true);
-    expect(isCharacterSheetData(docData)).toEqual(true);
+    expect(isCharacterSheetDataOLD(docData)).toEqual(true);
     expect(docData).toEqual(CharacterSheet.newDataObject({ id: csId }));
 
     // can clean up

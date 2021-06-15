@@ -1,7 +1,7 @@
 import {
   iCharacterSheetDataOLD,
 } from '../../classes/character-sheet/interfaces/character-sheet-interfaces';
-import isCharacterSheetData from './isCharacterSheetData';
+import isCharacterSheetDataOLD from './isCharacterSheetDataOLD';
 
 test("Character sheet data predicate", () => {
   const correctData: iCharacterSheetDataOLD = {
@@ -36,14 +36,14 @@ test("Character sheet data predicate", () => {
   const badData7 = { ...correctData, clan: { name: "" } };
   const badData8 = { ...correctData, id: false };
 
-  expect(isCharacterSheetData(correctData)).toBeTruthy();
-  expect(isCharacterSheetData(1)).toBeFalsy();
-  expect(isCharacterSheetData(badData1)).toBeFalsy();
-  expect(isCharacterSheetData(badData2)).toBeFalsy();
-  expect(isCharacterSheetData(badData3)).toBeFalsy();
-  expect(isCharacterSheetData(badData4)).toBeFalsy();
-  expect(isCharacterSheetData(badData5)).toBeFalsy();
-  expect(isCharacterSheetData(badData6)).toBeFalsy();
-  expect(isCharacterSheetData(badData7)).toBeFalsy();
-  expect(isCharacterSheetData(badData8)).toBeFalsy();
+  expect(isCharacterSheetDataOLD(correctData)).toBeTruthy();
+  expect(isCharacterSheetDataOLD(1)).toBeFalsy();
+  expect(isCharacterSheetDataOLD(badData1)).toBeFalsy();
+  expect(isCharacterSheetDataOLD(badData2)).toBeFalsy();
+  expect(isCharacterSheetDataOLD(badData3)).toBeFalsy();
+  expect(isCharacterSheetDataOLD(badData4)).toBeFalsy();
+  expect(isCharacterSheetDataOLD(badData5)).toBeFalsy();
+  expect(isCharacterSheetDataOLD(badData6)).toBeFalsy();
+  expect(isCharacterSheetDataOLD(badData7)).toBeFalsy();
+  expect(isCharacterSheetDataOLD(badData8)).toBeFalsy();
 });

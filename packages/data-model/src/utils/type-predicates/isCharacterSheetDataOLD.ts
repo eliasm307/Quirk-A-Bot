@@ -1,12 +1,12 @@
 import CharacterSheet from '../../classes/character-sheet/CharacterSheet-OLD';
 import {
-  iCharacterSheetData, iCharacterSheetDataOLD,
+  iCharacterSheetDataOLD,
 } from '../../classes/character-sheet/interfaces/character-sheet-interfaces';
 import isTraitData from './isTraitData';
 
-export default function isCharacterSheetData(
+export default function isCharacterSheetDataOLD(
   data: unknown
-): data is iCharacterSheetData {
+): data is iCharacterSheetDataOLD {
   // todo test
   if (typeof data !== "object") return false;
 
@@ -14,28 +14,57 @@ export default function isCharacterSheetData(
 
   const {
     attributes,
+    bloodPotency,
+    clan,
     disciplines,
+    id,
+    health,
+    humanity,
+    hunger,
+    name,
+    sire,
     skills,
     touchstonesAndConvictions,
-    coreNumberTraits,
-    coreStringTraits,
-    id,
-    img,
-    name,
-  } = data as iCharacterSheetData;
+    willpower,
+  } = data as iCharacterSheetDataOLD;
 
   // ts property check, will throw an error if the schema is changed but predicate not updated
-  ((): iCharacterSheetData => ({
+  ((): iCharacterSheetDataOLD => ({
     attributes,
+    bloodPotency,
+    clan,
     disciplines,
+    health,
+    humanity,
+    hunger,
+    id,
+    name,
+    sire,
     skills,
     touchstonesAndConvictions,
-    coreNumberTraits,
-    coreStringTraits,
-    id,
-    img,
-    name,
+    willpower,
   }))();
+
+  /*
+
+  const receivedNumberOfProperties = Object.keys(data).length;
+  const correctNumberOfProperties = Object.keys(exampleCorrectData).length;
+
+  // check number of properties
+  if (receivedNumberOfProperties !== correctNumberOfProperties) {
+		console.warn(
+			`isCharacterSheetData, data does not have the right number of properties, expected ${correctNumberOfProperties} but received ${receivedNumberOfProperties}`,
+			{
+				correctNumberOfProperties,
+				receivedNumberOfProperties,
+				data,
+				correctData: exampleCorrectData,
+			}
+		);
+
+    return false;
+  }
+  */
 
   if (!id) {
     console.warn(`isCharacterSheetData, id is falsy`, {
@@ -58,7 +87,6 @@ export default function isCharacterSheetData(
   }
 
   // check core number traits
-  /*
   const coreNumberTraitData: unknown[] = [
     health,
     humanity,
@@ -66,9 +94,8 @@ export default function isCharacterSheetData(
     willpower,
     bloodPotency,
   ];
-  */
 
-  for (const traitData of Object.values(coreNumberTraits)) {
+  for (const traitData of coreNumberTraitData) {
     if (!isTraitData(traitData) || typeof traitData.value !== "number") {
       /*
       console.warn(
@@ -80,8 +107,8 @@ export default function isCharacterSheetData(
   }
 
   // check core string traits
-  // const coreStringTraitData: unknown[] = [clan, name, sire];
-  for (const traitData of Object.values(coreStringTraits)) {
+  const coreStringTraitData: unknown[] = [clan, name, sire];
+  for (const traitData of coreStringTraitData) {
     if (!isTraitData(traitData) || typeof traitData.value !== "string") {
       console.warn(
         `isCharacterSheetData, core string trait  is not a valid trait data or does not have a string value`,
@@ -102,10 +129,10 @@ export default function isCharacterSheetData(
     skills,
     touchstonesAndConvictions,
   };
-  for (const [traitCollectionName, traitDataObjectMap] of Object.entries(
+  for (const [traitCollectionName, traitDataArray] of Object.entries(
     traitDataCollections
   )) {
-    if (typeof traitDataObjectMap !== "object" || !traitDataObjectMap) {
+    if (!Array.isArray(traitDataArray)) {
       /*
       console.warn(
         `isCharacterSheetData, trait collection is not an array, it is "${typeof traitDataArray}"`,
@@ -116,7 +143,7 @@ export default function isCharacterSheetData(
       */
       return false;
     }
-    for (const traitData of Object.values(traitDataObjectMap)) {
+    for (const traitData of traitDataArray) {
       if (!isTraitData(traitData)) {
         /*
         console.warn(

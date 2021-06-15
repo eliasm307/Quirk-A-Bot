@@ -9,6 +9,7 @@ import { BaseModelReader } from '../../data-models/interfaces/interfaces';
 import {
   iHasCharacterSheetDataStorage, iHasDataStorageFactory,
 } from '../../data-storage/interfaces/data-storage-interfaces';
+import { iCharacterData } from '../../game/interfaces/game-player-interfaces';
 import { iHasCharacterSheetLogReporter } from '../../log/interfaces/log-interfaces';
 import {
   iAttributeTraitCollection, iDisciplineTraitCollection, iSkillTraitCollection,
@@ -75,7 +76,7 @@ export interface iCharacterSheetDataOLD extends iCharacterSheetShape {
 }
 
 /** The shape of character sheet as plain JSON data, with top level trait collections */
-export interface iCharacterSheetData {
+export interface iCharacterSheetData extends iCharacterData {
   attributes: Record<AttributeName, iAttributeData>;
   coreNumberTraits: Record<CoreNumberTraitName, iCoreNumberTraitData>;
   coreStringTraits: Record<CoreStringTraitName, iCoreStringTraitData> & {

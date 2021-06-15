@@ -1,7 +1,7 @@
 import fs from 'fs-extra';
 import path from 'path';
 
-import isCharacterSheetData from '../../../utils/type-predicates/isCharacterSheetData';
+import isCharacterSheetDataOLD from '../../../utils/type-predicates/isCharacterSheetDataOLD';
 import CharacterSheet from '../../character-sheet/CharacterSheet-OLD';
 import {
   iCharacterSheetDataOLD,
@@ -62,7 +62,7 @@ export default class LocalFileCharacterSheetDataStorage
 
     // console.log(`Data imported from ${this.resolvedFilePath}`, { data });
 
-    if (!isCharacterSheetData(data))
+    if (!isCharacterSheetDataOLD(data))
       throw Error(
         `Data loaded from path "${this.resolvedFilePath}" is not valid character sheet data`
       );
