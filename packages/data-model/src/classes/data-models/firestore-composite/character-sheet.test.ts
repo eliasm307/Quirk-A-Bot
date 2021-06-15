@@ -38,7 +38,8 @@ const newInitialData = (id: string): iCharacterSheetData => ({
 
 describe("Firestore Composite Character Sheet Model using RX", () => {
   afterAll(async () => {
-    await new Promise((resolve) => setTimeout(resolve, 500)); // avoid jest open handle error
+    await firestore.app.delete();
+    await pause(500); // avoid jest open handle error
   });
 
   it("can create a new character sheet", (done) => {
