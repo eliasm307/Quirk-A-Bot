@@ -5,7 +5,7 @@ import {
 } from '../../../declarations/interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
 import {
-  iCharacterSheet, iCharacterSheetDataOLD,
+  iCharacterSheetDataOLD, iCharacterSheetOLD,
 } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import { iGameData } from '../../game/interfaces/game-interfaces';
 import { iCharacterData } from '../../game/interfaces/game-player-interfaces';

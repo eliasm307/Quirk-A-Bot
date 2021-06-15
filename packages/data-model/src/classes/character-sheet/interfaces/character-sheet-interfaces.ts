@@ -21,7 +21,7 @@ import {
 } from '../../traits/interfaces/trait-interfaces';
 
 export interface iHasCharacterSheet {
-  characterSheet: iCharacterSheet;
+  characterSheet: iCharacterSheetOLD;
 }
 export interface iHasCharacterSheetData {
   characterSheetData: iCharacterSheetDataOLD;
@@ -99,7 +99,7 @@ export interface iCharacterSheetData extends Omit<iCharacterData, "name"> {
 }
 
 /** The shape of a character sheet object instance */
-export interface iCharacterSheet
+export interface iCharacterSheetOLD
   extends iCharacterSheetShape,
     iHasGetData<iCharacterSheetDataOLD>,
     iHasCharacterSheetLogReporter,
@@ -125,7 +125,7 @@ export interface iCharacterSheet
 }
 
 export interface iCharacterSheetViewModel
-  extends BaseModelReader<iCharacterSheetDataOLD> {
+  extends BaseModelReader<iCharacterSheetData> {
   setAttribute(props: iAttributeData): void;
   setCoreNumberTrait(props: iCoreNumberTraitData): void;
   setCoreStringTrait(props: iCoreStringTraitData): void;

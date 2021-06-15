@@ -42,7 +42,7 @@ export interface iHasTraitInstanceCreator<
 > {
   instanceCreator: (props: iBaseTraitProps<N, V, D>) => T;
 
-  // todo this should only require name and value, everything else should be pre configured
+// todo this should only require name and value, everything else should be pre configured
 }
 // -------------------------------------------------------
 // TRAIT PROPS
@@ -104,7 +104,7 @@ export interface iNumberTraitWithCategoryProps<
 export interface iCanHaveLoggerCreator<L extends iBaseLogger<iBaseLogReport>> {
   loggerCreator: ((props: iChildLoggerCreatorProps) => L) | null;
 
-  // todo rename to loggerCreator
+// todo rename to loggerCreator
 }
 
 /*
@@ -154,8 +154,9 @@ export interface iBaseTraitData<
 export interface iGeneralTraitData
   extends iBaseTraitData<TraitNameUnionOrString, TraitValueTypeUnion> {}
 
-export interface iNumberTraitData<N extends TraitNameUnionOrString>
-  extends iBaseTraitData<N, number>,
+export interface iNumberTraitData<
+  N extends TraitNameUnionOrString = TraitNameUnionOrString
+> extends iBaseTraitData<N, number>,
     iHasNumberValue {}
 
 export interface iStringTraitData<
@@ -196,7 +197,7 @@ export interface iBaseTrait<
   /** Method to update value directly with a new value or a function that does a relative update using the old value */
   setValue: (newValue: V | ((oldValue: V) => V)) => Promise<void>;
 
-  // todo add explain method to give a summary what this trait is for
+// todo add explain method to give a summary what this trait is for
   // todo add explainValue method to describe the current value of the attribute, ie add description getter to describe the meaning of a value
 }
 

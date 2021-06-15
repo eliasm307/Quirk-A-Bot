@@ -4,7 +4,7 @@ import {
   TOUCHSTONE_AND_CONVICTION_COLLECTION_NAME,
 } from '@quirk-a-bot/common';
 
-import { isCharacterSheetData } from '../../../../utils/type-predicates';
+import { isCharacterSheetDataOLD } from '../../../../utils/type-predicates';
 import isTraitData from '../../../../utils/type-predicates/isTraitData';
 import {
   iCharacterSheetDataOLD,
@@ -123,7 +123,7 @@ export default async function readCharacterSheetDataFromFirestoreComposite({
   console.timeEnd(timerName);
 
   // confirm data is in the right format
-  if (!isCharacterSheetData(data)) {
+  if (!isCharacterSheetDataOLD(data)) {
     const error = `Resulting data read from firestore in document at path "${path}" is not valid character sheet data`;
     console.error(__filename, {
       error,

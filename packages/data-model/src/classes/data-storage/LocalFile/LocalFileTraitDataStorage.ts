@@ -1,7 +1,7 @@
 import path from 'path';
 
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../declarations/types';
-import { iCharacterSheet } from '../../character-sheet/interfaces/character-sheet-interfaces';
+import { iCharacterSheetOLD } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import { iBaseTraitData } from '../../traits/interfaces/trait-interfaces';
 import AbstractTraitDataStorage from '../AbstractTraitDataStorage';
 import { iBaseTraitDataStorage } from '../interfaces/data-storage-interfaces';
@@ -13,8 +13,9 @@ export default class LocalFileTraitDataStorage<
     V extends TraitValueTypeUnion
   >
   extends AbstractTraitDataStorage<N, V>
-  implements iBaseTraitDataStorage<N, V> {
-  #characterSheet: iCharacterSheet;
+  implements iBaseTraitDataStorage<N, V>
+{
+  #characterSheet: iCharacterSheetOLD;
   #resolvedFilePath: string;
   path: string;
 

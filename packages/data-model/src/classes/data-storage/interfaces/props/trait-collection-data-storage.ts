@@ -5,7 +5,7 @@ import {
 } from '../../../../declarations/interfaces';
 import { TraitNameUnionOrString, TraitValueTypeUnion } from '../../../../declarations/types';
 import {
-  iCharacterSheet, iHasCharacterSheet,
+  iCharacterSheetOLD, iHasCharacterSheet,
 } from '../../../character-sheet/interfaces/character-sheet-interfaces';
 import {
   iAddLogEventProps, iDeleteLogEventProps, iTraitCollectionLogger,
@@ -47,7 +47,7 @@ export interface iLocalFileTraitCollectionDataStorageProps<
   T extends iBaseTrait<N, V, D>
 > extends iBaseTraitCollectionDataStorageProps<N, V, D, T>,
     iHasResolvedBasePath {
-  characterSheet: iCharacterSheet;
+  characterSheet: iCharacterSheetOLD;
 }
 export interface iFirestoreTraitCollectionDataStorageProps<
   N extends TraitNameUnionOrString,

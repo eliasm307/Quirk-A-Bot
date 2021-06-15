@@ -9,7 +9,7 @@ import {
   iTouchStoneOrConvictionData,
 } from '../traits/interfaces/trait-interfaces';
 import {
-  iCharacterSheetDataOLD, iCharacterSheetViewModel,
+  iCharacterSheetData, iCharacterSheetViewModel,
 } from './interfaces/character-sheet-interfaces';
 
 interface Props extends iHasId {
@@ -22,7 +22,7 @@ export default class CharacterSheetViewModel
   protected static instances: Map<UID, CharacterSheetViewModel> = new Map();
 
   #model: CharacterSheetModel;
-  changes: Observable<iCharacterSheetDataOLD | undefined>;
+  changes: Observable<iCharacterSheetData | undefined>;
   id: string;
 
   private constructor(props: Props) {
@@ -53,8 +53,9 @@ export default class CharacterSheetViewModel
     CharacterSheetViewModel.instances.delete(this.id);
   }
 
-  setAttribute({ name, value }: iAttributeData): void {
-    throw new Error("Method not implemented.");
+  setAttribute(data: iAttributeData): void {
+    const { name } = data;
+    this.#model.update({ attributes: { [name]: data } });
   }
 
   setCoreNumberTrait(props: iCoreNumberTraitData): void {

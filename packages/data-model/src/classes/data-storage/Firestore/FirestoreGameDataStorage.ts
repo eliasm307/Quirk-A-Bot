@@ -2,7 +2,7 @@ import { ChangeHandler, Firestore } from '@quirk-a-bot/common';
 
 import { iHasInitialData } from '../../../declarations/interfaces';
 import returnValueWhenLoaded from '../../../utils/returnValueWhenLoaded';
-import { iCharacterSheet } from '../../character-sheet/interfaces/character-sheet-interfaces';
+import { iCharacterSheetOLD } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import { iGameData } from '../../game/interfaces/game-interfaces';
 import { iCharacterData } from '../../game/interfaces/game-player-interfaces';
 import defaultGameData from '../../game/utils/defaultGameData';
@@ -13,7 +13,7 @@ import readGameDataFromFirestore from './utils/readGameDataFromFirestore';
 import writeGameDataToFirestore from './utils/writeGameDataToFirestore';
 
 export default class FirestoreGameDataStorage implements iGameDataStorage {
-  protected characterSheets?: Map<string, iCharacterSheet>;
+  protected characterSheets?: Map<string, iCharacterSheetOLD>;
   protected dataStorageFactory: iDataStorageFactory;
   protected firestore: Firestore;
   protected gameData?: iGameData;

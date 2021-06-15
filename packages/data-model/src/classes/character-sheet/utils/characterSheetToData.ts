@@ -1,7 +1,9 @@
-import { iCharacterSheet, iCharacterSheetDataOLD } from '../interfaces/character-sheet-interfaces';
+import {
+  iCharacterSheetDataOLD, iCharacterSheetOLD,
+} from '../interfaces/character-sheet-interfaces';
 
 export default function characterSheetToData(
-  characterSheet: iCharacterSheet
+  characterSheet: iCharacterSheetOLD
 ): iCharacterSheetDataOLD {
   const data: iCharacterSheetDataOLD = {
     id: characterSheet.id,

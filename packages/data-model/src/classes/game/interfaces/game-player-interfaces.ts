@@ -11,11 +11,11 @@ export interface iCharacterData {
   /** Id for this users in this particular game, id matches the users auth id */
   id: UID;
   /** Link to a profile image for a character in a game */
-  img: WebURL;
+  img?: WebURL;
   /** How the player would like to be addressed as in this game, defaults to User.name */
   name: string;
 
-  /** Status of the player for the game */
+/** Status of the player for the game */
   // status: any;
   /** Status of the player for the game */
   // status: PlayerStatus;

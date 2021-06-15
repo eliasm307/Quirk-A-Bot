@@ -2,40 +2,44 @@ import { scan } from 'rxjs/operators';
 
 import { firestore, pause } from '@quirk-a-bot/common';
 
-import {
-  iCharacterSheetDataOLD,
-} from '../../character-sheet/interfaces/character-sheet-interfaces';
+import { iCharacterSheetData } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import { createPath } from '../../data-storage/utils/createPath';
 import CharacterSheetFirestoreCompositeModel from './character-sheet-model';
 
 // firestore composite - rx
 const parentPath = "fc-rx-characterSheetTraitDocsCollection";
 
-const newInitialData = (id: string): iCharacterSheetDataOLD => ({
+const newInitialData = (id: string): iCharacterSheetData => ({
   id,
-  bloodPotency: { name: "Blood Potency", value: 5 },
-  health: { name: "Health", value: 9 },
-  humanity: { name: "Humanity", value: 2 },
-  hunger: { name: "Hunger", value: 4 },
-  willpower: { name: "Willpower", value: 6 },
-  name: { name: "Name", value: "test name" },
-  sire: { name: "Sire", value: "some sire" },
-  clan: { name: "Clan", value: "best clan" },
-  attributes: [
-    { name: "Charisma", value: 3 },
-    { name: "Manipulation", value: 2 },
-  ],
-  disciplines: [{ name: "Blood Sorcery", value: 3 }],
-  skills: [
-    { name: "Academics", value: 2 },
-    { name: "Brawl", value: 2 },
-    { name: "Firearms", value: 4 },
-  ],
-  touchstonesAndConvictions: [
-    { name: "de name", value: "val f f f " },
-    { name: "dfff", value: "val  f f ff " },
-    { name: "ededed", value: "val  f f f f" },
-  ],
+  coreNumberTraits: {
+    "Blood Potency": { name: "Blood Potency", value: 5 },
+    Health: { name: "Health", value: 9 },
+    Humanity: { name: "Humanity", value: 2 },
+    Hunger: { name: "Hunger", value: 4 },
+    Willpower: { name: "Willpower", value: 6 },
+  },
+  coreStringTraits: {
+    Clan: { name: "Clan", value: "best clan" },
+    Name: { name: "Name", value: "test name" },
+    Sire: { name: "Sire", value: "some sire" },
+  },
+  img: "",
+
+  attributes: {
+    Charisma: { name: "Charisma", value: 3 },
+    Manipulation: { name: "Manipulation", value: 2 },
+  },
+  disciplines: { "Blood Sorcery": { name: "Blood Sorcery", value: 3 } },
+  skills: {
+    Academics: { name: "Academics", value: 2 },
+    Brawl: { name: "Brawl", value: 2 },
+    Firearms: { name: "Firearms", value: 4 },
+  },
+  touchstonesAndConvictions: {
+    "de name": { name: "de name", value: "val f f f " },
+    dfff: { name: "dfff", value: "val  f f ff " },
+    ededed: { name: "ededed", value: "val  f f f f" },
+  },
 });
 
 describe("Firestore Composite Character Sheet Model using RX", () => {
@@ -71,7 +75,7 @@ describe("Firestore Composite Character Sheet Model using RX", () => {
             (_, data, index) => ({ data, index }),
             {} as {
               index: number;
-              data: iCharacterSheetDataOLD | undefined;
+              data: iCharacterSheetData | undefined;
             }
           )
         )
@@ -145,7 +149,7 @@ describe("Firestore Composite Character Sheet Model using RX", () => {
             (_, data, index) => ({ data, index }),
             {} as {
               index: number;
-              data: iCharacterSheetDataOLD | undefined;
+              data: iCharacterSheetData | undefined;
             }
           )
         )

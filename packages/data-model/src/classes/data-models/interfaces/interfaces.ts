@@ -1,9 +1,7 @@
 import { Observable } from 'rxjs';
 
 import { iHasId } from '../../../declarations/interfaces';
-import {
-  iCharacterSheetDataOLD,
-} from '../../character-sheet/interfaces/character-sheet-interfaces';
+import { iCharacterSheetData } from '../../character-sheet/interfaces/character-sheet-interfaces';
 
 // ! this simplicity allows the implementation of models in different data storages to be more flexible e.g. the structure of local file based storage and Firestore by document is quite different and has very little overlaps which cause issues if you try to make one size fits all granular interfaces
 
@@ -25,5 +23,4 @@ export interface BaseModelWriter<T> extends iHasId {
  */
 export interface BaseModel<T> extends BaseModelReader<T>, BaseModelWriter<T> {}
 
-export interface CharacterSheetModel
-  extends BaseModel<iCharacterSheetDataOLD> {}
+export interface CharacterSheetModel extends BaseModel<iCharacterSheetData> {}

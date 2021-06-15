@@ -15,7 +15,7 @@ import {
 } from '../traits/interfaces/trait-interfaces';
 import TraitFactory from '../traits/TraitFactory';
 import {
-  iCharacterSheet, iCharacterSheetDataOLD, iCharacterSheetLoaderProps, iCharacterSheetProps,
+  iCharacterSheetDataOLD, iCharacterSheetLoaderProps, iCharacterSheetOLD, iCharacterSheetProps,
 } from './interfaces/character-sheet-interfaces';
 import characterSheetToData from './utils/characterSheetToData';
 import newCharacterSheetData from './utils/newCharacterSheetData';
@@ -24,7 +24,7 @@ import newCharacterSheetData from './utils/newCharacterSheetData';
 
 // todo add a method to clean up when a character sheet is not in use anymore, ie detach all event listeners to data storage etc
 
-export default class CharacterSheet implements iCharacterSheet {
+export default class CharacterSheet implements iCharacterSheetOLD {
   /** Existing singleton-ish instances of this class */
   protected static instances: Map<string, CharacterSheet> = new Map();
 

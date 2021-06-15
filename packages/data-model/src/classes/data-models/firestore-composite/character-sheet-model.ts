@@ -9,9 +9,7 @@ import {
 
 import { iHasId } from '../../../declarations/interfaces';
 import { isCharacterSheetData } from '../../../utils/type-predicates';
-import {
-  iCharacterSheetDataOLD,
-} from '../../character-sheet/interfaces/character-sheet-interfaces';
+import { iCharacterSheetData } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import { createPath } from '../../data-storage/utils/createPath';
 import { CharacterSheetModel } from '../interfaces/interfaces';
 
@@ -22,11 +20,11 @@ export default class CharacterSheetFirestoreCompositeModel
 {
   #firestoreDocumentRef: FirestoreDocumentReference;
   /** Incoming changes */
-  #incomingUpdatesSubject: Subject<iCharacterSheetDataOLD>;
-  #outgoingUpdatesSubject: Subject<iCharacterSheetDataOLD | undefined>;
+  #incomingUpdatesSubject: Subject<iCharacterSheetData>;
+  #outgoingUpdatesSubject: Subject<iCharacterSheetData | undefined>;
   #unsubscribers: (() => void)[] = [];
   /** Outgoing changes to observers of this instance */
-  changes: Observable<iCharacterSheetDataOLD | undefined>;
+  changes: Observable<iCharacterSheetData | undefined>;
   id: string;
   path: string;
 
@@ -40,12 +38,12 @@ export default class CharacterSheetFirestoreCompositeModel
     // todo this should come from firestore composite utils which are used by all firestore composite data models
     this.path = createPath(parentPath, id);
 
-    this.#incomingUpdatesSubject = new Subject<iCharacterSheetDataOLD>();
+    this.#incomingUpdatesSubject = new Subject<iCharacterSheetData>();
 
     // handle external change events internally
     const incomingUpdatesSubscription = this.#incomingUpdatesSubject
       .pipe(
-        switchMap((newData: iCharacterSheetDataOLD) =>
+        switchMap((newData: iCharacterSheetData) =>
           from(this.#firestoreDocumentRef.set(newData)).pipe(
             tap(() => {
               // console.warn("Data updated successfully", { newData });
@@ -98,7 +96,7 @@ export default class CharacterSheetFirestoreCompositeModel
           data,
           hasChanges: !valuesAreEqual(lastData, data),
         }),
-        {} as { data: iCharacterSheetDataOLD | undefined; hasChanges: boolean }
+        {} as { data: iCharacterSheetData | undefined; hasChanges: boolean }
       ),
       filter(({ hasChanges }) => {
         // if (!hasChanges) console.warn(`Ignoring change`);
@@ -114,18 +112,18 @@ export default class CharacterSheetFirestoreCompositeModel
     this.#unsubscribers.forEach((unsubscribe) => unsubscribe());
   }
 
-  update(updatedData: Omit<iCharacterSheetDataOLD, "id">): void {
+  update(updatedData: Omit<iCharacterSheetData, "id">): void {
     this.#incomingUpdatesSubject.next({ ...updatedData, id: this.id });
   }
 
   private getCharacterSheetTraitsDocumentChangeSubject(
     compositeDocumentPath: string
   ): {
-    outgoingUpdatesSubject: Subject<iCharacterSheetDataOLD | undefined>;
+    outgoingUpdatesSubject: Subject<iCharacterSheetData | undefined>;
     ref: FirestoreDocumentReference;
   } {
     const outgoingUpdatesSubject = new Subject<
-      iCharacterSheetDataOLD | undefined
+      iCharacterSheetData | undefined
     >();
 
     /*
