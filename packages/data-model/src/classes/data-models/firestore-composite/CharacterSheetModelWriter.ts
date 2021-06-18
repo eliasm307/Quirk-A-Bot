@@ -13,7 +13,7 @@ interface Props extends iHasId, iHasParentPath {}
 export default class CharacterSheetFirestoreCompositeModelWriter
   implements BaseModelWriter<iCharacterSheetData>
 {
-  #firestoreDocumentRef: FirestoreDocumentReference;
+  protected firestoreDocumentRef: FirestoreDocumentReference;
   /** Incoming changes */
   #incomingUpdatesSubject: Subject<iCharacterSheetData>;
   #unsubscribers: (() => void)[] = [];
@@ -28,7 +28,7 @@ export default class CharacterSheetFirestoreCompositeModelWriter
     // todo createPath should come from firestore composite utils which are used by all firestore composite data models
     this.path = createPath(parentPath, id);
 
-    this.#firestoreDocumentRef = firestore.doc(this.path);
+    this.firestoreDocumentRef = firestore.doc(this.path);
 
     // todo assert id and parentPath are valid
 
@@ -40,7 +40,7 @@ export default class CharacterSheetFirestoreCompositeModelWriter
         switchMap(
           (newData: iCharacterSheetData) =>
             // ? should this be set or update?
-            from(this.#firestoreDocumentRef.set(newData))
+            from(this.firestoreDocumentRef.set(newData))
           /* .pipe(
             tap(() => {
               // console.warn("Data updated successfully", { newData });

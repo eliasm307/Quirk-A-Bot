@@ -1,15 +1,19 @@
-import { Observable, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { firestore } from '@quirk-a-bot/common';
 
-import {
-  iCharacterSheetData,
-} from '../classes/character-sheet/interfaces/character-sheet-interfaces';
-import { isCharacterSheetData } from './type-predicates';
+interface Props<D> {
+  documentPath: string;
 
-export default function getFirestoreDocumentChangeObservable(
-  documentPath: string
-): Observable<iCharacterSheetData | undefined> {
+  schemaPredicate(value: unknown): value is D;
+}
+
+// todo test
+
+export default function getFirestoreDocumentChangeObservable<D>({
+  documentPath,
+  schemaPredicate,
+}: Props<D>): Observable<D | undefined> {
   return new Observable((observer) => {
     const ref = firestore.doc(documentPath);
 
@@ -24,6 +28,7 @@ export default function getFirestoreDocumentChangeObservable(
       })
       .catch(observer.error);
 
+    // return unsubscribe function
     return ref.onSnapshot({
       complete: observer.complete,
       error: observer.error,
@@ -39,11 +44,11 @@ export default function getFirestoreDocumentChangeObservable(
         if (newData === undefined || !snapshot.exists)
           return observer.next(undefined);
 
-        if (!isCharacterSheetData(newData)) {
+        if (!schemaPredicate(newData)) {
           const error = `New data from document at path "${documentPath}" doesn't meet required schema predicate`;
           console.error({
             error,
-            compositeDocumentPath: documentPath,
+            documentPath,
             newData,
           });
           throw Error(error);
