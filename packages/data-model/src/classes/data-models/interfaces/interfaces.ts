@@ -7,7 +7,7 @@ import { iCharacterSheetData } from '../../character-sheet/interfaces/character-
 
 /** Interface for reading a model */
 export interface BaseModelReader<T> extends iHasId {
-  readonly changes: Observable<T | undefined>;
+  readonly changes?: Observable<T | undefined>;
 
   dispose(): void;
 }
@@ -22,5 +22,3 @@ export interface BaseModelWriter<T> extends iHasId {
  * Model responsibilities are to facilitate CRUD operations from/to data storage and optimise that.
  */
 export interface BaseModel<T> extends BaseModelReader<T>, BaseModelWriter<T> {}
-
-export interface CharacterSheetModel extends BaseModel<iCharacterSheetData> {}

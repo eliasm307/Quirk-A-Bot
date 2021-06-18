@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { UID } from '@quirk-a-bot/common';
 
 import { iHasId } from '../../declarations/interfaces';
-import { CharacterSheetModel } from '../data-models/interfaces/interfaces';
+import { BaseModelReader, BaseModelWriter } from '../data-models/interfaces/interfaces';
 import {
   iAttributeData, iCoreNumberTraitData, iCoreStringTraitData, iSkillData,
   iTouchStoneOrConvictionData,
@@ -14,7 +14,8 @@ import {
 import numberTraitIsValid from './utils/numberTraitIsValid';
 
 interface Props extends iHasId {
-  model: CharacterSheetModel;
+  modelReader?: BaseModelReader<iCharacterSheetData>;
+  modelWriter?: BaseModelWriter<iCharacterSheetData>;
 }
 
 export default class CharacterSheetViewModel
@@ -22,15 +23,17 @@ export default class CharacterSheetViewModel
 {
   protected static instances: Map<UID, CharacterSheetViewModel> = new Map();
 
-  #model: CharacterSheetModel;
-  changes: Observable<iCharacterSheetData | undefined>;
+  #modelReader?: BaseModelReader<iCharacterSheetData>;
+  #modelWriter?: BaseModelWriter<iCharacterSheetData>;
+  changes?: Observable<iCharacterSheetData | undefined>;
   id: string;
 
   private constructor(props: Props) {
-    const { model, id } = props;
+    const { modelReader, modelWriter, id } = props;
     this.id = id;
-    this.#model = model;
-    this.changes = model.changes;
+    this.#modelReader = modelReader;
+    this.#modelWriter = modelWriter;
+    this.changes = modelReader?.changes;
   }
 
   /** Loads an existing instance if available */
@@ -50,7 +53,7 @@ export default class CharacterSheetViewModel
   }
 
   dispose(): void {
-    this.#model.dispose();
+    if (this.#modelReader) this.#modelReader.dispose();
     CharacterSheetViewModel.instances.delete(this.id);
   }
 
@@ -158,6 +161,10 @@ export default class CharacterSheetViewModel
   }
 
   private updateModel(updates: Partial<Omit<iCharacterSheetData, "id">>): void {
-    this.#model.update(updates);
+    if (this.#modelWriter) this.#modelWriter.update(updates);
+    else
+      console.warn(
+        `Could not update character sheet with id ${this.id} because you don't have write access`
+      );
   }
 }
