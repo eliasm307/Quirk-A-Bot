@@ -1,14 +1,10 @@
-import { Observable, Observer, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { filter, map, scan } from 'rxjs/operators';
 
-import {
-  firestore, FirestoreDocumentReference, iHasParentPath, valuesAreEqual,
-} from '@quirk-a-bot/common';
+import { iHasParentPath, valuesAreEqual } from '@quirk-a-bot/common';
 
 import { iHasId } from '../../../declarations/interfaces';
 import getFirestoreDocumentChangeObservable from '../../../utils/getFirestoreDocumentChangeObservable';
-import { isCharacterSheetData } from '../../../utils/type-predicates';
-import { iCharacterSheetData } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import { createPath } from '../../data-storage/utils/createPath';
 import { BaseModelReader } from '../interfaces/interfaces';
 
@@ -16,7 +12,7 @@ interface Props<D> extends iHasId, iHasParentPath {
   dataPredicate(value: unknown): value is D;
 }
 
-export default abstract class AbstractModelReader<D>
+export default abstract class AbstractModelReader<D extends iHasId>
   implements BaseModelReader<D>
 {
   // #firestoreDocumentRef: FirestoreDocumentReference;
