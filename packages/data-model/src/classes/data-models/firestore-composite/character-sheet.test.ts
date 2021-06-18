@@ -108,7 +108,7 @@ describe("Firestore Composite Character Sheet Model using RX", () => {
         });
 
       // update 0
-      modelWriter.update(newInitialData(id));
+      modelWriter.set(newInitialData(id));
 
       // delay then stop test, to make sure all updates come in
       await pause(5000).then(() => {

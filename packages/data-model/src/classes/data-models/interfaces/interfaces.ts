@@ -13,7 +13,7 @@ export interface BaseModelReader<T> extends iHasId {
 
 /** Interface for mutating/updating a model */
 export interface BaseModelWriter<T> extends iHasId {
-  update(updates: Partial<Omit<T, "id">>): void;
+  set(newData: Partial<Omit<T, "id">>): void;
 }
 
 /**

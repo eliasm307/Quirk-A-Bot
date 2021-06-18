@@ -89,7 +89,7 @@ export default class CharacterSheetFirestoreCompositeModelWriter
     this.#unsubscribers.forEach((unsubscribe) => unsubscribe());
   }
 
-  update(updatedData: Omit<iCharacterSheetData, "id">): void {
+  set(updatedData: Omit<iCharacterSheetData, "id">): void {
     this.#incomingUpdatesSubject.next({ ...updatedData, id: this.id });
   }
 }
