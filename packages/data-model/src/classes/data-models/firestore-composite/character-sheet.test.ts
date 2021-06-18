@@ -4,7 +4,8 @@ import { firestore, pause } from '@quirk-a-bot/common';
 
 import { iCharacterSheetData } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import { createPath } from '../../data-storage/utils/createPath';
-import CharacterSheetFirestoreCompositeModel from './CharacterSheetModelReader';
+import CharacterSheetFirestoreCompositeModelReader from './CharacterSheetModelReader';
+import CharacterSheetFirestoreCompositeModelWriter from './CharacterSheetModelWriter';
 
 // firestore composite - rx
 const parentPath = "fc-rx-characterSheetTraitDocsCollection";
@@ -42,6 +43,7 @@ const newInitialData = (id: string): iCharacterSheetData => ({
   },
 });
 
+// todo separate
 describe("Firestore Composite Character Sheet Model using RX", () => {
   afterAll(async () => {
     // await firestore.app.delete();
@@ -56,19 +58,27 @@ describe("Firestore Composite Character Sheet Model using RX", () => {
     const id = "newCharacterSheetTraits";
     const docPath = createPath(parentPath, id);
 
+    const modelProps = {
+      id,
+      parentPath,
+    };
+
     const test = async () => {
       await firestore.doc(docPath).delete();
 
       await pause(500);
 
-      const model = new CharacterSheetFirestoreCompositeModel({
-        id,
-        parentPath,
-      });
+      const modelReader = new CharacterSheetFirestoreCompositeModelReader(
+        modelProps
+      );
+
+      const modelWriter = new CharacterSheetFirestoreCompositeModelWriter(
+        modelProps
+      );
 
       let updateCount = 0;
 
-      const subscription = model.changes
+      const subscription = modelReader.changes
         .pipe(
           // get the index of changes
           scan(
@@ -98,7 +108,7 @@ describe("Firestore Composite Character Sheet Model using RX", () => {
         });
 
       // update 0
-      model.update(newInitialData(id));
+      modelWriter.update(newInitialData(id));
 
       // delay then stop test, to make sure all updates come in
       await pause(5000).then(() => {
@@ -106,7 +116,7 @@ describe("Firestore Composite Character Sheet Model using RX", () => {
 
         // stop when the known updates are done
         subscription.unsubscribe();
-        model.dispose();
+        modelReader.dispose();
 
         // only one sync expected
         expect(updateCount).toEqual(1);
@@ -135,14 +145,14 @@ describe("Firestore Composite Character Sheet Model using RX", () => {
       // make sure changes are synchronised
       await pause(500);
 
-      const model = new CharacterSheetFirestoreCompositeModel({
+      const modelReader = new CharacterSheetFirestoreCompositeModelReader({
         id,
         parentPath,
       });
 
       let updateCount = 0;
 
-      const subscription = model.changes
+      const subscription = modelReader.changes
         .pipe(
           // get the index of changes
           scan(
@@ -177,7 +187,7 @@ describe("Firestore Composite Character Sheet Model using RX", () => {
 
         // stop when the known updates are done
         subscription.unsubscribe();
-        model.dispose();
+        modelReader.dispose();
 
         // only one sync expected
         expect(updateCount).toEqual(1);
