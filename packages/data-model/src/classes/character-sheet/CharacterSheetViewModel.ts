@@ -55,27 +55,109 @@ export default class CharacterSheetViewModel
   }
 
   setAttribute(data: iAttributeData): void {
+    this.assertAttributeIsValid(data);
+
+    const { name } = data;
+
+    const updates: Partial<Omit<iCharacterSheetData, "id">> = {
+      attributes: { [name]: data },
+    };
+
+    this.updateModel(updates);
+  }
+
+  setCoreNumberTrait(data: iCoreNumberTraitData): void {
+    this.assertCoreNumberTraitIsValid(data);
+
+    const { name } = data;
+
+    const updates: Partial<Omit<iCharacterSheetData, "id">> = {
+      coreNumberTraits: { [name]: data },
+    };
+
+    this.updateModel(updates);
+  }
+
+  setCoreStringTrait(data: iCoreStringTraitData<string>): void {
+    this.assertCoreStringTraitIsValid(data);
+
+    const { name } = data;
+
+    const updates: Partial<Omit<iCharacterSheetData, "id">> = {
+      coreStringTraits: { [name]: data },
+    };
+
+    this.updateModel(updates);
+  }
+
+  setSkill(data: iSkillData): void {
+    this.assertSkillIsValid(data);
+
+    const { name } = data;
+
+    const updates: Partial<Omit<iCharacterSheetData, "id">> = {
+      skills: { [name]: data },
+    };
+
+    this.updateModel(updates);
+  }
+
+  setTouchstoneAndConviction(data: iTouchStoneOrConvictionData): void {
+    const { name, value } = data;
+
+    if (!name || !value)
+      throw Error(
+        `Could not set touchstone/conviction trait because name or value is blank, name: ${name} value: ${value}`
+      );
+
+    const updates: Partial<Omit<iCharacterSheetData, "id">> = {
+      touchstonesAndConvictions: { [name]: data },
+    };
+
+    this.updateModel(updates);
+  }
+
+  private assertAttributeIsValid(data: iAttributeData): void {
     const { name, value } = data;
 
     if (!numberTraitIsValid({ data, max: 5, min: 1 }))
       throw Error(`Could not set attribute ${name} to ${value}`);
-
-    this.#model.update({ attributes: { [name]: data } });
   }
 
-  setCoreNumberTrait(props: iCoreNumberTraitData): void {
-    throw new Error("Method not implemented.");
+  private assertCoreNumberTraitIsValid(data: iCoreNumberTraitData) {
+    const { name, value } = data;
+
+    if (
+      !numberTraitIsValid({
+        data,
+        max: {
+          "Blood Potency": 10,
+          Health: 5,
+          Humanity: 10,
+          Hunger: 5,
+          Willpower: 10,
+        },
+        min: 0,
+      })
+    )
+      throw Error(`Could not set core number trait ${name} to ${value}`);
   }
 
-  setCoreStringTrait(props: iCoreStringTraitData<string>): void {
-    throw new Error("Method not implemented.");
+  private assertCoreStringTraitIsValid(data: iCoreStringTraitData) {
+    const { name, value } = data;
+
+    if (!value)
+      throw Error(`Could not set core String trait ${name} to empty string`);
   }
 
-  setSkill(props: iSkillData): void {
-    throw new Error("Method not implemented.");
+  private assertSkillIsValid(data: iSkillData): void {
+    const { name, value } = data;
+
+    if (!numberTraitIsValid({ data, max: 5, min: 0 }))
+      throw Error(`Could not set Skill ${name} to ${value}`);
   }
 
-  setTouchstoneAndConvictions(props: iTouchStoneOrConvictionData): void {
-    throw new Error("Method not implemented.");
+  private updateModel(updates: Partial<Omit<iCharacterSheetData, "id">>): void {
+    this.#model.update(updates);
   }
 }

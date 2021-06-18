@@ -78,9 +78,12 @@ export interface iCharacterSheetDataOLD extends iCharacterSheetShape {
 /** The shape of character sheet as plain JSON data, with top level trait collections */
 export interface iCharacterSheetData extends Omit<iCharacterData, "name"> {
   attributes: Partial<Record<AttributeName, iAttributeData>>;
-  coreNumberTraits: Record<CoreNumberTraitName, iCoreNumberTraitData>;
-  coreStringTraits: Record<CoreStringTraitName, iCoreStringTraitData> & {
-    Clan: iCoreStringTraitData<ClanName>;
+  // ? should core traits be mandatory?
+  coreNumberTraits: Partial<Record<CoreNumberTraitName, iCoreNumberTraitData>>;
+  coreStringTraits: Partial<
+    Record<CoreStringTraitName, iCoreStringTraitData>
+  > & {
+    Clan?: iCoreStringTraitData<ClanName>;
   };
   disciplines: Partial<Record<DisciplineName, iDisciplineData>>;
   /*
@@ -126,9 +129,9 @@ export interface iCharacterSheetOLD
 
 export interface iCharacterSheetViewModel
   extends BaseModelReader<iCharacterSheetData> {
-  setAttribute(props: iAttributeData): void;
-  setCoreNumberTrait(props: iCoreNumberTraitData): void;
-  setCoreStringTrait(props: iCoreStringTraitData): void;
-  setSkill(props: iSkillData): void;
-  setTouchstoneAndConvictions(props: iTouchStoneOrConvictionData): void;
+  setAttribute(data: iAttributeData): void;
+  setCoreNumberTrait(data: iCoreNumberTraitData): void;
+  setCoreStringTrait(data: iCoreStringTraitData): void;
+  setSkill(data: iSkillData): void;
+  setTouchstoneAndConviction(data: iTouchStoneOrConvictionData): void;
 }

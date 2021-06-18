@@ -1,4 +1,3 @@
-import { type } from 'node:os';
 import { TraitNameUnionOrString } from 'packages/common/src/declarations';
 
 import { iNumberTraitData } from '../../traits/interfaces/trait-interfaces';
