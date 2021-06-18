@@ -1,7 +1,9 @@
-import { Observable } from 'rxjs';
+import { Observable, Observer, Subject } from 'rxjs';
 import { filter, map, scan } from 'rxjs/operators';
 
-import { iHasParentPath, valuesAreEqual } from '@quirk-a-bot/common';
+import {
+  firestore, FirestoreDocumentReference, iHasParentPath, valuesAreEqual,
+} from '@quirk-a-bot/common';
 
 import { iHasId } from '../../../declarations/interfaces';
 import getFirestoreDocumentChangeObservable from '../../../utils/getFirestoreDocumentChangeObservable';
@@ -10,20 +12,22 @@ import { iCharacterSheetData } from '../../character-sheet/interfaces/character-
 import { createPath } from '../../data-storage/utils/createPath';
 import { BaseModelReader } from '../interfaces/interfaces';
 
-interface Props extends iHasId, iHasParentPath {}
+interface Props<D> extends iHasId, iHasParentPath {
+  dataPredicate(value: unknown): value is D;
+}
 
-export default class CharacterSheetFirestoreCompositeModelReader
-  implements BaseModelReader<iCharacterSheetData>
+export default abstract class AbstractModelReader<D>
+  implements BaseModelReader<D>
 {
   // #firestoreDocumentRef: FirestoreDocumentReference;
   #unsubscribers: (() => void)[] = [];
   /** Outgoing changes to observers of this instance */
-  changes: Observable<iCharacterSheetData | undefined>;
+  changes: Observable<D | undefined>;
   id: string;
   path: string;
 
-  constructor(props: Props) {
-    const { id, parentPath } = props;
+  constructor(props: Props<D>) {
+    const { id, parentPath, dataPredicate } = props;
 
     this.id = id;
 
@@ -34,7 +38,7 @@ export default class CharacterSheetFirestoreCompositeModelReader
 
     const outgoingUpdate$ = getFirestoreDocumentChangeObservable({
       documentPath: this.path,
-      dataPredicate: isCharacterSheetData,
+      dataPredicate,
     });
 
     this.changes = outgoingUpdate$.pipe(
@@ -43,7 +47,7 @@ export default class CharacterSheetFirestoreCompositeModelReader
           data,
           hasChanges: !valuesAreEqual(lastData, data),
         }),
-        {} as { data: iCharacterSheetData | undefined; hasChanges: boolean }
+        {} as { data: D | undefined; hasChanges: boolean }
       ),
       filter(({ hasChanges }) => {
         // if (!hasChanges) console.warn(`Ignoring change`);
@@ -57,5 +61,10 @@ export default class CharacterSheetFirestoreCompositeModelReader
   dispose() {
     console.log(`Dispose for path ${this.path}`);
     this.#unsubscribers.forEach((unsubscribe) => unsubscribe());
+  }
+
+  /** Adds a tear down function to be called when this instance is disposed */
+  protected addUnsubscriber(unsubscriber: () => void) {
+    this.#unsubscribers.push(unsubscriber);
   }
 }

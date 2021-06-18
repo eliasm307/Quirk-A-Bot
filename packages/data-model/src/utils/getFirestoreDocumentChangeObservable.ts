@@ -5,14 +5,14 @@ import { firestore } from '@quirk-a-bot/common';
 interface Props<D> {
   documentPath: string;
 
-  schemaPredicate(value: unknown): value is D;
+  dataPredicate(value: unknown): value is D;
 }
 
 // todo test
 
 export default function getFirestoreDocumentChangeObservable<D>({
   documentPath,
-  schemaPredicate,
+  dataPredicate: schemaPredicate,
 }: Props<D>): Observable<D | undefined> {
   return new Observable((observer) => {
     const ref = firestore.doc(documentPath);
