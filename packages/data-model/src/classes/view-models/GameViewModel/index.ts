@@ -33,7 +33,7 @@ export default class GameViewModel implements iGameViewModel {
   }
 
   async addCharacter(id: string): Promise<void> {
-    const updates: Partial<iGameData> = { characterIds: { [id]: true } };
+    const updates: Partial<iGameData> = { users: { [id]: true } };
 
     this.#modelWriter?.update(updates);
   }
@@ -51,7 +51,7 @@ export default class GameViewModel implements iGameViewModel {
 
   async removeCharacter(id: string): Promise<void> {
     const updates: Partial<iGameData> = {
-      characterIds: { [id]: firestoreFieldValues.delete },
+      users: { [id]: firestoreFieldValues.delete },
     };
 
     this.#modelWriter?.update(updates);

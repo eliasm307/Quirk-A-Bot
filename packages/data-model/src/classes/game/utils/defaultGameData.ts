@@ -5,6 +5,6 @@ export default function defaultGameData(id: string): iGameData {
     id,
     description: "",
     gameMasterIds: [],
-    characterIds: [],
+    users: [],
   };
 }

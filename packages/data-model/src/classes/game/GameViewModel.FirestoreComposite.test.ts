@@ -110,7 +110,7 @@ describe("Game with firestore composite data storage", () => {
       id,
       gameMasterIds: ["a guy", "another guy"],
       discordBotWebSocketServer: "www.some-site.com",
-      characterIds: [],
+      users: [],
     };
 
     await docRef.set(gameData);
@@ -168,7 +168,7 @@ describe("Game with firestore composite data storage", () => {
     );
     expect(gameCharactersData.size).toEqual(2);
     // test synced ids
-    expect(gameData.characterIds.sort()).toEqual(
+    expect(gameData.users.sort()).toEqual(
       firestoreCharacters.map((character) => character.id).sort()
     );
 
@@ -186,7 +186,7 @@ describe("Game with firestore composite data storage", () => {
     expect(firestoreCharacters[0]).toEqual(
       gameCharactersData.get(character1Id)
     );
-    expect(gameData.characterIds.sort()).toEqual(
+    expect(gameData.users.sort()).toEqual(
       firestoreCharacters.map((character) => character.id).sort()
     );
 
@@ -199,7 +199,7 @@ describe("Game with firestore composite data storage", () => {
 
     expect(firestoreCharacters).toEqual([]);
     expect(gameCharactersData.size).toEqual(0);
-    expect(gameData.characterIds.sort()).toEqual(
+    expect(gameData.users.sort()).toEqual(
       firestoreCharacters.map((character) => character.id).sort()
     );
 

@@ -76,7 +76,7 @@ export default class FirestoreCompositeGameDataStorage
                   if (this.#data) {
                     // if changed document id has already been added, skip
                     if (
-                      this.#data.characterIds.some(
+                      this.#data.users.some(
                         (characterId) => characterId === changedDocId
                       )
                     )
@@ -84,13 +84,13 @@ export default class FirestoreCompositeGameDataStorage
 
                     this.#data = {
                       ...this.#data,
-                      characterIds: [...this.#data.characterIds, changedDocId],
+                      users: [...this.#data.users, changedDocId],
                     };
                   } else {
                     // ? is this required?
                     this.#data = {
                       ...defaultGameData(changedDocId),
-                      characterIds: [changedDocId],
+                      users: [changedDocId],
                     };
                   }
 
@@ -105,7 +105,7 @@ export default class FirestoreCompositeGameDataStorage
                   if (this.#data) {
                     this.#data = {
                       ...this.#data,
-                      characterIds: this.#data.characterIds.filter(
+                      users: this.#data.users.filter(
                         (characterId) => characterId !== changedDocId
                       ),
                     };
@@ -155,7 +155,7 @@ export default class FirestoreCompositeGameDataStorage
         description: isString,
         discordBotWebSocketServer: isOptionalString,
         gameMasterIds: newIsArrayPredicate(isString),
-        characterIds: newIsArrayPredicate(isString),
+        users: newIsArrayPredicate(isString),
         id: isString,
       },
     });
@@ -181,7 +181,7 @@ export default class FirestoreCompositeGameDataStorage
     const charactersData = await this.getCharacterData();
     const characterIds = charactersData.map((character) => character.id);
 
-    const { characterIds: syncedCharacterIds } = await this.data();
+    const { users: syncedCharacterIds } = await this.data();
 
     this.assertCharacterIdsSynchronised(characterIds, syncedCharacterIds);
 
@@ -199,7 +199,7 @@ export default class FirestoreCompositeGameDataStorage
       : [newCharacterData];
 
     if (this.#data)
-      this.#data = { ...this.#data, characterIds: [...characterIds, id] };
+      this.#data = { ...this.#data, users: [...characterIds, id] };
 
     // update on data storage
     await this.#characterCollectionRef.doc(id).set(newCharacterData);
@@ -237,7 +237,7 @@ export default class FirestoreCompositeGameDataStorage
     const charactersData = await this.getCharacterData();
     const characterIds = charactersData.map((character) => character.id);
 
-    const { characterIds: syncedCharacterIds } = await this.data();
+    const { users: syncedCharacterIds } = await this.data();
 
     this.assertCharacterIdsSynchronised(characterIds, syncedCharacterIds);
 

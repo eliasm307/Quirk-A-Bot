@@ -9,7 +9,7 @@ export default function isGameData(data: unknown): data is iGameData {
     description,
     id,
     gameMasterIds: gameMasters,
-    characterIds,
+    users: characterIds,
   } = data as iGameData;
 
   // to check if all required properties are defined
@@ -17,7 +17,7 @@ export default function isGameData(data: unknown): data is iGameData {
     description,
     id,
     gameMasterIds: gameMasters,
-    characterIds,
+    users: characterIds,
   }))();
 
   const hasId = isNonEmptyString(id); // id must be non-empty
