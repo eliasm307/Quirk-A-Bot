@@ -7,22 +7,31 @@ interface Props<D> {
 
   dataPredicate(value: unknown): value is D;
 }
+
+// todo test
+
 export default function getFirestoreCollectionChangeObservable<D>({
   collectionPath,
   dataPredicate,
-}: Props<D>): Observable<D | undefined> {
+}: Props<D>): Observable<D[]> {
   return new Observable((observer) => {
     const ref = firestore.collection(collectionPath);
+
+    // return unsubscriber
     return ref.onSnapshot({
       complete: observer.complete,
       error: observer.error,
       next: (querySnapshot) => {
         const data = querySnapshot.docs
           .filter((docSnapshot) => docSnapshot.exists)
-          .map((docSnapshot) => docSnapshot.data())
-          .filter((docData) => dataPredicate(docData));
+          .map((docSnapshot) => {
+            const docData = docSnapshot.data();
+            return dataPredicate(docData) && docData;
+          })
+          .filter(Boolean)
+          .map((docData) => docData as D);
 
-        const goodData = data.filter((docData) => dataPredicate(docData));
+        observer.next(data);
       },
     });
   });
