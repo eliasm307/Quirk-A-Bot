@@ -35,9 +35,9 @@ export default class FirestoreCompositeUserDataStorage
       },
       path: this.path,
       valuePredicates: {
-        name: isString,
-        uid: isString,
-        img: isString,
+        displayName: isString,
+        id: isString,
+        photoURL: isString,
       },
     });
   }

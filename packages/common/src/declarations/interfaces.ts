@@ -91,5 +91,5 @@ export interface iCompositeDocument<S extends Record<string, unknown>> {
 
 export interface iHasUid {
   /** UID from Firebase Authentication  */
-  uid: UID;
+  id: UID;
 }

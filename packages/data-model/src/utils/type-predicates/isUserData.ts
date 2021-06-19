@@ -8,10 +8,10 @@ export default function isUserData(data: unknown): data is iUserData {
   if (!data) return false;
 
   // destructure expected properties
-  const { name, uid, img } = data as iUserData;
+  const { displayName: name, id: uid, photoURL: img } = data as iUserData;
 
   // for ts to check all properties accounted for
-  ((): iUserData => ({ name, uid, img }))();
+  ((): iUserData => ({ displayName: name, id: uid, photoURL: img }))();
 
   const hasCorrectNumberOfProperties = Object.keys(data).length !== 3;
   if (!hasCorrectNumberOfProperties) return false;

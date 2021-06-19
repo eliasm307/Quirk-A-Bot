@@ -68,9 +68,8 @@ firebase.initializeApp(firebaseConfig);
 ////////////////////////////////////////////////////////
 // Firebase Authentication exports
 
-const _auth = firebase.auth();
-_auth.useEmulator("http://localhost:9099"); // todo use environment variables to conditionally use this
-export const auth = _auth;
+export const auth = firebase.auth();
+if (!isProductionEnvironment()) auth.useEmulator("http://localhost:9099");
 
 export const { GoogleAuthProvider, EmailAuthProvider } = firebase.auth;
 
@@ -82,7 +81,7 @@ export interface FireBaseUser extends firebase.User {}
 export const firestore = firebase.firestore();
 if (!isProductionEnvironment()) firestore.useEmulator("localhost", 8080);
 
-export function isfirestoreRunning(): boolean {
+export function isFirestoreRunning(): boolean {
   return urlExistSync("http://localhost:4000/firestore/");
 }
 

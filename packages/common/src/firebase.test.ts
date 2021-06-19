@@ -1,4 +1,4 @@
-import { firestore, isfirestoreRunning } from "./";
+import { firestore, isFirestoreRunning } from "./";
 
 const testDocData = {
   testProperty: `testing @ ${new Date().toLocaleString()}`,
@@ -32,8 +32,8 @@ describe("firestore", () => {
 
 describe("firestore emulator", () => {
   it("tests if firestore emulator is running", () => {
-    if (!isfirestoreRunning()) throw Error("Firestore emulator not running");
-    expect(isfirestoreRunning()).toEqual(true);
+    if (!isFirestoreRunning()) throw Error("Firestore emulator not running");
+    expect(isFirestoreRunning()).toEqual(true);
   });
 
   it("can write to firestore documents", async () => {
