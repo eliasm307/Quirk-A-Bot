@@ -1,4 +1,4 @@
-import { isCoreGameData } from '../../../../utils/type-predicates';
+import { isGameData } from '../../../../utils/type-predicates';
 import { iGameData } from '../../../game/interfaces/game-interfaces';
 import { DocumentDataReaderProps } from '../../Firestore/utils/assertDocumentExistsOnFirestore';
 
@@ -20,7 +20,7 @@ export default async function readGameDataFromFirestoreComposite({
   const gameData = coreDataDocument.data();
 
   // todo assert it is core game data
-  if (!isCoreGameData(gameData)) {
+  if (!isGameData(gameData)) {
     console.timeEnd(timerName);
     const error = `Core game data was read but format is invalid`;
     console.error(__filename, error, {

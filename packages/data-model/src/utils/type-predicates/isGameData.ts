@@ -1,4 +1,4 @@
-import { isNonEmptyString, isString, newIsArrayPredicate } from '@quirk-a-bot/common';
+import { isNonEmptyString, isString } from '@quirk-a-bot/common';
 
 import { iGameData } from '../../classes/game/interfaces/game-interfaces';
 
@@ -12,8 +12,8 @@ export default function isGameData(data: unknown): data is iGameData {
 
   const hasId = isNonEmptyString(id); // id must be non-empty
   const hasDescription = isString(description);
-  const hasGameMasters = newIsArrayPredicate(isString)(gameMasters);
-  const hasCharacterIds = newIsArrayPredicate(isString)(characterIds);
+  const hasGameMasters = typeof gameMasters === "object";
+  const hasCharacterIds = typeof characterIds === "object";
 
   return (
     (hasId && hasDescription && hasGameMasters && hasCharacterIds) ||

@@ -2,16 +2,15 @@ import { Observable } from 'rxjs';
 
 import { UID } from '@quirk-a-bot/common';
 
-import { iHasId } from '../../declarations/interfaces';
-import { BaseModelReader, BaseModelWriter } from '../data-models/interfaces/interfaces';
+import { iHasId } from '../../../declarations/interfaces';
+import { iCharacterSheetData } from '../../character-sheet/interfaces/character-sheet-interfaces';
+import numberTraitIsValid from '../../character-sheet/utils/numberTraitIsValid';
+import { BaseModelReader, BaseModelWriter } from '../../data-models/interfaces/interfaces';
 import {
   iAttributeData, iCoreNumberTraitData, iCoreStringTraitData, iSkillData,
   iTouchStoneOrConvictionData,
-} from '../traits/interfaces/trait-interfaces';
-import {
-  iCharacterSheetData, iCharacterSheetViewModel,
-} from './interfaces/character-sheet-interfaces';
-import numberTraitIsValid from './utils/numberTraitIsValid';
+} from '../../traits/interfaces/trait-interfaces';
+import { iCharacterSheetViewModel } from './interfaces';
 
 interface Props extends iHasId {
   modelReader?: BaseModelReader<iCharacterSheetData>;
@@ -25,7 +24,7 @@ export default class CharacterSheetViewModel
 
   #modelReader?: BaseModelReader<iCharacterSheetData>;
   #modelWriter?: BaseModelWriter<iCharacterSheetData>;
-  change$?: Observable<iCharacterSheetData | undefined>;
+  change$: Observable<iCharacterSheetData | undefined> | null;
   id: string;
 
   private constructor(props: Props) {
@@ -33,7 +32,7 @@ export default class CharacterSheetViewModel
     this.id = id;
     this.#modelReader = modelReader;
     this.#modelWriter = modelWriter;
-    this.change$ = modelReader?.change$;
+    this.change$ = modelReader?.change$ || null;
   }
 
   /** Loads an existing instance if available */

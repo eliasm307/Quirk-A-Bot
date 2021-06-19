@@ -1,6 +1,6 @@
 import { PLAYER_COLLECTION_NAME } from '@quirk-a-bot/common';
 
-import { isCoreGameData, isGamePlayerData } from '../../../../utils/type-predicates';
+import { isGameData, isGamePlayerData } from '../../../../utils/type-predicates';
 import { iGameData } from '../../../game/interfaces/game-interfaces';
 import { iCharacterData } from '../../../game/interfaces/game-player-interfaces';
 import { createPath } from '../../utils/createPath';
@@ -23,7 +23,7 @@ export default async function readGameDataFromFirestore({
   const coreGameData = coreDataDocument.data();
 
   // assert it is core game data
-  if (!isCoreGameData(coreGameData)) {
+  if (!isGameData(coreGameData)) {
     console.timeEnd(timerName);
     const error = `Core game data was read but format is invalid`;
     console.error(__filename, error, {

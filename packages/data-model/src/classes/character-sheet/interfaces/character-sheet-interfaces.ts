@@ -126,12 +126,3 @@ export interface iCharacterSheetOLD
   touchstonesAndConvictions: iTouchStoneOrConvictionCollection;
   willpower: iCoreNumberTrait;
 }
-
-export interface iCharacterSheetViewModel
-  extends BaseModelReader<iCharacterSheetData> {
-  setAttribute(data: iAttributeData): void;
-  setCoreNumberTrait(data: iCoreNumberTraitData): void;
-  setCoreStringTrait(data: iCoreStringTraitData): void;
-  setSkill(data: iSkillData): void;
-  setTouchstoneAndConviction(data: iTouchStoneOrConvictionData): void;
-}

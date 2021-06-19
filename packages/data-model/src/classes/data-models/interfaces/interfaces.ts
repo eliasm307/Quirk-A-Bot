@@ -14,9 +14,7 @@ export interface BaseModelReader<T> extends iHasId {
 }
 
 export interface GameModelReader extends BaseModelReader<iGameData> {
-  readonly characterChange$: Observable<
-    iCharacterSheetData[] | undefined
-  > | null;
+  readonly characterCollectionChange$: Observable<iCharacterSheetData[]>;
 }
 
 /** Interface for mutating/updating a model */

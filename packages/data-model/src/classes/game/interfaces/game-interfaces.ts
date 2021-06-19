@@ -8,7 +8,7 @@ export interface iGameData {
   /** Unique game id */
   readonly id: string;
 
-  characterIds: UID[];
+  characterIds: Record<UID, true>;
   /** Optional description of the game */
   description: string;
   /** The uri to the last websocket instance created by a discord bot instance // todo implement */
@@ -17,9 +17,9 @@ export interface iGameData {
   // players: unknown; // todo to be implemented as part of player management system
   /** Read-only List of players ids of players who are game masters,
    * this is a subset of the players list */
-  gameMasters: UID[];
+  gameMasters: Record<UID, true>;
 
-  // players: iGamePlayerData[];
+// players: iGamePlayerData[];
 }
 
 /** Represents a VTM game in firestore */
@@ -33,7 +33,7 @@ export interface iGameViewModel extends iBaseViewModel<iGameData> {
   getCharactersData(): Promise<Map<UID, iCharacterData>>;
   removeCharacter(id: UID): Promise<void>;
 
-  /** Loads character sheets defined in the game */
+/** Loads character sheets defined in the game */
   // loadCharacterSheets(): Promise<Map<UID, iCharacterSheet>>;
 
   // players: Map<UID, iGamePlayerData>;
