@@ -1,3 +1,5 @@
+import { FirestoreFieldValue } from 'packages/common/dist/src/FirebaseExports';
+
 import { GameId, UID, WebURL } from '@quirk-a-bot/common';
 
 import { iBaseViewModel } from '../../../declarations/interfaces';
@@ -8,7 +10,7 @@ export interface iGameData {
   /** Unique game id */
   readonly id: string;
 
-  characterIds: Record<UID, true | undefined>;
+  characterIds: Record<UID, true | FirestoreFieldValue>;
   /** Optional description of the game */
   description: string;
   /** The uri to the last websocket instance created by a discord bot instance // todo implement */
@@ -17,7 +19,7 @@ export interface iGameData {
   // players: unknown; // todo to be implemented as part of player management system
   /** Read-only List of players ids of players who are game masters,
    * this is a subset of the players list */
-  gameMasterIds: Record<UID, true | undefined>;
+  gameMasterIds: Record<UID, true | FirestoreFieldValue>;
 
 // players: iGamePlayerData[];
 }

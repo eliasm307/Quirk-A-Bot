@@ -1,3 +1,4 @@
+import { firestoreFieldValues } from 'packages/common/dist/src/FirebaseExports';
 import { Observable } from 'rxjs';
 
 import { iHasId } from '../../../declarations/interfaces';
@@ -11,6 +12,8 @@ interface Props extends iHasId {
   modelReader?: GameModelReader;
   modelWriter?: GameModelWriter;
 }
+
+// todo test
 
 export default class GameViewModel implements iGameViewModel {
   #modelReader: GameModelReader | null;
@@ -48,17 +51,25 @@ export default class GameViewModel implements iGameViewModel {
 
   async removeCharacter(id: string): Promise<void> {
     const updates: Partial<iGameData> = {
-      characterIds: { [id]: firebase.firestore.FieldValue.delete() },
+      characterIds: { [id]: firestoreFieldValues.delete },
     };
 
     this.#modelWriter?.update(updates);
   }
 
   async removeGameMaster(id: string): Promise<void> {
-    throw new Error("Method not implemented.");
+    const updates: Partial<iGameData> = {
+      gameMasterIds: { [id]: firestoreFieldValues.delete },
+    };
+
+    this.#modelWriter?.update(updates);
   }
 
   setDescription(description: string): void {
-    throw new Error("Method not implemented.");
+    const updates: Partial<iGameData> = {
+      description,
+    };
+
+    this.#modelWriter?.update(updates);
   }
 }
