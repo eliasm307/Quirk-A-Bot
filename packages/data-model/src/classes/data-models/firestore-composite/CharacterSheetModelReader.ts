@@ -3,7 +3,7 @@ import { iHasParentPath } from '@quirk-a-bot/common';
 import { iHasId } from '../../../declarations/interfaces';
 import { isCharacterSheetData } from '../../../utils/type-predicates';
 import { iCharacterSheetData } from '../../character-sheet/interfaces/character-sheet-interfaces';
-import AbstractModelReader from '../general/AbstractModelReader';
+import AbstractModelReader from './AbstractModelReader';
 
 interface Props extends iHasId, iHasParentPath {}
 
