@@ -12,7 +12,7 @@ interface Props<D> extends iHasId, iHasParentPath {
   dataPredicate(value: unknown): value is D;
 }
 
-export default abstract class AbstractModelReader<D extends iHasId>
+export default abstract class AbstractDocumentReader<D extends iHasId>
   implements BaseModelReader<D>
 {
   // #firestoreDocumentRef: FirestoreDocumentReference;

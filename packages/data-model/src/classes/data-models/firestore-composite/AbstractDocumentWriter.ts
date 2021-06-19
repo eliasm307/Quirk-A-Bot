@@ -9,7 +9,7 @@ import { BaseModelWriter } from '../interfaces/interfaces';
 
 interface Props extends iHasId, iHasParentPath {}
 
-export default abstract class AbstractModelWriter<D extends iHasId>
+export default abstract class AbstractDocumentWriter<D extends iHasId>
   implements BaseModelWriter<D>
 {
   protected firestoreDocumentRef: FirestoreDocumentReference;
