@@ -160,7 +160,7 @@ export default class CharacterSheetViewModel
   }
 
   private updateModel(updates: Partial<Omit<iCharacterSheetData, "id">>): void {
-    if (this.#modelWriter) this.#modelWriter.set(updates);
+    if (this.#modelWriter) this.#modelWriter.update(updates);
     else
       console.warn(
         `Could not update character sheet with id ${this.id} because you don't have write access`

@@ -1,11 +1,9 @@
 import { SchemaPredicateMap } from '../declarations/typeAliases';
-import { firestoreEmulator } from '../FirebaseExports';
+import { firestore } from '../FirebaseExports';
 import pause from '../utils/pause';
 import InconsistentCompositeDocument, {
   InconsistentCompositeDocumentLoaderProps,
 } from './InconsistentCompositeDocument';
-
-const firestore = firestoreEmulator;
 
 const rootPath = `DocumentGroupTests`;
 

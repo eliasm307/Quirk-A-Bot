@@ -108,7 +108,7 @@ describe("Game with firestore composite data storage", () => {
     const gameData: iGameData = {
       description: "an existing game",
       id,
-      gameMasters: ["a guy", "another guy"],
+      gameMasterIds: ["a guy", "another guy"],
       discordBotWebSocketServer: "www.some-site.com",
       characterIds: [],
     };

@@ -1,7 +1,5 @@
-import { firestoreEmulator } from '../FirebaseExports';
+import { firestore } from '../FirebaseExports';
 import SubDocument from './SubDocument';
-
-const firestore = firestoreEmulator;
 
 type testSubDocType = {
   prop1: string;

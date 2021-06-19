@@ -1,10 +1,8 @@
-import { firestoreEmulator } from '../FirebaseExports';
+import { firestore } from '../FirebaseExports';
 import pause from '../utils/pause';
 import ConsistentCompositeDocument, {
   ConsistentCompositeDocumentLoaderProps,
 } from './ConsistentCompositeDocument';
-
-const firestore = firestoreEmulator;
 
 const rootPath = `DocumentGroupTests`;
 

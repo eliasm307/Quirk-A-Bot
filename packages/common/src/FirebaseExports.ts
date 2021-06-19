@@ -82,7 +82,7 @@ export interface FireBaseUser extends firebase.User {}
 export const firestore = firebase.firestore();
 if (!isProductionEnvironment()) firestore.useEmulator("localhost", 8080);
 
-export function isFirestoreEmulatorRunning(): boolean {
+export function isfirestoreRunning(): boolean {
   return urlExistSync("http://localhost:4000/firestore/");
 }
 
@@ -140,4 +140,9 @@ export type FirestoreDocumentReference =
 export type FirestoreCollectionReference =
   firebase.firestore.CollectionReference<firebase.firestore.DocumentData>;
 
+export type FirestoreFieldValue = firebase.firestore.FieldValue;
+
+export const firestoreFieldValues: Record<"delete", FirestoreFieldValue> = {
+  delete: firebase.firestore.FieldValue.delete(),
+};
 // export default firebase;

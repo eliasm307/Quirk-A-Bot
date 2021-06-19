@@ -34,7 +34,7 @@ export default async function readGameDataFromFirestore({
     return Promise.reject(Error(error));
   }
 
-  const { description, id, gameMasters } = coreGameData;
+  const { description, id, gameMasterIds: gameMasters } = coreGameData;
 
   // todo create path should be a dependency
   const playerCollection = await firestore

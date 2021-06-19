@@ -14,12 +14,12 @@ export interface BaseModelReader<T> extends iHasId {
 }
 
 export interface GameModelReader extends BaseModelReader<iGameData> {
-  readonly characterCollectionChange$: Observable<iCharacterSheetData[]>;
+  readonly characterCollectionChange$: Observable<iCharacterSheetData[]> | null;
 }
 
 /** Interface for mutating/updating a model */
 export interface BaseModelWriter<T> extends iHasId {
-  set(newData: Partial<Omit<T, "id">>): void;
+  update(newData: Partial<Omit<T, "id">>): void;
 }
 
 /**

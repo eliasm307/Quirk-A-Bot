@@ -1,11 +1,9 @@
 import { type } from 'os';
 
-import { firestoreEmulator } from '../FirebaseExports';
+import { firestore } from '../FirebaseExports';
 import FirestoreDocumentObserver, {
   FirestoreDocumentChangeData,
 } from './FirestoreDocumentObserver';
-
-const firestore = firestoreEmulator;
 
 const rootCollectionPath = `FirestoreDocumentObserverTests`;
 
@@ -23,7 +21,7 @@ interface SCHEMA {
   stringArrayProp: string[];
   stringProp: string;
 
-// undefinedProp: undefined; // ! undefined not allowed by firestore
+  // undefinedProp: undefined; // ! undefined not allowed by firestore
 }
 
 const documentSchemaIsValid = (data: unknown): data is SCHEMA => {

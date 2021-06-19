@@ -154,7 +154,7 @@ export default class FirestoreCompositeGameDataStorage
       valuePredicates: {
         description: isString,
         discordBotWebSocketServer: isOptionalString,
-        gameMasters: newIsArrayPredicate(isString),
+        gameMasterIds: newIsArrayPredicate(isString),
         characterIds: newIsArrayPredicate(isString),
         id: isString,
       },

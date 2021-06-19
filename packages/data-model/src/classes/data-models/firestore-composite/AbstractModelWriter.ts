@@ -40,7 +40,7 @@ export default abstract class AbstractModelWriter<D extends iHasId>
         switchMap(
           (newData: D) =>
             // ? should this be set or update?
-            from(this.firestoreDocumentRef.set(newData))
+            from(this.firestoreDocumentRef.update(newData))
           /* .pipe(
             tap(() => {
               // console.warn("Data updated successfully", { newData });
@@ -92,7 +92,7 @@ export default abstract class AbstractModelWriter<D extends iHasId>
     this.#unsubscribers.forEach((unsubscribe) => unsubscribe());
   }
 
-  set(updatedData: Omit<D, "id">): void {
+  update(updatedData: Omit<Partial<D>, "id">): void {
     this.#incomingUpdatesSubject.next({ ...updatedData, id: this.id } as D);
   }
 

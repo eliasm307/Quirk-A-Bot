@@ -5,10 +5,20 @@ import { iGameData } from '../../classes/game/interfaces/game-interfaces';
 export default function isGameData(data: unknown): data is iGameData {
   if (typeof data !== "object") return false;
 
-  const { description, id, gameMasters, characterIds } = data as iGameData;
+  const {
+    description,
+    id,
+    gameMasterIds: gameMasters,
+    characterIds,
+  } = data as iGameData;
 
   // to check if all required properties are defined
-  ((): iGameData => ({ description, id, gameMasters, characterIds }))();
+  ((): iGameData => ({
+    description,
+    id,
+    gameMasterIds: gameMasters,
+    characterIds,
+  }))();
 
   const hasId = isNonEmptyString(id); // id must be non-empty
   const hasDescription = isString(description);
