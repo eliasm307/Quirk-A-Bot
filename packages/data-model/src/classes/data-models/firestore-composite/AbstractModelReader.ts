@@ -18,7 +18,7 @@ export default abstract class AbstractModelReader<D extends iHasId>
   // #firestoreDocumentRef: FirestoreDocumentReference;
   #unsubscribers: (() => void)[] = [];
   /** Outgoing changes to observers of this instance */
-  changes: Observable<D | undefined>;
+  change$: Observable<D | undefined>;
   id: string;
   path: string;
 
@@ -37,7 +37,7 @@ export default abstract class AbstractModelReader<D extends iHasId>
       dataPredicate,
     });
 
-    this.changes = outgoingUpdate$.pipe(
+    this.change$ = outgoingUpdate$.pipe(
       scan(
         ({ data: lastData }, data) => ({
           data,

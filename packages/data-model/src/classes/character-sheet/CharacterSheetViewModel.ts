@@ -25,7 +25,7 @@ export default class CharacterSheetViewModel
 
   #modelReader?: BaseModelReader<iCharacterSheetData>;
   #modelWriter?: BaseModelWriter<iCharacterSheetData>;
-  changes?: Observable<iCharacterSheetData | undefined>;
+  change$?: Observable<iCharacterSheetData | undefined>;
   id: string;
 
   private constructor(props: Props) {
@@ -33,7 +33,7 @@ export default class CharacterSheetViewModel
     this.id = id;
     this.#modelReader = modelReader;
     this.#modelWriter = modelWriter;
-    this.changes = modelReader?.changes;
+    this.change$ = modelReader?.change$;
   }
 
   /** Loads an existing instance if available */

@@ -2,7 +2,7 @@ import { isNonEmptyString, isString, newIsArrayPredicate } from '@quirk-a-bot/co
 
 import { iGameData } from '../../classes/game/interfaces/game-interfaces';
 
-export default function isCoreGameData(data: unknown): data is iGameData {
+export default function isGameData(data: unknown): data is iGameData {
   if (typeof data !== "object") return false;
 
   const { description, id, gameMasters, characterIds } = data as iGameData;
