@@ -8,13 +8,19 @@ import { iGameData } from '../../game/interfaces/game-interfaces';
 
 /** Interface for reading a model */
 export interface BaseModelReader<T> extends iHasId {
-  readonly change$: Observable<T | undefined> | null;
+  readonly data$: Observable<T | undefined> | null;
 
   dispose(): void;
 }
 
+export interface UserModelReader extends BaseModelReader<iGameData> {
+  readonly adminGameCollectionData$: Observable<iGameData[]>;
+  readonly characterGameCollectionData$: Observable<iGameData[]>;
+}
+
 export interface GameModelReader extends BaseModelReader<iGameData> {
-  readonly characterCollectionChange$: Observable<iCharacterSheetData[]> | null;
+  /** Stream of data of the game character collection */
+  readonly characterCollectionData$: Observable<iCharacterSheetData[]> | null;
 }
 
 /** Interface for mutating/updating a model */

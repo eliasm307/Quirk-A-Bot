@@ -78,7 +78,7 @@ describe("Firestore Composite Character Sheet Model using RX", () => {
 
       let updateCount = 0;
 
-      const subscription = modelReader.change$
+      const subscription = modelReader.data$
         .pipe(
           // get the index of changes
           scan(
@@ -152,7 +152,7 @@ describe("Firestore Composite Character Sheet Model using RX", () => {
 
       let updateCount = 0;
 
-      const subscription = modelReader.change$
+      const subscription = modelReader.data$
         .pipe(
           // get the index of changes
           scan(

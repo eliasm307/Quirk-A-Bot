@@ -18,15 +18,15 @@ interface Props extends iHasId {
 export default class GameViewModel implements iGameViewModel {
   #modelReader: GameModelReader | null;
   #modelWriter: GameModelWriter | null;
-  change$: Observable<iGameData | undefined> | null;
-  characterCollectionChange$: Observable<iCharacterSheetData[]> | null;
+  data$: Observable<iGameData | undefined> | null;
+  characterCollectionData$: Observable<iCharacterSheetData[]> | null;
   id: string;
 
   constructor({ modelReader, modelWriter, id }: Props) {
     this.id = id;
-    this.change$ = modelReader?.change$ || null;
-    this.characterCollectionChange$ =
-      modelReader?.characterCollectionChange$ || null;
+    this.data$ = modelReader?.data$ || null;
+    this.characterCollectionData$ =
+      modelReader?.characterCollectionData$ || null;
 
     this.#modelWriter = modelWriter || null;
     this.#modelReader = modelReader || null;

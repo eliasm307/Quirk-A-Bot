@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 
-import { CHARACTER_COLLECTION_NAME, iHasParentPath } from '@quirk-a-bot/common';
+import { auth, CHARACTER_COLLECTION_NAME, iHasParentPath } from '@quirk-a-bot/common';
 
 import { iHasId } from '../../../declarations/interfaces';
 import getFirestoreCollectionChangeObservable from '../../../utils/getFirestoreCollectionChangeObservable';
@@ -9,25 +9,35 @@ import isGameData from '../../../utils/type-predicates/isGameData';
 import { iCharacterSheetData } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import { createPath } from '../../data-storage/utils/createPath';
 import { iGameData } from '../../game/interfaces/game-interfaces';
-import { GameModelReader } from '../interfaces/interfaces';
+import { GameModelReader, UserModelReader } from '../interfaces/interfaces';
 import AbstractDocumentReader from './AbstractDocumentReader';
-
-interface Props extends iHasId, iHasParentPath {}
 
 // todo test
 
-export default class GameFirestoreCompositeModelReader
-  extends AbstractDocumentReader<iGameData>
-  implements GameModelReader
+export default class UserFirestoreCompositeModelReader
+  implements UserModelReader
 {
+  adminGameCollectionData$: Observable<iGameData[]>;
   characterCollectionChange$: Observable<iCharacterSheetData[]>;
+  characterGameCollectionData$: Observable<iGameData[]>;
+  data$: Observable<iGameData | undefined> | null;
+  id: string;
 
-  constructor(props: Props) {
-    super({ ...props, dataPredicate: isGameData });
+  constructor() {
+    if (!auth.currentUser)
+      throw Error(
+        `Cannot update user because no user is signed in, current user is ${typeof auth.currentUser}`
+      );
+
+    this.id = auth.currentUser.uid;
 
     this.characterCollectionChange$ = getFirestoreCollectionChangeObservable({
       collectionPath: createPath(this.path, CHARACTER_COLLECTION_NAME),
       dataPredicate: isCharacterSheetData,
     });
+  }
+
+  dispose(): void {
+    throw new Error("Method not implemented.");
   }
 }

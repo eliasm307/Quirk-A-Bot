@@ -20,12 +20,12 @@ export default class GameFirestoreCompositeModelReader
   extends AbstractDocumentReader<iGameData>
   implements GameModelReader
 {
-  characterCollectionChange$: Observable<iCharacterSheetData[]>;
+  characterCollectionData$: Observable<iCharacterSheetData[]>;
 
   constructor(props: Props) {
     super({ ...props, dataPredicate: isGameData });
 
-    this.characterCollectionChange$ = getFirestoreCollectionChangeObservable({
+    this.characterCollectionData$ = getFirestoreCollectionChangeObservable({
       collectionPath: createPath(this.path, CHARACTER_COLLECTION_NAME),
       dataPredicate: isCharacterSheetData,
     });
