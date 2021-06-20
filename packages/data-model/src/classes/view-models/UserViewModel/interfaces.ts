@@ -1,11 +1,13 @@
-import { UID } from '@quirk-a-bot/common';
+import { WebURL } from '@quirk-a-bot/common';
 
-import { UserModelReader } from '../../data-models/interfaces';
+import { iUserModelReader } from '../../data-models/interfaces';
 
 interface CreateGameProps {
   description: string;
 }
 
-export interface iUserViewModel extends UserModelReader {
+export interface iUserViewModel extends iUserModelReader {
   createGame(props: CreateGameProps): Promise<void>;
+  setDisplayName(name: string): void;
+  setPhotoUrl(url: WebURL): void;
 }

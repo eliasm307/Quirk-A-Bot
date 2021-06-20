@@ -8,12 +8,12 @@ import isGameData from '../../../utils/type-predicates/isGameData';
 import isUserData from '../../../utils/type-predicates/isUserData';
 import { iGameData } from '../../game/interfaces/game-interfaces';
 import { iUserData } from '../../user/interfaces';
-import { UserModelReader } from '../interfaces';
+import { iUserModelReader } from '../interfaces';
 
 // todo test
 
 export default class UserFirestoreCompositeModelReader
-  implements UserModelReader
+  implements iUserModelReader
 {
   data$: Observable<iUserData | undefined>;
   gameCollectionData$: Observable<iGameData[]>;

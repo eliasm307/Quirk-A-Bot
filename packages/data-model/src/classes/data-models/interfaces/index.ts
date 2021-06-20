@@ -14,7 +14,7 @@ export interface BaseModelReader<T> extends iHasId {
   dispose(): void;
 }
 
-export interface UserModelReader extends BaseModelReader<iUserData> {
+export interface iUserModelReader extends BaseModelReader<iUserData> {
   readonly gameCollectionData$: Observable<iGameData[]>;
 }
 
@@ -27,6 +27,8 @@ export interface GameModelReader extends BaseModelReader<iGameData> {
 export interface BaseModelWriter<T> extends iHasId {
   update(newData: Partial<Omit<T, "id">>): void;
 }
+
+export interface iUserModelWriter extends BaseModelWriter<iUserData> {}
 
 /**
  * Simplified model that only accepts updates and provides change notifications.
