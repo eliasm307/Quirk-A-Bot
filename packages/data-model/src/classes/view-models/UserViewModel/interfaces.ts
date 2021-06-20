@@ -2,4 +2,10 @@ import { UID } from '@quirk-a-bot/common';
 
 import { UserModelReader } from '../../data-models/interfaces';
 
-export interface iUserViewModel extends UserModelReader {}
+interface CreateGameProps {
+  description: string;
+}
+
+export interface iUserViewModel extends UserModelReader {
+  createGame(props: CreateGameProps): Promise<void>;
+}

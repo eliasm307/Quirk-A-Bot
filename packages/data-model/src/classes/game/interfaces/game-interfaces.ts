@@ -15,6 +15,8 @@ export interface iGameData {
   /** Unique game id */
   readonly id: string;
 
+  created: string;
+  createdBy: UID;
   /** Optional description of the game */
   description: string;
   /** The uri to the last websocket instance created by a discord bot instance // todo implement */
