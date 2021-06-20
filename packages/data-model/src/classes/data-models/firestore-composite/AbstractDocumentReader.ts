@@ -4,7 +4,7 @@ import { filter, map, scan } from 'rxjs/operators';
 import { iHasParentPath, valuesAreEqual } from '@quirk-a-bot/common';
 
 import { iHasId } from '../../../declarations/interfaces';
-import getFirestoreDocumentChangeObservable from '../../../utils/getFirestoreDocumentChangeObservable';
+import observableFromFirestoreDocument from '../../../utils/observables/observableFromFirestoreDocument';
 import { createPath } from '../../data-storage/utils/createPath';
 import { BaseModelReader } from '../interfaces/interfaces';
 
@@ -32,7 +32,7 @@ export default abstract class AbstractDocumentReader<D extends iHasId>
     // todo this should come from firestore composite utils which are used by all firestore composite data models
     this.path = createPath(parentPath, id);
 
-    const outgoingUpdate$ = getFirestoreDocumentChangeObservable({
+    const outgoingUpdate$ = observableFromFirestoreDocument({
       documentPath: this.path,
       dataPredicate,
     });

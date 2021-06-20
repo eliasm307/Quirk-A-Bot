@@ -1,14 +1,17 @@
 import { Observable } from 'rxjs';
 
-import { auth, CHARACTER_COLLECTION_NAME, iHasParentPath } from '@quirk-a-bot/common';
+import {
+  auth, CHARACTER_COLLECTION_NAME, firestore, GAMES_COLLECTION_NAME, iHasParentPath,
+} from '@quirk-a-bot/common';
 
 import { iHasId } from '../../../declarations/interfaces';
-import getFirestoreCollectionChangeObservable from '../../../utils/getFirestoreCollectionChangeObservable';
+import observableFromFirestoreCollection from '../../../utils/observables/observableFromFirestoreCollection';
 import { isCharacterSheetData } from '../../../utils/type-predicates';
 import isGameData from '../../../utils/type-predicates/isGameData';
 import { iCharacterSheetData } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import { createPath } from '../../data-storage/utils/createPath';
 import { iGameData } from '../../game/interfaces/game-interfaces';
+import { iUserData } from '../../user/interfaces';
 import { GameModelReader, UserModelReader } from '../interfaces/interfaces';
 import AbstractDocumentReader from './AbstractDocumentReader';
 
@@ -17,10 +20,7 @@ import AbstractDocumentReader from './AbstractDocumentReader';
 export default class UserFirestoreCompositeModelReader
   implements UserModelReader
 {
-  adminGameCollectionData$: Observable<iGameData[]>;
-  characterCollectionChange$: Observable<iCharacterSheetData[]>;
-  characterGameCollectionData$: Observable<iGameData[]>;
-  data$: Observable<iGameData | undefined> | null;
+  data$: Observable<iUserData | undefined> | null;
   id: string;
 
   constructor() {
@@ -31,9 +31,17 @@ export default class UserFirestoreCompositeModelReader
 
     this.id = auth.currentUser.uid;
 
-    this.characterCollectionChange$ = getFirestoreCollectionChangeObservable({
-      collectionPath: createPath(this.path, CHARACTER_COLLECTION_NAME),
-      dataPredicate: isCharacterSheetData,
+    const gameUsersField: keyof iGameData = "users";
+
+    auth.onAuthStateChanged({});
+
+    const refsToGamesForCurrentUser = firestore
+      .collection(GAMES_COLLECTION_NAME)
+      .where(`${gameUsersField}.${this.id}`, "!=", false);
+
+    this.characterCollectionChange$ = observableFromFirestoreCollection({
+      firestoreCollectionRef: refsToGamesForCurrentUser,
+      dataPredicate: isGameData,
     });
   }
 

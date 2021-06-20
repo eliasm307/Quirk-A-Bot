@@ -14,8 +14,7 @@ export interface BaseModelReader<T> extends iHasId {
 }
 
 export interface UserModelReader extends BaseModelReader<iGameData> {
-  readonly adminGameCollectionData$: Observable<iGameData[]>;
-  readonly characterGameCollectionData$: Observable<iGameData[]>;
+  readonly gameCollectionData$: Observable<iGameData[]>;
 }
 
 export interface GameModelReader extends BaseModelReader<iGameData> {

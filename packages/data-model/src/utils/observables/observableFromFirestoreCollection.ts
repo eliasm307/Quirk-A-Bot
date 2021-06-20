@@ -1,24 +1,24 @@
 import { Observable } from 'rxjs';
 
-import { firestore } from '@quirk-a-bot/common';
+import { FirestoreCollectionReference, FirestoreQuery } from '@quirk-a-bot/common';
 
 interface Props<D> {
-  collectionPath: string;
+  firestoreCollectionRef: FirestoreQuery | FirestoreCollectionReference;
 
   dataPredicate(value: unknown): value is D;
 }
 
 // todo test
 
-export default function getFirestoreCollectionChangeObservable<D>({
-  collectionPath,
+export default function observableFromFirestoreCollection<D>({
   dataPredicate,
+  firestoreCollectionRef,
 }: Props<D>): Observable<D[]> {
   return new Observable((observer) => {
-    const ref = firestore.collection(collectionPath);
+    // const ref = firestore.collection(collectionPath);
 
     // return unsubscriber
-    return ref.onSnapshot({
+    return firestoreCollectionRef.onSnapshot({
       complete: observer.complete,
       error: observer.error,
       next: (querySnapshot) => {

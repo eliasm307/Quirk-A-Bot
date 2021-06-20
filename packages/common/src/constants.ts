@@ -105,6 +105,7 @@ export const USER_COLLECTION_NAME = "users";
 export const PLAYER_COLLECTION_NAME = "players";
 export const CHARACTER_COLLECTION_NAME = "characters";
 export const ALL_TRAITS_COLLECTION_NAME = "traits";
+export const GAMES_COLLECTION_NAME = "games";
 
 export const TRAIT_COLLECTION_NAMES = [
   ATTRIBUTE_COLLECTION_NAME,

@@ -18,8 +18,8 @@ interface Props extends iHasId {
 export default class GameViewModel implements iGameViewModel {
   #modelReader: GameModelReader | null;
   #modelWriter: GameModelWriter | null;
-  data$: Observable<iGameData | undefined> | null;
   characterCollectionData$: Observable<iCharacterSheetData[]> | null;
+  data$: Observable<iGameData | undefined> | null;
   id: string;
 
   constructor({ modelReader, modelWriter, id }: Props) {
@@ -33,15 +33,19 @@ export default class GameViewModel implements iGameViewModel {
   }
 
   async addCharacter(id: string): Promise<void> {
-    const updates: Partial<iGameData> = { users: { [id]: true } };
+    const updates: Partial<iGameData> = {
+      users: { [id]: { isCharacter: true } },
+    };
 
-    this.#modelWriter?.update(updates);
+    this.updateModel(updates);
   }
 
-  async addGameMaster(id: string): Promise<void> {
-    const updates: Partial<iGameData> = { gameMasterIds: { [id]: true } };
+  async addGameAdmin(id: string): Promise<void> {
+    const updates: Partial<iGameData> = {
+      users: { [id]: { isAdmin: true } },
+    };
 
-    this.#modelWriter?.update(updates);
+    this.updateModel(updates);
   }
 
   dispose(): void {
@@ -51,18 +55,18 @@ export default class GameViewModel implements iGameViewModel {
 
   async removeCharacter(id: string): Promise<void> {
     const updates: Partial<iGameData> = {
-      users: { [id]: firestoreFieldValues.delete },
+      users: { [id]: { isCharacter: false } },
     };
 
-    this.#modelWriter?.update(updates);
+    this.updateModel(updates);
   }
 
-  async removeGameMaster(id: string): Promise<void> {
+  async removeGameAdmin(id: string): Promise<void> {
     const updates: Partial<iGameData> = {
-      gameMasterIds: { [id]: firestoreFieldValues.delete },
+      users: { [id]: { isAdmin: false } },
     };
 
-    this.#modelWriter?.update(updates);
+    this.updateModel(updates);
   }
 
   setDescription(description: string): void {
@@ -70,6 +74,14 @@ export default class GameViewModel implements iGameViewModel {
       description,
     };
 
-    this.#modelWriter?.update(updates);
+    this.updateModel(updates);
+  }
+
+  private updateModel(updates: Partial<Omit<iGameData, "id">>): void {
+    if (this.#modelWriter) this.#modelWriter.update(updates);
+    else
+      console.warn(
+        `Could not update game with id ${this.id} because you don't have write access`
+      );
   }
 }

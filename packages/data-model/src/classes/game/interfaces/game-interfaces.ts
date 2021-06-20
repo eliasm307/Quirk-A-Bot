@@ -6,8 +6,8 @@ import { iBaseViewModel } from '../../../declarations/interfaces';
 import { iCharacterData } from './game-player-interfaces';
 
 interface GameUserDetails {
-  isCharacter: boolean;
-  isGameMaster: boolean;
+  isAdmin?: boolean;
+  isCharacter?: boolean;
 }
 
 /** Game data as stored in firestore game document */

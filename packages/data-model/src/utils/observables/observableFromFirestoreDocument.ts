@@ -10,7 +10,7 @@ interface Props<D> {
 
 // todo test
 
-export default function getFirestoreDocumentChangeObservable<D>({
+export default function observableFromFirestoreDocument<D>({
   documentPath,
   dataPredicate: schemaPredicate,
 }: Props<D>): Observable<D | undefined> {

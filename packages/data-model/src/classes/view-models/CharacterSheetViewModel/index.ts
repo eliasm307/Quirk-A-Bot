@@ -52,7 +52,7 @@ export default class CharacterSheetViewModel
   }
 
   dispose(): void {
-    if (this.#modelReader) this.#modelReader.dispose();
+    this.#modelReader?.dispose();
     CharacterSheetViewModel.instances.delete(this.id);
   }
 

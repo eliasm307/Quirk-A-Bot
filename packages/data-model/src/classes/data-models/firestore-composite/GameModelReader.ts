@@ -1,9 +1,9 @@
 import { Observable } from 'rxjs';
 
-import { CHARACTER_COLLECTION_NAME, iHasParentPath } from '@quirk-a-bot/common';
+import { CHARACTER_COLLECTION_NAME, firestore, iHasParentPath } from '@quirk-a-bot/common';
 
 import { iHasId } from '../../../declarations/interfaces';
-import getFirestoreCollectionChangeObservable from '../../../utils/getFirestoreCollectionChangeObservable';
+import observableFromFirestoreCollection from '../../../utils/observables/observableFromFirestoreCollection';
 import { isCharacterSheetData } from '../../../utils/type-predicates';
 import isGameData from '../../../utils/type-predicates/isGameData';
 import { iCharacterSheetData } from '../../character-sheet/interfaces/character-sheet-interfaces';
@@ -25,8 +25,13 @@ export default class GameFirestoreCompositeModelReader
   constructor(props: Props) {
     super({ ...props, dataPredicate: isGameData });
 
-    this.characterCollectionData$ = getFirestoreCollectionChangeObservable({
-      collectionPath: createPath(this.path, CHARACTER_COLLECTION_NAME),
+    const characterCollectionPath = createPath(
+      this.path,
+      CHARACTER_COLLECTION_NAME
+    );
+
+    this.characterCollectionData$ = observableFromFirestoreCollection({
+      firestoreCollectionRef: firestore.collection(characterCollectionPath),
       dataPredicate: isCharacterSheetData,
     });
   }

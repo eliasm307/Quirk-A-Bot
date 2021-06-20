@@ -139,6 +139,9 @@ export type FirestoreDocumentReference =
 export type FirestoreCollectionReference =
   firebase.firestore.CollectionReference<firebase.firestore.DocumentData>;
 
+export type FirestoreQuery =
+  firebase.firestore.Query<firebase.firestore.DocumentData>;
+
 export type FirestoreFieldValue = firebase.firestore.FieldValue;
 
 export const firestoreFieldValues: Record<"delete", FirestoreFieldValue> = {
