@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { iHasId } from '../../../declarations/interfaces';
 import { iCharacterSheetData } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import { iGameData } from '../../game/interfaces/game-interfaces';
+import { iUserData } from '../../user/interfaces';
 
 // ! this simplicity allows the implementation of models in different data storages to be more flexible e.g. the structure of local file based storage and Firestore by document is quite different and has very little overlaps which cause issues if you try to make one size fits all granular interfaces
 
@@ -13,7 +14,7 @@ export interface BaseModelReader<T> extends iHasId {
   dispose(): void;
 }
 
-export interface UserModelReader extends BaseModelReader<iGameData> {
+export interface UserModelReader extends BaseModelReader<iUserData> {
   readonly gameCollectionData$: Observable<iGameData[]>;
 }
 

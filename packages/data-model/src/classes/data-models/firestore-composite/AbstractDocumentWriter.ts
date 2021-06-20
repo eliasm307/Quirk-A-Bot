@@ -5,7 +5,7 @@ import { firestore, FirestoreDocumentReference, iHasParentPath } from '@quirk-a-
 
 import { iHasId } from '../../../declarations/interfaces';
 import { createPath } from '../../data-storage/utils/createPath';
-import { BaseModelWriter } from '../interfaces/interfaces';
+import { BaseModelWriter } from '../interfaces';
 
 interface Props extends iHasId, iHasParentPath {}
 

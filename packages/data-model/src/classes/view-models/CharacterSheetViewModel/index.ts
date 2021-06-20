@@ -5,7 +5,7 @@ import { UID } from '@quirk-a-bot/common';
 import { iHasId } from '../../../declarations/interfaces';
 import { iCharacterSheetData } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import numberTraitIsValid from '../../character-sheet/utils/numberTraitIsValid';
-import { BaseModelReader, BaseModelWriter } from '../../data-models/interfaces/interfaces';
+import { BaseModelReader, BaseModelWriter } from '../../data-models/interfaces';
 import {
   iAttributeData, iCoreNumberTraitData, iCoreStringTraitData, iSkillData,
   iTouchStoneOrConvictionData,

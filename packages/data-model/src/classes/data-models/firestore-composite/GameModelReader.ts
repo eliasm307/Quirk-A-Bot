@@ -9,7 +9,7 @@ import isGameData from '../../../utils/type-predicates/isGameData';
 import { iCharacterSheetData } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import { createPath } from '../../data-storage/utils/createPath';
 import { iGameData } from '../../game/interfaces/game-interfaces';
-import { GameModelReader } from '../interfaces/interfaces';
+import { GameModelReader } from '../interfaces';
 import AbstractDocumentReader from './AbstractDocumentReader';
 
 interface Props extends iHasId, iHasParentPath {}

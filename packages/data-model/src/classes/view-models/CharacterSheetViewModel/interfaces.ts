@@ -1,5 +1,5 @@
 import { iCharacterSheetData } from '../../character-sheet/interfaces/character-sheet-interfaces';
-import { BaseModelReader } from '../../data-models/interfaces/interfaces';
+import { BaseModelReader } from '../../data-models/interfaces';
 import {
   iAttributeData, iCoreNumberTraitData, iCoreStringTraitData, iSkillData,
   iTouchStoneOrConvictionData,

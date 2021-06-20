@@ -1,26 +1,22 @@
 import { Observable } from 'rxjs';
 
-import {
-  auth, CHARACTER_COLLECTION_NAME, firestore, GAMES_COLLECTION_NAME, iHasParentPath,
-} from '@quirk-a-bot/common';
+import { auth, firestore, GAMES_COLLECTION_NAME } from '@quirk-a-bot/common';
 
-import { iHasId } from '../../../declarations/interfaces';
+import observableFromFirebaseAuthUser from '../../../utils/observables/observableFromFirebaseAuthUser';
 import observableFromFirestoreCollection from '../../../utils/observables/observableFromFirestoreCollection';
-import { isCharacterSheetData } from '../../../utils/type-predicates';
 import isGameData from '../../../utils/type-predicates/isGameData';
-import { iCharacterSheetData } from '../../character-sheet/interfaces/character-sheet-interfaces';
-import { createPath } from '../../data-storage/utils/createPath';
+import isUserData from '../../../utils/type-predicates/isUserData';
 import { iGameData } from '../../game/interfaces/game-interfaces';
 import { iUserData } from '../../user/interfaces';
-import { GameModelReader, UserModelReader } from '../interfaces/interfaces';
-import AbstractDocumentReader from './AbstractDocumentReader';
+import { UserModelReader } from '../interfaces';
 
 // todo test
 
 export default class UserFirestoreCompositeModelReader
   implements UserModelReader
 {
-  data$: Observable<iUserData | undefined> | null;
+  data$: Observable<iUserData | undefined>;
+  gameCollectionData$: Observable<iGameData[]>;
   id: string;
 
   constructor() {
@@ -33,19 +29,19 @@ export default class UserFirestoreCompositeModelReader
 
     const gameUsersField: keyof iGameData = "users";
 
-    auth.onAuthStateChanged({});
+    this.data$ = observableFromFirebaseAuthUser({ dataPredicate: isUserData });
 
     const refsToGamesForCurrentUser = firestore
       .collection(GAMES_COLLECTION_NAME)
       .where(`${gameUsersField}.${this.id}`, "!=", false);
 
-    this.characterCollectionChange$ = observableFromFirestoreCollection({
+    this.gameCollectionData$ = observableFromFirestoreCollection({
       firestoreCollectionRef: refsToGamesForCurrentUser,
       dataPredicate: isGameData,
     });
   }
 
   dispose(): void {
-    throw new Error("Method not implemented.");
+    console.warn(__filename, `Dispose method empty`);
   }
 }

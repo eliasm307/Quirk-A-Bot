@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { iHasId } from '../../../declarations/interfaces';
 import { iCharacterSheetData } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import GameModelWriter from '../../data-models/firestore-composite/GameModelWriter';
-import { GameModelReader } from '../../data-models/interfaces/interfaces';
+import { GameModelReader } from '../../data-models/interfaces';
 import { iGameData } from '../../game/interfaces/game-interfaces';
 import { iGameViewModel } from './interfaces';
 

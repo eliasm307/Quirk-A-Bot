@@ -5,7 +5,7 @@ import {
 
 import { iHasCleanUp, iHasGetData, iHasId, iHasParentPath } from '../../../declarations/interfaces';
 import { ClanName, CoreNumberTraitName } from '../../../declarations/types';
-import { BaseModelReader } from '../../data-models/interfaces/interfaces';
+import { BaseModelReader } from '../../data-models/interfaces';
 import {
   iHasCharacterSheetDataStorage, iHasDataStorageFactory,
 } from '../../data-storage/interfaces/data-storage-interfaces';

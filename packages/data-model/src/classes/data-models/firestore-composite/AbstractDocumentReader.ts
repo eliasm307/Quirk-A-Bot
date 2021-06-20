@@ -6,7 +6,7 @@ import { iHasParentPath, valuesAreEqual } from '@quirk-a-bot/common';
 import { iHasId } from '../../../declarations/interfaces';
 import observableFromFirestoreDocument from '../../../utils/observables/observableFromFirestoreDocument';
 import { createPath } from '../../data-storage/utils/createPath';
-import { BaseModelReader } from '../interfaces/interfaces';
+import { BaseModelReader } from '../interfaces';
 
 interface Props<D> extends iHasId, iHasParentPath {
   dataPredicate(value: unknown): value is D;

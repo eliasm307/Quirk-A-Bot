@@ -14,6 +14,8 @@ interface Props<D> {
 
 // ? does this need to be generic?
 
+// todo test
+
 export default function observableFromFirebaseAuthUser<
   D extends iUserData = iUserData
 >({ dataPredicate }: Props<D>): Observable<D | undefined> {

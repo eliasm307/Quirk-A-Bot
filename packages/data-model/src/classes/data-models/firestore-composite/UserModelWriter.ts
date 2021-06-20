@@ -1,7 +1,7 @@
 import { auth } from '@quirk-a-bot/common';
 
 import { iUserData } from '../../user/interfaces';
-import { BaseModelWriter } from '../interfaces/interfaces';
+import { BaseModelWriter } from '../interfaces';
 
 export default class UserFirestoreCompositeModelWriter
   implements BaseModelWriter<iUserData>
