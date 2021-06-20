@@ -37,6 +37,8 @@ export default class GameViewModel implements iGameViewModel {
       users: { [id]: { isCharacter: true } },
     };
 
+    throw Error("Implement character create, if doesn't exist");
+
     this.updateModel(updates);
   }
 
@@ -57,6 +59,8 @@ export default class GameViewModel implements iGameViewModel {
     const updates: Partial<iGameData> = {
       users: { [id]: { isCharacter: false } },
     };
+
+    throw Error("Implement character delete, if exists");
 
     this.updateModel(updates);
   }
