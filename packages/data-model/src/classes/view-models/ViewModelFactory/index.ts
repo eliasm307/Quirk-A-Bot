@@ -4,11 +4,13 @@ import {
   iCharacterSheetModelWriter, iGameModelWriter, ModelFactory, ModelUtils,
 } from '../../data-models/interfaces';
 import { iGameData } from '../../game/interfaces/game-interfaces';
-import { iUserViewModel } from '../../user/interfaces';
+import { iUserViewModelOLD } from '../../user/interfaces';
 import CharacterSheetViewModel from '../CharacterSheetViewModel';
 import { iCharacterSheetViewModel } from '../CharacterSheetViewModel/interfaces';
 import GameViewModel from '../GameViewModel';
 import { iGameViewModel } from '../GameViewModel/interfaces';
+import UserViewModel from '../UserViewModel';
+import { iUserViewModel } from '../UserViewModel/interfaces';
 import { iViewModelFactory } from './interfaces';
 
 export default class ViewModelFactory implements iViewModelFactory {
@@ -92,7 +94,8 @@ export default class ViewModelFactory implements iViewModelFactory {
   }
 
   async getUserViewModel(): Promise<iUserViewModel> {
-    throw new Error("Method not implemented.");
+    // todo expand this to allow getting view models of other users
+    return new UserViewModel();
   }
 
   private getCurrentUserId(): UID | undefined {
@@ -124,10 +127,12 @@ export default class ViewModelFactory implements iViewModelFactory {
     return !!game.users[characterId]?.isCharacter;
   }
 
+/*
   private isGameUser(game: iGameData, characterId: UID): boolean {
     return (
       this.isGameCharacter(game, characterId) ||
       this.isGameAdmin(game, characterId)
     );
   }
+  */
 }

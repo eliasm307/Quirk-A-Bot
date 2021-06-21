@@ -2,7 +2,7 @@ import { auth, GameId } from '@quirk-a-bot/common';
 
 import CharacterSheet from './classes/character-sheet/CharacterSheet-OLD';
 import { iGameViewModelOLD } from './classes/game/interfaces/game-interfaces';
-import { iUserViewModel } from './classes/user/interfaces';
+import { iUserViewModelOLD } from './classes/user/interfaces';
 import UserViewModelOLD from './classes/user/UserViewModelOLD';
 import GameViewModel from './classes/view-models/GameViewModel';
 import UserViewModel from './classes/view-models/UserViewModel';
@@ -13,7 +13,7 @@ import UserViewModel from './classes/view-models/UserViewModel';
 
 // todo refactor code to be organised by domain models
 
-export const getUserViewModel = (): iUserViewModel => {
+export const getUserViewModel = (): iUserViewModelOLD => {
   if (!auth.currentUser)
     throw Error(
       `Cannot get user view model because no user is signed in, current user is ${typeof auth.currentUser}`

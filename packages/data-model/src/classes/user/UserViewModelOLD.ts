@@ -5,14 +5,14 @@ import { iHasFirestore, iHasId } from '../../declarations/interfaces';
 import {
   iHasDataStorageFactory, iUserDataStorage,
 } from '../data-storage/interfaces/data-storage-interfaces';
-import { iUserData, iUserViewModel } from './interfaces';
+import { iUserData, iUserViewModelOLD } from './interfaces';
 
 export interface iUserProps
   extends iHasId,
     iHasDataStorageFactory,
     iHasFirestore {}
 
-export default class UserViewModelOLD implements iUserViewModel {
+export default class UserViewModelOLD implements iUserViewModelOLD {
   /** Existing singleton instances of this class */
   protected static instances: Map<string, UserViewModelOLD> = new Map<
     string,

@@ -2,7 +2,7 @@ import { FirestoreFieldValue } from 'packages/common/dist/src/FirebaseExports';
 
 import { GameId, UID, WebURL } from '@quirk-a-bot/common';
 
-import { iBaseViewModel } from '../../../declarations/interfaces';
+import { iBaseViewModelOLD } from '../../../declarations/interfaces';
 import { iCharacterData } from './game-player-interfaces';
 
 interface GameUserDetails {
@@ -32,7 +32,7 @@ export interface iGameData {
 }
 
 /** Represents a VTM game in firestore */
-export interface iGameViewModelOLD extends iBaseViewModel<iGameData> {
+export interface iGameViewModelOLD extends iBaseViewModelOLD<iGameData> {
   /** Unique game id */
   readonly id: GameId;
 

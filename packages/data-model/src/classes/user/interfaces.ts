@@ -1,6 +1,6 @@
 import { GameId, iHasUid, WebURL } from '@quirk-a-bot/common';
 
-import { iBaseViewModel } from '../../declarations/interfaces';
+import { iBaseViewModelOLD } from '../../declarations/interfaces';
 
 /** User data as saved in firestore as JSON,
  * *NOTE* matches editable fields from Firebase Auth */
@@ -13,11 +13,11 @@ export interface iUserData extends iHasUid {
   /** Link to a profile image for a user */
   photoURL: WebURL;
 
-/** List of games the user is involved in as a player */
+  /** List of games the user is involved in as a player */
   // playerGames: GameId[];
 }
 
-export interface iUserViewModel extends iBaseViewModel<iUserData> {
+export interface iUserViewModelOLD extends iBaseViewModelOLD<iUserData> {
   /** List of games the user is involved in as a player */
   // getMyAdminGameIds: Set<GameId>;
   /** List of games the user is involved in as a player */
