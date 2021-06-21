@@ -1,8 +1,9 @@
-import { STRING_TRAIT_DEFAULT_VALUE } from '../../../../../common/src/constants';
+import { STRING_TRAIT_DEFAULT_VALUE } from '@quirk-a-bot/common/src/constants';
+
 import { iHasId } from '../../../declarations/interfaces';
 import { iCharacterSheetDataOLD } from '../interfaces/character-sheet-interfaces';
 
-export default function newCharacterSheetData({
+export default function newCharacterSheetDataOLD({
   id,
 }: iHasId): iCharacterSheetDataOLD {
   return {

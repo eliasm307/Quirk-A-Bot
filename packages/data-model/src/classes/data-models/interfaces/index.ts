@@ -1,5 +1,7 @@
 import { Observable } from 'rxjs';
 
+import { UID } from '@quirk-a-bot/common';
+
 import { iHasId } from '../../../declarations/interfaces';
 import { iCharacterSheetData } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import { iGameData } from '../../game/interfaces/game-interfaces';
@@ -29,6 +31,13 @@ export interface BaseModelWriter<T> extends iHasId {
 }
 
 export interface iUserModelWriter extends BaseModelWriter<iUserData> {}
+
+export interface iGameModelWriter extends BaseModelWriter<iGameData> {
+  addCharacter(id: UID): Promise<void>;
+  addGameAdmin(id: UID): Promise<void>;
+  removeCharacter(id: UID): Promise<void>;
+  removeGameAdmin(id: UID): Promise<void>;
+}
 
 /**
  * Simplified model that only accepts updates and provides change notifications.

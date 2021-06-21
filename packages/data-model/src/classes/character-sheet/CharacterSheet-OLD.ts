@@ -18,7 +18,7 @@ import {
   iCharacterSheetDataOLD, iCharacterSheetLoaderProps, iCharacterSheetOLD, iCharacterSheetProps,
 } from './interfaces/character-sheet-interfaces';
 import characterSheetToData from './utils/characterSheetToData';
-import newCharacterSheetData from './utils/newCharacterSheetData';
+import newCharacterSheetDataOLD from './utils/newCharacterSheetDataOLD';
 
 // todo split this into smaller pieces
 
@@ -230,7 +230,7 @@ export default class CharacterSheet implements iCharacterSheetOLD {
 
   /** Returns a new iCharacterSheetData object with default values */
   static newDataObject(props: iHasId): iCharacterSheetDataOLD {
-    return newCharacterSheetData(props);
+    return newCharacterSheetDataOLD(props);
   }
 
   cleanUp(): boolean {

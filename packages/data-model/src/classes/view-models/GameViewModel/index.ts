@@ -33,21 +33,19 @@ export default class GameViewModel implements iGameViewModel {
   }
 
   async addCharacter(id: string): Promise<void> {
-    const updates: Partial<iGameData> = {
-      users: { [id]: { isCharacter: true } },
-    };
-
-    throw Error("Implement character create, if doesn't exist");
-
-    this.updateModel(updates);
+    return this.#modelWriter
+      ? this.#modelWriter.addCharacter(id)
+      : console.warn(
+          `Cannot add character because you don't have write access to game with id ${this.id}`
+        );
   }
 
   async addGameAdmin(id: string): Promise<void> {
-    const updates: Partial<iGameData> = {
-      users: { [id]: { isAdmin: true } },
-    };
-
-    this.updateModel(updates);
+    return this.#modelWriter
+      ? this.#modelWriter.addGameAdmin(id)
+      : console.warn(
+          `Cannot add game admin because you don't have write access to game with id ${this.id}`
+        );
   }
 
   dispose(): void {
@@ -56,21 +54,19 @@ export default class GameViewModel implements iGameViewModel {
   }
 
   async removeCharacter(id: string): Promise<void> {
-    const updates: Partial<iGameData> = {
-      users: { [id]: { isCharacter: false } },
-    };
-
-    throw Error("Implement character delete, if exists");
-
-    this.updateModel(updates);
+    return this.#modelWriter
+      ? this.#modelWriter.removeCharacter(id)
+      : console.warn(
+          `Cannot remove character because you don't have write access to game with id ${this.id}`
+        );
   }
 
   async removeGameAdmin(id: string): Promise<void> {
-    const updates: Partial<iGameData> = {
-      users: { [id]: { isAdmin: false } },
-    };
-
-    this.updateModel(updates);
+    return this.#modelWriter
+      ? this.#modelWriter.removeGameAdmin(id)
+      : console.warn(
+          `Cannot remove game admin because you don't have write access to game with id ${this.id}`
+        );
   }
 
   setDescription(description: string): void {

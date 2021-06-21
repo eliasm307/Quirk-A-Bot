@@ -1,26 +1,25 @@
 import { from, of, Subject } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 
-import { firestore, FirestoreDocumentReference, iHasParentPath } from '@quirk-a-bot/common';
+import { firestore, FirestoreDocumentReference } from '@quirk-a-bot/common';
 
-import { iHasId } from '../../../declarations/interfaces';
-import { createPath } from '../../data-storage/utils/createPath';
-import { BaseModelWriter } from '../interfaces';
-
-interface Props extends iHasId, iHasParentPath {}
+import { iHasId } from '../../../../declarations/interfaces';
+import { createPath } from '../../../data-storage/utils/createPath';
+import { BaseModelWriter } from '../../interfaces';
+import { AbstractDocumentWriterProps } from './interfaces';
 
 export default abstract class AbstractDocumentWriter<D extends iHasId>
   implements BaseModelWriter<D>
 {
   protected firestoreDocumentRef: FirestoreDocumentReference;
+  /** Incoming changes from external clients/environment */
+  protected incomingUpdatesSubject: Subject<D>;
 
-  /** Incoming changes */
-  #incomingUpdatesSubject: Subject<D>;
   #unsubscribers: (() => void)[] = [];
   id: string;
   path: string;
 
-  constructor(props: Props) {
+  constructor(props: AbstractDocumentWriterProps) {
     const { id, parentPath } = props;
 
     this.id = id;
@@ -32,10 +31,10 @@ export default abstract class AbstractDocumentWriter<D extends iHasId>
 
     // todo assert id and parentPath are valid
 
-    this.#incomingUpdatesSubject = new Subject<D>();
+    this.incomingUpdatesSubject = new Subject<D>();
 
     // handle external change events internally
-    const incomingUpdatesSubscription = this.#incomingUpdatesSubject
+    const incomingUpdatesSubscription = this.incomingUpdatesSubject
       .pipe(
         switchMap(
           (newData: D) =>
@@ -93,7 +92,7 @@ export default abstract class AbstractDocumentWriter<D extends iHasId>
   }
 
   update(updatedData: Omit<Partial<D>, "id">): void {
-    this.#incomingUpdatesSubject.next({ ...updatedData, id: this.id } as D);
+    this.incomingUpdatesSubject.next({ ...updatedData, id: this.id } as D);
   }
 
   /** Adds a tear down function to be called when this instance is disposed */
