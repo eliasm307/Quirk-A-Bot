@@ -1,3 +1,5 @@
+import { GAMES_COLLECTION_NAME } from 'packages/common/src/constants';
+
 import { GameId, UID } from '@quirk-a-bot/common/dist';
 
 import {
@@ -5,6 +7,9 @@ import {
   iUserModelReader, iUserModelWriter, ModelFactory, ModelUtils,
 } from '../interfaces';
 import CharacterSheetFirestoreCompositeModelReader from './CharacterSheetModelReader';
+import CharacterSheetFirestoreCompositeModelWriter from './CharacterSheetModelWriter';
+import GameFirestoreCompositeModelReader from './GameModelReader';
+import GameFirestoreCompositeModelWriter from './GameModelWriter';
 import FirestoreCompositeModelUtils from './ModelUtils';
 
 export default class FirestoreCompositeModelFactory implements ModelFactory {
@@ -18,31 +23,41 @@ export default class FirestoreCompositeModelFactory implements ModelFactory {
     gameId: GameId,
     characterId: UID
   ): iCharacterSheetModelReader {
-    const gamePath;
+    const gamePath = this.utils.createPath(GAMES_COLLECTION_NAME, gameId);
 
     return new CharacterSheetFirestoreCompositeModelReader({
       id: characterId,
-      parentPath,
+      parentPath: gamePath,
     });
   }
 
-  getCharacterSheetModelWriter(id: string): iCharacterSheetModelWriter {
-    throw new Error("Method not implemented.");
+  getCharacterSheetModelWriter(
+    gameId: GameId,
+    characterId: UID
+  ): iCharacterSheetModelWriter {
+    const gamePath = this.utils.createPath(GAMES_COLLECTION_NAME, gameId);
+
+    return new CharacterSheetFirestoreCompositeModelWriter({
+      id: characterId,
+      parentPath: gamePath,
+    });
   }
 
   getGameModelReader(id: string): iGameModelReader {
-    throw new Error("Method not implemented.");
+    return new GameFirestoreCompositeModelReader({
+      id,
+      parentPath: GAMES_COLLECTION_NAME,
+    });
   }
 
   getGameModelWriter(id: string): iGameModelWriter {
-    throw new Error("Method not implemented.");
+    return new GameFirestoreCompositeModelWriter({
+      id,
+      parentPath: GAMES_COLLECTION_NAME,
+    });
   }
 
   getUserModelReader(id: string): iUserModelReader {
-    throw new Error("Method not implemented.");
-  }
-
-  getUserModelWriter(id: string): iUserModelWriter {
     throw new Error("Method not implemented.");
   }
 }

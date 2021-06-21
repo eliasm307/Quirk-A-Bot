@@ -6,6 +6,10 @@ import { iGameData } from '../../game/interfaces/game-interfaces';
 import { ModelUtils } from '../interfaces';
 
 export default class FirestoreCompositeModelUtils implements ModelUtils {
+  createPath(parentPath: string, id: string): string {
+    return this.createPath(parentPath, id);
+  }
+
   async getGameData(id: string): Promise<iGameData | null> {
     const gameDocumentRef = firestore.collection(GAMES_COLLECTION_NAME).doc(id);
 

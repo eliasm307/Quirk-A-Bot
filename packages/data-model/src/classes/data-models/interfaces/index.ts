@@ -53,6 +53,7 @@ export interface BaseModel<T> extends BaseModelReader<T>, BaseModelWriter<T> {}
 
 /** Internal utils implemented for a specific data storage */
 export interface ModelUtils {
+  createPath(parentPath: string, id: string): string;
   getGameData(id: GameId): Promise<iGameData | null>;
 }
 
@@ -70,6 +71,6 @@ export interface ModelFactory {
   ): iCharacterSheetModelWriter;
   getGameModelReader(id: GameId): iGameModelReader;
   getGameModelWriter(id: GameId): iGameModelWriter;
+  /** // ? tbc add feature to read other people's profiles, don't show private data */
   getUserModelReader(id: UID): iUserModelReader;
-  getUserModelWriter(id: UID): iUserModelWriter;
 }
