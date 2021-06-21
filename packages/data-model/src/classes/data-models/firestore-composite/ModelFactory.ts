@@ -58,6 +58,7 @@ export default class FirestoreCompositeModelFactory implements ModelFactory {
   }
 
   getUserModelReader(id: string): iUserModelReader {
+    // todo use to view other users
     throw new Error("Method not implemented.");
   }
 }

@@ -1,11 +1,5 @@
-import { auth, GameId } from '@quirk-a-bot/common';
-
-import CharacterSheet from './classes/character-sheet/CharacterSheet-OLD';
-import { iGameViewModelOLD } from './classes/game/interfaces/game-interfaces';
-import { iUserViewModelOLD } from './classes/user/interfaces';
-import UserViewModelOLD from './classes/user/UserViewModelOLD';
-import GameViewModel from './classes/view-models/GameViewModel';
-import UserViewModel from './classes/view-models/UserViewModel';
+import FirestoreCompositeModelFactory from './classes/data-models/firestore-composite/ModelFactory';
+import ViewModelFactory from './classes/view-models/ViewModelFactory';
 
 // console.warn(__filename, 'init');
 
@@ -13,15 +7,7 @@ import UserViewModel from './classes/view-models/UserViewModel';
 
 // todo refactor code to be organised by domain models
 
-export const getUserViewModel = (): iUserViewModelOLD => {
-  if (!auth.currentUser)
-    throw Error(
-      `Cannot get user view model because no user is signed in, current user is ${typeof auth.currentUser}`
-    );
-
-  return new UserViewModel();
-};
-
-export const getGameViewModel = async (id: GameId): iGameViewModelOLD => {};
-
-export { CharacterSheet };
+// eslint-disable-next-line import/prefer-default-export
+export const viewModelFactory = new ViewModelFactory(
+  new FirestoreCompositeModelFactory()
+);

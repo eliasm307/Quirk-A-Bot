@@ -4,7 +4,6 @@ import {
   iCharacterSheetModelWriter, iGameModelWriter, ModelFactory, ModelUtils,
 } from '../../data-models/interfaces';
 import { iGameData } from '../../game/interfaces/game-interfaces';
-import { iUserViewModelOLD } from '../../user/interfaces';
 import CharacterSheetViewModel from '../CharacterSheetViewModel';
 import { iCharacterSheetViewModel } from '../CharacterSheetViewModel/interfaces';
 import GameViewModel from '../GameViewModel';
@@ -12,6 +11,8 @@ import { iGameViewModel } from '../GameViewModel/interfaces';
 import UserViewModel from '../UserViewModel';
 import { iUserViewModel } from '../UserViewModel/interfaces';
 import { iViewModelFactory } from './interfaces';
+
+// todo separate proxy logic from factory logic
 
 export default class ViewModelFactory implements iViewModelFactory {
   #modelFactory: ModelFactory;
