@@ -1,8 +1,8 @@
 import { UID } from '@quirk-a-bot/common';
 
-import { GameModelReader } from '../../data-models/interfaces';
+import { iGameModelReader } from '../../data-models/interfaces';
 
-export interface iGameViewModel extends GameModelReader {
+export interface iGameViewModel extends iGameModelReader {
   addCharacter(id: UID): Promise<void>;
   addGameAdmin(id: UID): Promise<void>;
   removeCharacter(id: UID): Promise<void>;

@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 
-import { UID } from '@quirk-a-bot/common';
+import { GameId, UID } from '@quirk-a-bot/common';
 
 import { iHasId } from '../../../declarations/interfaces';
 import { iCharacterSheetData } from '../../character-sheet/interfaces/character-sheet-interfaces';
@@ -16,11 +16,14 @@ export interface BaseModelReader<T> extends iHasId {
   dispose(): void;
 }
 
+export interface iCharacterSheetModelReader
+  extends BaseModelReader<iCharacterSheetData> {}
+
 export interface iUserModelReader extends BaseModelReader<iUserData> {
   readonly gameCollectionData$: Observable<iGameData[]>;
 }
 
-export interface GameModelReader extends BaseModelReader<iGameData> {
+export interface iGameModelReader extends BaseModelReader<iGameData> {
   /** Stream of data of the game character collection */
   readonly characterCollectionData$: Observable<iCharacterSheetData[]> | null;
 }
@@ -29,6 +32,9 @@ export interface GameModelReader extends BaseModelReader<iGameData> {
 export interface BaseModelWriter<T> extends iHasId {
   update(newData: Partial<Omit<T, "id">>): void;
 }
+
+export interface iCharacterSheetModelWriter
+  extends BaseModelWriter<iCharacterSheetData> {}
 
 export interface iUserModelWriter extends BaseModelWriter<iUserData> {}
 
@@ -44,3 +50,26 @@ export interface iGameModelWriter extends BaseModelWriter<iGameData> {
  * Model responsibilities are to facilitate CRUD operations from/to data storage and optimise that.
  */
 export interface BaseModel<T> extends BaseModelReader<T>, BaseModelWriter<T> {}
+
+/** Internal utils implemented for a specific data storage */
+export interface ModelUtils {
+  getGameData(id: GameId): Promise<iGameData | null>;
+}
+
+/** Produces model readers/writers specific to a data storage */
+export interface ModelFactory {
+  readonly utils: ModelUtils;
+
+  getCharacterSheetModelReader(
+    gameId: GameId,
+    characterId: UID
+  ): iCharacterSheetModelReader;
+  getCharacterSheetModelWriter(
+    gameId: GameId,
+    characterId: UID
+  ): iCharacterSheetModelWriter;
+  getGameModelReader(id: GameId): iGameModelReader;
+  getGameModelWriter(id: GameId): iGameModelWriter;
+  getUserModelReader(id: UID): iUserModelReader;
+  getUserModelWriter(id: UID): iUserModelWriter;
+}

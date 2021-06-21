@@ -1,6 +1,6 @@
 import { ChangeHandler } from '@quirk-a-bot/common';
+import { USER_COLLECTION_NAME } from '@quirk-a-bot/common/src/constants';
 
-import { USER_COLLECTION_NAME } from '../../../../common/src/constants';
 import { iHasFirestore, iHasId } from '../../declarations/interfaces';
 import {
   iHasDataStorageFactory, iUserDataStorage,
@@ -12,11 +12,11 @@ export interface iUserProps
     iHasDataStorageFactory,
     iHasFirestore {}
 
-export default class UserViewModel implements iUserViewModel {
+export default class UserViewModelOLD implements iUserViewModel {
   /** Existing singleton instances of this class */
-  protected static instances: Map<string, UserViewModel> = new Map<
+  protected static instances: Map<string, UserViewModelOLD> = new Map<
     string,
-    UserViewModel
+    UserViewModelOLD
   >();
 
   #dataStorage: iUserDataStorage;
@@ -32,12 +32,12 @@ export default class UserViewModel implements iUserViewModel {
     this.#dataStorage = userDataStorage;
   }
 
-  static async load(props: iUserProps): Promise<UserViewModel> {
+  static async load(props: iUserProps): Promise<UserViewModelOLD> {
     const { dataStorageFactory, id } = props;
 
     dataStorageFactory.assertIdIsValid(id);
 
-    const preExistingInstance = UserViewModel.instances.get(id);
+    const preExistingInstance = UserViewModelOLD.instances.get(id);
     if (preExistingInstance) return preExistingInstance;
 
     try {
@@ -46,7 +46,7 @@ export default class UserViewModel implements iUserViewModel {
         parentPath: USER_COLLECTION_NAME,
       });
 
-      return new UserViewModel({
+      return new UserViewModelOLD({
         ...props,
         userDataStorage,
       });

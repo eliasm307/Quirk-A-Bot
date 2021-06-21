@@ -4,19 +4,19 @@ import { Observable } from 'rxjs';
 import { iHasId } from '../../../declarations/interfaces';
 import { iCharacterSheetData } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import GameModelWriter from '../../data-models/firestore-composite/GameModelWriter';
-import { GameModelReader } from '../../data-models/interfaces';
+import { iGameModelReader } from '../../data-models/interfaces';
 import { iGameData } from '../../game/interfaces/game-interfaces';
 import { iGameViewModel } from './interfaces';
 
 interface Props extends iHasId {
-  modelReader?: GameModelReader;
+  modelReader?: iGameModelReader;
   modelWriter?: GameModelWriter;
 }
 
 // todo test
 
 export default class GameViewModel implements iGameViewModel {
-  #modelReader: GameModelReader | null;
+  #modelReader: iGameModelReader | null;
   #modelWriter: GameModelWriter | null;
   characterCollectionData$: Observable<iCharacterSheetData[]> | null;
   data$: Observable<iGameData | undefined> | null;

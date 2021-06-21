@@ -19,11 +19,14 @@ interface CreateGameProps {
 }
 
 export default class UserViewModel implements iUserViewModel {
+  #instance?: UserViewModel;
   #modelReader: iUserModelReader;
   #modelWriter: iUserModelWriter;
   data$: Observable<iUserData | undefined> | null;
   gameCollectionData$: Observable<iGameData[]>;
   id: string;
+
+  // ? should this be a singleton?
 
   constructor() {
     if (!auth.currentUser)
