@@ -18,6 +18,8 @@ interface CreateGameProps {
   description: string;
 }
 
+// todo expand this to use readers and writers so other user profiles can be viewed with read access
+
 export default class UserViewModel implements iUserViewModel {
   #instance?: UserViewModel;
   #modelReader: iUserModelReader;
@@ -27,7 +29,6 @@ export default class UserViewModel implements iUserViewModel {
   id: string;
 
   // ? should this be a singleton?
-
   constructor() {
     if (!auth.currentUser)
       throw Error(

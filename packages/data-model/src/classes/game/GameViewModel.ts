@@ -5,7 +5,7 @@ import {
   iDataStorageFactory, iGameDataStorage, iHasDataStorageFactory,
 } from '../data-storage/interfaces/data-storage-interfaces';
 import { createPath } from '../data-storage/utils/createPath';
-import { iGameData, iGameViewModel } from './interfaces/game-interfaces';
+import { iGameData, iGameViewModelOLD } from './interfaces/game-interfaces';
 import { iCharacterData } from './interfaces/game-player-interfaces';
 
 export interface iGameProps
@@ -13,7 +13,7 @@ export interface iGameProps
     iHasDataStorageFactory,
     iHasParentPath {}
 
-export default class GameViewModel implements iGameViewModel {
+export default class GameViewModel implements iGameViewModelOLD {
   /** Existing singleton instances of this class */
   protected static instances: Map<string, GameViewModel> = new Map<
     string,

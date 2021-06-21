@@ -26,13 +26,13 @@ export interface iGameData {
   /** Read-only List of players ids of players who are game masters,
    * this is a subset of the players list */
   // gameMasterIds: Record<UID, true | FirestoreFieldValue>;
-  users: Record<UID, GameUserDetails | FirestoreFieldValue>;
+  users: Record<UID, GameUserDetails>;
 
-// players: iGamePlayerData[];
+  // players: iGamePlayerData[];
 }
 
 /** Represents a VTM game in firestore */
-export interface iGameViewModel extends iBaseViewModel<iGameData> {
+export interface iGameViewModelOLD extends iBaseViewModel<iGameData> {
   /** Unique game id */
   readonly id: GameId;
 
@@ -42,7 +42,7 @@ export interface iGameViewModel extends iBaseViewModel<iGameData> {
   getCharactersData(): Promise<Map<UID, iCharacterData>>;
   removeCharacter(id: UID): Promise<void>;
 
-/** Loads character sheets defined in the game */
+  /** Loads character sheets defined in the game */
   // loadCharacterSheets(): Promise<Map<UID, iCharacterSheet>>;
 
   // players: Map<UID, iGamePlayerData>;

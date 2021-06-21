@@ -4,7 +4,7 @@ import { GameId, UID } from '@quirk-a-bot/common/dist';
 
 import {
   iCharacterSheetModelReader, iCharacterSheetModelWriter, iGameModelReader, iGameModelWriter,
-  iUserModelReader, iUserModelWriter, ModelFactory, ModelUtils,
+  iUserModelReader, ModelFactory, ModelUtils,
 } from '../interfaces';
 import CharacterSheetFirestoreCompositeModelReader from './CharacterSheetModelReader';
 import CharacterSheetFirestoreCompositeModelWriter from './CharacterSheetModelWriter';

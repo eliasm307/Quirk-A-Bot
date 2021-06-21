@@ -1,7 +1,7 @@
 import { auth, GameId } from '@quirk-a-bot/common';
 
 import CharacterSheet from './classes/character-sheet/CharacterSheet-OLD';
-import { iGameViewModel } from './classes/game/interfaces/game-interfaces';
+import { iGameViewModelOLD } from './classes/game/interfaces/game-interfaces';
 import { iUserViewModel } from './classes/user/interfaces';
 import UserViewModelOLD from './classes/user/UserViewModelOLD';
 import GameViewModel from './classes/view-models/GameViewModel';
@@ -22,6 +22,6 @@ export const getUserViewModel = (): iUserViewModel => {
   return new UserViewModel();
 };
 
-export const getGameViewModel = async (id: GameId): iGameViewModel => {};
+export const getGameViewModel = async (id: GameId): iGameViewModelOLD => {};
 
 export { CharacterSheet };
