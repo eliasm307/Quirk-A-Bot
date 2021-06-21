@@ -3,13 +3,12 @@ import {
   newGuid, UID,
 } from '@quirk-a-bot/common';
 
+import { iGameData } from '../../../declarations/interfaces';
 import defaultCharacterSheetData from '../../../utils/default-data/defaultCharacterSheetData';
-import { createPath } from '../../data-storage/utils/createPath';
-import { iGameData } from '../../game/interfaces/game-interfaces';
-import defaultCharacterData from '../../game/utils/defaultCharacterData';
 import { iGameModelWriter } from '../interfaces';
 import AbstractDocumentWriter from './AbstractDocumentWriter';
 import { AbstractDocumentWriterProps } from './AbstractDocumentWriter/interfaces';
+import FirestoreCompositeModelUtils from './ModelUtils';
 
 interface CreateGameProps {
   creatorId: UID;
@@ -47,7 +46,9 @@ export default class GameFirestoreCompositeModelWriter
   constructor(props: AbstractDocumentWriterProps) {
     super(props);
 
-    const characterCollectionPath = createPath(
+    const utils = new FirestoreCompositeModelUtils();
+
+    const characterCollectionPath = utils.createPath(
       this.path,
       CHARACTER_COLLECTION_NAME
     );

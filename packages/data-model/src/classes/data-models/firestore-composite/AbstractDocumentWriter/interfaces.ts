@@ -1,5 +1,3 @@
-import { iHasParentPath } from '@quirk-a-bot/common';
-
-import { iHasId } from '../../../../declarations/interfaces';
+import { iHasId, iHasParentPath } from '@quirk-a-bot/common';
 
 export interface AbstractDocumentWriterProps extends iHasId, iHasParentPath {}

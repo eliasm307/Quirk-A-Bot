@@ -1,11 +1,10 @@
 import { firestoreFieldValues } from 'packages/common/dist/src/FirebaseExports';
+import { iHasId } from 'packages/common/src/declarations';
 import { Observable } from 'rxjs';
 
-import { iHasId } from '../../../declarations/interfaces';
-import { iCharacterSheetData } from '../../character-sheet/interfaces/character-sheet-interfaces';
+import { iCharacterSheetData, iGameData } from '../../../declarations/interfaces';
 import GameModelWriter from '../../data-models/firestore-composite/GameModelWriter';
 import { iGameModelReader, iGameModelWriter } from '../../data-models/interfaces';
-import { iGameData } from '../../game/interfaces/game-interfaces';
 import { iGameViewModel } from './interfaces';
 
 interface Props extends iHasId {

@@ -1,3 +1,5 @@
+import { WebURL } from '@quirk-a-bot/common';
+
 import FirestoreCompositeModelFactory from './classes/data-models/firestore-composite/ModelFactory';
 import ViewModelFactory from './classes/view-models/ViewModelFactory';
 
@@ -11,3 +13,5 @@ import ViewModelFactory from './classes/view-models/ViewModelFactory';
 export const viewModelFactory = new ViewModelFactory(
   new FirestoreCompositeModelFactory()
 );
+
+const d: WebURL;

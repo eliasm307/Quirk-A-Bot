@@ -1,9 +1,9 @@
 import { auth, UID } from '@quirk-a-bot/common';
 
+import { iGameData } from '../../../declarations/interfaces';
 import {
   iCharacterSheetModelWriter, iGameModelWriter, ModelFactory, ModelUtils,
 } from '../../data-models/interfaces';
-import { iGameData } from '../../game/interfaces/game-interfaces';
 import CharacterSheetViewModel from '../CharacterSheetViewModel';
 import { iCharacterSheetViewModel } from '../CharacterSheetViewModel/interfaces';
 import GameViewModel from '../GameViewModel';

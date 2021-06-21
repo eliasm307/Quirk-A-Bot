@@ -1,4 +1,5 @@
-import { UID } from './typePredicates';
+import { Firestore } from '../FirebaseExports';
+import { UID } from './typeAliases';
 
 /** Props for a change handler */
 export interface BaseChangeProps<T> {
@@ -92,4 +93,40 @@ export interface iCompositeDocument<S extends Record<string, unknown>> {
 export interface iHasUid {
   /** UID from Firebase Authentication  */
   id: UID;
+}
+
+export interface iHasGetData<D> {
+  readonly data: () => D;
+}
+
+export interface iHasInitialData<D> {
+  initialData: D;
+}
+export interface iHasId {
+  id: string;
+}
+
+export interface iHasResolvedBasePath {
+  resolvedBasePath: string;
+}
+
+export interface iHasFirestore {
+  firestore: Firestore;
+}
+
+// ? should this be renamed to parentId?
+export interface iHasParentPath {
+  /** Path from the root to reach the parent of this item */
+  parentPath: string;
+}
+
+export interface iCanHaveParentPath {
+  /** Path from the root to reach the parent of this item */
+  parentPath?: string;
+}
+
+// ? should this be renamed to id?
+export interface iHasPath {
+  /** Path from the root to reach this item */
+  path: string;
 }

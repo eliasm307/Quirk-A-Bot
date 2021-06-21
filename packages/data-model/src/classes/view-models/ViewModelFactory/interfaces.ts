@@ -1,7 +1,5 @@
 import { GameId, UID } from '@quirk-a-bot/common';
 
-import { iGameViewModelOLD } from '../../game/interfaces/game-interfaces';
-import { iUserViewModelOLD } from '../../user/interfaces';
 import { iCharacterSheetViewModel } from '../CharacterSheetViewModel/interfaces';
 import { iGameViewModel } from '../GameViewModel/interfaces';
 import { iUserViewModel } from '../UserViewModel/interfaces';

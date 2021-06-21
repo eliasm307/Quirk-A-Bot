@@ -1,16 +1,14 @@
 import { Observable } from 'rxjs';
 
-import { CHARACTER_COLLECTION_NAME, firestore, iHasParentPath } from '@quirk-a-bot/common';
+import { CHARACTER_COLLECTION_NAME, firestore, iHasId, iHasParentPath } from '@quirk-a-bot/common';
 
-import { iHasId } from '../../../declarations/interfaces';
+import { iCharacterSheetData, iGameData } from '../../../declarations/interfaces';
 import observableFromFirestoreCollection from '../../../utils/observables/observableFromFirestoreCollection';
 import { isCharacterSheetData } from '../../../utils/type-predicates';
 import isGameData from '../../../utils/type-predicates/isGameData';
-import { iCharacterSheetData } from '../../character-sheet/interfaces/character-sheet-interfaces';
-import { createPath } from '../../data-storage/utils/createPath';
-import { iGameData } from '../../game/interfaces/game-interfaces';
 import { iGameModelReader } from '../interfaces';
 import AbstractDocumentReader from './AbstractDocumentReader';
+import FirestoreCompositeModelUtils from './ModelUtils';
 
 interface Props extends iHasId, iHasParentPath {}
 
@@ -25,7 +23,9 @@ export default class GameFirestoreCompositeModelReader
   constructor(props: Props) {
     super({ ...props, dataPredicate: isGameData });
 
-    const characterCollectionPath = createPath(
+    const utils = new FirestoreCompositeModelUtils();
+
+    const characterCollectionPath = utils.createPath(
       this.path,
       CHARACTER_COLLECTION_NAME
     );

@@ -1,11 +1,10 @@
 import { from, of, Subject } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 
-import { firestore, FirestoreDocumentReference } from '@quirk-a-bot/common';
+import { firestore, FirestoreDocumentReference, iHasId } from '@quirk-a-bot/common';
 
-import { iHasId } from '../../../../declarations/interfaces';
-import { createPath } from '../../../data-storage/utils/createPath';
 import { BaseModelWriter } from '../../interfaces';
+import FirestoreCompositeModelUtils from '../ModelUtils';
 import { AbstractDocumentWriterProps } from './interfaces';
 
 export default abstract class AbstractDocumentWriter<D extends iHasId>
@@ -24,8 +23,10 @@ export default abstract class AbstractDocumentWriter<D extends iHasId>
 
     this.id = id;
 
+    const utils = new FirestoreCompositeModelUtils();
+
     // todo createPath should come from firestore composite utils which are used by all firestore composite data models
-    this.path = createPath(parentPath, id);
+    this.path = utils.createPath(parentPath, id);
 
     this.firestoreDocumentRef = firestore.doc(this.path);
 

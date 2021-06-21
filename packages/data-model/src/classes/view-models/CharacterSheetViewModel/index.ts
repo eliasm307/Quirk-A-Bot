@@ -1,15 +1,13 @@
 import { Observable } from 'rxjs';
 
-import { UID } from '@quirk-a-bot/common';
+import { iHasId, UID } from '@quirk-a-bot/common';
 
-import { iHasId } from '../../../declarations/interfaces';
-import { iCharacterSheetData } from '../../character-sheet/interfaces/character-sheet-interfaces';
-import numberTraitIsValid from '../../character-sheet/utils/numberTraitIsValid';
-import { BaseModelReader, BaseModelWriter } from '../../data-models/interfaces';
 import {
-  iAttributeData, iCoreNumberTraitData, iCoreStringTraitData, iSkillData,
+  iAttributeData, iCharacterSheetData, iCoreNumberTraitData, iCoreStringTraitData, iSkillData,
   iTouchStoneOrConvictionData,
-} from '../../traits/interfaces/trait-interfaces';
+} from '../../../declarations/interfaces';
+import numberTraitIsValid from '../../../utils/numberTraitIsValid';
+import { BaseModelReader, BaseModelWriter } from '../../data-models/interfaces';
 import { iCharacterSheetViewModel } from './interfaces';
 
 interface Props extends iHasId {

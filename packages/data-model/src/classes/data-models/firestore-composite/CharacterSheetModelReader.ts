@@ -1,8 +1,7 @@
-import { iHasParentPath } from '@quirk-a-bot/common';
+import { iHasId, iHasParentPath } from '@quirk-a-bot/common';
 
-import { iHasId } from '../../../declarations/interfaces';
+import { iCharacterSheetData } from '../../../declarations/interfaces';
 import { isCharacterSheetData } from '../../../utils/type-predicates';
-import { iCharacterSheetData } from '../../character-sheet/interfaces/character-sheet-interfaces';
 import { iCharacterSheetModelReader } from '../interfaces';
 import AbstractDocumentReader from './AbstractDocumentReader';
 

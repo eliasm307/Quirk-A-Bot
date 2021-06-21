@@ -3,14 +3,11 @@ import { Observable } from 'rxjs';
 
 import { auth, DEFAULT_CHARACTER_IMAGE_URL, DEFAULT_CHARACTER_NAME } from '@quirk-a-bot/common';
 
-import { iHasId } from '../../../declarations/interfaces';
-import { iCharacterSheetData } from '../../character-sheet/interfaces/character-sheet-interfaces';
+import { iGameData, iUserData } from '../../../declarations/interfaces';
 import { createGame } from '../../data-models/firestore-composite/GameModelWriter';
 import UserModelReader from '../../data-models/firestore-composite/UserModelReader';
 import UserModelWriter from '../../data-models/firestore-composite/UserModelWriter';
 import { iUserModelReader, iUserModelWriter } from '../../data-models/interfaces';
-import { iGameData } from '../../game/interfaces/game-interfaces';
-import { iUserData } from '../../user/interfaces';
 import { iUserViewModel } from './interfaces';
 
 // todo test

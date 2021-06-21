@@ -1,99 +1,121 @@
-import { ChangeHandler, Firestore } from '@quirk-a-bot/common';
+import {
+  AttributeName, ClanName, CoreNumberTraitName, CoreStringTraitName, DisciplineName, Firestore,
+  iHasUid, SkillName, TraitNameUnionOrString, TraitValueTypeUnion, UID, WebURL,
+} from '@quirk-a-bot/common';
 
 // todo move this to common
 
-export interface iHasGetData<D> {
-  readonly data: () => D;
+export interface GameUserDetails {
+  isAdmin?: boolean;
+  isCharacter?: boolean;
+}
+/** Game data as stored in firestore game document */
+export interface iGameData {
+  /** Unique game id */
+  readonly id: string;
+
+  created: string;
+  createdBy: UID;
+  /** Optional description of the game */
+  description: string;
+  /** The uri to the last websocket instance created by a discord bot instance // todo implement */
+  discordBotWebSocketServer?: WebURL;
+  /** List of players involved in this game as characters, from a sub-collection */
+  // players: unknown; // todo to be implemented as part of player management system
+  /** Read-only List of players ids of players who are game masters,
+   * this is a subset of the players list */
+  // gameMasterIds: Record<UID, true | FirestoreFieldValue>;
+  users: Record<UID, GameUserDetails>;
+
+// players: iGamePlayerData[];
+}
+/** User data as saved in firestore as JSON,
+ * *NOTE* matches editable fields from Firebase Auth */
+export interface iUserData extends iHasUid {
+  /** User name in VTM */
+  displayName: string;
+  // todo save related game ids to user profile to reduce complex queries required
+  /** List of games the user is involved in as an admin */
+  // adminGames: GameId[];
+  /** Link to a profile image for a user */
+  photoURL: WebURL;
+
+/** List of games the user is involved in as a player */
+  // playerGames: GameId[];
 }
 
-export interface iBaseEntity<D>
-  extends Readonly<iHasId>,
-    Readonly<iHasPath>,
-    iHasCleanUp {
-  // todo controllers and data stores should implement this
-  data(): Promise<D>;
-  /** Registers a callback to call when game data changes */
-  onChange(handler: ChangeHandler<D>): void;
-  update(updates: Partial<Omit<D, "id" | "uid">>): Promise<void>;
+// todo not required for now, but will be for tracking game users/players
+/** Represents user character details specific to a game */
+export interface iCharacterData {
+  /** Id for this users in this particular game, id matches the users auth id */
+  id: UID;
+  /** Link to a profile image for a character in a game */
+  img?: WebURL;
+  /** How the player would like to be addressed as in this game, defaults to User.name */
+  name: string;
+
+/** Status of the player for the game */
+  // status: any;
+  /** Status of the player for the game */
+  // status: PlayerStatus;
 }
 
-// todo use where relevant
-export interface iBaseViewModelOLD<D> extends iBaseEntity<D> {}
-
-// todo use where relevant
-export interface iBaseModel<D> extends iBaseEntity<D> {}
-
-export interface iHasInitialData<D> {
-  initialData: D;
-}
-
-export interface iHasId {
-  id: string;
-}
-export interface iCanHaveId {
-  id?: string;
-}
-export interface iHasResolvedBasePath {
-  resolvedBasePath: string;
-}
-
-export interface iHasFirestore {
-  firestore: Firestore;
-}
-
-export interface iCanHaveGetData<D> {
-  data?: () => D;
-}
-
-export interface iCanHaveSaveAction {
-  saveAction?: () => boolean;
-}
-
-export interface iCanDescribe {
-  describe(): string;
-}
-
-export interface iHasSaveAction {
-  saveAction: () => boolean;
-}
-
-export interface iBaseCollection<
-  K extends string,
-  SetValueType,
-  ReturnValueType,
-  CollectionType
+/** Describes the shape of trait data with generic types */
+export interface iBaseTraitData<
+  N extends TraitNameUnionOrString,
+  V extends TraitValueTypeUnion
 > {
-  readonly size: number;
-
-  delete(key: K): CollectionType | Promise<CollectionType>;
-  get(key: K): ReturnValueType | void;
-  has(key: K): boolean;
-  /**
-   * Update trait value if it exists, otherwise add a new one
-   * @param name name of trait to edit or create
-   * @param newValue value to assign
-   */
-  set(key: K, value: SetValueType): CollectionType | Promise<CollectionType>;
-  toArray(): ReturnValueType[];
+  name: N;
+  value: V;
 }
 
-// ? should this be renamed to parentId?
-export interface iHasParentPath {
-  /** Path from the root to reach the parent of this item */
-  parentPath: string;
-}
+export interface iNumberTraitData<
+  N extends TraitNameUnionOrString = TraitNameUnionOrString
+> extends iBaseTraitData<N, number> {}
 
-export interface iCanHaveParentPath {
-  /** Path from the root to reach the parent of this item */
-  parentPath?: string;
-}
+export interface iStringTraitData<
+  N extends TraitNameUnionOrString,
+  V extends string
+> extends iBaseTraitData<N, V> {}
 
-// ? should this be renamed to id?
-export interface iHasPath {
-  /** Path from the root to reach this item */
-  path: string;
-}
+// -------------------------------------------------------
+// SPECIFIC TRAIT DATA TYPES
+// NOTE Data should only contain user defined data
 
-export interface iHasCleanUp {
-  cleanUp(): boolean;
+export interface iAttributeData extends iNumberTraitData<AttributeName> {}
+export interface iTouchStoneOrConvictionData
+  extends iStringTraitData<string, string> {}
+export interface iSkillData extends iNumberTraitData<SkillName> {}
+export interface iDisciplineData extends iNumberTraitData<DisciplineName> {
+  // todo add "specialisation" / sub types?
+}
+export interface iCoreStringTraitData<V extends string = string>
+  extends iStringTraitData<CoreStringTraitName, V> {}
+export interface iCoreNumberTraitData
+  extends iNumberTraitData<CoreNumberTraitName> {}
+
+/** The shape of character sheet as plain JSON data, with top level trait collections */
+export interface iCharacterSheetData extends Omit<iCharacterData, "name"> {
+  attributes: Partial<Record<AttributeName, iAttributeData>>;
+  // ? should core traits be mandatory?
+  coreNumberTraits: Partial<Record<CoreNumberTraitName, iCoreNumberTraitData>>;
+  coreStringTraits: Partial<
+    Record<CoreStringTraitName, iCoreStringTraitData>
+  > & {
+    Clan?: iCoreStringTraitData<ClanName>;
+  };
+  disciplines: Partial<Record<DisciplineName, iDisciplineData>>;
+  /*
+  health: iCoreNumberTraitData;
+  humanity: iCoreNumberTraitData;
+  hunger: iCoreNumberTraitData;
+  name: iCoreStringTraitData<string>;
+  sire: iCoreStringTraitData<string>;
+  willpower: iCoreNumberTraitData;
+  bloodPotency: iCoreNumberTraitData;
+  */
+  skills: Partial<Record<SkillName, iSkillData>>;
+  touchstonesAndConvictions: Partial<
+    Record<string, iTouchStoneOrConvictionData>
+  >;
 }

@@ -3,7 +3,7 @@ import {
 } from '../constants';
 import {
   AttributeName, CoreNumberTraitName, CoreStringTraitName, DisciplineName, SkillName,
-} from '../declarations/typePredicates';
+} from '../declarations/typeAliases';
 
 export function isAttributeName(name: unknown): name is AttributeName {
   if (typeof name !== "string") return false;
